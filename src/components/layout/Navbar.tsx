@@ -152,19 +152,25 @@ export function Navbar() {
             </button>
           </div>
 
-          {/* ── Action Buttons Container: Place Order (Email/Form) + WhatsApp Contact (Matching 56px Height & close to merging) ── */}
+          {/* ── Action Buttons Container: Place Order (Orange) + WhatsApp Contact Us (Green) ── */}
           <div className="hidden items-center gap-1.5 sm:inline-flex">
-            {/* Place Order Button */}
-            <Link
-              to="/contact"
-              aria-label="Place an Order"
-              className="inline-flex h-[56px] items-center gap-2 rounded-[20px] border border-white/80 bg-white/90 px-5 text-sm font-bold text-gray-900 shadow-md backdrop-blur-md transition-all hover:bg-white hover:scale-[1.02] active:scale-[0.98]"
-            >
-              <Mail className="h-4 w-4 text-[#FF5A1F]" />
-              Place Order
-            </Link>
+            {/* Place Order Button — Orange */}
+            <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
+              <Link
+                to="/contact"
+                aria-label="Place an Order"
+                className="inline-flex h-[56px] items-center gap-2 rounded-[20px] px-6 text-sm font-bold text-white transition-transform"
+                style={{
+                  background: "linear-gradient(135deg, #FF5A1F 0%, #FF7A00 100%)",
+                  boxShadow: "0 4px 24px rgba(255,90,31,0.45)",
+                }}
+              >
+                <Mail className="h-4 w-4 text-white" />
+                Place Order
+              </Link>
+            </motion.div>
 
-            {/* WhatsApp Contact Us button */}
+            {/* WhatsApp Contact Us button — Green */}
             <motion.a
               href={waHref}
               target="_blank"
@@ -174,8 +180,8 @@ export function Navbar() {
               whileTap={{ scale: 0.97 }}
               className="inline-flex h-[56px] items-center gap-2.5 rounded-[20px] px-6 text-sm font-bold text-white"
               style={{
-                background: "linear-gradient(135deg, #FF5A1F 0%, #FF7A00 100%)",
-                boxShadow: "0 4px 24px rgba(255,90,31,0.45)",
+                background: "linear-gradient(135deg, #25D366 0%, #128C7E 100%)",
+                boxShadow: "0 4px 24px rgba(37,211,102,0.45)",
               }}
             >
               <WhatsAppIcon size={19} />
@@ -232,7 +238,7 @@ export function Navbar() {
                 );
               })}
 
-              {/* Place Order (Email / Order Form) CTA */}
+              {/* Place Order (Orange) CTA */}
               <motion.div
                 initial={{ opacity: 0, y: 18 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -242,21 +248,25 @@ export function Navbar() {
               >
                 <Link
                   to="/contact"
-                  className="flex w-full items-center justify-center gap-2 rounded-2xl bg-white/90 py-3.5 text-base font-bold text-gray-900 shadow-md backdrop-blur-md"
+                  className="flex w-full items-center justify-center gap-2 rounded-2xl py-3.5 text-base font-bold text-white shadow-md"
+                  style={{
+                    background: "linear-gradient(135deg, #FF5A1F 0%, #FF7A00 100%)",
+                    boxShadow: "0 0 24px rgba(255,90,31,0.45)",
+                  }}
                 >
-                  <Mail className="h-5 w-5 text-[#FF5A1F]" />
-                  Place Order (Email)
+                  <Mail className="h-5 w-5 text-white" />
+                  Place Order
                 </Link>
 
-                {/* WhatsApp CTA */}
+                {/* WhatsApp Contact Us (Green) CTA */}
                 <a
                   href={waHref}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex w-full items-center justify-center gap-2.5 rounded-2xl py-3.5 text-base font-bold text-white"
                   style={{
-                    background: "linear-gradient(135deg, #FF5A1F 0%, #FF7A00 100%)",
-                    boxShadow: "0 0 32px rgba(255,90,31,0.35)",
+                    background: "linear-gradient(135deg, #25D366 0%, #128C7E 100%)",
+                    boxShadow: "0 0 32px rgba(37,211,102,0.35)",
                   }}
                 >
                   <WhatsAppIcon size={20} />
