@@ -218,8 +218,7 @@ export function Hero() {
           className="absolute left-8 z-10 text-xs font-bold uppercase tracking-[0.22em] text-orange-400 sm:left-14"
           style={{ top: "calc(var(--navbar-h, 6rem) + 1.5rem)" }}
         >
-          {slide.category ?? "CONTENTMESH"}&ensp;&mdash;&ensp;
-          {String(current + 1).padStart(2, "0")}&thinsp;/&thinsp;{String(slides.length).padStart(2, "0")}
+          {slide.category ?? "CONTENTMESH"}
         </motion.p>
       </AnimatePresence>
 
@@ -280,35 +279,6 @@ export function Hero() {
             Book an Order
           </Link>
         </div>
-      </div>
-
-      {/* ── Progress bar + counter — bottom-right ─────────────── */}
-      <div className="absolute bottom-8 right-6 z-10 flex items-center gap-3 sm:right-10">
-        <div className="h-[3px] w-28 overflow-hidden rounded-full bg-white/20">
-          <div
-            className="h-full rounded-full bg-orange-500"
-            style={{ width: `${progress}%`, transition: "width 40ms linear" }}
-          />
-        </div>
-        <span className="text-xs font-medium tabular-nums text-white/45">
-          {String(current + 1).padStart(2, "0")}&thinsp;/&thinsp;{String(slides.length).padStart(2, "0")}
-        </span>
-      </div>
-
-      {/* ── Dot navigation — bottom-center ────────────────────── */}
-      <div className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2 flex gap-2">
-        {slides.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => setCurrent(i)}
-            aria-label={`Go to slide ${i + 1}`}
-            className={`rounded-full transition-all duration-300 ${
-              i === current
-                ? "w-6 h-[3px] bg-orange-500"
-                : "w-[6px] h-[3px] bg-white/35 hover:bg-white/60"
-            }`}
-          />
-        ))}
       </div>
     </section>
   );

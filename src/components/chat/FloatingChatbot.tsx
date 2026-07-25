@@ -59,11 +59,22 @@ export function FloatingChatbot() {
       {/* Floating avatar button */}
       <motion.button
         initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.6, duration: 0.4 }}
+        animate={
+          open
+            ? { opacity: 1, scale: 1, y: 0 }
+            : { opacity: 1, scale: 1, y: [0, -10, 0] }
+        }
+        transition={
+          open
+            ? { duration: 0.2 }
+            : {
+                opacity: { delay: 0.6, duration: 0.4 },
+                y: { repeat: Infinity, duration: 2, ease: "easeInOut" },
+              }
+        }
         onClick={() => setOpen((o) => !o)}
         aria-label={open ? "Close chat" : "Open chat"}
-        className="fixed bottom-6 right-6 z-[9998] grid h-16 w-16 place-items-center rounded-full transition-transform hover:scale-105"
+        className="fixed bottom-10 right-6 z-[9998] grid h-16 w-16 place-items-center rounded-full transition-transform hover:scale-110 sm:bottom-12"
         style={{
           background: "#FFFFFF",
           border: "1px solid rgba(14,68,127,0.15)",
@@ -97,7 +108,7 @@ export function FloatingChatbot() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 24, scale: 0.96 }}
             transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed bottom-28 right-4 z-[9999] flex w-[calc(100vw-2rem)] max-w-[400px] flex-col overflow-hidden sm:right-6"
+            className="fixed bottom-32 right-4 z-[9999] flex w-[calc(100vw-2rem)] max-w-[400px] flex-col overflow-hidden sm:bottom-36 sm:right-6"
             style={{
               height: "min(600px, calc(100vh - 8rem))",
               borderRadius: 24,

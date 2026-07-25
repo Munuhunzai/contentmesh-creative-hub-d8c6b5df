@@ -34,7 +34,7 @@ export function Footer() {
             <p className="mt-4 max-w-xs text-sm text-muted-foreground">{s.tagline}</p>
             <div className="mt-6 flex gap-2">
               {socials.map(([Icon, label, href]) => (
-                <a key={label} href={href} aria-label={label} className="grid h-9 w-9 place-items-center rounded-full border border-border bg-background text-muted-foreground transition-colors hover:bg-primary hover:text-primary-foreground">
+                <a key={label} href={href} aria-label={label} className="grid h-9 w-9 place-items-center rounded-full border border-border bg-background text-muted-foreground transition-all hover:bg-[#0D4C92] hover:border-[#0D4C92] hover:text-white shadow-sm">
                   <Icon className="h-4 w-4" />
                 </a>
               ))}
