@@ -1,5 +1,4 @@
-import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import { SectionHeader } from "./Services";
 
 const STEPS = [
@@ -97,34 +96,13 @@ function StepCard({ step, index }: { step: (typeof STEPS)[0]; index: number }) {
 }
 
 export function Process() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
-  // Parallax on the large background text
-  const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "-18%"]);
-
   return (
     <section
-      ref={sectionRef}
       className="relative overflow-hidden py-28 sm:py-36"
       id="process"
       style={{ background: "linear-gradient(160deg, #f8f7f4 0%, #ffffff 50%, #f4f3ef 100%)" }}
     >
-      {/* ── Large ambient background word ── */}
-      <motion.div
-        style={{ y: bgY }}
-        aria-hidden
-        className="pointer-events-none absolute inset-0 flex items-center justify-center select-none overflow-hidden"
-      >
-        <span
-          className="font-display font-black uppercase tracking-tighter"
-          style={{ fontSize: "clamp(8rem, 22vw, 22rem)", whiteSpace: "nowrap", color: "rgba(0,0,0,0.04)" }}
-        >
-          PROCESS
-        </span>
-      </motion.div>
+
 
       {/* ── Radial glow blobs ── */}
       <div
