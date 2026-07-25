@@ -134,7 +134,7 @@ export function Services() {
   const totalW  = services.length * STEP;
 
   return (
-    <section className="relative overflow-hidden py-24 sm:py-32" id="services">
+    <section className="relative py-24 sm:py-32" id="services">
       {/* Section header */}
       <div className="mx-auto max-w-7xl px-6">
         <SectionHeader
@@ -145,23 +145,35 @@ export function Services() {
       </div>
 
       {/* Marquee track */}
+      {/* Inject keyframes via a style tag */}
+      <style>{`
+        @keyframes marquee-rtl {
+          0%   { transform: translateX(0); }
+          100% { transform: translateX(-${totalW}px); }
+        }
+        .marquee-track {
+          animation: marquee-rtl ${services.length * 3.5}s linear infinite;
+        }
+      `}</style>
+
+      {/*
+        Outer wrapper: clips HORIZONTALLY only (overflow-x hidden)
+        and has vertical padding so the scale/lift on hover is never clipped.
+        The edge-fade mask is applied here so it only hides the horizontal edges.
+      */}
       <div
         className="relative mt-16"
-        style={{ maskImage: "linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)", WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)" }}
+        style={{
+          overflowX: "hidden",
+          overflowY: "visible",
+          paddingTop: "20px",
+          paddingBottom: "20px",
+          maskImage: "linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
+          WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
+        }}
         onMouseEnter={pause}
         onMouseLeave={resume}
       >
-        {/* Inject keyframes via a style tag */}
-        <style>{`
-          @keyframes marquee-rtl {
-            0%   { transform: translateX(0); }
-            100% { transform: translateX(-${totalW}px); }
-          }
-          .marquee-track {
-            animation: marquee-rtl ${services.length * 3.5}s linear infinite;
-          }
-        `}</style>
-
         <div
           ref={trackRef}
           className="marquee-track flex gap-6"
