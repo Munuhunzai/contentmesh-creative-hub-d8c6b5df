@@ -68,8 +68,8 @@ function StepCard({ step, index }: { step: (typeof STEPS)[0]; index: number }) {
       <div
         className="relative mt-4 flex-1 overflow-hidden rounded-[1.75rem] p-6 transition-transform duration-500 group-hover:-translate-y-2"
         style={{
-          background: "rgba(255,255,255,0.03)",
-          border: "1px solid rgba(255,255,255,0.07)",
+          background: "rgba(255,255,255,0.80)",
+          border: "1px solid rgba(0,0,0,0.07)",
           backdropFilter: "blur(12px)",
         }}
       >
@@ -85,10 +85,10 @@ function StepCard({ step, index }: { step: (typeof STEPS)[0]; index: number }) {
           style={{ background: step.accent }}
         />
 
-        <h3 className="font-display text-xl font-bold tracking-tight text-white">
+        <h3 className="font-display text-xl font-bold tracking-tight text-gray-900">
           {step.title}
         </h3>
-        <p className="mt-3 text-sm leading-relaxed text-white/55">
+        <p className="mt-3 text-sm leading-relaxed text-gray-500">
           {step.desc}
         </p>
       </div>
@@ -110,7 +110,7 @@ export function Process() {
       ref={sectionRef}
       className="relative overflow-hidden py-28 sm:py-36"
       id="process"
-      style={{ background: "linear-gradient(160deg, #06060a 0%, #0e0e18 60%, #06060a 100%)" }}
+      style={{ background: "linear-gradient(160deg, #f8f7f4 0%, #ffffff 50%, #f4f3ef 100%)" }}
     >
       {/* ── Large ambient background word ── */}
       <motion.div
@@ -119,8 +119,8 @@ export function Process() {
         className="pointer-events-none absolute inset-0 flex items-center justify-center select-none overflow-hidden"
       >
         <span
-          className="font-display font-black uppercase tracking-tighter text-white/[0.025]"
-          style={{ fontSize: "clamp(8rem, 22vw, 22rem)", whiteSpace: "nowrap" }}
+          className="font-display font-black uppercase tracking-tighter"
+          style={{ fontSize: "clamp(8rem, 22vw, 22rem)", whiteSpace: "nowrap", color: "rgba(0,0,0,0.04)" }}
         >
           PROCESS
         </span>
@@ -130,12 +130,12 @@ export function Process() {
       <div
         aria-hidden
         className="pointer-events-none absolute left-1/4 top-1/3 h-[400px] w-[400px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[120px] opacity-20"
-        style={{ background: "radial-gradient(circle, #FF5A1F 0%, transparent 70%)" }}
+        style={{ background: "radial-gradient(circle, #FF5A1F 0%, transparent 70%)", opacity: 0.08 }}
       />
       <div
         aria-hidden
         className="pointer-events-none absolute right-1/4 bottom-1/3 h-[300px] w-[300px] translate-x-1/2 translate-y-1/2 rounded-full blur-[100px] opacity-15"
-        style={{ background: "radial-gradient(circle, #0D4C92 0%, transparent 70%)" }}
+        style={{ background: "radial-gradient(circle, #0D4C92 0%, transparent 70%)", opacity: 0.07 }}
       />
 
       {/* ── Content ── */}
@@ -152,7 +152,7 @@ export function Process() {
           <div
             aria-hidden
             className="absolute left-0 right-0 hidden lg:block"
-            style={{ top: "clamp(5rem, 10vw, 9rem)", height: "1px", background: "linear-gradient(to right, transparent, rgba(255,255,255,0.10) 15%, rgba(255,255,255,0.10) 85%, transparent)" }}
+            style={{ top: "clamp(5rem, 10vw, 9rem)", height: "1px", background: "linear-gradient(to right, transparent, rgba(0,0,0,0.10) 15%, rgba(0,0,0,0.10) 85%, transparent)" }}
           />
 
           {/* Step dots on the line */}
