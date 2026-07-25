@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useRouter } from "@tanstack/react-router";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import { Menu, X, ArrowUpRight, Mail } from "lucide-react";
 import { Logo } from "@/components/brand/Logo";
 import { useSanity } from "@/integrations/sanity/useSanity";
@@ -79,6 +79,7 @@ export function Navbar() {
             <Logo />
 
             {/* Desktop links — increased padding/margin from logo (ml-8 lg:ml-12) */}
+            <LayoutGroup id="navbar-pills">
             <nav className="ml-8 hidden items-center gap-1.5 lg:flex lg:ml-12" aria-label="Main navigation">
               {NAV.map((n) => {
                 const active = pathname.startsWith(n.to);
@@ -89,7 +90,7 @@ export function Navbar() {
                     className="relative px-5 py-2 text-sm font-medium transition-colors"
                     style={{ color: active ? "#111" : "#666" }}
                   >
-                    {/* Active pill with 36px radius, 4px left orange inner stroke & depth shadow */}
+                    {/* Single layoutId pill — Framer Motion slides it between whichever link is active */}
                     {active && (
                       <motion.span
                         layoutId="nav-active-pill"
@@ -100,14 +101,20 @@ export function Navbar() {
                           background: "rgba(0,0,0,0.04)",
                           boxShadow: "-4px 0 12px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.6)",
                         }}
-                        transition={{ type: "spring", stiffness: 350, damping: 30 }}
+                        transition={{
+                          type: "spring",
+                          stiffness: 420,
+                          damping: 34,
+                          mass: 0.8,
+                        }}
                       />
                     )}
-                    <span className="relative">{n.label}</span>
+                    <span className="relative z-10">{n.label}</span>
                   </Link>
                 );
               })}
             </nav>
+            </LayoutGroup>
 
             {/* Mobile hamburger (inside pill) */}
             <button
