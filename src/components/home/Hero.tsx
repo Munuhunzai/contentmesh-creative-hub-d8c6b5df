@@ -242,7 +242,7 @@ export function Hero() {
       </button>
 
       {/* ── Content — bottom-left ─────────────────────────────── */}
-      <div className="absolute bottom-20 left-8 z-10 max-w-lg sm:left-14 sm:bottom-24 lg:max-w-2xl">
+      <div className="absolute bottom-20 inset-x-6 z-10 sm:left-14 sm:right-auto sm:bottom-24 sm:max-w-lg lg:max-w-2xl">
         {/* Title — changes per slide */}
         <AnimatePresence mode="wait">
           <motion.h1
@@ -264,17 +264,17 @@ export function Hero() {
         </p>
 
         {/* CTAs — same for every slide */}
-        <div className="mt-7 flex flex-wrap items-center gap-3">
+        <div className="mt-7 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
           <Link
             to="/portfolio"
-            className="group inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-5 py-2.5 text-[11px] font-bold uppercase tracking-[0.16em] text-white backdrop-blur-sm transition hover:bg-white/20"
+            className="group inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-full border border-white/30 bg-white/10 px-5 py-3 text-[11px] font-bold uppercase tracking-[0.16em] text-white backdrop-blur-sm transition hover:bg-white/20 text-center"
           >
             View Portfolio{" "}
             <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
           </Link>
           <Link
             to="/contact"
-            className="inline-flex items-center gap-2 rounded-full bg-orange-500 px-5 py-2.5 text-[11px] font-bold uppercase tracking-[0.16em] text-white transition hover:bg-orange-600"
+            className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-full bg-orange-500 px-5 py-3 text-[11px] font-bold uppercase tracking-[0.16em] text-white transition hover:bg-orange-600 text-center"
             style={{ boxShadow: "0 0 24px rgba(255,90,31,0.45)" }}
           >
             Book an Order
