@@ -207,20 +207,6 @@ export function Hero() {
         }}
       />
 
-      {/* ── Category label — top-left ─────────────────────────── */}
-      <AnimatePresence mode="wait">
-        <motion.p
-          key={`cat-${current}`}
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 10 }}
-          transition={{ duration: 0.4 }}
-          className="absolute left-8 z-10 text-xs font-bold uppercase tracking-[0.22em] text-orange-400 sm:left-14"
-          style={{ top: "calc(var(--navbar-h, 6rem) + 1.5rem)" }}
-        >
-          {slide.category ?? "CONTENTMESH"}
-        </motion.p>
-      </AnimatePresence>
 
       {/* ── Arrow — prev ──────────────────────────────────────── */}
       <button
