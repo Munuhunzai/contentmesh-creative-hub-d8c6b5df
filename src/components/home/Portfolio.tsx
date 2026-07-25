@@ -123,7 +123,7 @@ export function Portfolio() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setOpen(null)}
-            className="fixed inset-0 z-[60] grid place-items-center bg-black/80 p-4 backdrop-blur-sm"
+            className="fixed inset-0 z-[200] grid place-items-center bg-black/85 p-4 backdrop-blur-md"
           >
             <motion.div
               initial={{ scale: 0.95, y: 20 }}
@@ -135,10 +135,10 @@ export function Portfolio() {
               {/* Close */}
               <button
                 onClick={() => setOpen(null)}
-                className="absolute right-4 top-4 z-10 grid h-9 w-9 place-items-center rounded-full bg-white/90 text-primary shadow"
+                className="absolute right-4 top-4 z-20 grid h-10 w-10 place-items-center rounded-full bg-black/75 text-white border border-white/20 shadow-xl transition-all hover:bg-black hover:scale-105 active:scale-95"
                 aria-label="Close"
               >
-                <X className="h-4 w-4" />
+                <X className="h-5 w-5" />
               </button>
 
               {/* Video / thumbnail area */}
