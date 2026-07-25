@@ -254,7 +254,7 @@ function renderFormattedContent(text: string, role: "user" | "assistant") {
                   className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full"
                   style={{ background: role === "user" ? "#FF8C00" : "#FF5A1F" }}
                 />
-                <span className="flex-1">{parseBoldText(cleanLine, role)}</span>
+                <span className="flex-1">{parseFormattedText(cleanLine, role)}</span>
               </li>
             );
           })}
@@ -267,7 +267,7 @@ function renderFormattedContent(text: string, role: "user" | "assistant") {
         {lines.map((line, lIdx) => (
           <span key={lIdx}>
             {lIdx > 0 && <br />}
-            {parseBoldText(line, role)}
+            {parseFormattedText(line, role)}
           </span>
         ))}
       </p>
@@ -275,9 +275,31 @@ function renderFormattedContent(text: string, role: "user" | "assistant") {
   });
 }
 
-function parseBoldText(text: string, role: "user" | "assistant") {
-  const parts = text.split(/(\*\*.*?\*\*|__.*?__)/g);
+function parseFormattedText(text: string, role: "user" | "assistant") {
+  // Regex to match markdown links [label](url) or bold **text**
+  const regex = /(\[.*?\]\(.*?\)|\*\*.*?\*\*|__.*?__)/g;
+  const parts = text.split(regex);
+
   return parts.map((part, i) => {
+    if (part.startsWith("[") && part.includes("](")) {
+      const match = part.match(/^\[(.*?)\]\((.*?)\)$/);
+      if (match) {
+        const [, label, url] = match;
+        const isExternal = url.startsWith("http");
+        return (
+          <a
+            key={i}
+            href={url}
+            target={isExternal ? "_blank" : undefined}
+            rel={isExternal ? "noopener noreferrer" : undefined}
+            className="underline font-semibold transition-opacity hover:opacity-80"
+            style={{ color: role === "user" ? "#FFFFFF" : "#0E447F" }}
+          >
+            {label}
+          </a>
+        );
+      }
+    }
     if ((part.startsWith("**") && part.endsWith("**")) || (part.startsWith("__") && part.endsWith("__"))) {
       const content = part.slice(2, -2);
       return (
