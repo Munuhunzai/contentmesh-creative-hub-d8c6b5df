@@ -164,8 +164,7 @@ export function Hero() {
 
   return (
     <section
-      className="relative w-full overflow-hidden"
-      style={{ height: "100dvh" }}
+      className="relative w-full overflow-hidden h-[72vh] min-h-[480px] sm:h-[100dvh]"
       aria-label="Hero"
     >
       {/* ── Static background (image upload or gradient fallback) ── */}
@@ -227,7 +226,7 @@ export function Hero() {
       </button>
 
       {/* ── Content — bottom-left ─────────────────────────────── */}
-      <div className="absolute bottom-20 inset-x-6 z-10 sm:left-14 sm:right-auto sm:bottom-24 sm:max-w-lg lg:max-w-2xl">
+      <div className="absolute bottom-10 inset-x-6 z-10 sm:left-14 sm:right-auto sm:bottom-24 sm:max-w-lg lg:max-w-2xl">
         {/* Title — changes per slide */}
         <AnimatePresence mode="wait">
           <motion.h1
