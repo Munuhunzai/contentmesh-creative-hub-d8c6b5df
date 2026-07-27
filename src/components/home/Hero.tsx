@@ -57,7 +57,7 @@ function extractYouTubeId(url: string): string | null {
   return null;
 }
 
-// ─── YouTube background iframe (muted autoplay, covers full container) ────────
+// ─── YouTube background iframe (muted autoplay) ─────────────────────────────
 
 function YouTubeBackground({ videoId, active }: { videoId: string; active: boolean }) {
   return (
@@ -66,27 +66,9 @@ function YouTubeBackground({ videoId, active }: { videoId: string; active: boole
       aria-hidden
       style={{ opacity: active ? 1 : 0, transition: "opacity 1s ease" }}
     >
-      {/*
-        Cover approach that works in all orientations:
-        - Set iframe to 100% × 100% of the container
-        - Use a wrapper that is sized to the 16:9 ratio and then scaled up
-          so it always covers the full viewport — portrait or landscape.
-      */}
       <div
-        style={{
-          position: "absolute",
-          /* 16:9 box anchored to the center */
-          top: "50%",
-          left: "50%",
-          /* At least as wide as the viewport, and tall enough for portrait screens.
-             We take the larger of: 100vw OR (100vh × 16/9).
-             Then we add a small overshoot buffer (× 1.05) to hide the thin black
-             letterbox YouTube sometimes shows on very tall phones.            */
-          width: "max(100vw, calc(100vh * 16 / 9))",
-          height: "max(100vh, calc(100vw * 9 / 16))",
-          transform: "translate(-50%, -50%) scale(1.06)",
-          transformOrigin: "center center",
-        }}
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[100vw] h-[56.25vw] min-h-full min-w-full sm:w-[max(100vw,calc(100vh*16/9))] sm:h-[max(100vh,calc(100vw*9/16))] sm:scale-[1.04]"
+        style={{ transformOrigin: "center center" }}
       >
         <iframe
           key={videoId}
@@ -164,7 +146,7 @@ export function Hero() {
 
   return (
     <section
-      className="relative w-full overflow-hidden h-[72vh] min-h-[480px] sm:h-[100dvh]"
+      className="relative w-full overflow-hidden aspect-[16/9] min-h-[340px] max-h-[65vh] sm:aspect-none sm:max-h-none sm:h-[100dvh]"
       aria-label="Hero"
     >
       {/* ── Static background (image upload or gradient fallback) ── */}
@@ -187,7 +169,6 @@ export function Hero() {
       </AnimatePresence>
 
       {/* ── YouTube background video (muted, autoplay, looping) ── */}
-      {/* We keep all slide iframes mounted so they buffer; only active one is visible */}
       {slides.map((s, i) => {
         const id = s.youtubeUrl ? extractYouTubeId(s.youtubeUrl) : null;
         if (!id) return null;
@@ -201,8 +182,8 @@ export function Hero() {
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            "linear-gradient(to right, rgba(0,0,0,0.80) 0%, rgba(0,0,0,0.40) 55%, rgba(0,0,0,0.15) 100%), " +
-            "linear-gradient(to top, rgba(0,0,0,0.70) 0%, transparent 55%)",
+            "linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.45) 55%, rgba(0,0,0,0.15) 100%), " +
+            "linear-gradient(to top, rgba(0,0,0,0.80) 0%, transparent 60%)",
         }}
       />
 
@@ -211,55 +192,55 @@ export function Hero() {
       <button
         onClick={prev}
         aria-label="Previous slide"
-        className="absolute left-3 top-1/2 z-20 -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-black/30 text-white backdrop-blur-sm transition hover:bg-white/20 sm:left-5"
+        className="absolute left-2.5 top-1/2 z-20 -translate-y-1/2 flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-full border border-white/20 bg-black/30 text-white backdrop-blur-sm transition hover:bg-white/20 sm:left-5"
       >
-        <ChevronLeft className="h-5 w-5" />
+        <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
       </button>
 
       {/* ── Arrow — next ──────────────────────────────────────── */}
       <button
         onClick={next}
         aria-label="Next slide"
-        className="absolute right-3 top-1/2 z-20 -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-black/30 text-white backdrop-blur-sm transition hover:bg-white/20 sm:right-5"
+        className="absolute right-2.5 top-1/2 z-20 -translate-y-1/2 flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-full border border-white/20 bg-black/30 text-white backdrop-blur-sm transition hover:bg-white/20 sm:right-5"
       >
-        <ChevronRight className="h-5 w-5" />
+        <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
       </button>
 
       {/* ── Content — bottom-left ─────────────────────────────── */}
-      <div className="absolute bottom-10 inset-x-6 z-10 sm:left-14 sm:right-auto sm:bottom-24 sm:max-w-lg lg:max-w-2xl">
+      <div className="absolute bottom-4 left-4 right-4 z-10 sm:left-14 sm:right-auto sm:bottom-24 sm:max-w-lg lg:max-w-2xl">
         {/* Title — changes per slide */}
         <AnimatePresence mode="wait">
           <motion.h1
             key={`title-${current}`}
-            initial={{ opacity: 0, y: 24 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -16 }}
-            transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-            className="font-display font-black uppercase leading-[0.92] tracking-tight text-white"
-            style={{ fontSize: "clamp(2.4rem, 5vw + 1rem, 4.8rem)" }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+            className="font-display font-black uppercase leading-[0.95] tracking-tight text-white"
+            style={{ fontSize: "clamp(1.3rem, 3.8vw + 0.4rem, 4.8rem)" }}
           >
             {slide.title ?? "CREATIVE PRODUCTION REIMAGINED."}
           </motion.h1>
         </AnimatePresence>
 
-        {/* Description — same for every slide, no animation needed */}
-        <p className="mt-4 text-sm leading-relaxed text-white/70 sm:text-base max-w-md">
+        {/* Description — compact text sizing on mobile */}
+        <p className="mt-2 text-[11px] leading-snug text-white/80 sm:text-base sm:mt-4 max-w-xs sm:max-w-md line-clamp-2 sm:line-clamp-none">
           {description}
         </p>
 
-        {/* CTAs — same for every slide */}
-        <div className="mt-7 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
+        {/* CTAs — compact buttons on mobile */}
+        <div className="mt-3 sm:mt-7 flex flex-row items-center gap-2 w-full sm:w-auto">
           <Link
             to="/portfolio"
-            className="group inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-full border border-white/30 bg-white/10 px-5 py-3 text-[11px] font-bold uppercase tracking-[0.16em] text-white backdrop-blur-sm transition hover:bg-white/20 text-center"
+            className="group flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 rounded-full border border-white/30 bg-white/10 px-3.5 py-2 sm:px-5 sm:py-3 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.12em] text-white backdrop-blur-sm transition hover:bg-white/20 text-center"
           >
             View Portfolio{" "}
-            <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+            <ArrowRight className="h-3 w-3 sm:h-3.5 sm:w-3.5 transition-transform group-hover:translate-x-0.5" />
           </Link>
           <Link
             to="/contact"
-            className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-full bg-orange-500 px-5 py-3 text-[11px] font-bold uppercase tracking-[0.16em] text-white transition hover:bg-orange-600 text-center"
-            style={{ boxShadow: "0 0 24px rgba(255,90,31,0.45)" }}
+            className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 rounded-full bg-orange-500 px-3.5 py-2 sm:px-5 sm:py-3 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.12em] text-white transition hover:bg-orange-600 text-center"
+            style={{ boxShadow: "0 0 20px rgba(255,90,31,0.45)" }}
           >
             Book an Order
           </Link>
