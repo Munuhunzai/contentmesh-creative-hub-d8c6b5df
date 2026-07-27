@@ -13,18 +13,18 @@ type ServiceDoc = {
 };
 
 const FALLBACK: ServiceDoc[] = [
-  { _id: "1",  title: "AI Video Production",     icon: "Video",       shortDescription: "From script to screen — cinematic AI-generated videos ready to publish." },
-  { _id: "2",  title: "AI Animation",             icon: "Wand2",       shortDescription: "Character, product and motion animation powered by the latest models." },
-  { _id: "3",  title: "Professional Voiceovers",  icon: "Mic",         shortDescription: "Studio-grade AI voice with human polish, in 40+ languages." },
-  { _id: "4",  title: "Video Editing",            icon: "Film",        shortDescription: "Fast, precise edits with color grading, sound design, and pacing." },
-  { _id: "5",  title: "Motion Graphics",          icon: "Sparkles",    shortDescription: "Brand-driven kinetic typography, transitions and explainer visuals." },
-  { _id: "6",  title: "Commercial Ads",           icon: "Megaphone",   shortDescription: "High-converting spots for Meta, YouTube, TikTok, and CTV." },
-  { _id: "7",  title: "Social Media Content",     icon: "Share2",      shortDescription: "Scroll-stopping reels, shorts and vertical-native storytelling." },
-  { _id: "8",  title: "In-house Production",      icon: "Building2",   shortDescription: "Studio, lighting, camera and crew — end-to-end capability." },
-  { _id: "9",  title: "Corporate Explainers",     icon: "PlayCircle",  shortDescription: "Clear, elegant explainers that make complex ideas land." },
-  { _id: "10", title: "YouTube Automation",       icon: "Youtube",     shortDescription: "Full-stack channels: research, script, voice, edit, thumbnail." },
-  { _id: "11", title: "Brand Storytelling",       icon: "BookOpen",    shortDescription: "Documentary-style narratives that make your brand unforgettable." },
-  { _id: "12", title: "AI Content Strategy",      icon: "Brain",       shortDescription: "A creative roadmap tuned to your goals, funnel and audience." },
+  { _id: "1",  title: "AI Video Production Services", icon: "Video",       shortDescription: "Full-stack AI video creation, generation, and script-to-screen production services." },
+  { _id: "2",  title: "AI Animation & 3D Visuals",     icon: "Wand2",       shortDescription: "Cinema-grade character, product, and motion animation by our AI video animation company." },
+  { _id: "3",  title: "AI Voiceovers & Dubbing",      icon: "Mic",         shortDescription: "Multilingual AI voice cloning, dubbing, and video translation services in 40+ languages." },
+  { _id: "4",  title: "UGC Video Editing Services",   icon: "Film",        shortDescription: "High-converting UGC video ad editing for marketing agencies, Meta, TikTok & YouTube." },
+  { _id: "5",  title: "AI Avatar Creation Services",  icon: "Sparkles",    shortDescription: "Custom AI presenter avatars for company onboarding, training videos, and customer service." },
+  { _id: "6",  title: "AI Video Advertising Services",icon: "Megaphone",   shortDescription: "High-impact commercial AI video ads, performance creative, and CTV campaign spots." },
+  { _id: "7",  title: "Social Media Video Agency",    icon: "Share2",      shortDescription: "Scroll-stopping reels, shorts, and vertical-native AI video marketing content." },
+  { _id: "8",  title: "In-House Studio Production",   icon: "Building2",   shortDescription: "In-house stage, camera crew, edit bays, and AI hybrid production capabilities." },
+  { _id: "9",  title: "Corporate AI Explainers",      icon: "PlayCircle",  shortDescription: "Clear, elegant explainer videos for SaaS, finance, and enterprise compliance." },
+  { _id: "10", title: "YouTube Channel Automation",   icon: "Youtube",     shortDescription: "Full-stack channel management: research, scriptwriting, AI voice, video edit & thumbnails." },
+  { _id: "11", title: "Brand Storytelling & Ads",     icon: "BookOpen",    shortDescription: "Documentary-style narratives and brand films engineered for maximum emotional resonance." },
+  { _id: "12", title: "AI Video Content Strategy",    icon: "Brain",       shortDescription: "Data-driven creative roadmaps tuned to your marketing funnel, audience & revenue goals." },
 ];
 
 // Gradient pairs per card — alternating dark/light, cinematic feel matching the reference
