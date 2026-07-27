@@ -1,17 +1,17 @@
 import { Link } from "@tanstack/react-router";
-import { Instagram, Linkedin, Twitter, Youtube, Send } from "lucide-react";
+import { Instagram, Linkedin, Facebook, Youtube, Send } from "lucide-react";
 import { Logo } from "@/components/brand/Logo";
 import { useSanity } from "@/integrations/sanity/useSanity";
 import { siteSettingsQuery } from "@/integrations/sanity/queries";
 
 type Settings = {
   tagline?: string;
-  socials?: { instagram?: string; linkedin?: string; twitter?: string; youtube?: string };
+  socials?: { instagram?: string; linkedin?: string; facebook?: string; twitter?: string; youtube?: string };
 };
 
 const FALLBACK: Settings = {
   tagline: "An AI-powered creative studio helping brands ship cinematic content — faster, sharper, on-message.",
-  socials: { instagram: "#", linkedin: "#", twitter: "#", youtube: "#" },
+  socials: { instagram: "#", linkedin: "#", facebook: "#", youtube: "#" },
 };
 
 export function Footer() {
@@ -21,7 +21,7 @@ export function Footer() {
   const socials: [React.ComponentType<{ className?: string }>, string, string][] = [
     [Instagram, "Instagram", s.socials?.instagram ?? "#"],
     [Linkedin, "LinkedIn", s.socials?.linkedin ?? "#"],
-    [Twitter, "Twitter", s.socials?.twitter ?? "#"],
+    [Facebook, "Facebook", s.socials?.facebook ?? s.socials?.twitter ?? "#"],
     [Youtube, "YouTube", s.socials?.youtube ?? "#"],
   ];
 
