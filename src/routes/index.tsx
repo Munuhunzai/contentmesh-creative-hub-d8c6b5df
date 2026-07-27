@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { Hero } from "@/components/home/Hero";
-import { TrustedBy } from "@/components/home/TrustedBy";
 import { Services } from "@/components/home/Services";
 import { WhyUs } from "@/components/home/WhyUs";
 import { Portfolio } from "@/components/home/Portfolio";
@@ -64,7 +63,6 @@ export const Route = createFileRoute("/")({
 function Index() {
   return (
     <SiteLayout heroSlot={<Hero />}>
-      <TrustedBy />
       <Services />
       <WhyUs />
       <Portfolio />
