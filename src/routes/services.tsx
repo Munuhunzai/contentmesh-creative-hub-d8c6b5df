@@ -9,13 +9,50 @@ import { PageHero } from "@/components/layout/PageHero";
 export const Route = createFileRoute("/services")({
   head: () => ({
     meta: [
-      { title: "Services — ContentMesh AI Creative Studio" },
-      { name: "description", content: "AI video production, animation, voiceovers, motion graphics, and in-house production. Explore ContentMesh's full creative capability." },
-      { property: "og:title", content: "Services — ContentMesh" },
-      { property: "og:description", content: "AI video, animation, voiceovers, and cinematic marketing content." },
-      { property: "og:url", content: "/services" },
+      { title: "AI Video Production Services & AI Animation Agency | ContentMesh" },
+      {
+        name: "description",
+        content:
+          "Explore full-stack AI video production services: commercial AI video ads, custom AI animation, studio-grade AI voiceovers, AI avatar creation, and motion graphics for modern brands.",
+      },
+      {
+        name: "keywords",
+        content:
+          "ai video production service, ai video advertising services, ai video avatar service, ai video animation company, ai video content agency, ai video editing services",
+      },
+      { property: "og:title", content: "AI Video Production Services & AI Animation Agency | ContentMesh" },
+      {
+        property: "og:description",
+        content: "Explore full-stack AI video production services, commercial ads, AI animation, and voiceovers.",
+      },
+      { property: "og:url", content: "https://contentmesh.ai/services" },
     ],
-    links: [{ rel: "canonical", href: "/services" }],
+    links: [{ rel: "canonical", href: "https://contentmesh.ai/services" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Service",
+          serviceType: "AI Video Production Service",
+          provider: {
+            "@type": "Organization",
+            name: "ContentMesh Studio",
+          },
+          areaServed: "Worldwide",
+          hasOfferCatalog: {
+            "@type": "OfferCatalog",
+            name: "AI Video Services",
+            itemListElement: [
+              { "@type": "Offer", itemOffered: { "@type": "Service", name: "AI Commercial Video Production" } },
+              { "@type": "Offer", itemOffered: { "@type": "Service", name: "AI Character & 3D Animation" } },
+              { "@type": "Offer", itemOffered: { "@type": "Service", name: "AI Voiceovers & Language Localization" } },
+              { "@type": "Offer", itemOffered: { "@type": "Service", name: "UGC Video Editing & Motion Graphics" } },
+            ],
+          },
+        }),
+      },
+    ],
   }),
   component: ServicesPage,
 });
@@ -23,7 +60,11 @@ export const Route = createFileRoute("/services")({
 function ServicesPage() {
   return (
     <SiteLayout>
-      <PageHero eyebrow="Services" title="Every creative capability. One studio." desc="From concept to master files, we handle the full production pipeline — powered by the latest AI tools and led by senior creatives." />
+      <PageHero
+        eyebrow="AI Video Production Services"
+        title="Full-Stack AI Video Production & Animation Services"
+        desc="From AI video ads and avatar creation to commercial editing and motion graphics, we provide end-to-end creative video production services."
+      />
       <Services />
       <WhyUs />
       <Process />

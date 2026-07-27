@@ -11,13 +11,25 @@ import { contactQuery } from "@/integrations/sanity/queries";
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
-      { title: "Contact — ContentMesh" },
-      { name: "description", content: "Book a discovery call or send us a project brief. We reply within one business day." },
-      { property: "og:title", content: "Contact — ContentMesh" },
-      { property: "og:description", content: "Book a discovery call with ContentMesh." },
-      { property: "og:url", content: "/contact" },
+      { title: "Contact ContentMesh | Book an AI Video Production Project" },
+      {
+        name: "description",
+        content:
+          "Get in touch with our AI video production agency. Book a discovery call, request a custom quote, or place an order for AI video creation services.",
+      },
+      {
+        name: "keywords",
+        content:
+          "contact ai video production agency, book ai video project, request ai video quote, hire ai video company",
+      },
+      { property: "og:title", content: "Contact ContentMesh | Book an AI Video Production Project" },
+      {
+        property: "og:description",
+        content: "Book a discovery call or place an order with ContentMesh AI Video Production Studio.",
+      },
+      { property: "og:url", content: "https://contentmesh.ai/contact" },
     ],
-    links: [{ rel: "canonical", href: "/contact" }],
+    links: [{ rel: "canonical", href: "https://contentmesh.ai/contact" }],
   }),
   component: Contact,
 });

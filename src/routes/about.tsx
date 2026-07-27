@@ -11,13 +11,25 @@ import { teamQuery } from "@/integrations/sanity/queries";
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
-      { title: "About — ContentMesh" },
-      { name: "description", content: "ContentMesh is an AI-powered creative studio combining senior craft with cutting-edge production tools." },
-      { property: "og:title", content: "About — ContentMesh" },
-      { property: "og:description", content: "The team, mission and studio behind ContentMesh." },
-      { property: "og:url", content: "/about" },
+      { title: "About ContentMesh | Leading AI Video Production Company" },
+      {
+        name: "description",
+        content:
+          "Learn about ContentMesh — a premier AI video creation company blending generative AI models with senior post-production craft for commercial ads, animation, and brand storytelling.",
+      },
+      {
+        name: "keywords",
+        content:
+          "ai video production company, ai video creation company, ai video company, ai video animation company, about contentmesh",
+      },
+      { property: "og:title", content: "About ContentMesh | Leading AI Video Production Company" },
+      {
+        property: "og:description",
+        content: "The team, mission and studio behind ContentMesh — pioneering the future of AI video production.",
+      },
+      { property: "og:url", content: "https://contentmesh.ai/about" },
     ],
-    links: [{ rel: "canonical", href: "/about" }],
+    links: [{ rel: "canonical", href: "https://contentmesh.ai/about" }],
   }),
   component: About,
 });
