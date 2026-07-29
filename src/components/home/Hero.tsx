@@ -67,7 +67,7 @@ function YouTubeBackground({ videoId, active }: { videoId: string; active: boole
       style={{ opacity: active ? 1 : 0, transition: "opacity 1s ease" }}
     >
       <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[100vw] h-[56.25vw] min-h-full min-w-full scale-[1.28] sm:scale-[1.04] sm:w-[max(100vw,calc(100vh*16/9))] sm:h-[max(100vh,calc(100vw*9/16))]"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[max(140vw,calc(140vh*16/9))] h-[max(140vh,calc(140vw*9/16))] scale-[1.15]"
         style={{ transformOrigin: "center center" }}
       >
         <iframe
