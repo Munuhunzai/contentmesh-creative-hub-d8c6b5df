@@ -67,7 +67,7 @@ function YouTubeBackground({ videoId, active }: { videoId: string; active: boole
       style={{ opacity: active ? 1 : 0, transition: "opacity 1s ease" }}
     >
       <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[100vw] h-[56.25vw] min-h-full min-w-full sm:w-[max(100vw,calc(100vh*16/9))] sm:h-[max(100vh,calc(100vw*9/16))] sm:scale-[1.04]"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[max(120vw,calc(120vh*16/9))] h-[max(120vh,calc(120vw*9/16))] scale-[1.28] sm:scale-[1.12]"
         style={{ transformOrigin: "center center" }}
       >
         <iframe
@@ -77,7 +77,7 @@ function YouTubeBackground({ videoId, active }: { videoId: string; active: boole
             `https://www.youtube-nocookie.com/embed/${videoId}` +
             `?autoplay=1&mute=1&loop=1&playlist=${videoId}` +
             `&controls=0&showinfo=0&rel=0&modestbranding=1` +
-            `&iv_load_policy=3&disablekb=1&fs=0`
+            `&iv_load_policy=3&disablekb=1&fs=0&playsinline=1`
           }
           allow="autoplay; encrypted-media"
           allowFullScreen={false}
@@ -146,7 +146,7 @@ export function Hero() {
 
   return (
     <section
-      className="relative w-full overflow-hidden aspect-[16/9] min-h-[340px] max-h-[65vh] sm:aspect-none sm:max-h-none sm:h-[100dvh]"
+      className="relative w-full overflow-hidden h-[78vh] min-h-[480px] sm:h-[100dvh]"
       aria-label="Hero"
     >
       {/* ── Static background (image upload or gradient fallback) ── */}
@@ -207,7 +207,7 @@ export function Hero() {
       </button>
 
       {/* ── Content — bottom-left ─────────────────────────────── */}
-      <div className="absolute bottom-4 left-4 right-4 z-10 sm:left-14 sm:right-auto sm:bottom-24 sm:max-w-lg lg:max-w-2xl">
+      <div className="absolute bottom-8 left-4 right-4 z-10 sm:left-14 sm:right-auto sm:bottom-24 sm:max-w-lg lg:max-w-2xl">
         {/* Title — changes per slide */}
         <AnimatePresence mode="wait">
           <motion.h1
