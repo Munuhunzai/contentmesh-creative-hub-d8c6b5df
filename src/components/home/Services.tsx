@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X,
@@ -270,8 +270,13 @@ const SERVICES_DATA: ServiceItem[] = [
   },
 ];
 
-// Duplicate items array to create seamless infinite loop
-const LOOP_SERVICES = [...SERVICES_DATA, ...SERVICES_DATA];
+// Quadruple items array to ensure infinite smooth seamless looping
+const LOOP_SERVICES = [
+  ...SERVICES_DATA,
+  ...SERVICES_DATA,
+  ...SERVICES_DATA,
+  ...SERVICES_DATA,
+];
 
 export function SectionHeader({
   eyebrow,
@@ -304,7 +309,42 @@ export function SectionHeader({
 export function Services() {
   const sanityServices = useSanity<any[]>(["sanity", "services"], servicesQuery, []);
   const [selectedService, setSelectedService] = useState<ServiceItem | null>(null);
-  const [isPaused, setIsPaused] = useState(false);
+
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const isInteractingRef = useRef(false);
+  const resumeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // ── Auto-Loop Animation + Seamless Wrap-Around Handler ──────────────────────
+  useEffect(() => {
+    let animId: number;
+
+    const autoScroll = () => {
+      if (scrollRef.current && !isInteractingRef.current) {
+        scrollRef.current.scrollLeft += 0.8; // Smooth auto-slide step
+
+        const halfWidth = scrollRef.current.scrollWidth / 2;
+        if (scrollRef.current.scrollLeft >= halfWidth) {
+          scrollRef.current.scrollLeft -= halfWidth / 2;
+        }
+      }
+      animId = requestAnimationFrame(autoScroll);
+    };
+
+    animId = requestAnimationFrame(autoScroll);
+    return () => cancelAnimationFrame(animId);
+  }, []);
+
+  const handleUserInteractionStart = () => {
+    isInteractingRef.current = true;
+    if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
+  };
+
+  const handleUserInteractionEnd = () => {
+    if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
+    resumeTimeoutRef.current = setTimeout(() => {
+      isInteractingRef.current = false;
+    }, 2500); // Resumes auto-loop after 2.5s of no manual interaction
+  };
 
   return (
     <section className="relative py-24 sm:py-32 overflow-hidden" id="services">
@@ -317,70 +357,68 @@ export function Services() {
         />
       </div>
 
-      {/* ── Continuous Infinite Looping Circular Cards Slider ───────────────── */}
+      {/* ── Dual Mode: Auto-Looping + 100% Full Manual Touch/Mouse Drag Scroll ─ */}
       <div
-        className="mt-14 overflow-hidden select-none py-6"
-        onMouseEnter={() => setIsPaused(true)}
-        onMouseLeave={() => setIsPaused(false)}
-        onTouchStart={() => setIsPaused(true)}
-        onTouchEnd={() => setIsPaused(false)}
+        ref={scrollRef}
+        onMouseDown={handleUserInteractionStart}
+        onMouseUp={handleUserInteractionEnd}
+        onTouchStart={handleUserInteractionStart}
+        onTouchEnd={handleUserInteractionEnd}
+        onScroll={() => {
+          if (scrollRef.current) {
+            const halfWidth = scrollRef.current.scrollWidth / 2;
+            if (scrollRef.current.scrollLeft >= halfWidth) {
+              scrollRef.current.scrollLeft -= halfWidth / 2;
+            } else if (scrollRef.current.scrollLeft <= 0) {
+              scrollRef.current.scrollLeft += halfWidth / 2;
+            }
+          }
+        }}
+        className="no-scrollbar mt-14 flex items-center gap-8 overflow-x-auto py-6 px-4 select-none cursor-grab active:cursor-grabbing w-full scroll-smooth"
       >
-        <motion.div
-          animate={{ x: isPaused ? undefined : ["0%", "-50%"] }}
-          transition={{
-            x: {
-              repeat: Infinity,
-              repeatType: "loop",
-              duration: 35,
-              ease: "linear",
-            },
-          }}
-          className="flex items-center gap-8 w-max px-4"
-        >
-          {LOOP_SERVICES.map((item, idx) => {
-            const Icon = item.iconComponent;
-            return (
-              <motion.div
-                key={`${item._id}-${idx}`}
-                whileHover={{ scale: 1.1, y: -6 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setSelectedService(item)}
-                className="group flex flex-col items-center shrink-0 cursor-pointer text-center"
-                style={{ width: "140px" }}
+        {LOOP_SERVICES.map((item, idx) => {
+          const Icon = item.iconComponent;
+          return (
+            <motion.div
+              key={`${item._id}-${idx}`}
+              whileHover={{ scale: 1.08, y: -6 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setSelectedService(item)}
+              className="group flex flex-col items-center shrink-0 cursor-pointer text-center"
+              style={{ width: "140px" }}
+            >
+              {/* Vibrant Circular Card Badge */}
+              <div
+                className="relative flex h-32 w-32 items-center justify-center rounded-full shadow-lg transition-all duration-300 group-hover:shadow-2xl overflow-hidden"
+                style={{
+                  backgroundColor: item.color,
+                  boxShadow: `0 16px 32px -8px ${item.color}88`,
+                }}
               >
-                {/* Vibrant Circular Card Badge */}
-                <div
-                  className="relative flex h-32 w-32 items-center justify-center rounded-full shadow-lg transition-all duration-300 group-hover:shadow-2xl overflow-hidden"
-                  style={{
-                    backgroundColor: item.color,
-                    boxShadow: `0 16px 32px -8px ${item.color}88`,
-                  }}
-                >
-                  {/* Custom 3D Icon Image or Fallback Icon */}
-                  {item.iconImg ? (
-                    <img
-                      src={item.iconImg}
-                      alt={item.title}
-                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
-                    />
-                  ) : (
-                    <div className="flex h-full w-full items-center justify-center bg-black/10 text-black">
-                      <Icon className="h-12 w-12 drop-shadow-md" />
-                    </div>
-                  )}
+                {/* Custom 3D Icon Image or Fallback Icon */}
+                {item.iconImg ? (
+                  <img
+                    src={item.iconImg}
+                    alt={item.title}
+                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+                  />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center bg-black/10 text-black">
+                    <Icon className="h-12 w-12 drop-shadow-md" />
+                  </div>
+                )}
 
-                  {/* Hover ring pulse */}
-                  <div className="absolute inset-0 rounded-full border-2 border-white/50 opacity-0 transition-opacity group-hover:opacity-100" />
-                </div>
+                {/* Hover ring pulse */}
+                <div className="absolute inset-0 rounded-full border-2 border-white/50 opacity-0 transition-opacity group-hover:opacity-100" />
+              </div>
 
-                {/* Service Category Title */}
-                <span className="mt-4 font-display text-sm font-bold tracking-tight text-foreground transition-colors group-hover:text-[#FF5A1F]">
-                  {item.title}
-                </span>
-              </motion.div>
-            );
-          })}
-        </motion.div>
+              {/* Service Category Title */}
+              <span className="mt-4 font-display text-sm font-bold tracking-tight text-foreground transition-colors group-hover:text-[#FF5A1F]">
+                {item.title}
+              </span>
+            </motion.div>
+          );
+        })}
       </div>
 
       {/* ── On-Click Service Details Modal / Drawer ─────────────────────────── */}
