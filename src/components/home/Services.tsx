@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X,
@@ -270,6 +270,9 @@ const SERVICES_DATA: ServiceItem[] = [
   },
 ];
 
+// Duplicate items array to create seamless infinite loop
+const LOOP_SERVICES = [...SERVICES_DATA, ...SERVICES_DATA];
+
 export function SectionHeader({
   eyebrow,
   title,
@@ -301,9 +304,10 @@ export function SectionHeader({
 export function Services() {
   const sanityServices = useSanity<any[]>(["sanity", "services"], servicesQuery, []);
   const [selectedService, setSelectedService] = useState<ServiceItem | null>(null);
+  const [isPaused, setIsPaused] = useState(false);
 
   return (
-    <section className="relative py-24 sm:py-32" id="services">
+    <section className="relative py-24 sm:py-32 overflow-hidden" id="services">
       <div className="mx-auto max-w-7xl px-6">
         {/* ── Centered Section Header ─────────────────────────────────────────── */}
         <SectionHeader
@@ -311,15 +315,34 @@ export function Services() {
           title="Categories & Capabilities"
           desc="Slide through our core services below. Click any category to inspect deliverables and book."
         />
+      </div>
 
-        {/* ── Centered Horizontal Scrollable Circular Cards Slider ─────────── */}
-        <div className="no-scrollbar mt-14 flex items-center justify-start md:justify-center gap-8 overflow-x-auto scroll-smooth py-6 px-2 select-none w-full">
-          {SERVICES_DATA.map((item) => {
+      {/* ── Continuous Infinite Looping Circular Cards Slider ───────────────── */}
+      <div
+        className="mt-14 overflow-hidden select-none py-6"
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
+        onTouchStart={() => setIsPaused(true)}
+        onTouchEnd={() => setIsPaused(false)}
+      >
+        <motion.div
+          animate={{ x: isPaused ? undefined : ["0%", "-50%"] }}
+          transition={{
+            x: {
+              repeat: Infinity,
+              repeatType: "loop",
+              duration: 35,
+              ease: "linear",
+            },
+          }}
+          className="flex items-center gap-8 w-max px-4"
+        >
+          {LOOP_SERVICES.map((item, idx) => {
             const Icon = item.iconComponent;
             return (
               <motion.div
-                key={item._id}
-                whileHover={{ scale: 1.08, y: -6 }}
+                key={`${item._id}-${idx}`}
+                whileHover={{ scale: 1.1, y: -6 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setSelectedService(item)}
                 className="group flex flex-col items-center shrink-0 cursor-pointer text-center"
@@ -327,7 +350,7 @@ export function Services() {
               >
                 {/* Vibrant Circular Card Badge */}
                 <div
-                  className="relative flex h-32 w-32 items-center justify-center rounded-full shadow-lg transition-shadow duration-300 group-hover:shadow-2xl overflow-hidden"
+                  className="relative flex h-32 w-32 items-center justify-center rounded-full shadow-lg transition-all duration-300 group-hover:shadow-2xl overflow-hidden"
                   style={{
                     backgroundColor: item.color,
                     boxShadow: `0 16px 32px -8px ${item.color}88`,
@@ -347,7 +370,7 @@ export function Services() {
                   )}
 
                   {/* Hover ring pulse */}
-                  <div className="absolute inset-0 rounded-full border-2 border-white/40 opacity-0 transition-opacity group-hover:opacity-100" />
+                  <div className="absolute inset-0 rounded-full border-2 border-white/50 opacity-0 transition-opacity group-hover:opacity-100" />
                 </div>
 
                 {/* Service Category Title */}
@@ -357,7 +380,7 @@ export function Services() {
               </motion.div>
             );
           })}
-        </div>
+        </motion.div>
       </div>
 
       {/* ── On-Click Service Details Modal / Drawer ─────────────────────────── */}
