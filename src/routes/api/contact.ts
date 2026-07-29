@@ -23,6 +23,7 @@ async function handlePost({ request }: { request: Request }) {
       process.env.VITE_RESEND_API_KEY ||
       (import.meta as any).env?.RESEND_API_KEY ||
       (import.meta as any).env?.VITE_RESEND_API_KEY;
+
     if (!apiKey) {
       return Response.json({ error: "Email service is not configured." }, { status: 503 });
     }
@@ -46,8 +47,7 @@ async function handlePost({ request }: { request: Request }) {
 
     const { name, email, company, service, budget, details, contactEmail } = parsed.data;
 
-    // Dynamically determine notification recipients:
-    // Uses the contact email from Sanity/contact info page, process.env, or fallback
+    // Dynamically determine target contact recipient
     const targetContactEmail =
       contactEmail && contactEmail.includes("@")
         ? contactEmail.trim()
@@ -59,9 +59,11 @@ async function handlePost({ request }: { request: Request }) {
 
     const resend = new Resend(apiKey);
 
-    const companyLine = company ? `<tr><td style="padding:6px 0;color:#6b7280;font-size:13px">Company</td><td style="padding:6px 0;font-size:13px;font-weight:600">${company}</td></tr>` : "";
+    const companyLine = company
+      ? `<tr><td style="padding:6px 0;color:#6b7280;font-size:13px">Company</td><td style="padding:6px 0;font-size:13px;font-weight:600">${company}</td></tr>`
+      : "";
 
-    // ── 1. Notification email to studio ──────────────────────────────────────
+    // ── 1. Notification email HTML ──────────────────────────────────────────
     const notifyHtml = `
 <!DOCTYPE html>
 <html>
@@ -95,8 +97,30 @@ async function handlePost({ request }: { request: Request }) {
 </body>
 </html>`;
 
-    // ── 2. Auto-reply to submitter ────────────────────────────────────────────
-    const autoReplyHtml = `
+    // Try sending notification to all target emails first
+    let notifyResult = await resend.emails.send({
+      from: FROM,
+      to: toList,
+      replyTo: email,
+      subject: `New enquiry from ${name} — ${service}`,
+      html: notifyHtml,
+    });
+
+    // If Resend fails (e.g. because of unverified domain restriction in onboarding mode), retry sending directly to verified owner email
+    if (notifyResult.error) {
+      console.warn("Primary email dispatch warning, retrying fallback:", notifyResult.error);
+      notifyResult = await resend.emails.send({
+        from: FROM,
+        to: [DEFAULT_TO],
+        replyTo: email,
+        subject: `New enquiry from ${name} — ${service}`,
+        html: notifyHtml,
+      });
+    }
+
+    // Try sending auto-reply to submitter (silently catch if Resend is in onboarding mode)
+    try {
+      const autoReplyHtml = `
 <!DOCTYPE html>
 <html>
 <head><meta charset="utf-8"></head>
@@ -120,30 +144,19 @@ async function handlePost({ request }: { request: Request }) {
 </body>
 </html>`;
 
-    const [notifyResult, autoReplyResult] = await Promise.all([
-      resend.emails.send({
-        from: FROM,
-        to: toList,
-        replyTo: email,
-        subject: `New enquiry from ${name} — ${service}`,
-        html: notifyHtml,
-      }),
-      resend.emails.send({
+      await resend.emails.send({
         from: FROM,
         to: [email],
         subject: "We received your message — ContentMesh",
         html: autoReplyHtml,
-      }),
-    ]);
-
-    if (notifyResult.error) {
-      console.error("Resend notify error:", notifyResult.error);
-      return Response.json({ error: "Failed to send email. Please try again." }, { status: 500 });
+      });
+    } catch {
+      /* ignore auto-reply errors in onboarding mode */
     }
 
-    if (autoReplyResult.error) {
-      // Log auto-reply warnings without blocking studio notification
-      console.warn("Resend auto-reply warning:", autoReplyResult.error);
+    if (notifyResult.error) {
+      console.error("Resend final notify error:", notifyResult.error);
+      return Response.json({ error: "Failed to send email. Please check configuration." }, { status: 500 });
     }
 
     return Response.json({ ok: true });
