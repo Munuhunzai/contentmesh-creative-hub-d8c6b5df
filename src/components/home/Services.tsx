@@ -1,376 +1,466 @@
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, ArrowRight, Layers, Zap } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  X,
+  CheckCircle2,
+  ArrowRight,
+  Sparkles,
+  Video,
+  Wand2,
+  Mic,
+  Film,
+  Megaphone,
+  Share2,
+  Building2,
+  PlayCircle,
+  Youtube,
+  BookOpen,
+  Brain,
+} from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { useSanity } from "@/integrations/sanity/useSanity";
 import { servicesQuery } from "@/integrations/sanity/queries";
-import { getIcon } from "@/lib/icon-map";
 
-export type ServiceDoc = {
+export type ServiceItem = {
   _id: string;
   title: string;
-  slug?: string;
-  icon?: string;
-  shortDescription?: string;
-  category?: string;
+  fullTitle: string;
+  category: string;
+  shortDescription: string;
+  fullDescription: string;
+  deliverables: string[];
+  color: string;
+  iconImg?: string;
+  iconComponent: React.ComponentType<{ className?: string }>;
 };
 
-const CATEGORIES = [
-  "All Capabilities",
-  "AI Video",
-  "Animation",
-  "Voice & Audio",
-  "Marketing & Ads",
-];
-
-const FALLBACK: ServiceDoc[] = [
+const SERVICES_DATA: ServiceItem[] = [
   {
     _id: "1",
-    title: "AI Video Production Services",
-    icon: "Video",
-    category: "AI Video",
+    title: "AI Video",
+    fullTitle: "AI Commercial Video Production Services",
+    category: "Production",
+    color: "#b4f07e", // Vibrant Lime Green
+    iconImg: "/services/ai-video.jpg",
+    iconComponent: Video,
     shortDescription:
-      "Full-stack AI video creation, generation, and script-to-screen commercial production services.",
+      "Full-stack AI video creation, generative visuals, and script-to-screen commercial production.",
+    fullDescription:
+      "We combine state-of-the-art generative AI models (Runway Gen-3, Luma, Sora-class) with senior human post-production to craft cinema-grade commercial ads and visual stories.",
+    deliverables: [
+      "Custom Scriptwriting & Storyboarding",
+      "Generative 4K Video Renderings",
+      "Professional Sound Design & Mix",
+      "Multi-cut Aspect Ratio Variations (16:9, 9:16, 1:1)",
+      "Full Commercial Distribution License",
+    ],
   },
   {
     _id: "2",
-    title: "AI Animation & 3D Visuals",
-    icon: "Wand2",
+    title: "AI Animation",
+    fullTitle: "AI Animation & 3D Motion Visuals",
     category: "Animation",
+    color: "#fca5d5", // Vibrant Pink
+    iconImg: "/services/ai-animation.jpg",
+    iconComponent: Wand2,
     shortDescription:
-      "Cinema-grade 2D/3D character, product, and motion animation powered by generative AI models.",
+      "Cinema-grade 2D/3D character animation, product concepts, and kinetic motion graphics.",
+    fullDescription:
+      "Bring complex visual ideas to life with high-fidelity 3D character animation, fluid motion graphics, and stylized generative visual effects.",
+    deliverables: [
+      "3D Character & Object Modeling",
+      "Fluid Camera Motion & Lighting",
+      "Kinetic Typography & Lower Thirds",
+      "Custom Brand Asset Integration",
+      "Broadcast Quality Master Export",
+    ],
   },
   {
     _id: "3",
-    title: "AI Voiceovers & Dubbing",
-    icon: "Mic",
+    title: "Voiceovers",
+    fullTitle: "Multilingual AI Voiceovers & Video Dubbing",
     category: "Voice & Audio",
+    color: "#fed766", // Bright Yellow
+    iconImg: "/services/voiceovers.jpg",
+    iconComponent: Mic,
     shortDescription:
-      "Multilingual AI voice cloning, audio dubbing, and video translation services in 40+ languages.",
+      "Studio-grade AI voice cloning, lip-syncing, and audio translation in 40+ global languages.",
+    fullDescription:
+      "Scale your brand internationally with emotion-tuned AI voiceovers, voice cloning, automatic lip-sync alignment, and native accent localization.",
+    deliverables: [
+      "Voice Cloning & Persona Calibration",
+      "Translation & Subtitle Alignment",
+      "40+ Languages & Dialect Variations",
+      "Mastered 24-bit Audio Tracks",
+      "Noise Reduction & Room Polish",
+    ],
   },
   {
     _id: "4",
-    title: "UGC Video Editing Services",
-    icon: "Film",
-    category: "Marketing & Ads",
+    title: "UGC Ads",
+    fullTitle: "UGC Video Editing & Performance Ads",
+    category: "Marketing",
+    color: "#7ef0e8", // Cyan / Aqua
+    iconImg: "/services/ugc-editing.jpg",
+    iconComponent: Film,
     shortDescription:
-      "High-converting UGC video ad editing for performance marketing agencies, Meta, TikTok & YouTube.",
+      "High-converting UGC video ad edits for performance marketing agencies on Meta & TikTok.",
+    fullDescription:
+      "Turn raw creator clips into high-converting performance ads. We optimize hooks, pacing, captions, overlay graphics, and call-to-actions.",
+    deliverables: [
+      "Scroll-Stopping 3-Second Hook Variations",
+      "Dynamic B-Roll & Text Overlays",
+      "Trending Audio & SFX Track Integration",
+      "Rapid A/B Test Cutdowns",
+      "Meta, TikTok & YouTube Shorts Native Formatting",
+    ],
   },
   {
     _id: "5",
-    title: "AI Avatar Creation Services",
-    icon: "Sparkles",
-    category: "AI Video",
+    title: "AI Avatars",
+    fullTitle: "Custom AI Presenter Avatars for Onboarding & Training",
+    category: "Avatars",
+    color: "#ffaa7e", // Warm Orange / Peach
+    iconImg: "/services/ai-avatar.jpg",
+    iconComponent: Sparkles,
     shortDescription:
-      "Custom AI presenter avatars for company onboarding, training videos, and self-service portals.",
+      "Custom AI avatars for company onboarding, internal training, and self-service helpdesk portals.",
+    fullDescription:
+      "Build hyper-realistic brand presenter avatars. Update corporate training videos, onboarding sequences, and support documentation in minutes without re-shooting.",
+    deliverables: [
+      "Custom Brand Presenter Avatar Creation",
+      "Photorealistic Voice & Gesture Sync",
+      "Onboarding & Training Video Templates",
+      "Instant Text-to-Video Script Updates",
+      "LMS & Portal Embed Integration",
+    ],
   },
   {
     _id: "6",
-    title: "AI Video Advertising Services",
-    icon: "Megaphone",
-    category: "Marketing & Ads",
+    title: "Commercial Ads",
+    fullTitle: "High-Impact Commercial Ads & CTV Campaigns",
+    category: "Advertising",
+    color: "#d8b4fe", // Purple / Violet
+    iconImg: "/services/commercial-ads.jpg",
+    iconComponent: Megaphone,
     shortDescription:
-      "High-impact commercial AI video ads, performance creative, and CTV campaign spots.",
+      "High-converting spots engineered for Meta, YouTube, TikTok, and Connected TV (CTV).",
+    fullDescription:
+      "End-to-end commercial ad creation built to capture attention and drive measurable revenue across paid social and broadcast channels.",
+    deliverables: [
+      "Direct Response & Brand Awareness Concepts",
+      "High-Impact Visual Editing & Color Grading",
+      "Licensed Commercial Soundtrack",
+      "Platform Compliance & Aspect Ratios",
+    ],
   },
   {
     _id: "7",
-    title: "Social Media Video Agency",
-    icon: "Share2",
-    category: "Marketing & Ads",
+    title: "Social Reels",
+    fullTitle: "Social Media Video Agency & Vertical Content",
+    category: "Marketing",
+    color: "#93c5fd", // Light Blue
+    iconComponent: Share2,
     shortDescription:
-      "Scroll-stopping reels, shorts, and vertical-native AI video marketing content for modern brands.",
+      "Scroll-stopping vertical-native video content designed for organic and paid growth.",
+    fullDescription:
+      "Consistent, high-quality short-form video production built specifically for Instagram Reels, TikTok, and YouTube Shorts.",
+    deliverables: [
+      "Monthly Content Calendar Production",
+      "Vertical-Native Storytelling",
+      "Engaging Subtitle Captions",
+      "Cross-Platform Distribution Formats",
+    ],
   },
   {
     _id: "8",
-    title: "In-House Studio Production",
-    icon: "Building2",
-    category: "AI Video",
+    title: "Explainers",
+    fullTitle: "Corporate Explainers & SaaS Product Demos",
+    category: "Production",
+    color: "#fde047", // Soft Gold
+    iconComponent: PlayCircle,
     shortDescription:
-      "In-house sound stage, camera crew, edit bays, and AI hybrid production capabilities.",
+      "Clear, elegant product explainers that turn complex technical concepts into sales.",
+    fullDescription:
+      "Showcase your software, SaaS, or enterprise service with slick UI animations, clear voiceover narration, and conversion-focused storytelling.",
+    deliverables: [
+      "App & Software Interface Animation",
+      "Technical Feature Breakdowns",
+      "Executive Pitch Video Edits",
+      "HD Master & Web Embed Formats",
+    ],
   },
   {
     _id: "9",
-    title: "Corporate AI Explainers",
-    icon: "PlayCircle",
-    category: "AI Video",
+    title: "Studio Stages",
+    fullTitle: "In-House Studio Stage & Hybrid Production",
+    category: "Production",
+    color: "#a7f3d0", // Mint Green
+    iconComponent: Building2,
     shortDescription:
-      "Clear, elegant explainer videos for SaaS, finance, enterprise compliance, and product drops.",
+      "In-house lighting stage, camera crew, edit bays, and AI hybrid production workflows.",
+    fullDescription:
+      "Combine live camera production with AI background extensions, visual effects, and post-production polish in our dedicated studio space.",
+    deliverables: [
+      "Live Filming & Studio Lighting Setup",
+      "4K Camera Crew & Direction",
+      "Generative Background Extensions",
+      "Post-Production Edit & Mix",
+    ],
   },
   {
     _id: "10",
-    title: "YouTube Channel Automation",
-    icon: "Youtube",
-    category: "Marketing & Ads",
+    title: "YouTube Studio",
+    fullTitle: "Full-Stack YouTube Channel Automation & Editing",
+    category: "Marketing",
+    color: "#f87171", // Coral Red
+    iconComponent: Youtube,
     shortDescription:
-      "Full-stack channel management: research, scriptwriting, AI voice, video edit & custom thumbnails.",
+      "Full-stack channel management: topic research, scriptwriting, AI voice, edit & thumbnails.",
+    fullDescription:
+      "Scale a dedicated YouTube channel with automated longform video editing, custom high-CTR thumbnails, and polished voiceover narration.",
+    deliverables: [
+      "High-CTR Thumbnail Design",
+      "Paced Editing with Sound Effects",
+      "Chapter Markers & SEO Metadata",
+      "Weekly Channel Publishing Workflows",
+    ],
   },
   {
     _id: "11",
-    title: "Brand Storytelling & Ads",
-    icon: "BookOpen",
-    category: "AI Video",
+    title: "Brand Films",
+    fullTitle: "Documentary Brand Films & Executive Stories",
+    category: "Production",
+    color: "#cbd5e1", // Slate Silver
+    iconComponent: BookOpen,
     shortDescription:
-      "Documentary-style narratives and brand films engineered for maximum emotional resonance.",
+      "Documentary-style narratives and brand films engineered for emotional resonance.",
+    fullDescription:
+      "Tell your company's founding story, mission, and culture through documentary-grade cinematography, voiceover, and custom music scoring.",
+    deliverables: [
+      "Executive Interview Editing",
+      "Archive & B-Roll Assembly",
+      "Cinematic Color Grading",
+      "Custom Soundtrack Composition",
+    ],
   },
   {
     _id: "12",
-    title: "AI Video Content Strategy",
-    icon: "Brain",
-    category: "Voice & Audio",
+    title: "AI Strategy",
+    fullTitle: "AI Video Content Strategy & Roadmap",
+    category: "Strategy",
+    color: "#f472b6", // Rose Pink
+    iconComponent: Brain,
     shortDescription:
       "Data-driven creative roadmaps tuned to your marketing funnel, audience & revenue targets.",
+    fullDescription:
+      "Work directly with our creative directors to audit your video funnel, select optimal AI tools, and structure scalable production pipelines.",
+    deliverables: [
+      "Video Funnel Audit & Analysis",
+      "AI Workflow Setup & Guidelines",
+      "Quarterly Content Roadmap",
+      "Creative Brief Templates",
+    ],
   },
 ];
-
-// Kraving 3D Color Themes
-const KRAVING_THEMES = [
-  {
-    gradient: "linear-gradient(135deg, rgba(255,90,31,0.18) 0%, rgba(13,76,146,0.12) 100%)",
-    accent: "#FF5A1F",
-    glow: "rgba(255,90,31,0.35)",
-    border: "rgba(255,90,31,0.25)",
-  },
-  {
-    gradient: "linear-gradient(135deg, rgba(13,76,146,0.20) 0%, rgba(37,99,235,0.12) 100%)",
-    accent: "#0D4C92",
-    glow: "rgba(13,76,146,0.40)",
-    border: "rgba(13,76,146,0.30)",
-  },
-  {
-    gradient: "linear-gradient(135deg, rgba(246,194,68,0.18) 0%, rgba(255,90,31,0.12) 100%)",
-    accent: "#F6C244",
-    glow: "rgba(246,194,68,0.35)",
-    border: "rgba(246,194,68,0.30)",
-  },
-  {
-    gradient: "linear-gradient(135deg, rgba(225,29,72,0.18) 0%, rgba(147,51,234,0.12) 100%)",
-    accent: "#E11D48",
-    glow: "rgba(225,29,72,0.35)",
-    border: "rgba(225,29,72,0.30)",
-  },
-  {
-    gradient: "linear-gradient(135deg, rgba(16,185,129,0.18) 0%, rgba(13,76,146,0.12) 100%)",
-    accent: "#10B981",
-    glow: "rgba(16,185,129,0.35)",
-    border: "rgba(16,185,129,0.30)",
-  },
-  {
-    gradient: "linear-gradient(135deg, rgba(147,51,234,0.18) 0%, rgba(255,90,31,0.12) 100%)",
-    accent: "#9333EA",
-    glow: "rgba(147,51,234,0.35)",
-    border: "rgba(147,51,234,0.30)",
-  },
-];
-
-export function SectionHeader({
-  eyebrow,
-  title,
-  desc,
-}: {
-  eyebrow?: string;
-  title: string;
-  desc?: string;
-}) {
-  return (
-    <div className="mx-auto max-w-2xl text-center">
-      {eyebrow && (
-        <p className="inline-flex items-center gap-1.5 rounded-full border border-[#FF5A1F]/30 bg-[#FF5A1F]/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-[#FF5A1F] backdrop-blur-md">
-          <Sparkles className="h-3.5 w-3.5" /> {eyebrow}
-        </p>
-      )}
-      <h2 className="mt-4 font-display text-3xl font-black tracking-tight text-foreground sm:text-4xl md:text-5xl">
-        {title}
-      </h2>
-      {desc && (
-        <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
-          {desc}
-        </p>
-      )}
-    </div>
-  );
-}
-
-// ─── Kraving 3D Interactive Card Component ──────────────────────────────────
-
-function Kraving3DCard({ s, idx }: { s: ServiceDoc; idx: number }) {
-  const theme = KRAVING_THEMES[idx % KRAVING_THEMES.length];
-  const Icon = getIcon(s.icon, Sparkles);
-
-  const cardRef = useRef<HTMLDivElement>(null);
-  const [rotateX, setRotateX] = useState(0);
-  const [rotateY, setRotateY] = useState(0);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-
-    const rX = ((y - centerY) / centerY) * -10; // Max 10 deg tilt
-    const rY = ((x - centerX) / centerX) * 10;  // Max 10 deg tilt
-
-    setRotateX(rX);
-    setRotateY(rY);
-  };
-
-  const handleMouseLeave = () => {
-    setRotateX(0);
-    setRotateY(0);
-  };
-
-  return (
-    <motion.div
-      layout
-      initial={{ opacity: 0, y: 24, scale: 0.95 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: -20, scale: 0.95 }}
-      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-      className="perspective-1000"
-    >
-      <div
-        ref={cardRef}
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
-        className="group relative flex h-full flex-col justify-between overflow-hidden rounded-[2.25rem] border bg-background/80 p-7 backdrop-blur-2xl transition-all duration-300 ease-out"
-        style={{
-          background: theme.gradient,
-          borderColor: theme.border,
-          transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
-          boxShadow: `0 20px 40px -15px ${theme.glow}, 0 0 0 1px ${theme.border}`,
-        }}
-      >
-        {/* Subtle 3D background sphere glow */}
-        <div
-          className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full blur-3xl transition-all duration-500 group-hover:scale-125"
-          style={{ background: theme.glow }}
-        />
-
-        <div>
-          {/* Top Row: Kraving 3D Floating Icon Capsule + Category Tag */}
-          <div className="flex items-center justify-between">
-            <motion.div
-              animate={{ y: [0, -4, 0] }}
-              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: idx * 0.2 }}
-              className="relative flex h-14 w-14 items-center justify-center rounded-2xl border shadow-lg backdrop-blur-xl"
-              style={{
-                backgroundColor: "rgba(255,255,255,0.08)",
-                borderColor: theme.border,
-                boxShadow: `0 8px 24px -6px ${theme.glow}`,
-                color: theme.accent,
-              }}
-            >
-              <Icon className="h-7 w-7 transition-transform duration-300 group-hover:scale-110" />
-            </motion.div>
-
-            <span className="inline-flex items-center gap-1 rounded-full border border-border/60 bg-background/60 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground backdrop-blur-md">
-              <Layers className="h-3 w-3" /> {s.category || "Capability"}
-            </span>
-          </div>
-
-          {/* Title */}
-          <h3 className="mt-7 font-display text-xl font-bold tracking-tight text-foreground transition-colors duration-300 group-hover:text-[#FF5A1F]">
-            {s.title}
-          </h3>
-
-          {/* Description */}
-          <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-            {s.shortDescription}
-          </p>
-        </div>
-
-        {/* Kraving Interactive 3D Footer Pill Button */}
-        <div className="mt-8 pt-4 border-t border-border/40 flex items-center justify-between">
-          <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground group-hover:text-foreground transition-colors">
-            Start Brief
-          </span>
-          <div
-            className="flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-300 group-hover:scale-110"
-            style={{
-              backgroundColor: theme.accent,
-              borderColor: theme.accent,
-              color: "#ffffff",
-              boxShadow: `0 6px 18px ${theme.glow}`,
-            }}
-          >
-            <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-          </div>
-        </div>
-
-        {/* Link overlay */}
-        <Link to="/contact" className="absolute inset-0 z-20" aria-label={s.title} />
-      </div>
-    </motion.div>
-  );
-}
-
-// ─── Main Services Section ──────────────────────────────────────────────────
 
 export function Services() {
-  const services = useSanity<ServiceDoc[]>(
-    ["sanity", "services"],
-    servicesQuery,
-    FALLBACK
-  );
-  const items = services && services.length > 0 ? services : FALLBACK;
+  const sanityServices = useSanity<any[]>(["sanity", "services"], servicesQuery, []);
+  const [selectedService, setSelectedService] = useState<ServiceItem | null>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
-  const [activeCategory, setActiveCategory] = useState("All Capabilities");
-
-  const filteredItems = items.filter((item) => {
-    if (activeCategory === "All Capabilities") return true;
-    return item.category === activeCategory;
-  });
+  const scroll = (direction: "left" | "right") => {
+    if (!scrollRef.current) return;
+    const amount = direction === "left" ? -320 : 320;
+    scrollRef.current.scrollBy({ left: amount, behavior: "smooth" });
+  };
 
   return (
     <section className="relative py-24 sm:py-32" id="services">
       <div className="mx-auto max-w-7xl px-6">
-        <SectionHeader
-          eyebrow="Kraving 3D Creative Suite"
-          title="Full-Stack AI Video Production & Creative Capabilities"
-          desc="Explore our 3D animated creative suite — from commercial video ads to AI animation, avatar creation, and voice dubbing."
-        />
+        {/* ── Section Header ──────────────────────────────────────────────────── */}
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between">
+          <div>
+            <p className="inline-flex items-center gap-1.5 rounded-full border border-[#FF5A1F]/30 bg-[#FF5A1F]/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-[#FF5A1F] backdrop-blur-md">
+              <Sparkles className="h-3.5 w-3.5" /> Service Categories
+            </p>
+            <h2 className="mt-4 font-display text-3xl font-black tracking-tight text-foreground sm:text-4xl md:text-5xl">
+              Categories & Capabilities
+            </h2>
+            <p className="mt-3 max-w-xl text-base text-muted-foreground sm:text-lg">
+              Slide through our core services below. Click any category to inspect deliverables and book.
+            </p>
+          </div>
 
-        {/* ── Kraving 3D Category Pill Tabs ─────────────────────────────────── */}
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-2.5">
-          {CATEGORIES.map((cat) => {
-            const isActive = activeCategory === cat;
+          {/* Navigation Arrows (Desktop & Mobile) */}
+          <div className="mt-6 flex items-center gap-3 md:mt-0">
+            <button
+              onClick={() => scroll("left")}
+              aria-label="Scroll left"
+              className="grid h-12 w-12 place-items-center rounded-full border border-border/80 bg-background text-foreground shadow-md transition-transform hover:scale-110 active:scale-95"
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </button>
+            <button
+              onClick={() => scroll("right")}
+              aria-label="Scroll right"
+              className="grid h-12 w-12 place-items-center rounded-full bg-foreground text-background shadow-md transition-transform hover:scale-110 active:scale-95"
+            >
+              <ChevronRight className="h-5 w-5" />
+            </button>
+          </div>
+        </div>
+
+        {/* ── Horizontal Scrollable Circular Cards Slider ───────────────────── */}
+        <div
+          ref={scrollRef}
+          className="no-scrollbar mt-12 flex items-center gap-8 overflow-x-auto scroll-smooth py-6 px-2 select-none"
+        >
+          {SERVICES_DATA.map((item) => {
+            const Icon = item.iconComponent;
             return (
-              <button
-                key={cat}
-                onClick={() => setActiveCategory(cat)}
-                className={`relative rounded-full px-5 py-2.5 text-xs font-bold uppercase tracking-wider transition-all duration-300 ${
-                  isActive
-                    ? "bg-[#FF5A1F] text-white shadow-xl shadow-[#FF5A1F]/35 scale-105"
-                    : "glass border border-border/60 text-muted-foreground hover:border-[#FF5A1F]/40 hover:bg-secondary hover:text-foreground"
-                }`}
+              <motion.div
+                key={item._id}
+                whileHover={{ scale: 1.06, y: -6 }}
+                whileTap={{ scale: 0.96 }}
+                onClick={() => setSelectedService(item)}
+                className="group flex flex-col items-center shrink-0 cursor-pointer text-center"
+                style={{ width: "140px" }}
               >
-                {cat}
-              </button>
+                {/* Vibrant Circular Card Badge */}
+                <div
+                  className="relative flex h-32 w-32 items-center justify-center rounded-full shadow-lg transition-shadow duration-300 group-hover:shadow-2xl overflow-hidden"
+                  style={{
+                    backgroundColor: item.color,
+                    boxShadow: `0 16px 32px -8px ${item.color}88`,
+                  }}
+                >
+                  {/* Custom 3D Icon Image or Rendered Icon */}
+                  {item.iconImg ? (
+                    <img
+                      src={item.iconImg}
+                      alt={item.title}
+                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+                    />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center bg-black/10 text-black">
+                      <Icon className="h-12 w-12 drop-shadow-md" />
+                    </div>
+                  )}
+
+                  {/* Hover ring pulse */}
+                  <div className="absolute inset-0 rounded-full border-2 border-white/40 opacity-0 transition-opacity group-hover:opacity-100" />
+                </div>
+
+                {/* Service Category Title */}
+                <span className="mt-4 font-display text-sm font-bold tracking-tight text-foreground transition-colors group-hover:text-[#FF5A1F]">
+                  {item.title}
+                </span>
+              </motion.div>
             );
           })}
         </div>
-
-        {/* ── Kraving 3D Cards Grid ───────────────────────────────────────── */}
-        <div className="mt-14 grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
-          <AnimatePresence mode="popLayout">
-            {filteredItems.map((s, idx) => (
-              <Kraving3DCard key={s._id || s.title} s={s} idx={idx} />
-            ))}
-          </AnimatePresence>
-        </div>
-
-        {/* ── Bottom Call To Action ───────────────────────────────────────── */}
-        <div className="mt-16 text-center">
-          <Link
-            to="/contact"
-            className="group inline-flex items-center gap-2.5 rounded-full bg-[#FF5A1F] px-8 py-4 text-xs font-bold uppercase tracking-widest text-white shadow-2xl shadow-[#FF5A1F]/40 transition-all duration-300 hover:scale-105 hover:bg-[#e04c15]"
-          >
-            <Zap className="h-4 w-4" /> Start Custom AI Production Brief{" "}
-            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-          </Link>
-        </div>
       </div>
+
+      {/* ── On-Click Service Details Modal / Drawer ─────────────────────────── */}
+      <AnimatePresence>
+        {selectedService && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelectedService(null)}
+              className="absolute inset-0 bg-black/70 backdrop-blur-md"
+            />
+
+            {/* Modal Body */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              transition={{ type: "spring", stiffness: 350, damping: 28 }}
+              className="relative z-10 w-full max-w-xl overflow-hidden rounded-[2.5rem] border border-border/80 bg-background p-7 sm:p-10 shadow-2xl"
+            >
+              {/* Close Button */}
+              <button
+                onClick={() => setSelectedService(null)}
+                aria-label="Close modal"
+                className="absolute right-6 top-6 grid h-10 w-10 place-items-center rounded-full border border-border/60 bg-secondary/80 text-foreground transition-transform hover:scale-110 active:scale-95"
+              >
+                <X className="h-5 w-5" />
+              </button>
+
+              {/* Top Service Badge Header */}
+              <div className="flex items-center gap-4">
+                <div
+                  className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full shadow-md overflow-hidden"
+                  style={{ backgroundColor: selectedService.color }}
+                >
+                  {selectedService.iconImg ? (
+                    <img
+                      src={selectedService.iconImg}
+                      alt={selectedService.title}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <selectedService.iconComponent className="h-9 w-9 text-black" />
+                  )}
+                </div>
+
+                <div>
+                  <span className="inline-block rounded-full bg-[#FF5A1F]/10 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-[#FF5A1F]">
+                    {selectedService.category}
+                  </span>
+                  <h3 className="mt-1 font-display text-xl font-bold tracking-tight text-foreground sm:text-2xl">
+                    {selectedService.fullTitle}
+                  </h3>
+                </div>
+              </div>
+
+              {/* Description */}
+              <p className="mt-6 text-sm leading-relaxed text-muted-foreground sm:text-base">
+                {selectedService.fullDescription}
+              </p>
+
+              {/* Key Deliverables List */}
+              <div className="mt-6">
+                <h4 className="text-xs font-bold uppercase tracking-widest text-foreground">
+                  What's Included & Deliverables:
+                </h4>
+                <ul className="mt-3 space-y-2.5">
+                  {selectedService.deliverables.map((item, idx) => (
+                    <li key={idx} className="flex items-start gap-2.5 text-xs sm:text-sm text-muted-foreground">
+                      <CheckCircle2 className="h-4 w-4 shrink-0 text-[#FF5A1F]" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="mt-8 flex flex-col sm:flex-row items-center gap-3">
+                <Link
+                  to="/contact"
+                  onClick={() => setSelectedService(null)}
+                  className="inline-flex w-full sm:flex-1 items-center justify-center gap-2 rounded-full bg-[#FF5A1F] px-6 py-3.5 text-xs font-bold uppercase tracking-widest text-white shadow-lg shadow-[#FF5A1F]/30 transition-transform hover:scale-102"
+                >
+                  Book This Service <ArrowRight className="h-4 w-4" />
+                </Link>
+                <button
+                  onClick={() => setSelectedService(null)}
+                  className="w-full sm:w-auto rounded-full border border-border/80 px-6 py-3.5 text-xs font-bold uppercase tracking-wider text-muted-foreground hover:bg-secondary hover:text-foreground"
+                >
+                  Close
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }
