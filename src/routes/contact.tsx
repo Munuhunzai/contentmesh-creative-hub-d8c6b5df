@@ -80,7 +80,10 @@ function Contact() {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(Object.fromEntries(fd.entries())),
+        body: JSON.stringify({
+          ...Object.fromEntries(fd.entries()),
+          contactEmail: c.email,
+        }),
       });
       if (!res.ok) {
         const data = (await res.json()) as { error?: string };

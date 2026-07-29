@@ -9,10 +9,11 @@ const schema = z.object({
   service: z.string().min(1),
   budget: z.string().min(1),
   details: z.string().trim().min(10).max(2000),
+  contactEmail: z.string().trim().optional().or(z.literal("")),
   _honey: z.string().max(0, "bot"), // honeypot — must be empty
 });
 
-const TO = "waheed.sul00@gmail.com";
+const DEFAULT_TO = "waheed.sul00@gmail.com";
 const FROM = "ContentMesh <onboarding@resend.dev>";
 
 async function handlePost({ request }: { request: Request }) {
@@ -43,7 +44,18 @@ async function handlePost({ request }: { request: Request }) {
       return Response.json({ error: "Invalid form data.", issues: parsed.error.issues }, { status: 400 });
     }
 
-    const { name, email, company, service, budget, details } = parsed.data;
+    const { name, email, company, service, budget, details, contactEmail } = parsed.data;
+
+    // Dynamically determine notification recipients:
+    // Uses the contact email from Sanity/contact info page, process.env, or fallback
+    const targetContactEmail =
+      contactEmail && contactEmail.includes("@")
+        ? contactEmail.trim()
+        : process.env.CONTACT_EMAIL || process.env.VITE_CONTACT_EMAIL || DEFAULT_TO;
+
+    const toList = Array.from(
+      new Set([targetContactEmail, DEFAULT_TO].filter(Boolean))
+    );
 
     const resend = new Resend(apiKey);
 
@@ -57,7 +69,7 @@ async function handlePost({ request }: { request: Request }) {
 <body style="margin:0;padding:0;background:#0a0a0f;font-family:'Segoe UI',Arial,sans-serif">
   <div style="max-width:600px;margin:40px auto;background:#13131a;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,0.08)">
     <div style="background:linear-gradient(135deg,#FF5A1F,#0D4C92);padding:32px 40px">
-      <p style="margin:0;color:rgba(255,255,255,0.7);font-size:12px;text-transform:uppercase;letter-spacing:0.12em">New Lead</p>
+      <p style="margin:0;color:rgba(255,255,255,0.7);font-size:12px;text-transform:uppercase;letter-spacing:0.12em">New Order / Project Enquiry</p>
       <h1 style="margin:8px 0 0;color:#fff;font-size:26px;font-weight:700">Contact Form Submission</h1>
     </div>
     <div style="padding:36px 40px">
@@ -98,7 +110,7 @@ async function handlePost({ request }: { request: Request }) {
       <p style="margin:0 0 16px;font-size:15px;line-height:1.7">Thanks for reaching out to <strong>ContentMesh</strong>. We've received your enquiry about <strong>${service}</strong> and will get back to you within one business day.</p>
       <p style="margin:0 0 32px;font-size:15px;line-height:1.7">In the meantime, feel free to browse our work or explore our services.</p>
       <div style="text-align:center">
-        <a href="https://contentmesh.studio/portfolio" style="display:inline-block;background:linear-gradient(135deg,#FF5A1F,#e04a14);color:#fff;text-decoration:none;padding:12px 28px;border-radius:999px;font-size:14px;font-weight:600">View Our Work</a>
+        <a href="https://contentmesh.ai/portfolio" style="display:inline-block;background:linear-gradient(135deg,#FF5A1F,#e04a14);color:#fff;text-decoration:none;padding:12px 28px;border-radius:999px;font-size:14px;font-weight:600">View Our Work</a>
       </div>
     </div>
     <div style="padding:20px 40px;border-top:1px solid rgba(255,255,255,0.06);text-align:center">
@@ -111,7 +123,7 @@ async function handlePost({ request }: { request: Request }) {
     const [notifyResult, autoReplyResult] = await Promise.all([
       resend.emails.send({
         from: FROM,
-        to: [TO],
+        to: toList,
         replyTo: email,
         subject: `New enquiry from ${name} — ${service}`,
         html: notifyHtml,
@@ -130,8 +142,8 @@ async function handlePost({ request }: { request: Request }) {
     }
 
     if (autoReplyResult.error) {
-      // Don't fail the request if only the auto-reply fails
-      console.warn("Resend auto-reply error:", autoReplyResult.error);
+      // Log auto-reply warnings without blocking studio notification
+      console.warn("Resend auto-reply warning:", autoReplyResult.error);
     }
 
     return Response.json({ ok: true });
