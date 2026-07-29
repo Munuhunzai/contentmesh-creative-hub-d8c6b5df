@@ -67,7 +67,7 @@ function YouTubeBackground({ videoId, active }: { videoId: string; active: boole
       style={{ opacity: active ? 1 : 0, transition: "opacity 1s ease" }}
     >
       <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[100vw] h-[56.25vw] min-h-full min-w-full sm:w-[max(100vw,calc(100vh*16/9))] sm:h-[max(100vh,calc(100vw*9/16))] sm:scale-[1.04]"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[100vw] h-[56.25vw] min-h-full min-w-full scale-[1.28] sm:scale-[1.04] sm:w-[max(100vw,calc(100vh*16/9))] sm:h-[max(100vh,calc(100vw*9/16))]"
         style={{ transformOrigin: "center center" }}
       >
         <iframe
@@ -77,7 +77,7 @@ function YouTubeBackground({ videoId, active }: { videoId: string; active: boole
             `https://www.youtube-nocookie.com/embed/${videoId}` +
             `?autoplay=1&mute=1&loop=1&playlist=${videoId}` +
             `&controls=0&showinfo=0&rel=0&modestbranding=1` +
-            `&iv_load_policy=3&disablekb=1&fs=0`
+            `&iv_load_policy=3&disablekb=1&fs=0&playsinline=1`
           }
           allow="autoplay; encrypted-media"
           allowFullScreen={false}
