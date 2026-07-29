@@ -1,8 +1,6 @@
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  ChevronLeft,
-  ChevronRight,
   X,
   CheckCircle2,
   ArrowRight,
@@ -106,7 +104,7 @@ const SERVICES_DATA: ServiceItem[] = [
     iconImg: "/services/ugc-editing.jpg",
     iconComponent: Film,
     shortDescription:
-      "High-converting UGC video ad edits for performance marketing agencies on Meta & TikTok.",
+      "High-converting UGC video ad editing for performance marketing agencies on Meta & TikTok.",
     fullDescription:
       "Turn raw creator clips into high-converting performance ads. We optimize hooks, pacing, captions, overlay graphics, and call-to-actions.",
     deliverables: [
@@ -162,6 +160,7 @@ const SERVICES_DATA: ServiceItem[] = [
     fullTitle: "Social Media Video Agency & Vertical Content",
     category: "Marketing",
     color: "#93c5fd", // Light Blue
+    iconImg: "/services/social-reels.jpg",
     iconComponent: Share2,
     shortDescription:
       "Scroll-stopping vertical-native video content designed for organic and paid growth.",
@@ -180,6 +179,7 @@ const SERVICES_DATA: ServiceItem[] = [
     fullTitle: "Corporate Explainers & SaaS Product Demos",
     category: "Production",
     color: "#fde047", // Soft Gold
+    iconImg: "/services/explainers.jpg",
     iconComponent: PlayCircle,
     shortDescription:
       "Clear, elegant product explainers that turn complex technical concepts into sales.",
@@ -198,6 +198,7 @@ const SERVICES_DATA: ServiceItem[] = [
     fullTitle: "In-House Studio Stage & Hybrid Production",
     category: "Production",
     color: "#a7f3d0", // Mint Green
+    iconImg: "/services/studio-stages.jpg",
     iconComponent: Building2,
     shortDescription:
       "In-house lighting stage, camera crew, edit bays, and AI hybrid production workflows.",
@@ -216,6 +217,7 @@ const SERVICES_DATA: ServiceItem[] = [
     fullTitle: "Full-Stack YouTube Channel Automation & Editing",
     category: "Marketing",
     color: "#f87171", // Coral Red
+    iconImg: "/services/youtube-studio.jpg",
     iconComponent: Youtube,
     shortDescription:
       "Full-stack channel management: topic research, scriptwriting, AI voice, edit & thumbnails.",
@@ -234,6 +236,7 @@ const SERVICES_DATA: ServiceItem[] = [
     fullTitle: "Documentary Brand Films & Executive Stories",
     category: "Production",
     color: "#cbd5e1", // Slate Silver
+    iconImg: "/services/brand-films.jpg",
     iconComponent: BookOpen,
     shortDescription:
       "Documentary-style narratives and brand films engineered for emotional resonance.",
@@ -252,6 +255,7 @@ const SERVICES_DATA: ServiceItem[] = [
     fullTitle: "AI Video Content Strategy & Roadmap",
     category: "Strategy",
     color: "#f472b6", // Rose Pink
+    iconImg: "/services/ai-strategy.jpg",
     iconComponent: Brain,
     shortDescription:
       "Data-driven creative roadmaps tuned to your marketing funnel, audience & revenue targets.",
@@ -297,62 +301,26 @@ export function SectionHeader({
 export function Services() {
   const sanityServices = useSanity<any[]>(["sanity", "services"], servicesQuery, []);
   const [selectedService, setSelectedService] = useState<ServiceItem | null>(null);
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  const scroll = (direction: "left" | "right") => {
-    if (!scrollRef.current) return;
-    const amount = direction === "left" ? -320 : 320;
-    scrollRef.current.scrollBy({ left: amount, behavior: "smooth" });
-  };
 
   return (
     <section className="relative py-24 sm:py-32" id="services">
       <div className="mx-auto max-w-7xl px-6">
-        {/* ── Section Header ──────────────────────────────────────────────────── */}
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between">
-          <div>
-            <p className="inline-flex items-center gap-1.5 rounded-full border border-[#FF5A1F]/30 bg-[#FF5A1F]/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-[#FF5A1F] backdrop-blur-md">
-              <Sparkles className="h-3.5 w-3.5" /> Service Categories
-            </p>
-            <h2 className="mt-4 font-display text-3xl font-black tracking-tight text-foreground sm:text-4xl md:text-5xl">
-              Categories & Capabilities
-            </h2>
-            <p className="mt-3 max-w-xl text-base text-muted-foreground sm:text-lg">
-              Slide through our core services below. Click any category to inspect deliverables and book.
-            </p>
-          </div>
+        {/* ── Centered Section Header ─────────────────────────────────────────── */}
+        <SectionHeader
+          eyebrow="Service Categories"
+          title="Categories & Capabilities"
+          desc="Slide through our core services below. Click any category to inspect deliverables and book."
+        />
 
-          {/* Navigation Arrows (Desktop & Mobile) */}
-          <div className="mt-6 flex items-center gap-3 md:mt-0">
-            <button
-              onClick={() => scroll("left")}
-              aria-label="Scroll left"
-              className="grid h-12 w-12 place-items-center rounded-full border border-border/80 bg-background text-foreground shadow-md transition-transform hover:scale-110 active:scale-95"
-            >
-              <ChevronLeft className="h-5 w-5" />
-            </button>
-            <button
-              onClick={() => scroll("right")}
-              aria-label="Scroll right"
-              className="grid h-12 w-12 place-items-center rounded-full bg-foreground text-background shadow-md transition-transform hover:scale-110 active:scale-95"
-            >
-              <ChevronRight className="h-5 w-5" />
-            </button>
-          </div>
-        </div>
-
-        {/* ── Horizontal Scrollable Circular Cards Slider ───────────────────── */}
-        <div
-          ref={scrollRef}
-          className="no-scrollbar mt-12 flex items-center gap-8 overflow-x-auto scroll-smooth py-6 px-2 select-none"
-        >
+        {/* ── Centered Horizontal Scrollable Circular Cards Slider ─────────── */}
+        <div className="no-scrollbar mt-14 flex items-center justify-start md:justify-center gap-8 overflow-x-auto scroll-smooth py-6 px-2 select-none w-full">
           {SERVICES_DATA.map((item) => {
             const Icon = item.iconComponent;
             return (
               <motion.div
                 key={item._id}
-                whileHover={{ scale: 1.06, y: -6 }}
-                whileTap={{ scale: 0.96 }}
+                whileHover={{ scale: 1.08, y: -6 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => setSelectedService(item)}
                 className="group flex flex-col items-center shrink-0 cursor-pointer text-center"
                 style={{ width: "140px" }}
@@ -365,7 +333,7 @@ export function Services() {
                     boxShadow: `0 16px 32px -8px ${item.color}88`,
                   }}
                 >
-                  {/* Custom 3D Icon Image or Rendered Icon */}
+                  {/* Custom 3D Icon Image or Fallback Icon */}
                   {item.iconImg ? (
                     <img
                       src={item.iconImg}
