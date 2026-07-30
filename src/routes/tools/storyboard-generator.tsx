@@ -272,8 +272,7 @@ export function StoryboardGeneratorPage() {
       setExpandedScenes(initialExpanded);
     } catch (err: any) {
       setError(err.message || "An error occurred during generation.");
-    } font-mono
-    finally {
+    } finally {
       setLoading(false);
     }
   };
