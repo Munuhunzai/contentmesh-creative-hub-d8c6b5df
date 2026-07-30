@@ -17,13 +17,13 @@ function WhatsAppIcon({ size = 20 }: { size?: number }) {
 
 // ─── Nav links (no "Home" — logo serves as home) ─────────────────────────────
 const NAV = [
-  { to: "/portfolio",  label: "Portfolio"  },
-  { to: "/services",   label: "Services"   },
-  { to: "/tools/storyboard-generator", label: "AI Tool" },
-  { to: "/about",      label: "About Us"   },
-  { to: "/pricing",    label: "Pricing"    },
-  { to: "/blog",       label: "Blog"       },
-] as const;
+  { to: "/portfolio" as const,  label: "Portfolio"  },
+  { to: "/services" as const,   label: "Services"   },
+  { to: "/tools/storyboard-generator" as any, label: "AI Tool" },
+  { to: "/about" as const,      label: "About Us"   },
+  { to: "/pricing" as const,    label: "Pricing"    },
+  { to: "/blog" as const,       label: "Blog"       },
+];
 
 type SiteSettings = { whatsappNumber?: string; email?: string };
 

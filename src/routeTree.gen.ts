@@ -21,6 +21,8 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as ApiContactRouteImport } from './routes/api/contact'
+import { Route as ApiGenerateStoryboardRouteImport } from './routes/api/generate-storyboard'
+import { Route as ToolsStoryboardGeneratorRouteImport } from './routes/tools/storyboard-generator'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as StudioIndexRouteImport } from './routes/studio.index'
 import { Route as StudioSplatRouteImport } from './routes/studio.$'
@@ -85,6 +87,16 @@ const ApiContactRoute = ApiContactRouteImport.update({
   path: '/api/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiGenerateStoryboardRoute = ApiGenerateStoryboardRouteImport.update({
+  id: '/api/generate-storyboard',
+  path: '/api/generate-storyboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsStoryboardGeneratorRoute = ToolsStoryboardGeneratorRouteImport.update({
+  id: '/tools/storyboard-generator',
+  path: '/tools/storyboard-generator',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BlogSlugRoute = BlogSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -114,6 +126,8 @@ export interface FileRoutesByFullPath {
   '/terms': typeof TermsRoute
   '/api/chat': typeof ApiChatRoute
   '/api/contact': typeof ApiContactRoute
+  '/api/generate-storyboard': typeof ApiGenerateStoryboardRoute
+  '/tools/storyboard-generator': typeof ToolsStoryboardGeneratorRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/studio/$': typeof StudioSplatRoute
   '/studio/': typeof StudioIndexRoute
@@ -131,6 +145,8 @@ export interface FileRoutesByTo {
   '/terms': typeof TermsRoute
   '/api/chat': typeof ApiChatRoute
   '/api/contact': typeof ApiContactRoute
+  '/api/generate-storyboard': typeof ApiGenerateStoryboardRoute
+  '/tools/storyboard-generator': typeof ToolsStoryboardGeneratorRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/studio/$': typeof StudioSplatRoute
   '/studio': typeof StudioIndexRoute
@@ -149,6 +165,8 @@ export interface FileRoutesById {
   '/terms': typeof TermsRoute
   '/api/chat': typeof ApiChatRoute
   '/api/contact': typeof ApiContactRoute
+  '/api/generate-storyboard': typeof ApiGenerateStoryboardRoute
+  '/tools/storyboard-generator': typeof ToolsStoryboardGeneratorRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/studio/$': typeof StudioSplatRoute
   '/studio/': typeof StudioIndexRoute
@@ -168,6 +186,8 @@ export interface FileRouteTypes {
     | '/terms'
     | '/api/chat'
     | '/api/contact'
+    | '/api/generate-storyboard'
+    | '/tools/storyboard-generator'
     | '/blog/$slug'
     | '/studio/$'
     | '/studio/'
@@ -185,6 +205,8 @@ export interface FileRouteTypes {
     | '/terms'
     | '/api/chat'
     | '/api/contact'
+    | '/api/generate-storyboard'
+    | '/tools/storyboard-generator'
     | '/blog/$slug'
     | '/studio/$'
     | '/studio'
@@ -202,11 +224,14 @@ export interface FileRouteTypes {
     | '/terms'
     | '/api/chat'
     | '/api/contact'
+    | '/api/generate-storyboard'
+    | '/tools/storyboard-generator'
     | '/blog/$slug'
     | '/studio/$'
     | '/studio/'
   fileRoutesById: FileRoutesById
 }
+
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
@@ -220,129 +245,11 @@ export interface RootRouteChildren {
   TermsRoute: typeof TermsRoute
   ApiChatRoute: typeof ApiChatRoute
   ApiContactRoute: typeof ApiContactRoute
+  ApiGenerateStoryboardRoute: typeof ApiGenerateStoryboardRoute
+  ToolsStoryboardGeneratorRoute: typeof ToolsStoryboardGeneratorRoute
   StudioSplatRoute: typeof StudioSplatRoute
   StudioIndexRoute: typeof StudioIndexRoute
 }
-
-declare module '@tanstack/react-router' {
-  interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/blog': {
-      id: '/blog'
-      path: '/blog'
-      fullPath: '/blog'
-      preLoaderRoute: typeof BlogRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/contact': {
-      id: '/contact'
-      path: '/contact'
-      fullPath: '/contact'
-      preLoaderRoute: typeof ContactRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/portfolio': {
-      id: '/portfolio'
-      path: '/portfolio'
-      fullPath: '/portfolio'
-      preLoaderRoute: typeof PortfolioRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/pricing': {
-      id: '/pricing'
-      path: '/pricing'
-      fullPath: '/pricing'
-      preLoaderRoute: typeof PricingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/privacy': {
-      id: '/privacy'
-      path: '/privacy'
-      fullPath: '/privacy'
-      preLoaderRoute: typeof PrivacyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/services': {
-      id: '/services'
-      path: '/services'
-      fullPath: '/services'
-      preLoaderRoute: typeof ServicesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/sitemap.xml': {
-      id: '/sitemap.xml'
-      path: '/sitemap.xml'
-      fullPath: '/sitemap.xml'
-      preLoaderRoute: typeof SitemapDotxmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/terms': {
-      id: '/terms'
-      path: '/terms'
-      fullPath: '/terms'
-      preLoaderRoute: typeof TermsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/chat': {
-      id: '/api/chat'
-      path: '/api/chat'
-      fullPath: '/api/chat'
-      preLoaderRoute: typeof ApiChatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/contact': {
-      id: '/api/contact'
-      path: '/api/contact'
-      fullPath: '/api/contact'
-      preLoaderRoute: typeof ApiContactRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/blog/$slug': {
-      id: '/blog/$slug'
-      path: '/$slug'
-      fullPath: '/blog/$slug'
-      preLoaderRoute: typeof BlogSlugRouteImport
-      parentRoute: typeof BlogRoute
-    }
-    '/studio/': {
-      id: '/studio/'
-      path: '/studio'
-      fullPath: '/studio/'
-      preLoaderRoute: typeof StudioIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/studio/$': {
-      id: '/studio/$'
-      path: '/studio/$'
-      fullPath: '/studio/$'
-      preLoaderRoute: typeof StudioSplatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-  }
-}
-
-interface BlogRouteChildren {
-  BlogSlugRoute: typeof BlogSlugRoute
-}
-
-const BlogRouteChildren: BlogRouteChildren = {
-  BlogSlugRoute: BlogSlugRoute,
-}
-
-const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -357,19 +264,12 @@ const rootRouteChildren: RootRouteChildren = {
   TermsRoute: TermsRoute,
   ApiChatRoute: ApiChatRoute,
   ApiContactRoute: ApiContactRoute,
+  ApiGenerateStoryboardRoute: ApiGenerateStoryboardRoute,
+  ToolsStoryboardGeneratorRoute: ToolsStoryboardGeneratorRoute,
   StudioSplatRoute: StudioSplatRoute,
   StudioIndexRoute: StudioIndexRoute,
 }
+
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
