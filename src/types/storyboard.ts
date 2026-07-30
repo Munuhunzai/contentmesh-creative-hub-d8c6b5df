@@ -45,12 +45,21 @@ export type CameraStyleOption =
 
 export type PromptDetailOption = "Basic" | "Detailed" | "Ultra Detailed";
 
+export interface UploadedCharacter {
+  id: string;
+  name: string;
+  prompt: string;
+  imageUrl?: string;
+  fileName?: string;
+}
+
 export interface StoryboardFormInput {
   script: string;
   numberOfScenes: number;
   visualStyle: VisualStyleOption;
   customStyle?: string;
   characterPrompts?: string;
+  uploadedCharacters?: UploadedCharacter[];
   aiModel: string;
   promptStyle: PromptStyleOption;
   outputLanguage: OutputLanguageOption;
@@ -94,6 +103,7 @@ export interface CharacterItem {
   description: string;
   sceneCount: number;
   characterPrompt: string;
+  imageUrl?: string;
 }
 
 export interface EnvironmentItem {

@@ -92,6 +92,17 @@ JSON RESPONSE SCHEMA:
   ]
 }`;
 
+  let characterRefSection = "";
+  if (input.uploadedCharacters && input.uploadedCharacters.length > 0) {
+    characterRefSection += "\nUPLOADED CHARACTER VISUAL REFERENCES:\n";
+    input.uploadedCharacters.forEach((c) => {
+      characterRefSection += `- Character Name: ${c.name || "Unnamed"} | Prompt: ${c.prompt || "Visual reference attached"}\n`;
+    });
+  }
+  if (input.characterPrompts) {
+    characterRefSection += `\nTEXT CHARACTER PROMPTS:\n${input.characterPrompts}\n`;
+  }
+
   const userPrompt = `
 Generate a complete ${input.numberOfScenes}-scene storyboard from the following script:
 
@@ -99,14 +110,7 @@ Generate a complete ${input.numberOfScenes}-scene storyboard from the following 
 ${input.script}
 --- SCRIPT END ---
 
-${
-  input.characterPrompts
-    ? `
-USER CHARACTER PROMPTS REFERENCE:
-${input.characterPrompts}
-`
-    : ""
-}
+${characterRefSection ? `CHARACTER REFERENCES:\n${characterRefSection}` : ""}
 
 CONFIGURATION REQUIREMENTS:
 - Target Scenes: Exactly ${input.numberOfScenes} scenes.

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -23,6 +23,10 @@ import {
   ChevronUp,
   MessageSquare,
   Zap,
+  Upload,
+  Plus,
+  Trash2,
+  Image as ImageIcon,
 } from "lucide-react";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { AdPlaceholder } from "@/components/tools/AdPlaceholder";
@@ -35,6 +39,7 @@ import {
   AspectRatioOption,
   CameraStyleOption,
   StoryboardScene,
+  UploadedCharacter,
 } from "@/types/storyboard";
 
 export const Route = createFileRoute("/tools/storyboard-generator")({
@@ -179,6 +184,7 @@ export function StoryboardGeneratorPage() {
     visualStyle: "Cyberpunk",
     customStyle: "",
     characterPrompts: "Maya: Rogue female engineer, dark braided hair, glowing cyber-visor, black tactical leather jacket.\nDr. Aris: Senior scientist, 50s, silver lab coat, sharp blue eyes.",
+    uploadedCharacters: [],
     aiModel: "DeepSeek",
     promptStyle: "Google Flow",
     outputLanguage: "English",
@@ -200,6 +206,8 @@ export function StoryboardGeneratorPage() {
   const [activeFilter, setActiveFilter] = useState<string>("all");
   const [expandedScenes, setExpandedScenes] = useState<Record<number, boolean>>({});
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   // Local Storage Session Recovery
   useEffect(() => {
     try {
@@ -217,6 +225,56 @@ export function StoryboardGeneratorPage() {
     value: any
   ) => {
     setForm((prev) => ({ ...prev, [key]: value }));
+  };
+
+  // Character Upload Handlers
+  const handleImageFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    Array.from(files).forEach((file) => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const imageUrl = event.target?.result as string;
+        const newChar: UploadedCharacter = {
+          id: `char-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+          name: file.name.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " "),
+          prompt: "Visual character reference attached.",
+          imageUrl,
+          fileName: file.name,
+        };
+
+        setForm((prev) => ({
+          ...prev,
+          uploadedCharacters: [...(prev.uploadedCharacters || []), newChar],
+        }));
+      };
+      reader.readAsDataURL(file);
+    });
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
+  const handleRemoveUploadedCharacter = (id: string) => {
+    setForm((prev) => ({
+      ...prev,
+      uploadedCharacters: (prev.uploadedCharacters || []).filter((c) => c.id !== id),
+    }));
+  };
+
+  const handleUpdateUploadedCharacter = (
+    id: string,
+    field: "name" | "prompt",
+    value: string
+  ) => {
+    setForm((prev) => ({
+      ...prev,
+      uploadedCharacters: (prev.uploadedCharacters || []).map((c) =>
+        c.id === id ? { ...c, [field]: value } : c
+      ),
+    }));
   };
 
   const handleCopy = (text: string, key: string) => {
@@ -262,6 +320,17 @@ export function StoryboardGeneratorPage() {
       }
 
       const data: StoryboardOutput = await res.json();
+
+      // Attach uploaded images to matching characters in output
+      if (form.uploadedCharacters && form.uploadedCharacters.length > 0 && data.characters) {
+        data.characters = data.characters.map((char) => {
+          const match = form.uploadedCharacters?.find(
+            (u) => u.name.toLowerCase().trim() === char.name.toLowerCase().trim()
+          );
+          return match?.imageUrl ? { ...char, imageUrl: match.imageUrl } : char;
+        });
+      }
+
       setOutput(data);
       localStorage.setItem("contentmesh_storyboard_output", JSON.stringify(data));
 
@@ -347,7 +416,7 @@ export function StoryboardGeneratorPage() {
         </div>
       </section>
 
-      {/* ── Main Workspace Container (Strict 100% Mobile Viewport Boundary) ─ */}
+      {/* ── Main Workspace Container ──────────────────────────────────────── */}
       <section className="mx-auto max-w-7xl px-3 sm:px-6 pb-20 w-full max-w-full overflow-hidden" id="generator-workspace">
         <div className="grid gap-6 lg:gap-8 lg:grid-cols-12 w-full max-w-full">
           {/* ── LEFT INPUT PANEL (35% Desktop / 100% Mobile Stack) ───────────── */}
@@ -379,6 +448,104 @@ export function StoryboardGeneratorPage() {
                     className="w-full max-w-full rounded-xl sm:rounded-2xl border border-input bg-background/80 px-3 py-2.5 text-xs outline-none focus:ring-2 focus:ring-[#FF5A1F]/40 leading-relaxed font-mono break-words whitespace-pre-wrap"
                     required
                   />
+                </div>
+
+                {/* ── CHARACTER IMAGE UPLOAD & PROMPTS SECTION ──────────────── */}
+                <div className="rounded-xl border border-border/70 bg-secondary/20 p-3 space-y-3 max-w-full">
+                  <div className="flex items-center justify-between">
+                    <label className="text-[11px] font-bold uppercase tracking-wider text-foreground flex items-center gap-1.5">
+                      <ImageIcon className="h-3.5 w-3.5 text-[#FF5A1F]" /> Character Image Upload & References
+                    </label>
+                    <span className="text-[10px] font-bold text-[#FF5A1F]">
+                      {form.uploadedCharacters?.length || 0} Uploaded
+                    </span>
+                  </div>
+
+                  {/* Hidden file input */}
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handleImageFileUpload}
+                    accept="image/png, image/jpeg, image/webp"
+                    multiple
+                    className="hidden"
+                  />
+
+                  {/* Upload Drop Zone Button */}
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="w-full flex items-center justify-center gap-2 rounded-xl border border-dashed border-[#FF5A1F]/50 bg-[#FF5A1F]/5 p-3 text-xs font-bold text-[#FF5A1F] hover:bg-[#FF5A1F]/10 transition-colors"
+                  >
+                    <Upload className="h-4 w-4" /> Upload Character Reference Images (PNG/JPG)
+                  </button>
+
+                  {/* Uploaded Characters Preview List */}
+                  {form.uploadedCharacters && form.uploadedCharacters.length > 0 && (
+                    <div className="space-y-2.5 pt-1">
+                      {form.uploadedCharacters.map((char) => (
+                        <div
+                          key={char.id}
+                          className="flex items-center gap-2.5 rounded-xl border border-border/60 bg-background p-2 max-w-full"
+                        >
+                          {char.imageUrl ? (
+                            <img
+                              src={char.imageUrl}
+                              alt={char.name}
+                              className="h-12 w-12 rounded-lg object-cover border border-border/40 shrink-0"
+                            />
+                          ) : (
+                            <div className="h-12 w-12 rounded-lg bg-secondary flex items-center justify-center text-muted-foreground shrink-0">
+                              <Users className="h-5 w-5" />
+                            </div>
+                          )}
+
+                          <div className="flex-1 min-w-0 space-y-1">
+                            <input
+                              type="text"
+                              value={char.name}
+                              placeholder="Character Name"
+                              onChange={(e) =>
+                                handleUpdateUploadedCharacter(char.id, "name", e.target.value)
+                              }
+                              className="w-full rounded-md border border-input bg-background px-2 py-0.5 text-xs font-bold text-foreground outline-none focus:ring-1 focus:ring-[#FF5A1F]"
+                            />
+                            <input
+                              type="text"
+                              value={char.prompt}
+                              placeholder="Visual prompt / appearance details..."
+                              onChange={(e) =>
+                                handleUpdateUploadedCharacter(char.id, "prompt", e.target.value)
+                              }
+                              className="w-full rounded-md border border-input bg-background px-2 py-0.5 text-[10px] text-muted-foreground outline-none focus:ring-1 focus:ring-[#FF5A1F]"
+                            />
+                          </div>
+
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveUploadedCharacter(char.id)}
+                            className="p-1 text-muted-foreground hover:text-destructive shrink-0"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Text Character Prompts Area */}
+                  <div>
+                    <label className="block text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1">
+                      Additional Text Character Prompts
+                    </label>
+                    <textarea
+                      rows={2}
+                      value={form.characterPrompts || ""}
+                      onChange={(e) => handleFormChange("characterPrompts", e.target.value)}
+                      placeholder="Character Name: Prompt details..."
+                      className="w-full max-w-full rounded-xl border border-input bg-background/80 px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-[#FF5A1F]/40 font-mono text-muted-foreground break-words"
+                    />
+                  </div>
                 </div>
 
                 {/* Number of Scenes & Visual Style */}
@@ -432,20 +599,6 @@ export function StoryboardGeneratorPage() {
                     />
                   </div>
                 )}
-
-                {/* Character Prompts Reference */}
-                <div className="max-w-full">
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-foreground mb-1">
-                    Character Consistency Prompts
-                  </label>
-                  <textarea
-                    rows={3}
-                    value={form.characterPrompts || ""}
-                    onChange={(e) => handleFormChange("characterPrompts", e.target.value)}
-                    placeholder="Character Name: Prompt details..."
-                    className="w-full max-w-full rounded-xl border border-input bg-background/80 px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-[#FF5A1F]/40 font-mono text-muted-foreground break-words"
-                  />
-                </div>
 
                 {/* AI Model & Prompt Style */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-full">
@@ -634,7 +787,7 @@ export function StoryboardGeneratorPage() {
             <AdPlaceholder type="sidebar-sticky" />
           </div>
 
-          {/* ── RIGHT GENERATED RESULTS PANEL (35%/65% Desktop / 100% Mobile Stack) ─ */}
+          {/* ── RIGHT GENERATED RESULTS PANEL ─────────────────────────────────── */}
           <div className="lg:col-span-7 xl:col-span-8 space-y-4 sm:space-y-6 min-w-0 max-w-full">
             {!output && !loading && (
               <div className="flex flex-col items-center justify-center rounded-2xl sm:rounded-3xl border border-dashed border-border/80 bg-card/60 p-6 sm:p-12 text-center min-h-[300px] sm:min-h-[450px] max-w-full">
@@ -645,7 +798,7 @@ export function StoryboardGeneratorPage() {
                   Ready to Generate Your Storyboard
                 </h3>
                 <p className="mt-1.5 max-w-md text-xs text-muted-foreground leading-relaxed break-words">
-                  Paste your script on the left, select your target AI generator (Google Flow, Midjourney, Flux, Veo), and click Generate Storyboard Package.
+                  Paste your script, upload character reference images, select your target AI generator, and click Generate Storyboard Package.
                 </p>
               </div>
             )}
@@ -657,14 +810,14 @@ export function StoryboardGeneratorPage() {
                   Analyzing Script & Building Storyboards...
                 </h3>
                 <p className="mt-1.5 text-xs text-muted-foreground break-words">
-                  Structuring camera angles, lighting, 4K prompts, dialogue, and SFX into a unified production package.
+                  Structuring camera angles, lighting, 4K prompts, dialogue, and uploaded character references into a unified package.
                 </p>
               </div>
             )}
 
             {output && !loading && (
               <div className="space-y-4 sm:space-y-6 min-w-0 max-w-full">
-                {/* ── Strict Mobile Fit Analytics Overview Header Bar ────────── */}
+                {/* ── Analytics Overview Header Bar ──────────────────────────── */}
                 <div className="flex flex-wrap gap-2 sm:grid sm:grid-cols-4 lg:grid-cols-7 max-w-full">
                   {[
                     { label: "Scenes", val: output.analytics?.totalScenes || output.scenes?.length || 0, color: "text-[#FF5A1F]" },
@@ -792,7 +945,7 @@ export function StoryboardGeneratorPage() {
                   </div>
                 </div>
 
-                {/* ── Generated Scenes List (Strict Break-Words & Responsive) ─── */}
+                {/* ── Generated Scenes List ───────────────────────────────────── */}
                 <div className="space-y-4 max-w-full">
                   {filteredScenes.map((scene) => {
                     const isExpanded = expandedScenes[scene.sceneNumber] !== false;
@@ -867,7 +1020,7 @@ export function StoryboardGeneratorPage() {
                                 </div>
                               </div>
 
-                              {/* ── UNIFIED PRODUCTION PACKAGE: Prompt, Dialogue & SFX ── */}
+                              {/* ── UNIFIED PRODUCTION PACKAGE ── */}
                               <div className="rounded-xl border border-[#FF5A1F]/30 bg-background p-3 sm:p-4 space-y-3 shadow-sm max-w-full overflow-hidden">
                                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 border-b border-border/40 pb-2 max-w-full">
                                   <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-[#FF5A1F] flex items-center gap-1">
@@ -935,7 +1088,7 @@ export function StoryboardGeneratorPage() {
                   })}
                 </div>
 
-                {/* ── Character Library Panel (Mobile Fit) ────────────────────── */}
+                {/* ── Character Library Panel (With Uploaded Image Thumbnail Preview) ─ */}
                 {output.characters && output.characters.length > 0 && (
                   <div className="rounded-2xl sm:rounded-3xl border border-border/80 bg-card p-3.5 sm:p-6 shadow-glass max-w-full">
                     <h3 className="font-display text-sm sm:text-lg font-bold text-foreground mb-2.5 flex items-center gap-1.5">
@@ -943,22 +1096,36 @@ export function StoryboardGeneratorPage() {
                     </h3>
                     <div className="grid gap-2.5 grid-cols-1 sm:grid-cols-2 max-w-full">
                       {output.characters.map((char, i) => (
-                        <div key={i} className="rounded-xl border border-border/60 bg-secondary/20 p-3 space-y-1 max-w-full">
-                          <div className="flex items-center justify-between">
-                            <h4 className="font-display font-bold text-xs text-foreground truncate">{char.name}</h4>
-                            <span className="rounded-full bg-background px-2 py-0.5 text-[9px] font-bold text-muted-foreground shrink-0">
-                              {char.sceneCount} Scenes
-                            </span>
-                          </div>
-                          <p className="text-[11px] text-muted-foreground break-words">{char.appearance}</p>
-                          <div className="pt-1">
-                            <button
-                              onClick={() => handleCopy(char.characterPrompt, `char-${i}`)}
-                              className="inline-flex items-center gap-1 text-[10px] font-bold text-[#FF5A1F] hover:underline"
-                            >
-                              {copiedKey === `char-${i}` ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
-                              Copy Consistency Prompt
-                            </button>
+                        <div key={i} className="flex gap-3 rounded-xl border border-border/60 bg-secondary/20 p-3 max-w-full">
+                          {char.imageUrl ? (
+                            <img
+                              src={char.imageUrl}
+                              alt={char.name}
+                              className="h-16 w-16 rounded-xl object-cover border border-border/40 shrink-0 shadow-sm"
+                            />
+                          ) : (
+                            <div className="h-16 w-16 rounded-xl bg-background border border-border/40 flex items-center justify-center text-muted-foreground shrink-0">
+                              <Users className="h-6 w-6" />
+                            </div>
+                          )}
+
+                          <div className="flex-1 min-w-0 space-y-1">
+                            <div className="flex items-center justify-between">
+                              <h4 className="font-display font-bold text-xs text-foreground truncate">{char.name}</h4>
+                              <span className="rounded-full bg-background px-1.5 py-0.5 text-[9px] font-bold text-muted-foreground shrink-0">
+                                {char.sceneCount} Scenes
+                              </span>
+                            </div>
+                            <p className="text-[11px] text-muted-foreground break-words line-clamp-2">{char.appearance}</p>
+                            <div className="pt-0.5">
+                              <button
+                                onClick={() => handleCopy(char.characterPrompt, `char-${i}`)}
+                                className="inline-flex items-center gap-1 text-[10px] font-bold text-[#FF5A1F] hover:underline"
+                              >
+                                {copiedKey === `char-${i}` ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+                                Copy Prompt
+                              </button>
+                            </div>
                           </div>
                         </div>
                       ))}
@@ -966,7 +1133,7 @@ export function StoryboardGeneratorPage() {
                   </div>
                 )}
 
-                {/* ── Environment Library Panel (Mobile Fit) ──────────────────── */}
+                {/* ── Environment Library Panel ───────────────────────────────── */}
                 {output.environments && output.environments.length > 0 && (
                   <div className="rounded-2xl sm:rounded-3xl border border-border/80 bg-card p-3.5 sm:p-6 shadow-glass max-w-full">
                     <h3 className="font-display text-sm sm:text-lg font-bold text-foreground mb-2.5 flex items-center gap-1.5">
