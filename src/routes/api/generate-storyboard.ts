@@ -83,7 +83,7 @@ async function handlePost({ request }: { request: Request }) {
   }
 }
 
-export const Route = createFileRoute("/api/generate-storyboard" as any)({
+export const Route = createFileRoute("/api/generate-storyboard")({
   server: {
     handlers: {
       POST: handlePost,
