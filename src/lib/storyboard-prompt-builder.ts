@@ -15,17 +15,24 @@ export function buildDeepSeekStoryboardPrompt(
   const chunkEnd = endScene || totalTarget;
   const chunkCount = chunkEnd - chunkStart + 1;
 
+  const startPercent = Math.round(((chunkStart - 1) / totalTarget) * 100);
+  const endPercent = Math.round((chunkEnd / totalTarget) * 100);
+
   const systemPrompt = `You are a world-class Hollywood Creative Director, AI Video Producer, and Senior Cinematographer for ContentMesh Studios.
 Your task is to analyze an input script and generate a complete, production-ready AI Storyboard & Prompt Package in STRICT JSON format.
 
-CRITICAL RULES & DIRECTIVES:
-1. EXACT SCENE RANGE RULE: You MUST generate EXACTLY ${chunkCount} distinct scene objects inside the "scenes" array for Scene ${chunkStart} through Scene ${chunkEnd}. Each scene object's "sceneNumber" MUST be numbered sequentially starting from ${chunkStart} up to ${chunkEnd}.
-2. Return ONLY valid, raw, parseable JSON matching the specified JSON schema. No markdown wrapping (no \`\`\`json), no preamble, no trailing text.
-3. Schema Version: "1.0".
-4. NEVER include more than 3 characters inside a single scene prompt. Limit characters per scene to 1-3 for maximum Google Flow, Veo, and Midjourney consistency.
-5. Background Music: If background music is NOT explicitly enabled by the user, set "backgroundMusic": "No background music" and explicitly mention "No background music" in every scene's copyReadyPrompt.
-6. Language: Output all scene titles, descriptions, dialogue, and instructions in ${input.outputLanguage}.
-7. Prompt Optimization: Optimize the "copyReadyPrompt" for ${input.promptStyle} generators using aspect ratio ${input.aspectRatio}, visual style "${selectedStyle}", and camera style "${input.cameraStyle}".
+CRITICAL NARRATIVE & CHUNK DIRECTIVES:
+1. STORY ARC PROGRESSION: This chunk covers EXACTLY ${startPercent}% to ${endPercent}% progress along the script's chronological story arc.
+   - Do NOT restart the story from the beginning if startScene > 1.
+   - You MUST pick up the story progression at the ${startPercent}% mark of the narrative and advance the plot continuously through the ${endPercent}% milestone.
+2. EXACT SCENE NUMBERS: You MUST generate EXACTLY ${chunkCount} distinct scene objects inside the "scenes" array for Scene ${chunkStart} through Scene ${chunkEnd}.
+   - Each scene object's "sceneNumber" MUST be numbered sequentially starting from ${chunkStart} up to ${chunkEnd}.
+3. Return ONLY valid, raw, parseable JSON matching the specified JSON schema. No markdown wrapping (no \`\`\`json), no preamble, no trailing text.
+4. Schema Version: "1.0".
+5. NEVER include more than 3 characters inside a single scene prompt. Limit characters per scene to 1-3 for maximum Google Flow, Veo, and Midjourney consistency.
+6. Background Music: If background music is NOT explicitly enabled by the user, set "backgroundMusic": "No background music" and explicitly mention "No background music" in every scene's copyReadyPrompt.
+7. Language: Output all scene titles, descriptions, dialogue, and instructions in ${input.outputLanguage}.
+8. Prompt Optimization: Optimize the "copyReadyPrompt" for ${input.promptStyle} generators using aspect ratio ${input.aspectRatio}, visual style "${selectedStyle}", and camera style "${input.cameraStyle}".
 
 JSON RESPONSE SCHEMA:
 {
@@ -113,16 +120,17 @@ JSON RESPONSE SCHEMA:
   }
 
   const userPrompt = `
-STRICT TASK: Segment and expand the script into EXACTLY ${chunkCount} cinematic scenes starting at Scene ${chunkStart} through Scene ${chunkEnd} (out of a total ${totalTarget}-scene project).
+STRICT NARRATIVE TASK: Focus ONLY on scenes ${chunkStart} through ${chunkEnd} (representing ${startPercent}% to ${endPercent}% of the complete script plot).
 
---- SCRIPT START ---
+--- FULL SCRIPT START ---
 ${input.script}
---- SCRIPT END ---
+--- FULL SCRIPT END ---
 
 ${characterRefSection ? `CHARACTER REFERENCES:\n${characterRefSection}` : ""}
 
-CONFIGURATION REQUIREMENTS:
-- Target Chunk Range: SCENES ${chunkStart} TO ${chunkEnd} (Generate EXACTLY ${chunkCount} scene objects numbered ${chunkStart} through ${chunkEnd}).
+CHUNK CONFIGURATION & INSTRUCTIONS:
+- Scene Range: SCENES ${chunkStart} TO ${chunkEnd} (Generate EXACTLY ${chunkCount} scene objects numbered ${chunkStart} through ${chunkEnd}).
+- Narrative Position: Start at the ${startPercent}% narrative milestone of the story and advance to the ${endPercent}% milestone.
 - Visual Style: ${selectedStyle}
 - Target AI Generator Format: ${input.promptStyle}
 - Aspect Ratio: ${input.aspectRatio}
@@ -133,7 +141,7 @@ CONFIGURATION REQUIREMENTS:
 - Include Background Music: ${input.includeBackgroundMusic ? "Yes" : "No (Always state 'No background music')"}
 - Include Negative Prompts: ${input.safetyNotes ? "Yes" : "No"}
 
-Expand the visual beats for scenes ${chunkStart} to ${chunkEnd}. Produce ONLY valid JSON matching the schema.
+Do NOT repeat the beginning of the story. Generate unique, sequential visual scenes for range ${chunkStart}..${chunkEnd}. Produce ONLY valid JSON matching the schema.
 `;
 
   return { systemPrompt, userPrompt };
