@@ -333,38 +333,38 @@ export function StoryboardGeneratorPage() {
   return (
     <SiteLayout>
       {/* ── Mobile-Optimized Hero & Header ───────────────────────────────── */}
-      <section className="relative overflow-hidden pt-6 sm:pt-10 pb-6 px-4 sm:px-6">
+      <section className="relative overflow-hidden pt-4 sm:pt-8 pb-4 px-4 sm:px-6 w-full max-w-full">
         <div className="mx-auto max-w-7xl text-center">
-          <p className="inline-flex items-center gap-1.5 rounded-full border border-[#FF5A1F]/30 bg-[#FF5A1F]/10 px-3.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-[#FF5A1F] backdrop-blur-md">
+          <p className="inline-flex items-center gap-1.5 rounded-full border border-[#FF5A1F]/30 bg-[#FF5A1F]/10 px-3 py-1 text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-[#FF5A1F] backdrop-blur-md">
             <Clapperboard className="h-3.5 w-3.5" /> AI Storyboard & Scene Prompt Studio
           </p>
-          <h1 className="mt-3 font-display text-2xl font-black tracking-tight text-foreground sm:text-4xl md:text-5xl">
+          <h1 className="mt-2.5 font-display text-2xl sm:text-4xl md:text-5xl font-black tracking-tight text-foreground break-words">
             AI Storyboard & Prompt Generator
           </h1>
-          <p className="mx-auto mt-2 max-w-2xl text-xs sm:text-sm leading-relaxed text-muted-foreground">
+          <p className="mx-auto mt-2 max-w-2xl text-xs sm:text-sm leading-relaxed text-muted-foreground break-words">
             Turn any script into a complete AI production package: storyboards, 4K scene prompts, character actions, dialogue, camera directions, SFX, and generation-ready prompts.
           </p>
         </div>
       </section>
 
-      {/* ── Main Workspace Container (Mobile Responsive 100% Width Stack) ─── */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 pb-20" id="generator-workspace">
-        <div className="grid gap-6 lg:gap-8 lg:grid-cols-12">
-          {/* ── LEFT INPUT PANEL (Stacked on Mobile, 35% on Desktop) ────────── */}
-          <div className="lg:col-span-5 xl:col-span-4 space-y-6">
-            <div className="rounded-3xl border border-border/80 bg-card p-4 sm:p-7 shadow-glass backdrop-blur-xl">
-              <div className="flex items-center gap-2 border-b border-border/40 pb-3.5">
-                <SlidersHorizontal className="h-4 w-4 text-[#FF5A1F]" />
-                <h2 className="font-display text-base sm:text-lg font-bold tracking-tight text-foreground">
+      {/* ── Main Workspace Container (Strict 100% Mobile Viewport Boundary) ─ */}
+      <section className="mx-auto max-w-7xl px-3 sm:px-6 pb-20 w-full max-w-full overflow-hidden" id="generator-workspace">
+        <div className="grid gap-6 lg:gap-8 lg:grid-cols-12 w-full max-w-full">
+          {/* ── LEFT INPUT PANEL (35% Desktop / 100% Mobile Stack) ───────────── */}
+          <div className="lg:col-span-5 xl:col-span-4 space-y-5 min-w-0 max-w-full">
+            <div className="rounded-2xl sm:rounded-3xl border border-border/80 bg-card p-3.5 sm:p-7 shadow-glass backdrop-blur-xl max-w-full overflow-hidden">
+              <div className="flex items-center gap-2 border-b border-border/40 pb-3">
+                <SlidersHorizontal className="h-4 w-4 text-[#FF5A1F] shrink-0" />
+                <h2 className="font-display text-base sm:text-lg font-bold tracking-tight text-foreground truncate">
                   Script & Production Config
                 </h2>
               </div>
 
-              <form onSubmit={handleSubmit} className="mt-5 space-y-4 sm:space-y-5">
+              <form onSubmit={handleSubmit} className="mt-4 space-y-4 max-w-full">
                 {/* Script Textarea */}
-                <div>
+                <div className="max-w-full">
                   <div className="flex items-center justify-between mb-1.5">
-                    <label className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-foreground">
+                    <label className="text-[11px] font-bold uppercase tracking-wider text-foreground">
                       Script / Screenplay
                     </label>
                     <span className="text-[10px] text-muted-foreground font-mono">
@@ -372,17 +372,17 @@ export function StoryboardGeneratorPage() {
                     </span>
                   </div>
                   <textarea
-                    rows={8}
+                    rows={7}
                     value={form.script}
                     onChange={(e) => handleFormChange("script", e.target.value)}
                     placeholder="Paste your screenplay, ad script, or story outline here..."
-                    className="w-full rounded-2xl border border-input bg-background/80 px-3.5 py-3 text-xs outline-none focus:ring-2 focus:ring-[#FF5A1F]/40 leading-relaxed font-mono"
+                    className="w-full max-w-full rounded-xl sm:rounded-2xl border border-input bg-background/80 px-3 py-2.5 text-xs outline-none focus:ring-2 focus:ring-[#FF5A1F]/40 leading-relaxed font-mono break-words whitespace-pre-wrap"
                     required
                   />
                 </div>
 
-                {/* Number of Scenes & Visual Style (Stacked on Mobile, 2 cols on tablet+) */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {/* Number of Scenes & Visual Style */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-full">
                   <div>
                     <label className="block text-[11px] font-bold uppercase tracking-wider text-foreground mb-1">
                       Scenes (1–200)
@@ -395,7 +395,7 @@ export function StoryboardGeneratorPage() {
                       onChange={(e) =>
                         handleFormChange("numberOfScenes", parseInt(e.target.value) || 5)
                       }
-                      className="w-full rounded-xl border border-input bg-background px-3.5 py-2.5 text-xs font-semibold outline-none focus:ring-2 focus:ring-[#FF5A1F]/40"
+                      className="w-full rounded-xl border border-input bg-background px-3 py-2 text-xs font-semibold outline-none focus:ring-2 focus:ring-[#FF5A1F]/40"
                     />
                   </div>
 
@@ -406,7 +406,7 @@ export function StoryboardGeneratorPage() {
                     <select
                       value={form.visualStyle}
                       onChange={(e) => handleFormChange("visualStyle", e.target.value)}
-                      className="w-full rounded-xl border border-input bg-background px-3.5 py-2.5 text-xs font-semibold outline-none focus:ring-2 focus:ring-[#FF5A1F]/40"
+                      className="w-full rounded-xl border border-input bg-background px-3 py-2 text-xs font-semibold outline-none focus:ring-2 focus:ring-[#FF5A1F]/40"
                     >
                       {VISUAL_STYLES.map((st) => (
                         <option key={st} value={st}>
@@ -419,7 +419,7 @@ export function StoryboardGeneratorPage() {
 
                 {/* Custom Style Input */}
                 {form.visualStyle === "Custom" && (
-                  <div>
+                  <div className="max-w-full">
                     <label className="block text-[11px] font-bold uppercase tracking-wider text-foreground mb-1">
                       Custom Visual Style
                     </label>
@@ -428,13 +428,13 @@ export function StoryboardGeneratorPage() {
                       placeholder="e.g. 1980s Neon Synthwave 3D Render"
                       value={form.customStyle || ""}
                       onChange={(e) => handleFormChange("customStyle", e.target.value)}
-                      className="w-full rounded-xl border border-input bg-background px-3.5 py-2.5 text-xs outline-none focus:ring-2 focus:ring-[#FF5A1F]/40"
+                      className="w-full rounded-xl border border-input bg-background px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-[#FF5A1F]/40"
                     />
                   </div>
                 )}
 
                 {/* Character Prompts Reference */}
-                <div>
+                <div className="max-w-full">
                   <label className="block text-[11px] font-bold uppercase tracking-wider text-foreground mb-1">
                     Character Consistency Prompts
                   </label>
@@ -443,12 +443,12 @@ export function StoryboardGeneratorPage() {
                     value={form.characterPrompts || ""}
                     onChange={(e) => handleFormChange("characterPrompts", e.target.value)}
                     placeholder="Character Name: Prompt details..."
-                    className="w-full rounded-2xl border border-input bg-background/80 px-3.5 py-2.5 text-xs outline-none focus:ring-2 focus:ring-[#FF5A1F]/40 font-mono text-muted-foreground"
+                    className="w-full max-w-full rounded-xl border border-input bg-background/80 px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-[#FF5A1F]/40 font-mono text-muted-foreground break-words"
                   />
                 </div>
 
                 {/* AI Model & Prompt Style */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-full">
                   <div>
                     <label className="block text-[11px] font-bold uppercase tracking-wider text-foreground mb-1">
                       AI Engine
@@ -456,10 +456,10 @@ export function StoryboardGeneratorPage() {
                     <select
                       value={form.aiModel}
                       onChange={(e) => handleFormChange("aiModel", e.target.value)}
-                      className="w-full rounded-xl border border-input bg-background px-3.5 py-2.5 text-xs font-semibold outline-none focus:ring-2 focus:ring-[#FF5A1F]/40"
+                      className="w-full rounded-xl border border-input bg-background px-3 py-2 text-xs font-semibold outline-none focus:ring-2 focus:ring-[#FF5A1F]/40"
                     >
                       <option value="DeepSeek">DeepSeek V3 (Default)</option>
-                      <option value="OpenAI">OpenAI GPT-4o (Modular)</option>
+                      <option value="OpenAI">OpenAI GPT-4o</option>
                       <option value="Claude">Claude 3.5 Sonnet</option>
                     </select>
                   </div>
@@ -471,7 +471,7 @@ export function StoryboardGeneratorPage() {
                     <select
                       value={form.promptStyle}
                       onChange={(e) => handleFormChange("promptStyle", e.target.value)}
-                      className="w-full rounded-xl border border-input bg-background px-3.5 py-2.5 text-xs font-semibold outline-none focus:ring-2 focus:ring-[#FF5A1F]/40"
+                      className="w-full rounded-xl border border-input bg-background px-3 py-2 text-xs font-semibold outline-none focus:ring-2 focus:ring-[#FF5A1F]/40"
                     >
                       {PROMPT_STYLES.map((ps) => (
                         <option key={ps} value={ps}>
@@ -483,7 +483,7 @@ export function StoryboardGeneratorPage() {
                 </div>
 
                 {/* Aspect Ratio & Camera Style */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-full">
                   <div>
                     <label className="block text-[11px] font-bold uppercase tracking-wider text-foreground mb-1">
                       Aspect Ratio
@@ -491,7 +491,7 @@ export function StoryboardGeneratorPage() {
                     <select
                       value={form.aspectRatio}
                       onChange={(e) => handleFormChange("aspectRatio", e.target.value)}
-                      className="w-full rounded-xl border border-input bg-background px-3.5 py-2.5 text-xs font-semibold outline-none focus:ring-2 focus:ring-[#FF5A1F]/40"
+                      className="w-full rounded-xl border border-input bg-background px-3 py-2 text-xs font-semibold outline-none focus:ring-2 focus:ring-[#FF5A1F]/40"
                     >
                       {ASPECT_RATIOS.map((ar) => (
                         <option key={ar} value={ar}>
@@ -508,7 +508,7 @@ export function StoryboardGeneratorPage() {
                     <select
                       value={form.cameraStyle}
                       onChange={(e) => handleFormChange("cameraStyle", e.target.value)}
-                      className="w-full rounded-xl border border-input bg-background px-3.5 py-2.5 text-xs font-semibold outline-none focus:ring-2 focus:ring-[#FF5A1F]/40"
+                      className="w-full rounded-xl border border-input bg-background px-3 py-2 text-xs font-semibold outline-none focus:ring-2 focus:ring-[#FF5A1F]/40"
                     >
                       {CAMERA_STYLES.map((cs) => (
                         <option key={cs} value={cs}>
@@ -520,7 +520,7 @@ export function StoryboardGeneratorPage() {
                 </div>
 
                 {/* Language & Detail Level */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-full">
                   <div>
                     <label className="block text-[11px] font-bold uppercase tracking-wider text-foreground mb-1">
                       Output Language
@@ -528,7 +528,7 @@ export function StoryboardGeneratorPage() {
                     <select
                       value={form.outputLanguage}
                       onChange={(e) => handleFormChange("outputLanguage", e.target.value)}
-                      className="w-full rounded-xl border border-input bg-background px-3.5 py-2.5 text-xs font-semibold outline-none focus:ring-2 focus:ring-[#FF5A1F]/40"
+                      className="w-full rounded-xl border border-input bg-background px-3 py-2 text-xs font-semibold outline-none focus:ring-2 focus:ring-[#FF5A1F]/40"
                     >
                       {LANGUAGES.map((lg) => (
                         <option key={lg} value={lg}>
@@ -545,7 +545,7 @@ export function StoryboardGeneratorPage() {
                     <select
                       value={form.promptDetail}
                       onChange={(e) => handleFormChange("promptDetail", e.target.value)}
-                      className="w-full rounded-xl border border-input bg-background px-3.5 py-2.5 text-xs font-semibold outline-none focus:ring-2 focus:ring-[#FF5A1F]/40"
+                      className="w-full rounded-xl border border-input bg-background px-3 py-2 text-xs font-semibold outline-none focus:ring-2 focus:ring-[#FF5A1F]/40"
                     >
                       <option value="Basic">Basic</option>
                       <option value="Detailed">Detailed</option>
@@ -555,7 +555,7 @@ export function StoryboardGeneratorPage() {
                 </div>
 
                 {/* Toggles */}
-                <div className="space-y-2 rounded-2xl border border-border/60 bg-secondary/20 p-3.5">
+                <div className="space-y-2 rounded-xl border border-border/60 bg-secondary/20 p-3 max-w-full">
                   <div className="flex items-center justify-between text-xs font-semibold">
                     <span className="flex items-center gap-1.5 text-foreground">
                       <MessageSquare className="h-3.5 w-3.5 text-[#FF5A1F]" /> Include Dialogue
@@ -609,7 +609,7 @@ export function StoryboardGeneratorPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full flex items-center justify-center gap-2 rounded-2xl bg-[#FF5A1F] py-3.5 sm:py-4 text-xs font-bold uppercase tracking-widest text-white shadow-xl shadow-[#FF5A1F]/30 transition-transform duration-300 hover:scale-[1.02] active:scale-95 disabled:opacity-60"
+                  className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#FF5A1F] py-3.5 text-xs font-bold uppercase tracking-widest text-white shadow-xl shadow-[#FF5A1F]/30 transition-transform duration-300 active:scale-95 disabled:opacity-60"
                 >
                   {loading ? (
                     <>
@@ -623,7 +623,7 @@ export function StoryboardGeneratorPage() {
                 </button>
 
                 {error && (
-                  <p className="rounded-xl border border-destructive/30 bg-destructive/10 p-3 text-xs font-semibold text-destructive">
+                  <p className="rounded-xl border border-destructive/30 bg-destructive/10 p-3 text-xs font-semibold text-destructive break-words">
                     {error}
                   </p>
                 )}
@@ -634,92 +634,78 @@ export function StoryboardGeneratorPage() {
             <AdPlaceholder type="sidebar-sticky" />
           </div>
 
-          {/* ── RIGHT GENERATED RESULTS PANEL (Stacked on Mobile, 65% Desktop) ── */}
-          <div className="lg:col-span-7 xl:col-span-8 space-y-5 sm:space-y-6">
+          {/* ── RIGHT GENERATED RESULTS PANEL (35%/65% Desktop / 100% Mobile Stack) ─ */}
+          <div className="lg:col-span-7 xl:col-span-8 space-y-4 sm:space-y-6 min-w-0 max-w-full">
             {!output && !loading && (
-              <div className="flex flex-col items-center justify-center rounded-3xl border border-dashed border-border/80 bg-card/60 p-8 sm:p-12 text-center min-h-[360px] sm:min-h-[500px]">
-                <div className="grid h-14 w-14 sm:h-16 sm:w-16 place-items-center rounded-2xl bg-[#FF5A1F]/10 text-[#FF5A1F]">
-                  <Clapperboard className="h-7 w-7 sm:h-8 sm:w-8" />
+              <div className="flex flex-col items-center justify-center rounded-2xl sm:rounded-3xl border border-dashed border-border/80 bg-card/60 p-6 sm:p-12 text-center min-h-[300px] sm:min-h-[450px] max-w-full">
+                <div className="grid h-12 w-12 sm:h-16 sm:w-16 place-items-center rounded-2xl bg-[#FF5A1F]/10 text-[#FF5A1F]">
+                  <Clapperboard className="h-6 w-6 sm:h-8 sm:w-8" />
                 </div>
-                <h3 className="mt-5 font-display text-lg sm:text-xl font-bold text-foreground">
+                <h3 className="mt-4 font-display text-base sm:text-xl font-bold text-foreground">
                   Ready to Generate Your Storyboard
                 </h3>
-                <p className="mt-2 max-w-md text-xs text-muted-foreground leading-relaxed">
+                <p className="mt-1.5 max-w-md text-xs text-muted-foreground leading-relaxed break-words">
                   Paste your script on the left, select your target AI generator (Google Flow, Midjourney, Flux, Veo), and click Generate Storyboard Package.
                 </p>
               </div>
             )}
 
             {loading && (
-              <div className="flex flex-col items-center justify-center rounded-3xl border border-border/80 bg-card/80 p-8 sm:p-12 text-center min-h-[360px] sm:min-h-[500px] shadow-glass backdrop-blur-xl">
-                <RefreshCw className="h-9 w-9 text-[#FF5A1F] animate-spin" />
-                <h3 className="mt-5 font-display text-base sm:text-lg font-bold text-foreground">
+              <div className="flex flex-col items-center justify-center rounded-2xl sm:rounded-3xl border border-border/80 bg-card/80 p-6 sm:p-12 text-center min-h-[300px] sm:min-h-[450px] shadow-glass backdrop-blur-xl max-w-full">
+                <RefreshCw className="h-8 w-8 text-[#FF5A1F] animate-spin" />
+                <h3 className="mt-4 font-display text-base sm:text-lg font-bold text-foreground">
                   Analyzing Script & Building Storyboards...
                 </h3>
-                <p className="mt-2 text-xs text-muted-foreground">
+                <p className="mt-1.5 text-xs text-muted-foreground break-words">
                   Structuring camera angles, lighting, 4K prompts, dialogue, and SFX into a unified production package.
                 </p>
               </div>
             )}
 
             {output && !loading && (
-              <div className="space-y-5 sm:space-y-6">
-                {/* ── Mobile Responsive Analytics Overview Header Bar ────────── */}
-                <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-7 gap-2 sm:gap-3">
-                  <div className="rounded-xl sm:rounded-2xl border border-border/60 bg-card p-2.5 sm:p-3.5 text-center">
-                    <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Scenes</span>
-                    <p className="font-display text-base sm:text-lg font-black text-[#FF5A1F]">{output.analytics?.totalScenes || output.scenes?.length || 0}</p>
-                  </div>
-                  <div className="rounded-xl sm:rounded-2xl border border-border/60 bg-card p-2.5 sm:p-3.5 text-center">
-                    <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Chars</span>
-                    <p className="font-display text-base sm:text-lg font-black text-blue-500">{output.analytics?.charactersCount || output.characters?.length || 0}</p>
-                  </div>
-                  <div className="rounded-xl sm:rounded-2xl border border-border/60 bg-card p-2.5 sm:p-3.5 text-center">
-                    <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Locs</span>
-                    <p className="font-display text-base sm:text-lg font-black text-emerald-500">{output.analytics?.locationsCount || output.environments?.length || 0}</p>
-                  </div>
-                  <div className="rounded-xl sm:rounded-2xl border border-border/60 bg-card p-2.5 sm:p-3.5 text-center">
-                    <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Runtime</span>
-                    <p className="font-display text-base sm:text-lg font-black text-purple-500">{output.analytics?.estimatedRuntime || "1m 30s"}</p>
-                  </div>
-                  <div className="rounded-xl sm:rounded-2xl border border-border/60 bg-card p-2.5 sm:p-3.5 text-center">
-                    <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Words</span>
-                    <p className="font-display text-base sm:text-lg font-black text-amber-500">{output.analytics?.wordCount || 0}</p>
-                  </div>
-                  <div className="rounded-xl sm:rounded-2xl border border-border/60 bg-card p-2.5 sm:p-3.5 text-center">
-                    <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Dialogues</span>
-                    <p className="font-display text-base sm:text-lg font-black text-pink-500">{output.analytics?.dialogueCount || 0}</p>
-                  </div>
-                  <div className="rounded-xl sm:rounded-2xl border border-border/60 bg-card p-2.5 sm:p-3.5 text-center col-span-3 sm:col-span-1">
-                    <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Packages</span>
-                    <p className="font-display text-base sm:text-lg font-black text-[#FF5A1F]">{output.analytics?.promptCount || output.scenes?.length || 0}</p>
-                  </div>
+              <div className="space-y-4 sm:space-y-6 min-w-0 max-w-full">
+                {/* ── Strict Mobile Fit Analytics Overview Header Bar ────────── */}
+                <div className="flex flex-wrap gap-2 sm:grid sm:grid-cols-4 lg:grid-cols-7 max-w-full">
+                  {[
+                    { label: "Scenes", val: output.analytics?.totalScenes || output.scenes?.length || 0, color: "text-[#FF5A1F]" },
+                    { label: "Chars", val: output.analytics?.charactersCount || output.characters?.length || 0, color: "text-blue-500" },
+                    { label: "Locs", val: output.analytics?.locationsCount || output.environments?.length || 0, color: "text-emerald-500" },
+                    { label: "Runtime", val: output.analytics?.estimatedRuntime || "1m 30s", color: "text-purple-500" },
+                    { label: "Words", val: output.analytics?.wordCount || 0, color: "text-amber-500" },
+                    { label: "Dialogues", val: output.analytics?.dialogueCount || 0, color: "text-pink-500" },
+                    { label: "Packages", val: output.analytics?.promptCount || output.scenes?.length || 0, color: "text-[#FF5A1F]" },
+                  ].map((m, i) => (
+                    <div key={i} className="flex-1 min-w-[70px] sm:min-w-0 rounded-xl border border-border/60 bg-card p-2 text-center">
+                      <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground block">{m.label}</span>
+                      <p className={`font-display text-sm sm:text-base font-black ${m.color}`}>{m.val}</p>
+                    </div>
+                  ))}
                 </div>
 
                 {/* ── Storyboard Horizontal Visual Timeline ───────────────────── */}
                 {output.timeline && output.timeline.length > 0 && (
-                  <div className="rounded-3xl border border-border/80 bg-card p-4 sm:p-6 shadow-glass">
-                    <h3 className="font-display text-xs font-bold uppercase tracking-widest text-muted-foreground mb-3 flex items-center gap-2">
-                      <Film className="h-4 w-4 text-[#FF5A1F]" /> Storyboard Timeline
+                  <div className="rounded-2xl sm:rounded-3xl border border-border/80 bg-card p-3.5 sm:p-6 shadow-glass max-w-full overflow-hidden">
+                    <h3 className="font-display text-[11px] sm:text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2.5 flex items-center gap-1.5">
+                      <Film className="h-3.5 w-3.5 text-[#FF5A1F]" /> Storyboard Timeline
                     </h3>
-                    <div className="no-scrollbar flex items-center gap-3 overflow-x-auto pb-1">
+                    <div className="no-scrollbar flex items-center gap-2.5 overflow-x-auto pb-1 max-w-full">
                       {output.timeline.map((item) => (
                         <div
                           key={item.sceneNumber}
                           onClick={() => toggleExpand(item.sceneNumber)}
-                          className="flex flex-col justify-between shrink-0 rounded-2xl border border-border/60 bg-secondary/30 p-3 cursor-pointer hover:border-[#FF5A1F]/60 hover:bg-secondary transition-all"
-                          style={{ width: "145px" }}
+                          className="flex flex-col justify-between shrink-0 rounded-xl border border-border/60 bg-secondary/30 p-2.5 cursor-pointer hover:border-[#FF5A1F]/60 transition-all"
+                          style={{ width: "135px" }}
                         >
                           <div className="flex items-center justify-between">
                             <span className="rounded-md bg-[#FF5A1F]/10 px-1.5 py-0.5 text-[9px] font-bold text-[#FF5A1F]">
-                              Scene {item.sceneNumber}
+                              Sc {item.sceneNumber}
                             </span>
                             <span className="text-[9px] text-muted-foreground font-semibold">{item.duration}</span>
                           </div>
-                          <h4 className="mt-1.5 font-display text-xs font-bold text-foreground line-clamp-1">
+                          <h4 className="mt-1 font-display text-[11px] font-bold text-foreground line-clamp-1">
                             {item.sceneTitle}
                           </h4>
-                          <span className="mt-1 text-[9px] text-muted-foreground/80 line-clamp-1">
+                          <span className="mt-0.5 text-[9px] text-muted-foreground/80 line-clamp-1">
                             📍 {item.environment}
                           </span>
                         </div>
@@ -728,35 +714,35 @@ export function StoryboardGeneratorPage() {
                   </div>
                 )}
 
-                {/* ── Top Export & Filter Action Toolbar (Mobile Full-Width Responsive) ── */}
-                <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center justify-between gap-3 rounded-3xl border border-border/80 bg-card p-4 sm:p-5 shadow-glass">
+                {/* ── Top Export & Filter Action Toolbar ────────────────────────── */}
+                <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center justify-between gap-2.5 rounded-2xl sm:rounded-3xl border border-border/80 bg-card p-3.5 sm:p-5 shadow-glass max-w-full">
                   {/* Search Bar */}
-                  <div className="relative w-full sm:flex-1 sm:min-w-[180px]">
-                    <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <div className="relative w-full sm:flex-1 sm:min-w-[160px]">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
                     <input
                       type="text"
-                      placeholder="Search scenes or prompts..."
+                      placeholder="Search prompts or locations..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full rounded-xl border border-input bg-background pl-9 pr-3.5 py-2 text-xs outline-none focus:ring-2 focus:ring-[#FF5A1F]/40"
+                      className="w-full rounded-xl border border-input bg-background pl-8 pr-3 py-1.5 text-xs outline-none focus:ring-2 focus:ring-[#FF5A1F]/40"
                     />
                   </div>
 
                   {/* Category Filter Pills */}
-                  <div className="no-scrollbar flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
+                  <div className="no-scrollbar flex items-center gap-1 overflow-x-auto pb-0.5 sm:pb-0 max-w-full">
                     {[
-                      { key: "all", label: "All Scenes" },
+                      { key: "all", label: "All" },
                       { key: "dialogue", label: "Dialogue" },
                       { key: "sfx", label: "SFX" },
-                      { key: "characters", label: "Characters" },
+                      { key: "characters", label: "Chars" },
                     ].map((f) => (
                       <button
                         key={f.key}
                         onClick={() => setActiveFilter(f.key)}
-                        className={`shrink-0 rounded-full px-3 py-1 text-[11px] font-semibold transition-all ${
+                        className={`shrink-0 rounded-full px-2.5 py-1 text-[10px] sm:text-[11px] font-semibold transition-all ${
                           activeFilter === f.key
                             ? "bg-[#FF5A1F] text-white shadow-md"
-                            : "bg-secondary text-muted-foreground hover:text-foreground"
+                            : "bg-secondary text-muted-foreground"
                         }`}
                       >
                         {f.label}
@@ -764,8 +750,8 @@ export function StoryboardGeneratorPage() {
                     ))}
                   </div>
 
-                  {/* Export Buttons (Responsive Grid on Mobile) */}
-                  <div className="grid grid-cols-2 sm:flex items-center gap-2 pt-1 sm:pt-0 border-t sm:border-t-0 border-border/40">
+                  {/* Export Buttons */}
+                  <div className="grid grid-cols-3 sm:flex items-center gap-1.5 max-w-full">
                     <button
                       onClick={() =>
                         handleCopy(
@@ -773,34 +759,41 @@ export function StoryboardGeneratorPage() {
                           "all-packages"
                         )
                       }
-                      className="col-span-2 sm:col-span-1 inline-flex items-center justify-center gap-1.5 rounded-xl border border-[#FF5A1F]/40 bg-[#FF5A1F]/10 px-3 py-2 text-xs font-bold text-[#FF5A1F] hover:bg-[#FF5A1F] hover:text-white transition-colors"
+                      className="col-span-3 sm:col-span-1 inline-flex items-center justify-center gap-1 rounded-xl border border-[#FF5A1F]/40 bg-[#FF5A1F]/10 px-2.5 py-1.5 text-[11px] font-bold text-[#FF5A1F]"
                     >
                       {copiedKey === "all-packages" ? (
-                        <Check className="h-3.5 w-3.5 text-emerald-500" />
+                        <Check className="h-3 w-3 text-emerald-500" />
                       ) : (
-                        <Copy className="h-3.5 w-3.5" />
+                        <Copy className="h-3 w-3" />
                       )}
-                      Copy All Packages
+                      Copy All
                     </button>
 
                     <button
                       onClick={() => exportFormatted("markdown")}
-                      className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-border/80 bg-background px-2.5 py-2 text-xs font-semibold text-foreground hover:bg-secondary"
+                      className="inline-flex items-center justify-center gap-1 rounded-xl border border-border/80 bg-background px-2 py-1.5 text-[11px] font-semibold text-foreground"
                     >
-                      <FileText className="h-3.5 w-3.5" /> MD
+                      <FileText className="h-3 w-3" /> MD
                     </button>
 
                     <button
                       onClick={() => exportFormatted("json")}
-                      className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-border/80 bg-background px-2.5 py-2 text-xs font-semibold text-foreground hover:bg-secondary"
+                      className="inline-flex items-center justify-center gap-1 rounded-xl border border-border/80 bg-background px-2 py-1.5 text-[11px] font-semibold text-foreground"
                     >
-                      <Download className="h-3.5 w-3.5" /> JSON
+                      <Download className="h-3 w-3" /> JSON
+                    </button>
+
+                    <button
+                      onClick={() => window.print()}
+                      className="inline-flex items-center justify-center gap-1 rounded-xl border border-border/80 bg-background px-2 py-1.5 text-[11px] font-semibold text-foreground"
+                    >
+                      <Printer className="h-3 w-3" /> Print
                     </button>
                   </div>
                 </div>
 
-                {/* ── Generated Scenes List (Mobile Optimized) ─────────────── */}
-                <div className="space-y-4 sm:space-y-5">
+                {/* ── Generated Scenes List (Strict Break-Words & Responsive) ─── */}
+                <div className="space-y-4 max-w-full">
                   {filteredScenes.map((scene) => {
                     const isExpanded = expandedScenes[scene.sceneNumber] !== false;
                     const copyKey = `scene-pkg-${scene.sceneNumber}`;
@@ -809,37 +802,37 @@ export function StoryboardGeneratorPage() {
                       <motion.div
                         key={scene.sceneNumber}
                         layout
-                        className="overflow-hidden rounded-3xl border border-border/80 bg-card p-4 sm:p-6 shadow-glass backdrop-blur-xl transition-all hover:border-[#FF5A1F]/30"
+                        className="overflow-hidden rounded-2xl sm:rounded-3xl border border-border/80 bg-card p-3.5 sm:p-5 shadow-glass backdrop-blur-xl transition-all hover:border-[#FF5A1F]/30 max-w-full"
                       >
                         {/* Scene Header Bar */}
                         <div
                           onClick={() => toggleExpand(scene.sceneNumber)}
-                          className="flex items-start sm:items-center justify-between gap-3 cursor-pointer"
+                          className="flex items-start sm:items-center justify-between gap-2 cursor-pointer max-w-full"
                         >
-                          <div className="flex items-center gap-2.5 sm:gap-3">
-                            <span className="flex h-7 w-7 sm:h-8 sm:w-8 shrink-0 items-center justify-center rounded-xl bg-[#FF5A1F] text-xs font-bold text-white shadow-md">
+                          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                            <span className="flex h-6 w-6 sm:h-8 sm:w-8 shrink-0 items-center justify-center rounded-lg sm:rounded-xl bg-[#FF5A1F] text-[11px] sm:text-xs font-bold text-white shadow-md">
                               {scene.sceneNumber}
                             </span>
-                            <div>
-                              <h3 className="font-display text-sm sm:text-base font-bold text-foreground">
+                            <div className="min-w-0">
+                              <h3 className="font-display text-xs sm:text-base font-bold text-foreground truncate">
                                 {scene.sceneTitle}
                               </h3>
-                              <div className="flex items-center gap-2 text-[10px] sm:text-[11px] text-muted-foreground mt-0.5">
-                                <span>⏱ {scene.duration}</span>
+                              <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground mt-0.5">
+                                <span className="shrink-0">⏱ {scene.duration}</span>
                                 <span>•</span>
-                                <span className="line-clamp-1">📍 {scene.environment}</span>
+                                <span className="truncate">📍 {scene.environment}</span>
                               </div>
                             </div>
                           </div>
 
-                          <div className="flex items-center gap-1.5 shrink-0">
-                            <span className="hidden sm:inline-block rounded-full bg-secondary px-2.5 py-0.5 text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
+                          <div className="flex items-center gap-1 shrink-0">
+                            <span className="hidden sm:inline-block rounded-full bg-secondary px-2 py-0.5 text-[9px] font-bold text-muted-foreground uppercase">
                               {scene.visualStyle}
                             </span>
                             {isExpanded ? (
-                              <ChevronUp className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
+                              <ChevronUp className="h-4 w-4 text-muted-foreground" />
                             ) : (
-                              <ChevronDown className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
+                              <ChevronDown className="h-4 w-4 text-muted-foreground" />
                             )}
                           </div>
                         </div>
@@ -851,38 +844,38 @@ export function StoryboardGeneratorPage() {
                               initial={{ opacity: 0, height: 0 }}
                               animate={{ opacity: 1, height: "auto" }}
                               exit={{ opacity: 0, height: 0 }}
-                              className="mt-4 sm:mt-6 border-t border-border/40 pt-4 space-y-3 sm:space-y-4"
+                              className="mt-3 sm:mt-5 border-t border-border/40 pt-3 space-y-3 max-w-full overflow-hidden"
                             >
                               {/* Character Tags & Camera Motion */}
-                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 text-xs">
-                                <div className="rounded-xl border border-border/60 bg-secondary/20 p-2.5 sm:p-3">
-                                  <span className="font-bold text-foreground uppercase tracking-wider text-[10px]">Characters ({scene.characters?.length || 0})</span>
-                                  <div className="flex flex-wrap gap-1 mt-1">
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs max-w-full">
+                                <div className="rounded-xl border border-border/60 bg-secondary/20 p-2.5 max-w-full">
+                                  <span className="font-bold text-foreground uppercase tracking-wider text-[9px]">Characters ({scene.characters?.length || 0})</span>
+                                  <div className="flex flex-wrap gap-1 mt-1 max-w-full">
                                     {scene.characters?.map((c, i) => (
-                                      <span key={i} className="rounded-md bg-background px-2 py-0.5 text-[10px] sm:text-[11px] font-semibold text-foreground border border-border/60">
+                                      <span key={i} className="rounded-md bg-background px-1.5 py-0.5 text-[10px] font-semibold text-foreground border border-border/60 break-words">
                                         {c}
                                       </span>
                                     ))}
                                   </div>
                                 </div>
 
-                                <div className="rounded-xl border border-border/60 bg-secondary/20 p-2.5 sm:p-3">
-                                  <span className="font-bold text-foreground uppercase tracking-wider text-[10px]">Camera & Lens</span>
-                                  <p className="mt-0.5 text-[11px] text-muted-foreground">
+                                <div className="rounded-xl border border-border/60 bg-secondary/20 p-2.5 max-w-full">
+                                  <span className="font-bold text-foreground uppercase tracking-wider text-[9px]">Camera & Lens</span>
+                                  <p className="mt-0.5 text-[10px] sm:text-[11px] text-muted-foreground break-words">
                                     {scene.camera?.angle} • {scene.camera?.movement} ({scene.camera?.lens})
                                   </p>
                                 </div>
                               </div>
 
-                              {/* ── UNIFIED PRODUCTION PACKAGE: Prompt, Dialogue & SFX Together ── */}
-                              <div className="rounded-2xl border border-[#FF5A1F]/30 bg-background p-3.5 sm:p-5 space-y-3.5 shadow-sm">
-                                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 border-b border-border/40 pb-2.5 sm:pb-3">
-                                  <span className="text-[11px] sm:text-xs font-bold uppercase tracking-widest text-[#FF5A1F] flex items-center gap-1.5">
-                                    <Sparkles className="h-3.5 w-3.5" /> AI Production Package ({form.promptStyle})
+                              {/* ── UNIFIED PRODUCTION PACKAGE: Prompt, Dialogue & SFX ── */}
+                              <div className="rounded-xl border border-[#FF5A1F]/30 bg-background p-3 sm:p-4 space-y-3 shadow-sm max-w-full overflow-hidden">
+                                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 border-b border-border/40 pb-2 max-w-full">
+                                  <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-[#FF5A1F] flex items-center gap-1">
+                                    <Sparkles className="h-3.5 w-3.5 shrink-0" /> AI Package ({form.promptStyle})
                                   </span>
                                   <button
                                     onClick={() => handleCopy(getCombinedPackageText(scene), copyKey)}
-                                    className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#FF5A1F] px-3.5 py-2 text-xs font-bold text-white shadow-md hover:bg-[#e04c15] transition-transform active:scale-95"
+                                    className="w-full sm:w-auto inline-flex items-center justify-center gap-1 rounded-lg bg-[#FF5A1F] px-3 py-1.5 text-[11px] font-bold text-white shadow-md active:scale-95"
                                   >
                                     {copiedKey === copyKey ? (
                                       <Check className="h-3.5 w-3.5" />
@@ -894,22 +887,22 @@ export function StoryboardGeneratorPage() {
                                 </div>
 
                                 {/* Visual Prompt */}
-                                <div>
-                                  <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-muted-foreground block mb-1">
+                                <div className="max-w-full">
+                                  <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground block mb-1">
                                     🎬 Visual AI Prompt
                                   </span>
-                                  <p className="text-[11px] sm:text-xs font-mono text-foreground leading-relaxed selection:bg-[#FF5A1F]/30">
+                                  <p className="text-[11px] sm:text-xs font-mono text-foreground leading-relaxed break-words whitespace-pre-wrap selection:bg-[#FF5A1F]/30">
                                     {scene.copyReadyPrompt || scene.generationPrompt}
                                   </p>
                                 </div>
 
                                 {/* Dialogue Line */}
                                 {scene.dialogue && (
-                                  <div className="border-t border-border/30 pt-2.5">
-                                    <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-[#FF5A1F] block mb-1 flex items-center gap-1">
-                                      <MessageSquare className="h-3 w-3" /> Character Dialogue
+                                  <div className="border-t border-border/30 pt-2 max-w-full">
+                                    <span className="text-[9px] font-bold uppercase tracking-wider text-[#FF5A1F] block mb-1 flex items-center gap-1">
+                                      <MessageSquare className="h-3 w-3 shrink-0" /> Character Dialogue
                                     </span>
-                                    <p className="text-[11px] sm:text-xs font-mono italic text-foreground bg-[#FF5A1F]/5 p-2 sm:p-2.5 rounded-xl border border-[#FF5A1F]/20">
+                                    <p className="text-[11px] font-mono italic text-foreground bg-[#FF5A1F]/5 p-2 rounded-lg border border-[#FF5A1F]/20 break-words whitespace-pre-wrap">
                                       "{scene.dialogue}"
                                     </p>
                                   </div>
@@ -917,11 +910,11 @@ export function StoryboardGeneratorPage() {
 
                                 {/* Sound Effects (SFX) */}
                                 {scene.sfx && (
-                                  <div className="border-t border-border/30 pt-2.5">
-                                    <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-muted-foreground block mb-1 flex items-center gap-1">
-                                      <Volume2 className="h-3 w-3" /> Sound Effects (SFX)
+                                  <div className="border-t border-border/30 pt-2 max-w-full">
+                                    <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground block mb-1 flex items-center gap-1">
+                                      <Volume2 className="h-3 w-3 shrink-0" /> Sound Effects (SFX)
                                     </span>
-                                    <p className="text-[11px] sm:text-xs font-mono text-muted-foreground bg-secondary/30 p-2 sm:p-2.5 rounded-xl border border-border/40">
+                                    <p className="text-[11px] font-mono text-muted-foreground bg-secondary/30 p-2 rounded-lg border border-border/40 break-words whitespace-pre-wrap">
                                       🔊 {scene.sfx}
                                     </p>
                                   </div>
@@ -929,7 +922,7 @@ export function StoryboardGeneratorPage() {
 
                                 {/* Negative Prompt */}
                                 {scene.negativePrompt && (
-                                  <div className="border-t border-border/30 pt-2 text-[9px] sm:text-[10px] font-mono text-muted-foreground">
+                                  <div className="border-t border-border/30 pt-1.5 text-[9px] font-mono text-muted-foreground break-words">
                                     <strong>Negative Prompt:</strong> {scene.negativePrompt}
                                   </div>
                                 )}
@@ -942,26 +935,26 @@ export function StoryboardGeneratorPage() {
                   })}
                 </div>
 
-                {/* ── Character Library Panel (Mobile Grid) ────────────────────── */}
+                {/* ── Character Library Panel (Mobile Fit) ────────────────────── */}
                 {output.characters && output.characters.length > 0 && (
-                  <div className="rounded-3xl border border-border/80 bg-card p-4 sm:p-8 shadow-glass">
-                    <h3 className="font-display text-base sm:text-lg font-bold text-foreground mb-3 sm:mb-4 flex items-center gap-2">
-                      <Users className="h-4.5 w-4.5 text-[#FF5A1F]" /> Character Library ({output.characters.length})
+                  <div className="rounded-2xl sm:rounded-3xl border border-border/80 bg-card p-3.5 sm:p-6 shadow-glass max-w-full">
+                    <h3 className="font-display text-sm sm:text-lg font-bold text-foreground mb-2.5 flex items-center gap-1.5">
+                      <Users className="h-4 w-4 text-[#FF5A1F]" /> Character Library ({output.characters.length})
                     </h3>
-                    <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2">
+                    <div className="grid gap-2.5 grid-cols-1 sm:grid-cols-2 max-w-full">
                       {output.characters.map((char, i) => (
-                        <div key={i} className="rounded-2xl border border-border/60 bg-secondary/20 p-3.5 sm:p-4 space-y-1.5 sm:space-y-2">
+                        <div key={i} className="rounded-xl border border-border/60 bg-secondary/20 p-3 space-y-1 max-w-full">
                           <div className="flex items-center justify-between">
-                            <h4 className="font-display font-bold text-sm text-foreground">{char.name}</h4>
-                            <span className="rounded-full bg-background px-2 py-0.5 text-[9px] sm:text-[10px] font-bold text-muted-foreground">
+                            <h4 className="font-display font-bold text-xs text-foreground truncate">{char.name}</h4>
+                            <span className="rounded-full bg-background px-2 py-0.5 text-[9px] font-bold text-muted-foreground shrink-0">
                               {char.sceneCount} Scenes
                             </span>
                           </div>
-                          <p className="text-xs text-muted-foreground">{char.appearance}</p>
-                          <div className="pt-1.5">
+                          <p className="text-[11px] text-muted-foreground break-words">{char.appearance}</p>
+                          <div className="pt-1">
                             <button
                               onClick={() => handleCopy(char.characterPrompt, `char-${i}`)}
-                              className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#FF5A1F] hover:underline"
+                              className="inline-flex items-center gap-1 text-[10px] font-bold text-[#FF5A1F] hover:underline"
                             >
                               {copiedKey === `char-${i}` ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
                               Copy Consistency Prompt
@@ -973,21 +966,21 @@ export function StoryboardGeneratorPage() {
                   </div>
                 )}
 
-                {/* ── Environment Library Panel (Mobile Grid) ──────────────────── */}
+                {/* ── Environment Library Panel (Mobile Fit) ──────────────────── */}
                 {output.environments && output.environments.length > 0 && (
-                  <div className="rounded-3xl border border-border/80 bg-card p-4 sm:p-8 shadow-glass">
-                    <h3 className="font-display text-base sm:text-lg font-bold text-foreground mb-3 sm:mb-4 flex items-center gap-2">
-                      <MapPin className="h-4.5 w-4.5 text-emerald-500" /> Environment Library ({output.environments.length})
+                  <div className="rounded-2xl sm:rounded-3xl border border-border/80 bg-card p-3.5 sm:p-6 shadow-glass max-w-full">
+                    <h3 className="font-display text-sm sm:text-lg font-bold text-foreground mb-2.5 flex items-center gap-1.5">
+                      <MapPin className="h-4 w-4 text-emerald-500" /> Environment Library ({output.environments.length})
                     </h3>
-                    <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2">
+                    <div className="grid gap-2.5 grid-cols-1 sm:grid-cols-2 max-w-full">
                       {output.environments.map((env, i) => (
-                        <div key={i} className="rounded-2xl border border-border/60 bg-secondary/20 p-3.5 sm:p-4 space-y-1.5 sm:space-y-2">
-                          <h4 className="font-display font-bold text-sm text-foreground">{env.location}</h4>
-                          <p className="text-xs text-muted-foreground">{env.description}</p>
-                          <div className="pt-1.5">
+                        <div key={i} className="rounded-xl border border-border/60 bg-secondary/20 p-3 space-y-1 max-w-full">
+                          <h4 className="font-display font-bold text-xs text-foreground truncate">{env.location}</h4>
+                          <p className="text-[11px] text-muted-foreground break-words">{env.description}</p>
+                          <div className="pt-1">
                             <button
                               onClick={() => handleCopy(env.imagePrompt, `env-${i}`)}
-                              className="inline-flex items-center gap-1.5 text-[11px] font-bold text-emerald-500 hover:underline"
+                              className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-500 hover:underline"
                             >
                               {copiedKey === `env-${i}` ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
                               Copy Background Prompt
@@ -1005,25 +998,25 @@ export function StoryboardGeneratorPage() {
       </section>
 
       {/* ── Bottom Future Footer Ad Banner Placeholder ────────────────────── */}
-      <AdPlaceholder type="footer-banner" className="mb-12 sm:mb-16" />
+      <AdPlaceholder type="footer-banner" className="mb-12" />
 
       {/* ── Agency Conversion CTA Footprint ─────────────────────────────────── */}
-      <section className="relative overflow-hidden border-t border-border/60 bg-gradient-to-b from-secondary/40 via-background to-background py-14 sm:py-20">
+      <section className="relative overflow-hidden border-t border-border/60 bg-gradient-to-b from-secondary/40 via-background to-background py-12 sm:py-16 w-full max-w-full">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 text-center">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-[#FF5A1F]/30 bg-[#FF5A1F]/10 px-3.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-[#FF5A1F]">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-[#FF5A1F]/30 bg-[#FF5A1F]/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-[#FF5A1F]">
             <Zap className="h-3.5 w-3.5" /> Need Full Commercial Production?
           </span>
-          <h2 className="mt-3 font-display text-2xl font-black tracking-tight text-foreground sm:text-4xl">
+          <h2 className="mt-3 font-display text-xl sm:text-3xl font-black tracking-tight text-foreground break-words">
             Want ContentMesh Studios to Turn Your Storyboard into a Finished Commercial Video?
           </h2>
-          <p className="mt-3 text-xs sm:text-base leading-relaxed text-muted-foreground">
+          <p className="mt-2 text-xs sm:text-base leading-relaxed text-muted-foreground break-words">
             Our team handles full-stack AI production: scriptwriting, character design, 4K generative video renders, voiceover dubbing, and senior color grading.
           </p>
 
-          <div className="mt-6 sm:mt-8 flex justify-center">
+          <div className="mt-5 sm:mt-8 flex justify-center">
             <Link
               to="/contact"
-              className="inline-flex items-center gap-2 rounded-full bg-[#FF5A1F] px-7 py-3.5 text-xs font-bold uppercase tracking-widest text-white shadow-2xl shadow-[#FF5A1F]/40 transition-transform duration-300 hover:scale-105"
+              className="inline-flex items-center gap-2 rounded-full bg-[#FF5A1F] px-6 py-3 text-xs font-bold uppercase tracking-widest text-white shadow-xl shadow-[#FF5A1F]/30 transition-transform duration-300 hover:scale-105"
             >
               Hire ContentMesh Studios <ArrowRight className="h-4 w-4" />
             </Link>

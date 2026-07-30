@@ -21,12 +21,12 @@ export function SiteLayout({ children, heroSlot }: SiteLayoutProps) {
   }, []);
 
   return (
-    <div className="relative min-h-dvh">
+    <div className="relative min-h-dvh w-full max-w-full overflow-x-hidden">
       <AmbientBackground />
       <Navbar />
       {/* Hero renders here — behind the fixed navbar, no pt-28 */}
       {heroSlot}
-      <main className={heroSlot ? "" : "pt-28"}>{children}</main>
+      <main className={`w-full max-w-full overflow-x-hidden ${heroSlot ? "" : "pt-28"}`}>{children}</main>
       <Footer />
       <FloatingChatbot />
       <AnimatePresence>
