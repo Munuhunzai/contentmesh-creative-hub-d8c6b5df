@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Star, ChevronLeft, ChevronRight, Quote, TrendingUp, CheckCircle } from "lucide-react";
+import { Star } from "lucide-react";
 import { useSanity } from "@/integrations/sanity/useSanity";
 import { testimonialsQuery } from "@/integrations/sanity/queries";
-import { SectionHeader } from "./Services";
 
 export type Testimonial = {
   _id: string;
@@ -12,216 +11,147 @@ export type Testimonial = {
   authorRole?: string;
   company?: string;
   avatarUrl?: string | null;
-  metric?: string;
   rating?: number;
-  accentColor?: string;
 };
 
-const FALLBACK: Testimonial[] = [
+const REVIEWS_DATA: Testimonial[] = [
   {
     _id: "1",
-    authorName: "Amelia Chen",
-    authorRole: "Head of Growth",
-    company: "Aurea Health",
-    avatarUrl: "/avatars/amelia.jpg",
-    quote:
-      "ContentMesh completely reshaped our video ad pipeline. We ship high-converting video variations in 3 days that used to take months with traditional agencies.",
-    metric: "+340% ROAS Lift",
+    authorName: "Emily Jeff",
+    authorRole: "CEO",
+    company: "TheWebagency",
+    avatarUrl: "/reviews/emily.jpg",
     rating: 5,
-    accentColor: "#FF5A1F",
+    quote:
+      "Ten the hastened steepest feelings pleasant few surprise property. An brother he do colonel against.",
   },
   {
     _id: "2",
-    authorName: "Marcus Rivera",
-    authorRole: "Founder & CEO",
-    company: "Halo Wireless",
-    avatarUrl: "/avatars/marcus.jpg",
-    quote:
-      "The visual craft is cinema-grade, and their generative AI workflow gave us shot variety and angle options we could never afford on a physical set.",
-    metric: "12M+ Views",
+    authorName: "Hamza Malik",
+    authorRole: "Manager",
+    company: "TheWekrtech",
+    avatarUrl: "/reviews/hamza.jpg",
     rating: 5,
-    accentColor: "#0D4C92",
+    quote:
+      "Can how elinor warmly mrs basket marked. Led raising expense yet demesne weather musical. Me mr what.",
   },
   {
     _id: "3",
-    authorName: "Priya Sharma",
-    authorRole: "Chief Marketing Officer",
-    company: "Kairos SaaS",
-    avatarUrl: null,
-    quote:
-      "Every single deliverable was strictly on-brand, on-time, and noticeably higher quality than what we requested. ContentMesh is our secret weapon.",
-    metric: "5-Day Turnaround",
+    authorName: "Elizabeth Rai",
+    authorRole: "Developer",
+    company: "I2c Company",
+    avatarUrl: "/reviews/elizabeth.jpg",
     rating: 5,
-    accentColor: "#F6C244",
+    quote:
+      "park next busy ever. Elinor her his secure far twenty eat object. Any far saw size want man. Which way you wrong.",
   },
   {
     _id: "4",
-    authorName: "Jonas Weber",
-    authorRole: "Creative Director",
-    company: "Fjord Media",
-    avatarUrl: null,
-    quote:
-      "A rare creative studio that deeply understands narrative storytelling AND technical AI execution. They are our permanent video partner.",
-    metric: "10x Content Volume",
+    authorName: "Sara Thomas",
+    authorRole: "Accountant",
+    company: "TheConsturction",
+    avatarUrl: "/reviews/sara.jpg",
     rating: 5,
-    accentColor: "#10B981",
+    quote:
+      "Concerns greatest margaret him absolute entrance nay. Door neat week do find past he. Be no surprise he honoured.",
   },
 ];
 
 export function Testimonials() {
-  const list = useSanity<Testimonial[]>(["sanity", "testimonials"], testimonialsQuery, FALLBACK);
-  const items = list && list.length > 0 ? list : FALLBACK;
+  const sanityList = useSanity<Testimonial[]>(["sanity", "testimonials"], testimonialsQuery, []);
+  const list = sanityList && sanityList.length > 0 ? sanityList : REVIEWS_DATA;
 
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [isAutoplay, setIsAutoplay] = useState(true);
-
-  const cur = items[activeIndex % items.length];
-
-  const goNext = () => {
-    setActiveIndex((prev) => (prev + 1) % items.length);
-  };
-
-  const goPrev = () => {
-    setActiveIndex((prev) => (prev - 1 + items.length) % items.length);
-  };
-
-  // Auto advance every 6 seconds unless paused
-  useEffect(() => {
-    if (!isAutoplay) return;
-    const timer = setInterval(() => {
-      goNext();
-    }, 6000);
-    return () => clearInterval(timer);
-  }, [activeIndex, isAutoplay]);
-
-  if (!cur) return null;
+  const [activeIndex, setActiveIndex] = useState(1);
 
   return (
-    <section className="relative py-24 sm:py-32" id="testimonials">
+    <section className="relative py-20 sm:py-28" id="testimonials">
       <div className="mx-auto max-w-7xl px-6">
-        <SectionHeader
-          eyebrow="Verified Client Results"
-          title="Loved by High-Growth Brands & Creative Leaders"
-          desc="See how modern growth teams and agency directors scale video production with ContentMesh."
-        />
-
-        {/* ── Client Company Selector Tabs ──────────────────────────────────── */}
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-          {items.map((item, idx) => {
-            const isActive = idx === activeIndex % items.length;
-            return (
-              <button
-                key={item._id}
-                onClick={() => {
-                  setActiveIndex(idx);
-                  setIsAutoplay(false);
-                }}
-                className={`relative rounded-full px-5 py-2.5 text-xs font-bold uppercase tracking-wider transition-all duration-300 ${
-                  isActive
-                    ? "bg-[#FF5A1F] text-white shadow-lg shadow-[#FF5A1F]/30 scale-105"
-                    : "glass border border-border/60 text-muted-foreground hover:bg-secondary hover:text-foreground"
-                }`}
-              >
-                {item.company || item.authorName}
-              </button>
-            );
-          })}
+        {/* ── Section Title ─────────────────────────────────────────────────── */}
+        <div className="text-center">
+          <h2 className="font-display text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+            Testimonials
+          </h2>
         </div>
 
-        {/* ── High-Impact Client Spotlight Card ─────────────────────────────── */}
-        <div
-          className="relative mt-12 mx-auto max-w-4xl overflow-hidden rounded-[2.5rem] border border-border/80 bg-gradient-to-b from-background via-background/90 to-secondary/40 p-8 sm:p-14 shadow-2xl backdrop-blur-2xl"
-          onMouseEnter={() => setIsAutoplay(false)}
-          onMouseLeave={() => setIsAutoplay(true)}
-        >
-          {/* Ambient Glow */}
-          <div
-            className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full blur-3xl opacity-30 transition-all duration-700"
-            style={{ backgroundColor: cur.accentColor || "#FF5A1F" }}
-          />
+        {/* ── 4-Column Cards Grid ───────────────────────────────────────────── */}
+        <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {list.map((item, idx) => {
+            const isSelected = activeIndex === idx;
+            return (
+              <motion.div
+                key={item._id || idx}
+                whileHover={{ y: -6 }}
+                onClick={() => setActiveIndex(idx)}
+                className="group relative flex flex-col justify-between overflow-hidden rounded-[1.75rem] border border-border/50 bg-card shadow-sm transition-all duration-300 hover:shadow-xl cursor-pointer"
+              >
+                {/* ── Top Half: Gray Container with Avatar & Author Info ───── */}
+                <div className="flex items-center gap-4 bg-secondary/50 p-6 pt-7 rounded-t-[1.75rem]">
+                  {/* Square Avatar Portrait */}
+                  <div className="h-20 w-20 shrink-0 overflow-hidden rounded-2xl border border-border/40 shadow-sm">
+                    {item.avatarUrl ? (
+                      <img
+                        src={item.avatarUrl}
+                        alt={item.authorName}
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center bg-primary/10 font-bold text-primary text-xl">
+                        {item.authorName[0]}
+                      </div>
+                    )}
+                  </div>
 
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={cur._id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.4 }}
-            >
-              {/* Header Badges */}
-              <div className="flex flex-wrap items-center justify-between gap-4">
-                {/* Rating Stars */}
-                <div className="flex items-center gap-1.5 rounded-full border border-border/60 bg-background/80 px-4 py-1.5 text-[#F6C244]">
-                  {Array.from({ length: cur.rating || 5 }).map((_, k) => (
-                    <Star key={k} className="h-4 w-4 fill-current" />
-                  ))}
-                  <span className="ml-1 text-xs font-bold text-foreground">5.0 Verified</span>
-                </div>
-
-                {/* Growth Metric Badge */}
-                {cur.metric && (
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-emerald-500">
-                    <TrendingUp className="h-3.5 w-3.5" /> {cur.metric}
-                  </span>
-                )}
-              </div>
-
-              {/* Quote Body */}
-              <div className="relative mt-8">
-                <Quote className="absolute -left-3 -top-3 h-10 w-10 text-[#FF5A1F]/20" />
-                <p className="relative font-display text-2xl font-bold leading-relaxed tracking-tight text-foreground sm:text-3xl">
-                  "{cur.quote}"
-                </p>
-              </div>
-
-              {/* Author Footer */}
-              <div className="mt-10 flex flex-col sm:flex-row sm:items-center justify-between border-t border-border/50 pt-6 gap-4">
-                <div className="flex items-center gap-4">
-                  {cur.avatarUrl ? (
-                    <img
-                      src={cur.avatarUrl}
-                      alt={cur.authorName}
-                      className="h-14 w-14 rounded-2xl border-2 border-[#FF5A1F] object-cover shadow-md"
-                    />
-                  ) : (
-                    <div
-                      className="grid h-14 w-14 place-items-center rounded-2xl font-bold text-white shadow-md text-lg"
-                      style={{ backgroundColor: cur.accentColor || "#FF5A1F" }}
-                    >
-                      {cur.authorName.split(" ").map((n) => n[0]).join("")}
-                    </div>
-                  )}
-
-                  <div>
-                    <h4 className="font-display text-lg font-bold tracking-tight text-foreground">
-                      {cur.authorName}
-                    </h4>
-                    <p className="text-xs font-semibold text-muted-foreground">
-                      {cur.authorRole} • <span className="text-[#FF5A1F]">{cur.company}</span>
+                  {/* Details */}
+                  <div className="flex flex-col justify-center">
+                    <h3 className="font-display text-base font-bold tracking-tight text-foreground sm:text-lg">
+                      {item.authorName}
+                    </h3>
+                    <p className="mt-0.5 text-xs text-muted-foreground font-medium">
+                      {item.authorRole}
+                    </p>
+                    <p className="text-xs text-muted-foreground/80 font-normal">
+                      {item.company}
                     </p>
                   </div>
                 </div>
 
-                {/* Slide Controls */}
-                <div className="flex items-center gap-2 self-end sm:self-center">
-                  <button
-                    onClick={goPrev}
-                    aria-label="Previous testimonial"
-                    className="grid h-11 w-11 place-items-center rounded-full border border-border/80 bg-background text-foreground shadow-md transition-transform hover:scale-110 active:scale-95"
-                  >
-                    <ChevronLeft className="h-5 w-5" />
-                  </button>
-                  <button
-                    onClick={goNext}
-                    aria-label="Next testimonial"
-                    className="grid h-11 w-11 place-items-center rounded-full bg-foreground text-background shadow-md transition-transform hover:scale-110 active:scale-95"
-                  >
-                    <ChevronRight className="h-5 w-5" />
-                  </button>
+                {/* ── Middle Rating Star Pill ──────────────────────────────── */}
+                <div className="relative z-10 -mt-3.5 mx-auto flex items-center justify-center">
+                  <div className="inline-flex items-center gap-1 rounded-full border border-border/40 bg-background px-3.5 py-1 shadow-md">
+                    {Array.from({ length: item.rating || 5 }).map((_, k) => (
+                      <Star key={k} className="h-3.5 w-3.5 fill-[#f59e0b] text-[#f59e0b]" />
+                    ))}
+                  </div>
                 </div>
-              </div>
-            </motion.div>
-          </AnimatePresence>
+
+                {/* ── Bottom Half: White Quote Container ──────────────────── */}
+                <div className="flex flex-1 flex-col justify-center bg-card p-6 pt-5 text-center rounded-b-[1.75rem]">
+                  <p className="text-xs leading-relaxed text-muted-foreground sm:text-sm">
+                    {item.quote}
+                  </p>
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
+
+        {/* ── Bottom Pagination Indicators (Exact Cyan Pill Style) ──────────── */}
+        <div className="mt-10 flex items-center justify-center gap-2">
+          {list.map((_, idx) => {
+            const isActive = idx === activeIndex;
+            return (
+              <button
+                key={idx}
+                onClick={() => setActiveIndex(idx)}
+                aria-label={`Go to review slide ${idx + 1}`}
+                className={`h-1.5 rounded-full transition-all duration-300 ${
+                  isActive
+                    ? "w-8 bg-[#0d9488]"
+                    : "w-6 bg-[#99f6e4] opacity-60 hover:opacity-100"
+                }`}
+              />
+            );
+          })}
         </div>
       </div>
     </section>
