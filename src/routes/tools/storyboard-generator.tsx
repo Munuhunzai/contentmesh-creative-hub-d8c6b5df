@@ -42,7 +42,7 @@ import {
   StoryboardScene,
 } from "@/types/storyboard";
 
-export const Route = createFileRoute("/tools/storyboard-generator")({
+export const Route = createFileRoute("/tools/storyboard-generator" as any)({
   head: () => ({
     meta: [
       {
