@@ -24,9 +24,9 @@ import {
   MessageSquare,
   Zap,
   Upload,
-  Plus,
   Trash2,
   Image as ImageIcon,
+  Compass,
 } from "lucide-react";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { AdPlaceholder } from "@/components/tools/AdPlaceholder";
@@ -283,6 +283,16 @@ export function StoryboardGeneratorPage() {
     setTimeout(() => setCopiedKey(null), 2000);
   };
 
+  const scrollToScene = (sceneNumber: number) => {
+    setExpandedScenes((prev) => ({ ...prev, [sceneNumber]: true }));
+    setTimeout(() => {
+      const el = document.getElementById(`scene-card-${sceneNumber}`);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    }, 50);
+  };
+
   const getCombinedPackageText = (scene: StoryboardScene) => {
     let pkg = `[SCENE ${scene.sceneNumber}: ${scene.sceneTitle}]\n🎬 VISUAL PROMPT:\n${scene.copyReadyPrompt || scene.generationPrompt}`;
     if (scene.dialogue) {
@@ -349,10 +359,14 @@ export function StoryboardGeneratorPage() {
   const filteredScenes = useMemo(() => {
     if (!output?.scenes) return [];
     return output.scenes.filter((scene) => {
+      const q = searchQuery.toLowerCase().trim();
       const matchesSearch =
-        scene.sceneTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        scene.generationPrompt.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        scene.environment.toLowerCase().includes(searchQuery.toLowerCase());
+        !q ||
+        scene.sceneTitle.toLowerCase().includes(q) ||
+        scene.generationPrompt.toLowerCase().includes(q) ||
+        scene.environment.toLowerCase().includes(q) ||
+        `scene ${scene.sceneNumber}`.toLowerCase().includes(q) ||
+        scene.sceneNumber.toString() === q;
 
       if (!matchesSearch) return false;
 
@@ -454,7 +468,7 @@ export function StoryboardGeneratorPage() {
                 <div className="rounded-xl border border-border/70 bg-secondary/20 p-3 space-y-3 max-w-full">
                   <div className="flex items-center justify-between">
                     <label className="text-[11px] font-bold uppercase tracking-wider text-foreground flex items-center gap-1.5">
-                      <ImageIcon className="h-3.5 w-3.5 text-[#FF5A1F]" /> Character Image Upload & References
+                      <ImageIcon className="h-3.5 w-3.5 text-[#FF5A1F]" /> Character Reference Images
                     </label>
                     <span className="text-[10px] font-bold text-[#FF5A1F]">
                       {form.uploadedCharacters?.length || 0} Uploaded
@@ -477,7 +491,7 @@ export function StoryboardGeneratorPage() {
                     onClick={() => fileInputRef.current?.click()}
                     className="w-full flex items-center justify-center gap-2 rounded-xl border border-dashed border-[#FF5A1F]/50 bg-[#FF5A1F]/5 p-3 text-xs font-bold text-[#FF5A1F] hover:bg-[#FF5A1F]/10 transition-colors"
                   >
-                    <Upload className="h-4 w-4" /> Upload Character Reference Images (PNG/JPG)
+                    <Upload className="h-4 w-4" /> Upload Character Images (PNG/JPG)
                   </button>
 
                   {/* Uploaded Characters Preview List */}
@@ -513,7 +527,7 @@ export function StoryboardGeneratorPage() {
                             <input
                               type="text"
                               value={char.prompt}
-                              placeholder="Visual prompt / appearance details..."
+                              placeholder="Visual prompt details..."
                               onChange={(e) =>
                                 handleUpdateUploadedCharacter(char.id, "prompt", e.target.value)
                               }
@@ -560,7 +574,7 @@ export function StoryboardGeneratorPage() {
                       max={200}
                       value={form.numberOfScenes}
                       onChange={(e) =>
-                        handleFormChange("numberOfScenes", parseInt(e.target.value) || 5)
+                        handleFormChange("numberOfScenes", parseInt(e.target.value) || 10)
                       }
                       className="w-full rounded-xl border border-input bg-background px-3 py-2 text-xs font-semibold outline-none focus:ring-2 focus:ring-[#FF5A1F]/40"
                     />
@@ -838,15 +852,19 @@ export function StoryboardGeneratorPage() {
                 {/* ── Storyboard Horizontal Visual Timeline ───────────────────── */}
                 {output.timeline && output.timeline.length > 0 && (
                   <div className="rounded-2xl sm:rounded-3xl border border-border/80 bg-card p-3.5 sm:p-6 shadow-glass max-w-full overflow-hidden">
-                    <h3 className="font-display text-[11px] sm:text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2.5 flex items-center gap-1.5">
-                      <Film className="h-3.5 w-3.5 text-[#FF5A1F]" /> Storyboard Timeline
-                    </h3>
+                    <div className="flex items-center justify-between mb-2.5">
+                      <h3 className="font-display text-[11px] sm:text-xs font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
+                        <Film className="h-3.5 w-3.5 text-[#FF5A1F]" /> Storyboard Timeline ({output.timeline.length} Scenes)
+                      </h3>
+                      <span className="text-[10px] text-muted-foreground">Click any scene to jump</span>
+                    </div>
+
                     <div className="no-scrollbar flex items-center gap-2.5 overflow-x-auto pb-1 max-w-full">
                       {output.timeline.map((item) => (
                         <div
                           key={item.sceneNumber}
-                          onClick={() => toggleExpand(item.sceneNumber)}
-                          className="flex flex-col justify-between shrink-0 rounded-xl border border-border/60 bg-secondary/30 p-2.5 cursor-pointer hover:border-[#FF5A1F]/60 transition-all"
+                          onClick={() => scrollToScene(item.sceneNumber)}
+                          className="flex flex-col justify-between shrink-0 rounded-xl border border-border/60 bg-secondary/30 p-2.5 cursor-pointer hover:border-[#FF5A1F] hover:bg-secondary transition-all"
                           style={{ width: "135px" }}
                         >
                           <div className="flex items-center justify-between">
@@ -867,19 +885,43 @@ export function StoryboardGeneratorPage() {
                   </div>
                 )}
 
-                {/* ── Top Export & Filter Action Toolbar ────────────────────────── */}
+                {/* ── Top Export, Filter & Quick Jumper Action Toolbar ───────── */}
                 <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center justify-between gap-2.5 rounded-2xl sm:rounded-3xl border border-border/80 bg-card p-3.5 sm:p-5 shadow-glass max-w-full">
                   {/* Search Bar */}
                   <div className="relative w-full sm:flex-1 sm:min-w-[160px]">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
                     <input
                       type="text"
-                      placeholder="Search prompts or locations..."
+                      placeholder="Search prompts, scene #, or locations..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       className="w-full rounded-xl border border-input bg-background pl-8 pr-3 py-1.5 text-xs outline-none focus:ring-2 focus:ring-[#FF5A1F]/40"
                     />
                   </div>
+
+                  {/* Scene Jumper Dropdown */}
+                  {output.scenes && output.scenes.length > 0 && (
+                    <div className="relative flex items-center gap-1">
+                      <Compass className="h-3.5 w-3.5 text-[#FF5A1F] shrink-0" />
+                      <select
+                        onChange={(e) => {
+                          const val = parseInt(e.target.value);
+                          if (val) scrollToScene(val);
+                        }}
+                        defaultValue=""
+                        className="rounded-xl border border-input bg-background px-2.5 py-1.5 text-xs font-semibold outline-none focus:ring-2 focus:ring-[#FF5A1F]/40"
+                      >
+                        <option value="" disabled>
+                          Jump to Scene...
+                        </option>
+                        {output.scenes.map((s) => (
+                          <option key={s.sceneNumber} value={s.sceneNumber}>
+                            Scene {s.sceneNumber}: {s.sceneTitle}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
 
                   {/* Category Filter Pills */}
                   <div className="no-scrollbar flex items-center gap-1 overflow-x-auto pb-0.5 sm:pb-0 max-w-full">
@@ -945,7 +987,7 @@ export function StoryboardGeneratorPage() {
                   </div>
                 </div>
 
-                {/* ── Generated Scenes List ───────────────────────────────────── */}
+                {/* ── Generated Scenes List (With Scene IDs for Direct Jumper Anchor) ── */}
                 <div className="space-y-4 max-w-full">
                   {filteredScenes.map((scene) => {
                     const isExpanded = expandedScenes[scene.sceneNumber] !== false;
@@ -954,6 +996,7 @@ export function StoryboardGeneratorPage() {
                     return (
                       <motion.div
                         key={scene.sceneNumber}
+                        id={`scene-card-${scene.sceneNumber}`}
                         layout
                         className="overflow-hidden rounded-2xl sm:rounded-3xl border border-border/80 bg-card p-3.5 sm:p-5 shadow-glass backdrop-blur-xl transition-all hover:border-[#FF5A1F]/30 max-w-full"
                       >
@@ -1088,7 +1131,7 @@ export function StoryboardGeneratorPage() {
                   })}
                 </div>
 
-                {/* ── Character Library Panel (With Uploaded Image Thumbnail Preview) ─ */}
+                {/* ── Character Library Panel ─────────────────────────────────── */}
                 {output.characters && output.characters.length > 0 && (
                   <div className="rounded-2xl sm:rounded-3xl border border-border/80 bg-card p-3.5 sm:p-6 shadow-glass max-w-full">
                     <h3 className="font-display text-sm sm:text-lg font-bold text-foreground mb-2.5 flex items-center gap-1.5">
