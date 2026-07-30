@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -16,15 +16,12 @@ import {
   Film,
   Users,
   MapPin,
-  Clock,
   Volume2,
   Music,
   Shield,
   ArrowRight,
   ChevronDown,
   ChevronUp,
-  Share2,
-  Edit3,
   MessageSquare,
   Zap,
 } from "lucide-react";
@@ -38,7 +35,6 @@ import {
   OutputLanguageOption,
   AspectRatioOption,
   CameraStyleOption,
-  PromptDetailOption,
   StoryboardScene,
 } from "@/types/storyboard";
 
@@ -230,6 +226,20 @@ export function StoryboardGeneratorPage() {
     setTimeout(() => setCopiedKey(null), 2000);
   };
 
+  const getCombinedPackageText = (scene: StoryboardScene) => {
+    let pkg = `[SCENE ${scene.sceneNumber}: ${scene.sceneTitle}]\n🎬 VISUAL PROMPT:\n${scene.copyReadyPrompt || scene.generationPrompt}`;
+    if (scene.dialogue) {
+      pkg += `\n\n💬 DIALOGUE:\n"${scene.dialogue}"`;
+    }
+    if (scene.sfx) {
+      pkg += `\n\n🔊 SOUND EFFECTS (SFX):\n${scene.sfx}`;
+    }
+    if (scene.negativePrompt) {
+      pkg += `\n\n🛑 NEGATIVE PROMPT:\n${scene.negativePrompt}`;
+    }
+    return pkg;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.script || form.script.trim().length < 10) {
@@ -262,7 +272,8 @@ export function StoryboardGeneratorPage() {
       setExpandedScenes(initialExpanded);
     } catch (err: any) {
       setError(err.message || "An error occurred during generation.");
-    } finally {
+    } font-mono
+    finally {
       setLoading(false);
     }
   };
@@ -298,13 +309,13 @@ export function StoryboardGeneratorPage() {
     } else if (type === "markdown") {
       content = `# ${output.project.title}\n\n**Visual Style:** ${output.project.visualStyle} | **Aspect Ratio:** ${output.project.aspectRatio}\n\n## Summary\n${output.summary}\n\n## Scenes\n`;
       output.scenes.forEach((s) => {
-        content += `\n### Scene ${s.sceneNumber}: ${s.sceneTitle} (${s.duration})\n- **Environment:** ${s.environment}\n- **Characters:** ${s.characters.join(", ")}\n- **Camera:** ${s.camera.angle}, ${s.camera.movement}\n- **Prompt:** ${s.copyReadyPrompt}\n`;
+        content += `\n### Scene ${s.sceneNumber}: ${s.sceneTitle} (${s.duration})\n- **Environment:** ${s.environment}\n- **Characters:** ${s.characters.join(", ")}\n- **Camera:** ${s.camera.angle}, ${s.camera.movement}\n- **Prompt Package:**\n\`\`\`\n${getCombinedPackageText(s)}\n\`\`\`\n`;
       });
       mimeType = "text/markdown";
     } else {
-      content = `${output.project.title}\n======================\n${output.summary}\n\nSCENE PROMPTS:\n`;
+      content = `${output.project.title}\n======================\n${output.summary}\n\nSCENE PACKAGES:\n`;
       output.scenes.forEach((s) => {
-        content += `\n[Scene ${s.sceneNumber}] ${s.sceneTitle}\nPROMPT: ${s.copyReadyPrompt}\n`;
+        content += `\n${getCombinedPackageText(s)}\n----------------------------------------\n`;
       });
     }
 
@@ -353,7 +364,7 @@ export function StoryboardGeneratorPage() {
       {/* ── Main Workspace Container ──────────────────────────────────────── */}
       <section className="mx-auto max-w-7xl px-6 pb-28" id="generator-workspace">
         <div className="grid gap-8 lg:grid-cols-12">
-          {/* ── LEFT INPUT PANEL (35% on Desktop / 12 cols span 4 or 5) ──────── */}
+          {/* ── LEFT INPUT PANEL (35% on Desktop) ────────────────────────────── */}
           <div className="lg:col-span-5 xl:col-span-4 space-y-6">
             <div className="rounded-[2.25rem] border border-border/80 bg-card p-6 sm:p-8 shadow-glass backdrop-blur-xl">
               <div className="flex items-center gap-2 border-b border-border/40 pb-4">
@@ -637,7 +648,7 @@ export function StoryboardGeneratorPage() {
             <AdPlaceholder type="sidebar-sticky" />
           </div>
 
-          {/* ── RIGHT GENERATED RESULTS PANEL (65% Desktop / 12 cols span 7 or 8) ─ */}
+          {/* ── RIGHT GENERATED RESULTS PANEL (65% Desktop) ──────────────────── */}
           <div className="lg:col-span-7 xl:col-span-8 space-y-6">
             {!output && !loading && (
               <div className="flex flex-col items-center justify-center rounded-[2.25rem] border border-dashed border-border/80 bg-card/60 p-12 text-center min-h-[500px]">
@@ -660,7 +671,7 @@ export function StoryboardGeneratorPage() {
                   Analyzing Script & Building Storyboards...
                 </h3>
                 <p className="mt-2 text-xs text-muted-foreground">
-                  Structuring camera angles, lighting, 4K prompts, and Google Flow character constraints.
+                  Structuring camera angles, lighting, 4K prompts, dialogue, and SFX into a unified production package.
                 </p>
               </div>
             )}
@@ -694,7 +705,7 @@ export function StoryboardGeneratorPage() {
                     <p className="font-display text-lg font-black text-pink-500">{output.analytics?.dialogueCount || 0}</p>
                   </div>
                   <div className="col-span-2 sm:col-span-1 rounded-2xl border border-border/60 bg-card p-3.5 text-center">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Prompts</span>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Packages</span>
                     <p className="font-display text-lg font-black text-[#FF5A1F]">{output.analytics?.promptCount || output.scenes?.length || 0}</p>
                   </div>
                 </div>
@@ -738,7 +749,7 @@ export function StoryboardGeneratorPage() {
                     <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <input
                       type="text"
-                      placeholder="Search scene prompts..."
+                      placeholder="Search scene prompts, dialogue, or locations..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       className="w-full rounded-xl border border-input bg-background pl-9 pr-4 py-2 text-xs outline-none focus:ring-2 focus:ring-[#FF5A1F]/40"
@@ -772,18 +783,18 @@ export function StoryboardGeneratorPage() {
                     <button
                       onClick={() =>
                         handleCopy(
-                          output.scenes.map((s) => s.copyReadyPrompt).join("\n\n"),
-                          "all-prompts"
+                          output.scenes.map((s) => getCombinedPackageText(s)).join("\n\n========================================\n\n"),
+                          "all-packages"
                         )
                       }
-                      className="inline-flex items-center gap-1.5 rounded-xl border border-border/80 bg-background px-3 py-2 text-xs font-semibold text-foreground hover:bg-secondary"
+                      className="inline-flex items-center gap-1.5 rounded-xl border border-[#FF5A1F]/40 bg-[#FF5A1F]/10 px-3 py-2 text-xs font-bold text-[#FF5A1F] hover:bg-[#FF5A1F] hover:text-white transition-colors"
                     >
-                      {copiedKey === "all-prompts" ? (
+                      {copiedKey === "all-packages" ? (
                         <Check className="h-3.5 w-3.5 text-emerald-500" />
                       ) : (
                         <Copy className="h-3.5 w-3.5" />
                       )}
-                      Copy All
+                      Copy All Packages
                     </button>
 
                     <button
@@ -809,11 +820,11 @@ export function StoryboardGeneratorPage() {
                   </div>
                 </div>
 
-                {/* ── Generated Scenes List ───────────────────────────────────── */}
+                {/* ── Generated Scenes List (Unified Production Package Together) ─ */}
                 <div className="space-y-5">
                   {filteredScenes.map((scene) => {
                     const isExpanded = expandedScenes[scene.sceneNumber] !== false;
-                    const copyKey = `scene-${scene.sceneNumber}`;
+                    const copyKey = `scene-pkg-${scene.sceneNumber}`;
 
                     return (
                       <motion.div
@@ -884,51 +895,64 @@ export function StoryboardGeneratorPage() {
                                 </div>
                               </div>
 
-                              {/* Dialogue & SFX if present */}
-                              {scene.dialogue && (
-                                <div className="rounded-xl border border-[#FF5A1F]/30 bg-[#FF5A1F]/5 p-3.5 text-xs">
-                                  <span className="font-bold text-[#FF5A1F] uppercase tracking-wider text-[10px]">Dialogue</span>
-                                  <p className="mt-1 font-mono italic text-foreground">
-                                    "{scene.dialogue}"
-                                  </p>
-                                </div>
-                              )}
-
-                              {scene.sfx && (
-                                <div className="rounded-xl border border-border/60 bg-secondary/30 p-3 text-xs">
-                                  <span className="font-bold text-muted-foreground uppercase tracking-wider text-[10px]">Sound Effects (SFX)</span>
-                                  <p className="mt-1 text-muted-foreground font-mono">
-                                    🔊 {scene.sfx}
-                                  </p>
-                                </div>
-                              )}
-
-                              {/* Copy-Ready AI Generator Prompt */}
-                              <div className="rounded-2xl border border-border/80 bg-background p-4 space-y-3">
-                                <div className="flex items-center justify-between">
-                                  <span className="text-[10px] font-bold uppercase tracking-widest text-[#FF5A1F] flex items-center gap-1.5">
-                                    <Sparkles className="h-3.5 w-3.5" /> Optimized AI Prompt ({form.promptStyle})
+                              {/* ── UNIFIED PRODUCTION PACKAGE: Prompt, Dialogue & SFX Together ── */}
+                              <div className="rounded-2xl border border-[#FF5A1F]/30 bg-background p-5 space-y-4 shadow-sm">
+                                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/40 pb-3">
+                                  <span className="text-xs font-bold uppercase tracking-widest text-[#FF5A1F] flex items-center gap-1.5">
+                                    <Sparkles className="h-4 w-4" /> AI Production Package ({form.promptStyle})
                                   </span>
                                   <button
-                                    onClick={() => handleCopy(scene.copyReadyPrompt, copyKey)}
-                                    className="inline-flex items-center gap-1.5 rounded-lg bg-[#FF5A1F] px-3 py-1.5 text-xs font-bold text-white shadow-md hover:bg-[#e04c15]"
+                                    onClick={() => handleCopy(getCombinedPackageText(scene), copyKey)}
+                                    className="inline-flex items-center gap-1.5 rounded-xl bg-[#FF5A1F] px-4 py-2 text-xs font-bold text-white shadow-md hover:bg-[#e04c15] transition-transform active:scale-95"
                                   >
                                     {copiedKey === copyKey ? (
-                                      <Check className="h-3.5 w-3.5" />
+                                      <Check className="h-4 w-4" />
                                     ) : (
-                                      <Copy className="h-3.5 w-3.5" />
+                                      <Copy className="h-4 w-4" />
                                     )}
-                                    Copy Prompt
+                                    Copy Scene Package
                                   </button>
                                 </div>
-                                <p className="text-xs font-mono text-foreground leading-relaxed selection:bg-[#FF5A1F]/30">
-                                  {scene.copyReadyPrompt}
-                                </p>
 
-                                {scene.negativePrompt && (
-                                  <p className="text-[10px] font-mono text-muted-foreground border-t border-border/40 pt-2">
-                                    <strong>Negative Prompt:</strong> {scene.negativePrompt}
+                                {/* Visual Prompt */}
+                                <div>
+                                  <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground block mb-1">
+                                    🎬 Visual AI Prompt
+                                  </span>
+                                  <p className="text-xs font-mono text-foreground leading-relaxed selection:bg-[#FF5A1F]/30">
+                                    {scene.copyReadyPrompt || scene.generationPrompt}
                                   </p>
+                                </div>
+
+                                {/* Dialogue Line */}
+                                {scene.dialogue && (
+                                  <div className="border-t border-border/30 pt-3">
+                                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#FF5A1F] block mb-1 flex items-center gap-1">
+                                      <MessageSquare className="h-3 w-3" /> Character Dialogue
+                                    </span>
+                                    <p className="text-xs font-mono italic text-foreground bg-[#FF5A1F]/5 p-2.5 rounded-xl border border-[#FF5A1F]/20">
+                                      "{scene.dialogue}"
+                                    </p>
+                                  </div>
+                                )}
+
+                                {/* Sound Effects (SFX) */}
+                                {scene.sfx && (
+                                  <div className="border-t border-border/30 pt-3">
+                                    <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground block mb-1 flex items-center gap-1">
+                                      <Volume2 className="h-3 w-3" /> Sound Effects (SFX)
+                                    </span>
+                                    <p className="text-xs font-mono text-muted-foreground bg-secondary/30 p-2.5 rounded-xl border border-border/40">
+                                      🔊 {scene.sfx}
+                                    </p>
+                                  </div>
+                                )}
+
+                                {/* Negative Prompt */}
+                                {scene.negativePrompt && (
+                                  <div className="border-t border-border/30 pt-2 text-[10px] font-mono text-muted-foreground">
+                                    <strong>Negative Prompt:</strong> {scene.negativePrompt}
+                                  </div>
                                 )}
                               </div>
                             </motion.div>

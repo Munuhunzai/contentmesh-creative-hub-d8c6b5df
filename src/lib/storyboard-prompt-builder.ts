@@ -15,7 +15,7 @@ CRITICAL RULES:
 3. NEVER include more than 3 characters inside a single scene prompt. Limit characters per scene to 1-3 for maximum Google Flow, Veo, and Midjourney consistency.
 4. Background Music: If background music is NOT explicitly enabled by the user, set "backgroundMusic": "No background music" and explicitly mention "No background music" in every scene's copyReadyPrompt.
 5. Language: Output all scene titles, descriptions, dialogue, and instructions in ${input.outputLanguage}.
-6. Prompt Optimization: Optimize the "copyReadyPrompt" for ${input.promptStyle} generators using aspect ratio ${input.aspectRatio}, visual style "${selectedStyle}", and camera style "${input.cameraStyle}". Include negative prompts if safety notes are enabled.
+6. Prompt Optimization: Optimize the "copyReadyPrompt" for ${input.promptStyle} generators using aspect ratio ${input.aspectRatio}, visual style "${selectedStyle}", and camera style "${input.cameraStyle}". Include negative prompts if safety notes are enabled. Bundle prompt, dialogue, and SFX in a clean copy-pasteable structure.
 7. Detail Level: Produce ${input.promptDetail} scene descriptions covering environment, camera angle, camera movement, lens, lighting, mood, character appearance, facial expression, body language, foreground, background, weather, time of day, SFX, and dialogue.
 
 JSON RESPONSE SCHEMA:
