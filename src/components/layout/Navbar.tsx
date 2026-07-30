@@ -159,11 +159,7 @@ export function Navbar() {
               <Link
                 to="/contact"
                 aria-label="Place an Order"
-                className="inline-flex h-[56px] items-center gap-2 rounded-[20px] px-6 text-sm font-bold text-white transition-transform"
-                style={{
-                  background: "linear-gradient(135deg, #FF5A1F 0%, #FF7A00 100%)",
-                  boxShadow: "0 4px 24px rgba(255,90,31,0.45)",
-                }}
+                className="inline-flex h-[56px] items-center gap-2 rounded-[20px] bg-[#FF5A1F] px-6 text-sm font-bold text-white shadow-none transition-transform"
               >
                 <Mail className="h-4 w-4 text-white" />
                 Place Order
@@ -178,11 +174,7 @@ export function Navbar() {
               aria-label="Contact us on WhatsApp"
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.97 }}
-              className="inline-flex h-[56px] items-center gap-2.5 rounded-[20px] px-6 text-sm font-bold text-white"
-              style={{
-                background: "linear-gradient(135deg, #25D366 0%, #128C7E 100%)",
-                boxShadow: "0 4px 24px rgba(37,211,102,0.45)",
-              }}
+              className="inline-flex h-[56px] items-center gap-2.5 rounded-[20px] bg-[#25D366] px-6 text-sm font-bold text-white shadow-none"
             >
               <WhatsAppIcon size={19} />
               Contact Us
@@ -248,11 +240,7 @@ export function Navbar() {
               >
                 <Link
                   to="/contact"
-                  className="flex w-full items-center justify-center gap-2 rounded-2xl py-3.5 text-base font-bold text-white shadow-md"
-                  style={{
-                    background: "linear-gradient(135deg, #FF5A1F 0%, #FF7A00 100%)",
-                    boxShadow: "0 0 24px rgba(255,90,31,0.45)",
-                  }}
+                  className="flex w-full items-center justify-center gap-2 rounded-2xl bg-[#FF5A1F] py-3.5 text-base font-bold text-white shadow-none"
                 >
                   <Mail className="h-5 w-5 text-white" />
                   Place Order
@@ -263,11 +251,7 @@ export function Navbar() {
                   href={waHref}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex w-full items-center justify-center gap-2.5 rounded-2xl py-3.5 text-base font-bold text-white"
-                  style={{
-                    background: "linear-gradient(135deg, #25D366 0%, #128C7E 100%)",
-                    boxShadow: "0 0 32px rgba(37,211,102,0.35)",
-                  }}
+                  className="flex w-full items-center justify-center gap-2.5 rounded-2xl bg-[#25D366] py-3.5 text-base font-bold text-white shadow-none"
                 >
                   <WhatsAppIcon size={20} />
                   Contact Us on WhatsApp
