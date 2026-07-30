@@ -21,6 +21,8 @@ import {
   ArrowRight,
   ChevronDown,
   ChevronUp,
+  ChevronLeft,
+  ChevronRight,
   MessageSquare,
   Zap,
   Upload,
@@ -207,13 +209,25 @@ export function StoryboardGeneratorPage() {
   const [expandedScenes, setExpandedScenes] = useState<Record<number, boolean>>({});
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const timelineScrollRef = useRef<HTMLDivElement>(null);
 
   // Local Storage Session Recovery
   useEffect(() => {
     try {
       const saved = localStorage.getItem("contentmesh_storyboard_output");
       if (saved) {
-        setOutput(JSON.parse(saved));
+        const parsed = JSON.parse(saved);
+        if (parsed.scenes && parsed.scenes.length > 0) {
+          // Re-sync timeline with scenes array if needed
+          parsed.timeline = parsed.scenes.map((s: StoryboardScene) => ({
+            sceneNumber: s.sceneNumber,
+            sceneTitle: s.sceneTitle || `Scene ${s.sceneNumber}`,
+            duration: s.duration || "5s",
+            environment: s.environment || "Location",
+            characters: s.characters || [],
+          }));
+        }
+        setOutput(parsed);
       }
     } catch {
       /* ignore */
@@ -284,13 +298,24 @@ export function StoryboardGeneratorPage() {
   };
 
   const scrollToScene = (sceneNumber: number) => {
+    // Clear search and filter to ensure target scene element is rendered in DOM
+    setSearchQuery("");
+    setActiveFilter("all");
     setExpandedScenes((prev) => ({ ...prev, [sceneNumber]: true }));
+
     setTimeout(() => {
       const el = document.getElementById(`scene-card-${sceneNumber}`);
       if (el) {
-        el.scrollIntoView({ behavior: "smooth", block: "center" });
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
       }
-    }, 50);
+    }, 100);
+  };
+
+  const scrollTimeline = (direction: "left" | "right") => {
+    if (timelineScrollRef.current) {
+      const scrollAmount = direction === "left" ? -300 : 300;
+      timelineScrollRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
+    }
   };
 
   const getCombinedPackageText = (scene: StoryboardScene) => {
@@ -330,6 +355,17 @@ export function StoryboardGeneratorPage() {
       }
 
       const data: StoryboardOutput = await res.json();
+
+      // Synchronize timeline directly from scenes array to guarantee 1:1 match
+      if (data.scenes && data.scenes.length > 0) {
+        data.timeline = data.scenes.map((s) => ({
+          sceneNumber: s.sceneNumber,
+          sceneTitle: s.sceneTitle || `Scene ${s.sceneNumber}`,
+          duration: s.duration || "5s",
+          environment: s.environment || "Location",
+          characters: s.characters || [],
+        }));
+      }
 
       // Attach uploaded images to matching characters in output
       if (form.uploadedCharacters && form.uploadedCharacters.length > 0 && data.characters) {
@@ -834,13 +870,13 @@ export function StoryboardGeneratorPage() {
                 {/* ── Analytics Overview Header Bar ──────────────────────────── */}
                 <div className="flex flex-wrap gap-2 sm:grid sm:grid-cols-4 lg:grid-cols-7 max-w-full">
                   {[
-                    { label: "Scenes", val: output.analytics?.totalScenes || output.scenes?.length || 0, color: "text-[#FF5A1F]" },
+                    { label: "Scenes", val: output.scenes?.length || 0, color: "text-[#FF5A1F]" },
                     { label: "Chars", val: output.analytics?.charactersCount || output.characters?.length || 0, color: "text-blue-500" },
                     { label: "Locs", val: output.analytics?.locationsCount || output.environments?.length || 0, color: "text-emerald-500" },
                     { label: "Runtime", val: output.analytics?.estimatedRuntime || "1m 30s", color: "text-purple-500" },
                     { label: "Words", val: output.analytics?.wordCount || 0, color: "text-amber-500" },
                     { label: "Dialogues", val: output.analytics?.dialogueCount || 0, color: "text-pink-500" },
-                    { label: "Packages", val: output.analytics?.promptCount || output.scenes?.length || 0, color: "text-[#FF5A1F]" },
+                    { label: "Packages", val: output.scenes?.length || 0, color: "text-[#FF5A1F]" },
                   ].map((m, i) => (
                     <div key={i} className="flex-1 min-w-[70px] sm:min-w-0 rounded-xl border border-border/60 bg-card p-2 text-center">
                       <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground block">{m.label}</span>
@@ -856,10 +892,30 @@ export function StoryboardGeneratorPage() {
                       <h3 className="font-display text-[11px] sm:text-xs font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
                         <Film className="h-3.5 w-3.5 text-[#FF5A1F]" /> Storyboard Timeline ({output.timeline.length} Scenes)
                       </h3>
-                      <span className="text-[10px] text-muted-foreground">Click any scene to jump</span>
+                      
+                      {/* Timeline Navigation Arrow Controls */}
+                      <div className="flex items-center gap-1">
+                        <button
+                          onClick={() => scrollTimeline("left")}
+                          className="p-1 rounded-lg border border-border/60 bg-background hover:bg-secondary text-muted-foreground transition-colors"
+                          title="Scroll Left"
+                        >
+                          <ChevronLeft className="h-3.5 w-3.5" />
+                        </button>
+                        <button
+                          onClick={() => scrollTimeline("right")}
+                          className="p-1 rounded-lg border border-border/60 bg-background hover:bg-secondary text-muted-foreground transition-colors"
+                          title="Scroll Right"
+                        >
+                          <ChevronRight className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
                     </div>
 
-                    <div className="no-scrollbar flex items-center gap-2.5 overflow-x-auto pb-1 max-w-full">
+                    <div
+                      ref={timelineScrollRef}
+                      className="no-scrollbar flex items-center gap-2.5 overflow-x-auto pb-1 max-w-full scroll-smooth"
+                    >
                       {output.timeline.map((item) => (
                         <div
                           key={item.sceneNumber}
