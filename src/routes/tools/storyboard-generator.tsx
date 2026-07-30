@@ -180,7 +180,7 @@ export function StoryboardGeneratorPage() {
   // Form State
   const [form, setForm] = useState<StoryboardFormInput>({
     script: DEFAULT_SCRIPT,
-    numberOfScenes: 5,
+    numberOfScenes: 10,
     visualStyle: "Cyberpunk",
     customStyle: "",
     characterPrompts: "Maya: Rogue female engineer, dark braided hair, glowing cyber-visor, black tactical leather jacket.\nDr. Aris: Senior scientist, 50s, silver lab coat, sharp blue eyes.",
