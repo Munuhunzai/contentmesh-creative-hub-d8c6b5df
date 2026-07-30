@@ -19,6 +19,7 @@ function WhatsAppIcon({ size = 20 }: { size?: number }) {
 const NAV = [
   { to: "/portfolio",  label: "Portfolio"  },
   { to: "/services",   label: "Services"   },
+  { to: "/tools/storyboard-generator", label: "AI Tool" },
   { to: "/about",      label: "About Us"   },
   { to: "/pricing",    label: "Pricing"    },
   { to: "/blog",       label: "Blog"       },
