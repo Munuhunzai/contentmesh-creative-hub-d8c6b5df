@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { StoryboardFormInput, StoryboardOutput } from "@/types/storyboard";
 import { buildDeepSeekStoryboardPrompt } from "@/lib/storyboard-prompt-builder";
+import { safeParseAIJson } from "@/lib/json-repair";
 
 async function handlePost({ request }: { request: Request }) {
   try {
@@ -42,7 +43,7 @@ async function handlePost({ request }: { request: Request }) {
         ],
         response_format: { type: "json_object" },
         temperature: 0.7,
-        max_tokens: 4096,
+        max_tokens: 8192,
       }),
     });
 
@@ -65,13 +66,7 @@ async function handlePost({ request }: { request: Request }) {
       );
     }
 
-    // Clean potential markdown codeblock backticks if present
-    let jsonString = content.trim();
-    if (jsonString.startsWith("```")) {
-      jsonString = jsonString.replace(/^```(json)?\n?/, "").replace(/\n?```$/, "");
-    }
-
-    const storyboardOutput = JSON.parse(jsonString) as StoryboardOutput;
+    const storyboardOutput = safeParseAIJson<StoryboardOutput>(content);
 
     return Response.json(storyboardOutput);
   } catch (err: any) {
