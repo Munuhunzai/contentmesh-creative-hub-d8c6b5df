@@ -312,14 +312,37 @@ export function Services() {
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const isInteractingRef = useRef(false);
+  const isMouseDownRef = useRef(false);
+  const startXRef = useRef(0);
+  const scrollLeftStartRef = useRef(0);
+  const hasDraggedRef = useRef(false);
   const resumeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // ── Auto-Loop Animation + Seamless Wrap-Around Handler ──────────────────────
+  // ── 1. Mouse Wheel Horizontal Scroll Listener ────────────────────────────────
+  useEffect(() => {
+    const container = scrollRef.current;
+    if (!container) return;
+
+    const handleWheel = (e: WheelEvent) => {
+      // Convert vertical scroll wheel movement into horizontal scrolling
+      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+        e.preventDefault();
+        container.scrollLeft += e.deltaY * 1.2;
+        handleUserInteractionStart();
+        handleUserInteractionEnd();
+      }
+    };
+
+    container.addEventListener("wheel", handleWheel, { passive: false });
+    return () => container.removeEventListener("wheel", handleWheel);
+  }, []);
+
+  // ── 2. Auto-Loop Animation + Wrap-Around Handler ────────────────────────────
   useEffect(() => {
     let animId: number;
 
     const autoScroll = () => {
-      if (scrollRef.current && !isInteractingRef.current) {
+      if (scrollRef.current && !isInteractingRef.current && !isMouseDownRef.current) {
         scrollRef.current.scrollLeft += 0.8; // Smooth auto-slide step
 
         const halfWidth = scrollRef.current.scrollWidth / 2;
@@ -343,7 +366,38 @@ export function Services() {
     if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
     resumeTimeoutRef.current = setTimeout(() => {
       isInteractingRef.current = false;
-    }, 2500); // Resumes auto-loop after 2.5s of no manual interaction
+    }, 2500);
+  };
+
+  // ── 3. Mouse Drag-to-Scroll Handlers ────────────────────────────────────────
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (!scrollRef.current) return;
+    isMouseDownRef.current = true;
+    hasDraggedRef.current = false;
+    handleUserInteractionStart();
+    startXRef.current = e.pageX - scrollRef.current.offsetLeft;
+    scrollLeftStartRef.current = scrollRef.current.scrollLeft;
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isMouseDownRef.current || !scrollRef.current) return;
+    const x = e.pageX - scrollRef.current.offsetLeft;
+    const walk = (x - startXRef.current) * 1.8;
+    if (Math.abs(walk) > 5) {
+      hasDraggedRef.current = true;
+    }
+    scrollRef.current.scrollLeft = scrollLeftStartRef.current - walk;
+  };
+
+  const handleMouseUpOrLeave = () => {
+    isMouseDownRef.current = false;
+    handleUserInteractionEnd();
+  };
+
+  const handleCardClick = (item: ServiceItem) => {
+    if (!hasDraggedRef.current) {
+      setSelectedService(item);
+    }
   };
 
   return (
@@ -357,11 +411,13 @@ export function Services() {
         />
       </div>
 
-      {/* ── Dual Mode: Auto-Looping + 100% Full Manual Touch/Mouse Drag Scroll ─ */}
+      {/* ── Mouse Scrollable + Drag-to-Scroll + Auto-Looping Circular Slider ─ */}
       <div
         ref={scrollRef}
-        onMouseDown={handleUserInteractionStart}
-        onMouseUp={handleUserInteractionEnd}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUpOrLeave}
+        onMouseLeave={handleMouseUpOrLeave}
         onTouchStart={handleUserInteractionStart}
         onTouchEnd={handleUserInteractionEnd}
         onScroll={() => {
@@ -374,7 +430,7 @@ export function Services() {
             }
           }
         }}
-        className="no-scrollbar mt-14 flex items-center gap-8 overflow-x-auto py-6 px-4 select-none cursor-grab active:cursor-grabbing w-full scroll-smooth"
+        className="no-scrollbar mt-14 flex items-center gap-8 overflow-x-auto py-6 px-4 select-none cursor-grab active:cursor-grabbing w-full"
       >
         {LOOP_SERVICES.map((item, idx) => {
           const Icon = item.iconComponent;
@@ -383,7 +439,7 @@ export function Services() {
               key={`${item._id}-${idx}`}
               whileHover={{ scale: 1.08, y: -6 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => setSelectedService(item)}
+              onClick={() => handleCardClick(item)}
               className="group flex flex-col items-center shrink-0 cursor-pointer text-center"
               style={{ width: "140px" }}
             >
@@ -400,10 +456,10 @@ export function Services() {
                   <img
                     src={item.iconImg}
                     alt={item.title}
-                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110 pointer-events-none"
                   />
                 ) : (
-                  <div className="flex h-full w-full items-center justify-center bg-black/10 text-black">
+                  <div className="flex h-full w-full items-center justify-center bg-black/10 text-black pointer-events-none">
                     <Icon className="h-12 w-12 drop-shadow-md" />
                   </div>
                 )}
@@ -413,7 +469,7 @@ export function Services() {
               </div>
 
               {/* Service Category Title */}
-              <span className="mt-4 font-display text-sm font-bold tracking-tight text-foreground transition-colors group-hover:text-[#FF5A1F]">
+              <span className="mt-4 font-display text-sm font-bold tracking-tight text-foreground transition-colors group-hover:text-[#FF5A1F] pointer-events-none">
                 {item.title}
               </span>
             </motion.div>
