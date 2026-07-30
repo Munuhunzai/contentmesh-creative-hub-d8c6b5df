@@ -333,30 +333,18 @@ export function StoryboardGeneratorPage() {
 
   return (
     <SiteLayout>
-      {/* ── Top Future Ad Banner Placeholder ──────────────────────────────── */}
-      <AdPlaceholder type="banner-top" className="mt-6" />
-
-      {/* ── Hero Section ──────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden py-16 sm:py-24">
+      {/* ── Hero & Upfront Tool Header ───────────────────────────────────── */}
+      <section className="relative overflow-hidden pt-8 sm:pt-12 pb-8">
         <div className="mx-auto max-w-7xl px-6 text-center">
           <p className="inline-flex items-center gap-1.5 rounded-full border border-[#FF5A1F]/30 bg-[#FF5A1F]/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-[#FF5A1F] backdrop-blur-md">
             <Clapperboard className="h-3.5 w-3.5" /> AI Storyboard & Scene Prompt Studio
           </p>
-          <h1 className="mt-4 font-display text-4xl font-black tracking-tight text-foreground sm:text-5xl md:text-6xl">
+          <h1 className="mt-3 font-display text-3xl font-black tracking-tight text-foreground sm:text-4xl md:text-5xl">
             AI Storyboard & Prompt Generator
           </h1>
-          <p className="mx-auto mt-4 max-w-3xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-            Turn any script into a complete AI production package including storyboards, 4K scene prompts, character actions, dialogue, camera directions, SFX, and generation-ready prompts.
+          <p className="mx-auto mt-2.5 max-w-2xl text-xs sm:text-sm leading-relaxed text-muted-foreground">
+            Turn any script into a complete AI production package: storyboards, 4K scene prompts, character actions, dialogue, camera directions, SFX, and generation-ready prompts.
           </p>
-
-          <div className="mt-8 flex justify-center">
-            <a
-              href="#generator-workspace"
-              className="inline-flex items-center gap-2 rounded-full bg-[#FF5A1F] px-8 py-4 text-xs font-bold uppercase tracking-widest text-white shadow-xl shadow-[#FF5A1F]/30 transition-transform duration-300 hover:scale-105"
-            >
-              Generate Storyboard <ArrowRight className="h-4 w-4" />
-            </a>
-          </div>
         </div>
       </section>
 
