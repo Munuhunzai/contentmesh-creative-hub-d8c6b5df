@@ -213,6 +213,17 @@ const CAMERA_STYLES: CameraStyleOption[] = [
 
 const SCENES_PER_PAGE = 10;
 
+// Helper to strip unwanted meta commands (like "(change it again)") from prompt text
+const cleanPromptText = (text: string) => {
+  if (!text) return "";
+  return text
+    .replace(/,\s*\([^)]*(change|redo|try again|again|rewrite)[^)]*\)/gi, "")
+    .replace(/\(\s*(change|redo|try again|again|rewrite)[^)]*\)/gi, "")
+    .replace(/,\s*,/g, ",")
+    .replace(/\s+/g, " ")
+    .trim();
+};
+
 export function StoryboardGeneratorPage() {
   // Navigation Wizard Step State: "script" | "config" | "studio"
   const [step, setStep] = useState<"script" | "config" | "studio">("script");
@@ -381,7 +392,7 @@ export function StoryboardGeneratorPage() {
 
   // Scene N [prompt] Format Generator
   const getSceneFormattedPrompt = (scene: StoryboardScene) => {
-    const promptText = scene.copyReadyPrompt || scene.generationPrompt;
+    const promptText = cleanPromptText(scene.copyReadyPrompt || scene.generationPrompt);
     return `Scene ${scene.sceneNumber} [${promptText}]`;
   };
 
@@ -464,10 +475,23 @@ export function StoryboardGeneratorPage() {
       const qLower = userMsg.toLowerCase();
       let actionDesc = "";
 
-      const updatedScenes = output.scenes.map((scene) => {
-        let promptText = scene.generationPrompt || scene.copyReadyPrompt;
+      const CAMERA_VARIATIONS = [
+        "35mm anamorphic lens, cinematic lighting, slow tracking shot",
+        "wide-angle establishing view, golden hour sunlight, detailed texture",
+        "low-angle dynamic perspective, high-contrast atmospheric grade",
+        "over-the-shoulder shot, shallow depth of field, soft rim lighting",
+      ];
 
-        if (qLower.includes("dramatic") || qLower.includes("intense")) {
+      const isRegenReq = /change|redo|again|regenerate|rewrite|try again|fresh|variation/i.test(qLower);
+
+      const updatedScenes = output.scenes.map((scene, idx) => {
+        let promptText = cleanPromptText(scene.generationPrompt || scene.copyReadyPrompt);
+
+        if (isRegenReq) {
+          const varAngle = CAMERA_VARIATIONS[idx % CAMERA_VARIATIONS.length];
+          promptText = `${promptText}, ${varAngle}`;
+          actionDesc = "Generated fresh scene variations with dynamic camera angles & lighting";
+        } else if (qLower.includes("dramatic") || qLower.includes("intense")) {
           promptText = `${promptText}, intense dramatic lighting, high contrast cinematic grade`;
           actionDesc = "Applied intense dramatic lighting to all scenes";
         } else if (qLower.includes("push in") || qLower.includes("zoom") || qLower.includes("camera")) {
@@ -489,9 +513,11 @@ export function StoryboardGeneratorPage() {
           promptText = `${promptText}, glowing neon lights, futuristic cyberpunk city backdrop`;
           actionDesc = "Injected cyberpunk neon aesthetics into scenes";
         } else {
-          promptText = `${promptText}, (${userMsg})`;
+          promptText = `${promptText}, ${userMsg}`;
           actionDesc = `Applied "${userMsg}" to all scenes`;
         }
+
+        promptText = cleanPromptText(promptText);
 
         return {
           ...scene,
@@ -517,10 +543,11 @@ export function StoryboardGeneratorPage() {
     if (!output?.scenes) return [];
     return output.scenes.filter((scene) => {
       const q = searchQuery.toLowerCase().trim();
+      const promptStr = cleanPromptText(scene.copyReadyPrompt || scene.generationPrompt);
       const matchesSearch =
         !q ||
         scene.sceneTitle.toLowerCase().includes(q) ||
-        (scene.copyReadyPrompt || scene.generationPrompt).toLowerCase().includes(q) ||
+        promptStr.toLowerCase().includes(q) ||
         scene.environment.toLowerCase().includes(q) ||
         `scene ${scene.sceneNumber}`.toLowerCase().includes(q) ||
         scene.sceneNumber.toString() === q;
@@ -1086,7 +1113,7 @@ export function StoryboardGeneratorPage() {
                     "Make more dramatic",
                     "Add camera push-ins",
                     "Pixar 3D style",
-                    "Add heavy rain",
+                    "New scene variations",
                   ].map((chip, i) => (
                     <button
                       key={i}
