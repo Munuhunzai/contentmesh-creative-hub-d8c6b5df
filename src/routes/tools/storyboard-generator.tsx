@@ -29,6 +29,7 @@ import {
   ArrowLeft,
   Wand2,
   BookOpen,
+  PlusCircle,
 } from "lucide-react";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { AdPlaceholder } from "@/components/tools/AdPlaceholder";
@@ -283,6 +284,14 @@ export function StoryboardGeneratorPage() {
     value: any
   ) => {
     setForm((prev) => ({ ...prev, [key]: value }));
+  };
+
+  // Reset / New Story Handler
+  const handleStartNewStory = () => {
+    setForm((prev) => ({ ...prev, script: "" }));
+    setOutput(null);
+    setStep("script");
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   // Character Upload Handlers
@@ -546,8 +555,15 @@ export function StoryboardGeneratorPage() {
               </span>
             </div>
 
-            {/* Wizard Step Breadcrumb Buttons */}
-            <div className="flex items-center gap-1 sm:gap-2">
+            {/* Wizard Step Breadcrumb Buttons & + New Story CTA */}
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <button
+                onClick={handleStartNewStory}
+                className="flex items-center gap-1 rounded-full bg-[#FF5A1F] px-3 py-1 text-xs font-bold text-white shadow-md hover:bg-[#FF5A1F]/90 transition-all mr-2"
+              >
+                <PlusCircle className="h-3.5 w-3.5" /> + New Story
+              </button>
+
               <button
                 onClick={() => setStep("script")}
                 className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold transition-all ${
@@ -705,12 +721,20 @@ export function StoryboardGeneratorPage() {
                   {form.script}
                 </p>
               </div>
-              <button
-                onClick={() => setStep("script")}
-                className="inline-flex items-center gap-1 text-xs font-bold text-muted-foreground hover:text-foreground shrink-0"
-              >
-                <ArrowLeft className="h-3.5 w-3.5" /> Edit Story
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={handleStartNewStory}
+                  className="inline-flex items-center gap-1 rounded-full bg-[#FF5A1F] px-3 py-1 text-xs font-bold text-white shadow-md hover:bg-[#FF5A1F]/90 transition-all"
+                >
+                  <PlusCircle className="h-3.5 w-3.5" /> + New Story
+                </button>
+                <button
+                  onClick={() => setStep("script")}
+                  className="inline-flex items-center gap-1 text-xs font-bold text-muted-foreground hover:text-foreground shrink-0"
+                >
+                  <ArrowLeft className="h-3.5 w-3.5" /> Edit Story
+                </button>
+              </div>
             </div>
 
             {/* DEDICATED PRODUCTION CONFIG CARD */}
@@ -950,26 +974,34 @@ export function StoryboardGeneratorPage() {
         )}
 
         {/* ─────────────────────────────────────────────────────────────────── */}
-        {/* ── STEP 3: STUDIO & FIXED AI ASSISTANT (MATCHES SCREENSHOT 2) ───── */}
+        {/* ── STEP 3: STUDIO & FULLY FIXED LEFT SIDEBAR (STORYBOARD + ASSISTANT) ─ */}
         {/* ─────────────────────────────────────────────────────────────────── */}
         {step === "studio" && (
           <section className="mx-auto max-w-7xl px-3 sm:px-6 pb-28 w-full max-w-full overflow-hidden" id="generator-workspace">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-full items-start">
 
-              {/* ── LEFT SIDEBAR (STICKY ON DESKTOP & FIXED FLOATING ASSISTANT BOX ON SCREEN) ── */}
-              <div className="lg:col-span-4 xl:col-span-4 flex flex-col justify-between space-y-4 w-full max-w-full lg:sticky lg:top-20">
-                {/* Script Recap & Config Badge Header */}
-                <div className="rounded-2xl border border-border/80 bg-card p-3.5 shadow-glass space-y-2">
+              {/* ── FULLY FIXED LEFT SIDEBAR CONTAINER (STAYS FIXED ON SCREEN WHEN SCROLLING) ── */}
+              <div className="lg:col-span-4 xl:col-span-4 lg:sticky lg:top-24 lg:self-start flex flex-col justify-between space-y-4 w-full max-w-full z-40 max-h-[calc(100vh-120px)] overflow-y-auto no-scrollbar pb-4">
+                {/* Storyboard Active Card Header */}
+                <div className="rounded-2xl border border-border/80 bg-card/95 p-3.5 shadow-glass backdrop-blur-xl space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] font-bold uppercase tracking-wider text-[#FF5A1F] flex items-center gap-1">
                       <Wand2 className="h-3.5 w-3.5" /> Storyboard Active
                     </span>
-                    <button
-                      onClick={() => setStep("config")}
-                      className="text-[10px] font-bold text-muted-foreground hover:text-foreground flex items-center gap-1"
-                    >
-                      <SlidersHorizontal className="h-3 w-3" /> Config
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={handleStartNewStory}
+                        className="text-[10px] font-bold text-[#FF5A1F] hover:underline flex items-center gap-0.5"
+                      >
+                        <PlusCircle className="h-3 w-3" /> + New Story
+                      </button>
+                      <button
+                        onClick={() => setStep("config")}
+                        className="text-[10px] font-bold text-muted-foreground hover:text-foreground flex items-center gap-1"
+                      >
+                        <SlidersHorizontal className="h-3 w-3" /> Config
+                      </button>
+                    </div>
                   </div>
 
                   <p className="text-xs font-mono text-muted-foreground line-clamp-2">
@@ -989,8 +1021,8 @@ export function StoryboardGeneratorPage() {
                   </div>
                 </div>
 
-                {/* ── FIXED TO SCREEN AI ASSISTANT CHAT/MODIFIER BOX ── */}
-                <div className="lg:relative fixed bottom-4 left-4 right-4 sm:right-auto z-50 lg:z-0 lg:bottom-0 lg:left-0 w-auto sm:w-[360px] lg:w-full rounded-2xl sm:rounded-3xl border border-border/90 bg-card/95 p-3.5 sm:p-4 shadow-2xl shadow-black/30 backdrop-blur-2xl space-y-3">
+                {/* ── FIXED AI ASSISTANT CHAT/MODIFIER BOX (MATCHES USER SCREENSHOT) ── */}
+                <div className="rounded-2xl sm:rounded-3xl border border-border/90 bg-card/95 p-3.5 sm:p-4 shadow-2xl shadow-black/20 backdrop-blur-2xl space-y-3">
                   <div className="flex items-center justify-between border-b border-border/40 pb-2">
                     <span className="text-[11px] font-bold uppercase tracking-wider text-foreground flex items-center gap-1.5">
                       <Sparkles className="h-3.5 w-3.5 text-[#FF5A1F]" /> AI Assistant (Fixed Viewport)
@@ -1037,7 +1069,7 @@ export function StoryboardGeneratorPage() {
                   {/* Assistant Prompt Input Box */}
                   <div className="space-y-2">
                     <textarea
-                      rows={2}
+                      rows={3}
                       value={assistantInput}
                       onChange={(e) => setAssistantInput(e.target.value)}
                       placeholder="Ask AI Assistant to adjust scenes..."
@@ -1047,7 +1079,7 @@ export function StoryboardGeneratorPage() {
                     <button
                       type="button"
                       onClick={() => handleAssistantSubmit(assistantInput)}
-                      className="w-full flex items-center justify-center gap-1.5 rounded-xl bg-[#FF5A1F] py-2 text-xs font-bold text-white shadow-md hover:opacity-90 active:scale-95 transition-all"
+                      className="w-full flex items-center justify-center gap-1.5 rounded-xl bg-[#FF5A1F] py-2.5 text-xs font-bold text-white shadow-md hover:opacity-90 active:scale-95 transition-all"
                     >
                       <Wand2 className="h-3.5 w-3.5" /> Apply Change to Scenes
                     </button>
