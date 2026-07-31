@@ -30,6 +30,7 @@ import {
   Wand2,
   BookOpen,
   PlusCircle,
+  Loader2,
 } from "lucide-react";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { AdPlaceholder } from "@/components/tools/AdPlaceholder";
@@ -248,6 +249,7 @@ export function StoryboardGeneratorPage() {
   // AI Assistant Chat state for Step 3
   const [assistantInput, setAssistantInput] = useState("");
   const [assistantLogs, setAssistantLogs] = useState<Array<{ sender: "user" | "ai"; text: string }>>([]);
+  const [assistantLoading, setAssistantLoading] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const timelineScrollRef = useRef<HTMLDivElement>(null);
@@ -450,33 +452,63 @@ export function StoryboardGeneratorPage() {
     }
   };
 
-  // AI Assistant Request Handler (Step 3)
+  // Intelligent AI Assistant Request Handler (Step 3)
   const handleAssistantSubmit = (query: string) => {
     if (!query || !query.trim() || !output) return;
     const userMsg = query.trim();
     setAssistantLogs((prev) => [...prev, { sender: "user", text: userMsg }]);
     setAssistantInput("");
+    setAssistantLoading(true);
 
     setTimeout(() => {
+      const qLower = userMsg.toLowerCase();
+      let actionDesc = "";
+
       const updatedScenes = output.scenes.map((scene) => {
-        let text = scene.copyReadyPrompt || scene.generationPrompt;
-        if (userMsg.toLowerCase().includes("dramatic")) {
-          text = `${text}, intense dramatic lighting, high contrast cinematic grade`;
-        } else if (userMsg.toLowerCase().includes("push in") || userMsg.toLowerCase().includes("camera")) {
-          text = `${text}, 35mm anamorphic camera lens, slow push-in tracking shot`;
-        } else if (userMsg.toLowerCase().includes("pixar") || userMsg.toLowerCase().includes("3d")) {
-          text = `${text}, Pixar 3D animated style, vibrant warm colors`;
+        let promptText = scene.generationPrompt || scene.copyReadyPrompt;
+
+        if (qLower.includes("dramatic") || qLower.includes("intense")) {
+          promptText = `${promptText}, intense dramatic lighting, high contrast cinematic grade`;
+          actionDesc = "Applied intense dramatic lighting to all scenes";
+        } else if (qLower.includes("push in") || qLower.includes("zoom") || qLower.includes("camera")) {
+          promptText = `${promptText}, 35mm anamorphic camera lens, slow push-in tracking shot`;
+          actionDesc = "Added 35mm camera motion and tracking to scenes";
+        } else if (qLower.includes("pixar") || qLower.includes("3d")) {
+          promptText = `${promptText}, Pixar 3D animated render, vibrant warm colors`;
+          actionDesc = "Updated style to Pixar 3D animation";
+        } else if (qLower.includes("anime") || qLower.includes("ghibli")) {
+          promptText = `${promptText}, hand-drawn anime aesthetic, Studio Ghibli style, vibrant colors`;
+          actionDesc = "Updated style to Anime & Ghibli aesthetic";
+        } else if (qLower.includes("rain") || qLower.includes("storm") || qLower.includes("wet")) {
+          promptText = `${promptText}, heavy rain pouring down, wet reflective ground, water droplets`;
+          actionDesc = "Added heavy rain and wet reflections to scenes";
+        } else if (qLower.includes("night") || qLower.includes("dark")) {
+          promptText = `${promptText}, atmospheric night time lighting, deep shadows, neon glows`;
+          actionDesc = "Adjusted lighting to atmospheric night scene";
+        } else if (qLower.includes("cyberpunk") || qLower.includes("neon")) {
+          promptText = `${promptText}, glowing neon lights, futuristic cyberpunk city backdrop`;
+          actionDesc = "Injected cyberpunk neon aesthetics into scenes";
         } else {
-          text = `${text}, (${userMsg})`;
+          promptText = `${promptText}, (${userMsg})`;
+          actionDesc = `Applied "${userMsg}" to all scenes`;
         }
-        return { ...scene, copyReadyPrompt: text };
+
+        return {
+          ...scene,
+          generationPrompt: promptText,
+          copyReadyPrompt: promptText,
+        };
       });
 
-      setOutput({ ...output, scenes: updatedScenes });
+      const newOutput = { ...output, scenes: updatedScenes };
+      setOutput(newOutput);
+      localStorage.setItem("contentmesh_storyboard_output", JSON.stringify(newOutput));
+
       setAssistantLogs((prev) => [
         ...prev,
-        { sender: "ai", text: `Updated ${updatedScenes.length} scenes matching: "${userMsg}"` },
+        { sender: "ai", text: `✨ ${actionDesc}` },
       ]);
+      setAssistantLoading(false);
     }, 400);
   };
 
@@ -488,7 +520,7 @@ export function StoryboardGeneratorPage() {
       const matchesSearch =
         !q ||
         scene.sceneTitle.toLowerCase().includes(q) ||
-        scene.generationPrompt.toLowerCase().includes(q) ||
+        (scene.copyReadyPrompt || scene.generationPrompt).toLowerCase().includes(q) ||
         scene.environment.toLowerCase().includes(q) ||
         `scene ${scene.sceneNumber}`.toLowerCase().includes(q) ||
         scene.sceneNumber.toString() === q;
@@ -1023,21 +1055,23 @@ export function StoryboardGeneratorPage() {
               <div className="rounded-2xl sm:rounded-3xl border border-border/90 bg-card/95 p-3.5 sm:p-4 shadow-2xl shadow-black/20 backdrop-blur-2xl space-y-3">
                 <div className="flex items-center justify-between border-b border-border/40 pb-2">
                   <span className="text-[11px] font-bold uppercase tracking-wider text-foreground flex items-center gap-1.5">
-                    <Sparkles className="h-3.5 w-3.5 text-[#FF5A1F]" /> AI Assistant (Fixed Viewport)
+                    <Sparkles className="h-3.5 w-3.5 text-[#FF5A1F]" /> AI Assistant (Live Prompt Modifier)
                   </span>
-                  <span className="text-[9px] text-emerald-500 font-bold">Online</span>
+                  <span className="text-[9px] text-emerald-500 font-bold flex items-center gap-1">
+                    {assistantLoading && <Loader2 className="h-3 w-3 animate-spin text-[#FF5A1F]" />} Online
+                  </span>
                 </div>
 
                 {/* Assistant Chat Logs */}
                 {assistantLogs.length > 0 && (
-                  <div className="space-y-2 max-h-[120px] overflow-y-auto no-scrollbar pr-1 text-xs">
+                  <div className="space-y-2 max-h-[140px] overflow-y-auto no-scrollbar pr-1 text-xs">
                     {assistantLogs.map((log, idx) => (
                       <div
                         key={idx}
                         className={`p-2 rounded-xl text-[11px] ${
                           log.sender === "user"
                             ? "bg-[#FF5A1F]/10 text-foreground border border-[#FF5A1F]/20 ml-4 text-right font-mono"
-                            : "bg-secondary/40 text-muted-foreground border border-border/40 mr-4"
+                            : "bg-secondary/60 text-foreground border border-border/40 mr-4 font-semibold"
                         }`}
                       >
                         {log.text}
@@ -1052,12 +1086,14 @@ export function StoryboardGeneratorPage() {
                     "Make more dramatic",
                     "Add camera push-ins",
                     "Pixar 3D style",
+                    "Add heavy rain",
                   ].map((chip, i) => (
                     <button
                       key={i}
                       type="button"
                       onClick={() => handleAssistantSubmit(chip)}
-                      className="rounded-full bg-secondary/60 px-2 py-0.5 text-[9px] font-semibold text-muted-foreground hover:bg-[#FF5A1F]/10 hover:text-[#FF5A1F] transition-all"
+                      disabled={assistantLoading}
+                      className="rounded-full bg-secondary/60 px-2 py-0.5 text-[9px] font-semibold text-muted-foreground hover:bg-[#FF5A1F]/10 hover:text-[#FF5A1F] transition-all disabled:opacity-50"
                     >
                       + {chip}
                     </button>
@@ -1070,16 +1106,31 @@ export function StoryboardGeneratorPage() {
                     rows={3}
                     value={assistantInput}
                     onChange={(e) => setAssistantInput(e.target.value)}
-                    placeholder="Ask AI Assistant to adjust scenes..."
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && !e.shiftKey) {
+                        e.preventDefault();
+                        handleAssistantSubmit(assistantInput);
+                      }
+                    }}
+                    placeholder="Ask AI Assistant to adjust scenes (e.g. 'Make lighting darker', 'Add rain', 'Make more dramatic')..."
                     className="w-full rounded-xl border border-input bg-background/90 px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-[#FF5A1F]/40 leading-relaxed font-mono break-words whitespace-pre-wrap"
                   />
 
                   <button
                     type="button"
                     onClick={() => handleAssistantSubmit(assistantInput)}
-                    className="w-full flex items-center justify-center gap-1.5 rounded-xl bg-[#FF5A1F] py-2.5 text-xs font-bold text-white shadow-md hover:opacity-90 active:scale-95 transition-all"
+                    disabled={assistantLoading || !assistantInput.trim()}
+                    className="w-full flex items-center justify-center gap-1.5 rounded-xl bg-[#FF5A1F] py-2.5 text-xs font-bold text-white shadow-md hover:opacity-90 active:scale-95 transition-all disabled:opacity-50"
                   >
-                    <Wand2 className="h-3.5 w-3.5" /> Apply Change to Scenes
+                    {assistantLoading ? (
+                      <>
+                        <Loader2 className="h-3.5 w-3.5 animate-spin" /> Modifying Scenes...
+                      </>
+                    ) : (
+                      <>
+                        <Wand2 className="h-3.5 w-3.5" /> Apply Change to Scenes
+                      </>
+                    )}
                   </button>
                 </div>
               </div>
