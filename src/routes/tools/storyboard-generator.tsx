@@ -974,13 +974,13 @@ export function StoryboardGeneratorPage() {
         )}
 
         {/* ─────────────────────────────────────────────────────────────────── */}
-        {/* ── STEP 3: STUDIO & FULLY FIXED LEFT SIDEBAR (STORYBOARD + ASSISTANT) ─ */}
+        {/* ── STEP 3: STUDIO & FULLY FIXED VIEWPORT SIDEBAR (STORYBOARD + ASSISTANT) ─ */}
         {/* ─────────────────────────────────────────────────────────────────── */}
         {step === "studio" && (
-          <section className="mx-auto max-w-7xl px-3 sm:px-6 pb-28 w-full max-w-full overflow-hidden" id="generator-workspace">
+          <section className="mx-auto max-w-7xl px-3 sm:px-6 pb-28 w-full max-w-full" id="generator-workspace">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-full items-start">
 
-              {/* ── FULLY FIXED LEFT SIDEBAR CONTAINER (STAYS FIXED ON SCREEN WHEN SCROLLING) ── */}
+              {/* ── TRULY FIXED VIEWPORT LEFT SIDEBAR (SCROLL-PROOF) ── */}
               <div className="lg:col-span-4 xl:col-span-4 lg:sticky lg:top-24 lg:self-start flex flex-col justify-between space-y-4 w-full max-w-full z-40 max-h-[calc(100vh-120px)] overflow-y-auto no-scrollbar pb-4">
                 {/* Storyboard Active Card Header */}
                 <div className="rounded-2xl border border-border/80 bg-card/95 p-3.5 shadow-glass backdrop-blur-xl space-y-2">
@@ -1320,7 +1320,7 @@ export function StoryboardGeneratorPage() {
                                     }}
                                     className={`h-8 w-8 rounded-xl text-xs font-bold transition-all ${
                                       currentPage === pg
-                                        ? "bg-[#FF5A1F] text-white shadow-md"
+                                        ? "bg-[#FF5A1F]"
                                         : "border border-border/60 bg-background text-muted-foreground hover:bg-secondary"
                                     }`}
                                   >
