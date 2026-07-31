@@ -178,6 +178,8 @@ const CAMERA_STYLES: CameraStyleOption[] = [
   "Mixed",
 ];
 
+const SCENES_PER_PAGE = 10;
+
 export function StoryboardGeneratorPage() {
   // Form State
   const [form, setForm] = useState<StoryboardFormInput>({
@@ -206,6 +208,7 @@ export function StoryboardGeneratorPage() {
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeFilter, setActiveFilter] = useState<string>("all");
+  const [currentPage, setCurrentPage] = useState(1);
   const [expandedScenes, setExpandedScenes] = useState<Record<number, boolean>>({});
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -218,7 +221,6 @@ export function StoryboardGeneratorPage() {
       if (saved) {
         const parsed = JSON.parse(saved);
         if (parsed.scenes && parsed.scenes.length > 0) {
-          // Re-sync timeline with scenes array if needed
           parsed.timeline = parsed.scenes.map((s: StoryboardScene) => ({
             sceneNumber: s.sceneNumber,
             sceneTitle: s.sceneTitle || `Scene ${s.sceneNumber}`,
@@ -233,6 +235,11 @@ export function StoryboardGeneratorPage() {
       /* ignore */
     }
   }, []);
+
+  // Reset pagination to page 1 whenever filters or search query changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, activeFilter]);
 
   const handleFormChange = (
     key: keyof StoryboardFormInput,
@@ -298,9 +305,18 @@ export function StoryboardGeneratorPage() {
   };
 
   const scrollToScene = (sceneNumber: number) => {
-    // Clear search and filter to ensure target scene element is rendered in DOM
     setSearchQuery("");
     setActiveFilter("all");
+
+    // Calculate target page for sceneNumber
+    if (output?.scenes) {
+      const sceneIndex = output.scenes.findIndex((s) => s.sceneNumber === sceneNumber);
+      if (sceneIndex !== -1) {
+        const targetPage = Math.floor(sceneIndex / SCENES_PER_PAGE) + 1;
+        setCurrentPage(targetPage);
+      }
+    }
+
     setExpandedScenes((prev) => ({ ...prev, [sceneNumber]: true }));
 
     setTimeout(() => {
@@ -308,7 +324,7 @@ export function StoryboardGeneratorPage() {
       if (el) {
         el.scrollIntoView({ behavior: "smooth", block: "start" });
       }
-    }, 100);
+    }, 120);
   };
 
   const scrollTimeline = (direction: "left" | "right") => {
@@ -356,7 +372,6 @@ export function StoryboardGeneratorPage() {
 
       const data: StoryboardOutput = await res.json();
 
-      // Synchronize timeline directly from scenes array to guarantee 1:1 match
       if (data.scenes && data.scenes.length > 0) {
         data.timeline = data.scenes.map((s) => ({
           sceneNumber: s.sceneNumber,
@@ -367,7 +382,6 @@ export function StoryboardGeneratorPage() {
         }));
       }
 
-      // Attach uploaded images to matching characters in output
       if (form.uploadedCharacters && form.uploadedCharacters.length > 0 && data.characters) {
         data.characters = data.characters.map((char) => {
           const match = form.uploadedCharacters?.find(
@@ -378,9 +392,9 @@ export function StoryboardGeneratorPage() {
       }
 
       setOutput(data);
+      setCurrentPage(1);
       localStorage.setItem("contentmesh_storyboard_output", JSON.stringify(data));
 
-      // Expand all scenes by default
       const initialExpanded: Record<number, boolean> = {};
       data.scenes?.forEach((s) => (initialExpanded[s.sceneNumber] = true));
       setExpandedScenes(initialExpanded);
@@ -412,6 +426,13 @@ export function StoryboardGeneratorPage() {
       return true;
     });
   }, [output, searchQuery, activeFilter]);
+
+  // Paginated Scenes Slicing (10 scenes per page)
+  const totalPages = Math.ceil(filteredScenes.length / SCENES_PER_PAGE);
+  const paginatedScenes = useMemo(() => {
+    const start = (currentPage - 1) * SCENES_PER_PAGE;
+    return filteredScenes.slice(start, start + SCENES_PER_PAGE);
+  }, [filteredScenes, currentPage]);
 
   // Export Utilities
   const exportFormatted = (type: "markdown" | "txt" | "json") => {
@@ -1043,9 +1064,9 @@ export function StoryboardGeneratorPage() {
                   </div>
                 </div>
 
-                {/* ── Generated Scenes List (With Scene IDs for Direct Jumper Anchor) ── */}
+                {/* ── Generated Scenes List (Paginated: 10 scenes per page) ── */}
                 <div className="space-y-4 max-w-full">
-                  {filteredScenes.map((scene) => {
+                  {paginatedScenes.map((scene) => {
                     const isExpanded = expandedScenes[scene.sceneNumber] !== false;
                     const copyKey = `scene-pkg-${scene.sceneNumber}`;
 
@@ -1186,6 +1207,81 @@ export function StoryboardGeneratorPage() {
                     );
                   })}
                 </div>
+
+                {/* ── PAGINATION CONTROLS BAR (10 Scenes per Page) ────────────── */}
+                {totalPages > 1 && (
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-glass max-w-full">
+                    <span className="text-xs text-muted-foreground font-medium text-center sm:text-left">
+                      Showing <strong className="text-foreground font-bold">{(currentPage - 1) * SCENES_PER_PAGE + 1}</strong>–
+                      <strong className="text-foreground font-bold">{Math.min(currentPage * SCENES_PER_PAGE, filteredScenes.length)}</strong> of{" "}
+                      <strong className="text-foreground font-bold">{filteredScenes.length}</strong> scenes (Page {currentPage} of {totalPages})
+                    </span>
+
+                    <div className="flex flex-wrap items-center justify-center gap-1 max-w-full">
+                      <button
+                        onClick={() => {
+                          setCurrentPage((prev) => Math.max(1, prev - 1));
+                          const el = document.getElementById("generator-workspace");
+                          if (el) el.scrollIntoView({ behavior: "smooth" });
+                        }}
+                        disabled={currentPage === 1}
+                        className="inline-flex items-center gap-1 rounded-xl border border-border/80 bg-background px-3 py-1.5 text-xs font-semibold text-foreground disabled:opacity-40 transition-all hover:bg-secondary"
+                      >
+                        <ChevronLeft className="h-3.5 w-3.5" /> Previous
+                      </button>
+
+                      <div className="flex items-center gap-1 px-1">
+                        {Array.from({ length: totalPages }, (_, i) => i + 1).map((pg) => {
+                          if (
+                            pg === 1 ||
+                            pg === totalPages ||
+                            (pg >= currentPage - 1 && pg <= currentPage + 1)
+                          ) {
+                            return (
+                              <button
+                                key={pg}
+                                onClick={() => {
+                                  setCurrentPage(pg);
+                                  const el = document.getElementById("generator-workspace");
+                                  if (el) el.scrollIntoView({ behavior: "smooth" });
+                                }}
+                                className={`h-8 w-8 rounded-xl text-xs font-bold transition-all ${
+                                  currentPage === pg
+                                    ? "bg-[#FF5A1F] text-white shadow-md"
+                                    : "border border-border/60 bg-background text-muted-foreground hover:bg-secondary"
+                                }`}
+                              >
+                                {pg}
+                              </button>
+                            );
+                          } else if (
+                            (pg === currentPage - 2 && pg > 1) ||
+                            (pg === currentPage + 2 && pg < totalPages)
+                          ) {
+                            return (
+                              <span key={pg} className="px-1 text-xs text-muted-foreground font-bold">
+                                ...
+                              </span>
+                            );
+                          }
+                          return null;
+                        })}
+                      </div>
+
+                      <button
+                        onClick={() => {
+                          setCurrentPage((prev) => Math.min(totalPages, prev + 1));
+                          const el = document.getElementById("generator-workspace");
+                          if (el) el.scrollIntoView({ behavior: "smooth" });
+                        }}
+                        disabled={currentPage === totalPages}
+                        className="inline-flex items-center gap-1 rounded-xl border border-border/80 bg-background px-3 py-1.5 text-xs font-semibold text-foreground disabled:opacity-40 transition-all hover:bg-secondary"
+                      >
+                        Next <ChevronRight className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                )}
 
                 {/* ── Character Library Panel ─────────────────────────────────── */}
                 {output.characters && output.characters.length > 0 && (
