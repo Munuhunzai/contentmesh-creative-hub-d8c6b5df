@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   Sparkles,
   Clapperboard,
@@ -14,20 +14,18 @@ import {
   Film,
   Users,
   MapPin,
-  Volume2,
-  Music,
-  Shield,
   ArrowRight,
-  ChevronDown,
-  ChevronUp,
   ChevronLeft,
   ChevronRight,
-  MessageSquare,
   Zap,
   Upload,
   Trash2,
   ImageIcon,
   Compass,
+  MessageSquare,
+  Volume2,
+  Music,
+  Shield,
 } from "lucide-react";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { AdPlaceholder } from "@/components/tools/AdPlaceholder";
@@ -197,7 +195,6 @@ export function StoryboardGeneratorPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeFilter, setActiveFilter] = useState<string>("all");
   const [currentPage, setCurrentPage] = useState(1);
-  const [expandedScenes, setExpandedScenes] = useState<Record<number, boolean>>({});
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const timelineScrollRef = useRef<HTMLDivElement>(null);
@@ -304,8 +301,6 @@ export function StoryboardGeneratorPage() {
       }
     }
 
-    setExpandedScenes((prev) => ({ ...prev, [sceneNumber]: true }));
-
     setTimeout(() => {
       const el = document.getElementById(`scene-card-${sceneNumber}`);
       if (el) {
@@ -325,20 +320,6 @@ export function StoryboardGeneratorPage() {
   const getSceneFormattedPrompt = (scene: StoryboardScene) => {
     const promptText = scene.copyReadyPrompt || scene.generationPrompt;
     return `Scene ${scene.sceneNumber} [${promptText}]`;
-  };
-
-  const getCombinedPackageText = (scene: StoryboardScene) => {
-    let pkg = `[SCENE ${scene.sceneNumber}: ${scene.sceneTitle}]\n🎬 VISUAL PROMPT:\n${scene.copyReadyPrompt || scene.generationPrompt}`;
-    if (scene.dialogue) {
-      pkg += `\n\n💬 DIALOGUE:\n"${scene.dialogue}"`;
-    }
-    if (scene.sfx) {
-      pkg += `\n\n🔊 SOUND EFFECTS (SFX):\n${scene.sfx}`;
-    }
-    if (scene.negativePrompt) {
-      pkg += `\n\n🛑 NEGATIVE PROMPT:\n${scene.negativePrompt}`;
-    }
-    return pkg;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -387,10 +368,6 @@ export function StoryboardGeneratorPage() {
       setOutput(data);
       setCurrentPage(1);
       localStorage.setItem("contentmesh_storyboard_output", JSON.stringify(data));
-
-      const initialExpanded: Record<number, boolean> = {};
-      data.scenes?.forEach((s) => (initialExpanded[s.sceneNumber] = true));
-      setExpandedScenes(initialExpanded);
     } catch (err: any) {
       setError(err.message || "An error occurred during generation.");
     } finally {
@@ -438,13 +415,13 @@ export function StoryboardGeneratorPage() {
       content = JSON.stringify(output, null, 2);
       mimeType = "application/json";
     } else if (type === "markdown") {
-      content = `# ${output.project.title}\n\n**Visual Style:** ${output.project.visualStyle} | **Aspect Ratio:** ${output.project.aspectRatio}\n\n## Summary\n${output.summary}\n\n## Scenes\n`;
+      content = `# ${output.project.title}\n\n**Visual Style:** ${output.project.visualStyle} | **Aspect Ratio:** ${output.project.aspectRatio}\n\n## Scenes\n`;
       output.scenes.forEach((s) => {
-        content += `\n### Scene ${s.sceneNumber}: ${s.sceneTitle} (${s.duration})\n- **Environment:** ${s.environment}\n- **Characters:** ${s.characters.join(", ")}\n- **Camera:** ${s.camera.angle}, ${s.camera.movement}\n- **Prompt Package:**\n\`\`\`\n${getSceneFormattedPrompt(s)}\n\`\`\`\n`;
+        content += `${getSceneFormattedPrompt(s)}\n\n`;
       });
       mimeType = "text/markdown";
     } else {
-      content = `${output.project.title}\n======================\n${output.summary}\n\nSCENE PROMPTS:\n`;
+      content = `${output.project.title}\n======================\n\nSCENE PROMPTS:\n`;
       output.scenes.forEach((s) => {
         content += `${getSceneFormattedPrompt(s)}\n\n`;
       });
@@ -459,698 +436,598 @@ export function StoryboardGeneratorPage() {
     URL.revokeObjectURL(url);
   };
 
-  const toggleExpand = (scNo: number) => {
-    setExpandedScenes((prev) => ({ ...prev, [scNo]: !prev[scNo] }));
-  };
-
   return (
     <SiteLayout>
-      {/* ── Mobile-Optimized Hero & Header ───────────────────────────────── */}
-      <section className="relative overflow-hidden pt-4 sm:pt-8 pb-4 px-4 sm:px-6 w-full max-w-full">
+      {/* ── Mobile Hero Header ─────────────────────────────────────────── */}
+      <section className="relative overflow-hidden pt-4 pb-2 px-4 sm:px-6 w-full max-w-full">
         <div className="mx-auto max-w-7xl text-center">
           <p className="inline-flex items-center gap-1.5 rounded-full border border-[#FF5A1F]/30 bg-[#FF5A1F]/10 px-3 py-1 text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-[#FF5A1F] backdrop-blur-md">
-            <Clapperboard className="h-3.5 w-3.5" /> AI Storyboard & Scene Prompt Studio
+            <Clapperboard className="h-3.5 w-3.5" /> AI Storyboard & Scene Studio
           </p>
-          <h1 className="mt-2 font-display text-2xl sm:text-4xl font-black tracking-tight text-foreground break-words">
-            AI Storyboard & Prompt Generator
+          <h1 className="mt-2 font-display text-xl sm:text-3xl font-black tracking-tight text-foreground break-words">
+            AI Storyboard Generator
           </h1>
-          <p className="mx-auto mt-1.5 max-w-2xl text-xs sm:text-sm text-muted-foreground break-words">
-            Turn your script into complete AI scene prompts, character actions, camera directions, and SFX packages.
-          </p>
         </div>
       </section>
 
-      {/* ── User-Friendly Workspace (Clean Top Config + Studio Below) ───── */}
-      <section className="mx-auto max-w-7xl px-3 sm:px-6 pb-20 w-full max-w-full space-y-6 overflow-hidden" id="generator-workspace">
-        
-        {/* ── TOP STREAMLINED CONFIGURATION BAR (100% WIDTH) ───────────────── */}
-        <div className="w-full rounded-2xl sm:rounded-3xl border border-border/80 bg-card p-4 sm:p-6 shadow-glass backdrop-blur-xl max-w-full overflow-hidden">
-          <div className="flex items-center justify-between border-b border-border/40 pb-3 mb-4">
-            <div className="flex items-center gap-2">
-              <SlidersHorizontal className="h-4 w-4 text-[#FF5A1F] shrink-0" />
-              <h2 className="font-display text-base font-bold tracking-tight text-foreground">
-                Script & Scene Config
-              </h2>
-            </div>
-            <span className="text-[10px] font-semibold text-muted-foreground">
-              DeepSeek AI Engine Active
-            </span>
-          </div>
+      {/* ── SPLIT WORKSPACE: LEFT SIDEBAR (SETTINGS + BOTTOM LEFT SCRIPT BOX) | RIGHT PANEL (SCENES) ───── */}
+      <section className="mx-auto max-w-7xl px-3 sm:px-6 pb-20 w-full max-w-full overflow-hidden" id="generator-workspace">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-full items-start">
 
-          <form onSubmit={handleSubmit} className="space-y-4 w-full">
-            {/* Top Row: Script Textarea (Left 7) + Character Upload Box (Right 5) */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 w-full">
-              {/* Script Textarea */}
-              <div className="lg:col-span-7 flex flex-col justify-between max-w-full">
-                <div className="flex items-center justify-between mb-1">
-                  <label className="text-[11px] font-bold uppercase tracking-wider text-foreground">
-                    Your Script / Screenplay
-                  </label>
-                  <span className="text-[10px] text-muted-foreground font-mono">
-                    {form.script.length} characters
-                  </span>
-                </div>
-                <textarea
-                  rows={6}
-                  value={form.script}
-                  onChange={(e) => handleFormChange("script", e.target.value)}
-                  placeholder="Paste your screenplay or story script here..."
-                  className="w-full max-w-full flex-1 rounded-xl border border-input bg-background/80 px-3.5 py-2.5 text-xs outline-none focus:ring-2 focus:ring-[#FF5A1F]/40 leading-relaxed font-mono break-words whitespace-pre-wrap min-h-[140px]"
-                  required
-                />
-              </div>
-
-              {/* Character Reference Upload Zone */}
-              <div className="lg:col-span-5 rounded-xl border border-border/70 bg-secondary/20 p-3 space-y-2.5 max-w-full flex flex-col justify-between">
-                <div className="flex items-center justify-between">
-                  <label className="text-[11px] font-bold uppercase tracking-wider text-foreground flex items-center gap-1.5">
-                    <ImageIcon className="h-3.5 w-3.5 text-[#FF5A1F]" /> Character Images
-                  </label>
-                  <span className="text-[10px] font-bold text-[#FF5A1F]">
-                    {form.uploadedCharacters?.length || 0} Attached
+          {/* ── LEFT SIDEBAR (SETTINGS ON TOP, SCRIPT BOX AT BOTTOM LEFT) ── */}
+          <div className="lg:col-span-5 xl:col-span-4 flex flex-col justify-between space-y-4 w-full max-w-full">
+            <form onSubmit={handleSubmit} className="space-y-4 w-full">
+              {/* Settings Card (Above Script Box) */}
+              <div className="rounded-2xl sm:rounded-3xl border border-border/80 bg-card p-4 sm:p-5 shadow-glass backdrop-blur-xl max-w-full space-y-4">
+                <div className="flex items-center justify-between border-b border-border/40 pb-2.5">
+                  <div className="flex items-center gap-2">
+                    <SlidersHorizontal className="h-4 w-4 text-[#FF5A1F] shrink-0" />
+                    <h2 className="font-display text-sm font-bold tracking-tight text-foreground">
+                      Production Settings
+                    </h2>
+                  </div>
+                  <span className="text-[9px] font-semibold text-muted-foreground">
+                    DeepSeek V3
                   </span>
                 </div>
 
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  onChange={handleImageFileUpload}
-                  accept="image/png, image/jpeg, image/webp"
-                  multiple
-                  className="hidden"
-                />
-
-                <button
-                  type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  className="w-full flex items-center justify-center gap-2 rounded-xl border border-dashed border-[#FF5A1F]/50 bg-[#FF5A1F]/5 p-2 text-xs font-bold text-[#FF5A1F] hover:bg-[#FF5A1F]/10 transition-colors"
-                >
-                  <Upload className="h-4 w-4" /> Upload Character Image (PNG/JPG)
-                </button>
-
-                {form.uploadedCharacters && form.uploadedCharacters.length > 0 && (
-                  <div className="space-y-1.5 max-h-[100px] overflow-y-auto no-scrollbar pr-1">
-                    {form.uploadedCharacters.map((char) => (
-                      <div
-                        key={char.id}
-                        className="flex items-center gap-2 rounded-lg border border-border/60 bg-background p-1.5 max-w-full"
-                      >
-                        {char.imageUrl ? (
-                          <img
-                            src={char.imageUrl}
-                            alt={char.name}
-                            className="h-8 w-8 rounded object-cover border border-border/40 shrink-0"
-                          />
-                        ) : (
-                          <div className="h-8 w-8 rounded bg-secondary flex items-center justify-center text-muted-foreground shrink-0">
-                            <Users className="h-3.5 w-3.5" />
-                          </div>
-                        )}
-
-                        <input
-                          type="text"
-                          value={char.name}
-                          placeholder="Character Name"
-                          onChange={(e) =>
-                            handleUpdateUploadedCharacter(char.id, "name", e.target.value)
-                          }
-                          className="flex-1 rounded border border-input bg-background px-1.5 py-0.5 text-[11px] font-bold text-foreground outline-none focus:ring-1 focus:ring-[#FF5A1F]"
-                        />
-
-                        <button
-                          type="button"
-                          onClick={() => handleRemoveUploadedCharacter(char.id)}
-                          className="p-1 text-muted-foreground hover:text-destructive shrink-0"
-                        >
-                          <Trash2 className="h-3.5 w-3.5" />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Streamlined Controls Row (5 Essential Options) */}
-            <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 pt-1 w-full">
-              <div>
-                <label className="block text-[10px] font-bold uppercase tracking-wider text-foreground mb-1">
-                  Scenes Count
-                </label>
-                <input
-                  type="number"
-                  min={1}
-                  max={200}
-                  value={form.numberOfScenes}
-                  onChange={(e) =>
-                    handleFormChange("numberOfScenes", parseInt(e.target.value) || 10)
-                  }
-                  className="w-full rounded-xl border border-input bg-background px-2.5 py-1.5 text-xs font-semibold outline-none focus:ring-2 focus:ring-[#FF5A1F]/40"
-                />
-              </div>
-
-              <div>
-                <label className="block text-[10px] font-bold uppercase tracking-wider text-foreground mb-1">
-                  Visual Style
-                </label>
-                <select
-                  value={form.visualStyle}
-                  onChange={(e) => handleFormChange("visualStyle", e.target.value)}
-                  className="w-full rounded-xl border border-input bg-background px-2.5 py-1.5 text-xs font-semibold outline-none focus:ring-2 focus:ring-[#FF5A1F]/40"
-                >
-                  {VISUAL_STYLES.map((st) => (
-                    <option key={st} value={st}>
-                      {st}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-[10px] font-bold uppercase tracking-wider text-foreground mb-1">
-                  AI Generator Format
-                </label>
-                <select
-                  value={form.promptStyle}
-                  onChange={(e) => handleFormChange("promptStyle", e.target.value)}
-                  className="w-full rounded-xl border border-input bg-background px-2.5 py-1.5 text-xs font-semibold outline-none focus:ring-2 focus:ring-[#FF5A1F]/40"
-                >
-                  {PROMPT_STYLES.map((ps) => (
-                    <option key={ps} value={ps}>
-                      {ps}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-[10px] font-bold uppercase tracking-wider text-foreground mb-1">
-                  Aspect Ratio
-                </label>
-                <select
-                  value={form.aspectRatio}
-                  onChange={(e) => handleFormChange("aspectRatio", e.target.value)}
-                  className="w-full rounded-xl border border-input bg-background px-2.5 py-1.5 text-xs font-semibold outline-none focus:ring-2 focus:ring-[#FF5A1F]/40"
-                >
-                  {ASPECT_RATIOS.map((ar) => (
-                    <option key={ar} value={ar}>
-                      {ar}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-[10px] font-bold uppercase tracking-wider text-foreground mb-1">
-                  Camera Motion
-                </label>
-                <select
-                  value={form.cameraStyle}
-                  onChange={(e) => handleFormChange("cameraStyle", e.target.value)}
-                  className="w-full rounded-xl border border-input bg-background px-2.5 py-1.5 text-xs font-semibold outline-none focus:ring-2 focus:ring-[#FF5A1F]/40"
-                >
-                  {CAMERA_STYLES.map((cs) => (
-                    <option key={cs} value={cs}>
-                      {cs}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            {/* Custom Visual Style Input if selected */}
-            {form.visualStyle === "Custom" && (
-              <div className="w-full">
-                <input
-                  type="text"
-                  placeholder="e.g. 1980s Neon Synthwave 3D Render"
-                  value={form.customStyle || ""}
-                  onChange={(e) => handleFormChange("customStyle", e.target.value)}
-                  className="w-full rounded-xl border border-input bg-background px-3 py-1.5 text-xs outline-none focus:ring-2 focus:ring-[#FF5A1F]/40"
-                />
-              </div>
-            )}
-
-            {/* Bottom Row: Toggles + Main Generate CTA Button */}
-            <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 pt-2 border-t border-border/40 w-full">
-              {/* Toggles Bar */}
-              <div className="flex flex-wrap items-center gap-4 text-xs font-semibold">
-                <label className="flex items-center gap-1.5 text-foreground cursor-pointer select-none">
-                  <input
-                    type="checkbox"
-                    checked={form.includeDialogue}
-                    onChange={(e) => handleFormChange("includeDialogue", e.target.checked)}
-                    className="h-4 w-4 rounded accent-[#FF5A1F]"
-                  />
-                  <MessageSquare className="h-3.5 w-3.5 text-[#FF5A1F]" /> Dialogue
-                </label>
-
-                <label className="flex items-center gap-1.5 text-foreground cursor-pointer select-none">
-                  <input
-                    type="checkbox"
-                    checked={form.includeSFX}
-                    onChange={(e) => handleFormChange("includeSFX", e.target.checked)}
-                    className="h-4 w-4 rounded accent-[#FF5A1F]"
-                  />
-                  <Volume2 className="h-3.5 w-3.5 text-[#FF5A1F]" /> SFX
-                </label>
-
-                <label className="flex items-center gap-1.5 text-foreground cursor-pointer select-none">
-                  <input
-                    type="checkbox"
-                    checked={form.includeBackgroundMusic}
-                    onChange={(e) => handleFormChange("includeBackgroundMusic", e.target.checked)}
-                    className="h-4 w-4 rounded accent-[#FF5A1F]"
-                  />
-                  <Music className="h-3.5 w-3.5 text-[#FF5A1F]" /> Music
-                </label>
-
-                <label className="flex items-center gap-1.5 text-foreground cursor-pointer select-none">
-                  <input
-                    type="checkbox"
-                    checked={form.safetyNotes}
-                    onChange={(e) => handleFormChange("safetyNotes", e.target.checked)}
-                    className="h-4 w-4 rounded accent-[#FF5A1F]"
-                  />
-                  <Shield className="h-3.5 w-3.5 text-[#FF5A1F]" /> Safety Prompts
-                </label>
-              </div>
-
-              {/* Main Generate Button */}
-              <button
-                type="submit"
-                disabled={loading}
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#FF5A1F] px-8 py-3 text-xs font-bold uppercase tracking-widest text-white shadow-xl shadow-[#FF5A1F]/30 transition-transform duration-300 active:scale-95 disabled:opacity-60 shrink-0"
-              >
-                {loading ? (
-                  <>
-                    <RefreshCw className="h-4 w-4 animate-spin" /> Generating Package...
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="h-4 w-4" /> Generate Storyboard Package
-                  </>
-                )}
-              </button>
-            </div>
-
-            {error && (
-              <p className="rounded-xl border border-destructive/30 bg-destructive/10 p-3 text-xs font-semibold text-destructive break-words">
-                {error}
-              </p>
-            )}
-          </form>
-        </div>
-
-        {/* ── STUDIO RESULTS PANEL (BELOW) ─────────────────────────────────── */}
-        <div className="w-full space-y-4 sm:space-y-6">
-          {!output && !loading && (
-            <div className="flex flex-col items-center justify-center rounded-2xl sm:rounded-3xl border border-dashed border-border/80 bg-card/60 p-6 sm:p-12 text-center min-h-[250px] sm:min-h-[350px] max-w-full">
-              <div className="grid h-12 w-12 sm:h-14 sm:w-14 place-items-center rounded-2xl bg-[#FF5A1F]/10 text-[#FF5A1F]">
-                <Clapperboard className="h-6 w-6" />
-              </div>
-              <h3 className="mt-3 font-display text-base sm:text-lg font-bold text-foreground">
-                Ready to Generate Your Storyboard
-              </h3>
-              <p className="mt-1 max-w-md text-xs text-muted-foreground leading-relaxed break-words">
-                Paste your script above and click Generate Storyboard Package.
-              </p>
-            </div>
-          )}
-
-          {loading && (
-            <div className="flex flex-col items-center justify-center rounded-2xl sm:rounded-3xl border border-border/80 bg-card/80 p-6 sm:p-12 text-center min-h-[250px] sm:min-h-[350px] shadow-glass backdrop-blur-xl max-w-full">
-              <RefreshCw className="h-8 w-8 text-[#FF5A1F] animate-spin" />
-              <h3 className="mt-4 font-display text-base sm:text-lg font-bold text-foreground">
-                Building AI Storyboard Packages...
-              </h3>
-              <p className="mt-1 text-xs text-muted-foreground break-words">
-                Generating 4K scene prompts, camera moves, dialogue, and sound effects.
-              </p>
-            </div>
-          )}
-
-          {output && !loading && (
-            <div className="space-y-4 sm:space-y-6 w-full">
-              {/* ── Summary Overview Bar ──────────────────────────── */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 max-w-full">
-                <div className="rounded-xl border border-border/60 bg-card p-3 text-center">
-                  <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground block">Total Scenes</span>
-                  <p className="font-display text-base font-black text-[#FF5A1F]">{output.scenes?.length || 0}</p>
-                </div>
-                <div className="rounded-xl border border-border/60 bg-card p-3 text-center">
-                  <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground block">Characters</span>
-                  <p className="font-display text-base font-black text-blue-500">{output.characters?.length || 0}</p>
-                </div>
-                <div className="rounded-xl border border-border/60 bg-card p-3 text-center">
-                  <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground block">Environments</span>
-                  <p className="font-display text-base font-black text-emerald-500">{output.environments?.length || 0}</p>
-                </div>
-                <div className="rounded-xl border border-border/60 bg-card p-3 text-center">
-                  <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground block">Est. Runtime</span>
-                  <p className="font-display text-base font-black text-purple-500">{output.analytics?.estimatedRuntime || "1m 30s"}</p>
-                </div>
-              </div>
-
-              {/* ── Storyboard Timeline Bar ───────────────────── */}
-              {output.timeline && output.timeline.length > 0 && (
-                <div className="rounded-2xl border border-border/80 bg-card p-3 sm:p-5 shadow-glass max-w-full overflow-hidden">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-display text-[11px] font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
-                      <Film className="h-3.5 w-3.5 text-[#FF5A1F]" /> Storyboard Timeline ({output.timeline.length} Scenes)
-                    </h3>
-                    
-                    <div className="flex items-center gap-1">
-                      <button
-                        onClick={() => scrollTimeline("left")}
-                        className="p-1 rounded-lg border border-border/60 bg-background hover:bg-secondary text-muted-foreground transition-colors"
-                        title="Scroll Left"
-                      >
-                        <ChevronLeft className="h-3.5 w-3.5" />
-                      </button>
-                      <button
-                        onClick={() => scrollTimeline("right")}
-                        className="p-1 rounded-lg border border-border/60 bg-background hover:bg-secondary text-muted-foreground transition-colors"
-                        title="Scroll Right"
-                      >
-                        <ChevronRight className="h-3.5 w-3.5" />
-                      </button>
-                    </div>
+                {/* Character Reference Image Upload */}
+                <div className="rounded-xl border border-border/70 bg-secondary/20 p-3 space-y-2 max-w-full">
+                  <div className="flex items-center justify-between">
+                    <label className="text-[10px] font-bold uppercase tracking-wider text-foreground flex items-center gap-1.5">
+                      <ImageIcon className="h-3.5 w-3.5 text-[#FF5A1F]" /> Character Images
+                    </label>
+                    <span className="text-[9px] font-bold text-[#FF5A1F]">
+                      {form.uploadedCharacters?.length || 0} Attached
+                    </span>
                   </div>
 
-                  <div
-                    ref={timelineScrollRef}
-                    className="no-scrollbar flex items-center gap-2 overflow-x-auto pb-1 max-w-full scroll-smooth"
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handleImageFileUpload}
+                    accept="image/png, image/jpeg, image/webp"
+                    multiple
+                    className="hidden"
+                  />
+
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="w-full flex items-center justify-center gap-1.5 rounded-xl border border-dashed border-[#FF5A1F]/50 bg-[#FF5A1F]/5 p-2 text-xs font-bold text-[#FF5A1F] hover:bg-[#FF5A1F]/10 transition-colors"
                   >
-                    {output.timeline.map((item) => (
-                      <div
-                        key={item.sceneNumber}
-                        onClick={() => scrollToScene(item.sceneNumber)}
-                        className="flex flex-col justify-between shrink-0 rounded-xl border border-border/60 bg-secondary/30 p-2 cursor-pointer hover:border-[#FF5A1F] hover:bg-secondary transition-all"
-                        style={{ width: "125px" }}
-                      >
-                        <div className="flex items-center justify-between">
-                          <span className="rounded-md bg-[#FF5A1F]/10 px-1.5 py-0.5 text-[9px] font-bold text-[#FF5A1F]">
-                            Sc {item.sceneNumber}
-                          </span>
-                          <span className="text-[9px] text-muted-foreground font-semibold">{item.duration}</span>
+                    <Upload className="h-3.5 w-3.5" /> Upload Character Image (PNG/JPG)
+                  </button>
+
+                  {form.uploadedCharacters && form.uploadedCharacters.length > 0 && (
+                    <div className="space-y-1 max-h-[90px] overflow-y-auto no-scrollbar">
+                      {form.uploadedCharacters.map((char) => (
+                        <div
+                          key={char.id}
+                          className="flex items-center gap-2 rounded-lg border border-border/60 bg-background p-1 max-w-full"
+                        >
+                          {char.imageUrl ? (
+                            <img
+                              src={char.imageUrl}
+                              alt={char.name}
+                              className="h-7 w-7 rounded object-cover border border-border/40 shrink-0"
+                            />
+                          ) : (
+                            <div className="h-7 w-7 rounded bg-secondary flex items-center justify-center text-muted-foreground shrink-0">
+                              <Users className="h-3 w-3" />
+                            </div>
+                          )}
+
+                          <input
+                            type="text"
+                            value={char.name}
+                            placeholder="Character Name"
+                            onChange={(e) =>
+                              handleUpdateUploadedCharacter(char.id, "name", e.target.value)
+                            }
+                            className="flex-1 rounded border border-input bg-background px-1.5 py-0.5 text-[10px] font-bold text-foreground outline-none focus:ring-1 focus:ring-[#FF5A1F]"
+                          />
+
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveUploadedCharacter(char.id)}
+                            className="p-1 text-muted-foreground hover:text-destructive shrink-0"
+                          >
+                            <Trash2 className="h-3 w-3" />
+                          </button>
                         </div>
-                        <h4 className="mt-1 font-display text-[11px] font-bold text-foreground line-clamp-1">
-                          {item.sceneTitle}
-                        </h4>
-                        <span className="mt-0.5 text-[9px] text-muted-foreground/80 line-clamp-1">
-                          📍 {item.environment}
-                        </span>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Configuration Inputs Grid */}
+                <div className="grid grid-cols-2 gap-2.5 w-full">
+                  <div>
+                    <label className="block text-[10px] font-bold uppercase tracking-wider text-foreground mb-1">
+                      Scenes Count
+                    </label>
+                    <input
+                      type="number"
+                      min={1}
+                      max={200}
+                      value={form.numberOfScenes}
+                      onChange={(e) =>
+                        handleFormChange("numberOfScenes", parseInt(e.target.value) || 10)
+                      }
+                      className="w-full rounded-xl border border-input bg-background px-2.5 py-1.5 text-xs font-semibold outline-none focus:ring-2 focus:ring-[#FF5A1F]/40"
+                    />
                   </div>
-                </div>
-              )}
 
-              {/* ── Action Toolbar ───────── */}
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 rounded-2xl border border-border/80 bg-card p-3 sm:p-4 shadow-glass max-w-full">
-                <div className="relative w-full sm:flex-1 sm:min-w-[160px]">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
-                  <input
-                    type="text"
-                    placeholder="Search prompts or scene #..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full rounded-xl border border-input bg-background pl-8 pr-3 py-1.5 text-xs outline-none focus:ring-2 focus:ring-[#FF5A1F]/40"
-                  />
-                </div>
-
-                {output.scenes && output.scenes.length > 0 && (
-                  <div className="relative flex items-center gap-1">
-                    <Compass className="h-3.5 w-3.5 text-[#FF5A1F] shrink-0" />
+                  <div>
+                    <label className="block text-[10px] font-bold uppercase tracking-wider text-foreground mb-1">
+                      Visual Style
+                    </label>
                     <select
-                      onChange={(e) => {
-                        const val = parseInt(e.target.value);
-                        if (val) scrollToScene(val);
-                      }}
-                      defaultValue=""
-                      className="rounded-xl border border-input bg-background px-2.5 py-1.5 text-xs font-semibold outline-none focus:ring-2 focus:ring-[#FF5A1F]/40"
+                      value={form.visualStyle}
+                      onChange={(e) => handleFormChange("visualStyle", e.target.value)}
+                      className="w-full rounded-xl border border-input bg-background px-2 py-1.5 text-xs font-semibold outline-none focus:ring-2 focus:ring-[#FF5A1F]/40"
                     >
-                      <option value="" disabled>
-                        Jump to Scene...
-                      </option>
-                      {output.scenes.map((s) => (
-                        <option key={s.sceneNumber} value={s.sceneNumber}>
-                          Scene {s.sceneNumber}: {s.sceneTitle}
+                      {VISUAL_STYLES.map((st) => (
+                        <option key={st} value={st}>
+                          {st}
                         </option>
                       ))}
                     </select>
                   </div>
+
+                  <div>
+                    <label className="block text-[10px] font-bold uppercase tracking-wider text-foreground mb-1">
+                      Generator Format
+                    </label>
+                    <select
+                      value={form.promptStyle}
+                      onChange={(e) => handleFormChange("promptStyle", e.target.value)}
+                      className="w-full rounded-xl border border-input bg-background px-2 py-1.5 text-xs font-semibold outline-none focus:ring-2 focus:ring-[#FF5A1F]/40"
+                    >
+                      {PROMPT_STYLES.map((ps) => (
+                        <option key={ps} value={ps}>
+                          {ps}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] font-bold uppercase tracking-wider text-foreground mb-1">
+                      Aspect Ratio
+                    </label>
+                    <select
+                      value={form.aspectRatio}
+                      onChange={(e) => handleFormChange("aspectRatio", e.target.value)}
+                      className="w-full rounded-xl border border-input bg-background px-2 py-1.5 text-xs font-semibold outline-none focus:ring-2 focus:ring-[#FF5A1F]/40"
+                    >
+                      {ASPECT_RATIOS.map((ar) => (
+                        <option key={ar} value={ar}>
+                          {ar}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="col-span-2">
+                    <label className="block text-[10px] font-bold uppercase tracking-wider text-foreground mb-1">
+                      Camera Motion
+                    </label>
+                    <select
+                      value={form.cameraStyle}
+                      onChange={(e) => handleFormChange("cameraStyle", e.target.value)}
+                      className="w-full rounded-xl border border-input bg-background px-2.5 py-1.5 text-xs font-semibold outline-none focus:ring-2 focus:ring-[#FF5A1F]/40"
+                    >
+                      {CAMERA_STYLES.map((cs) => (
+                        <option key={cs} value={cs}>
+                          {cs}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                {/* Custom Visual Style Input if selected */}
+                {form.visualStyle === "Custom" && (
+                  <div className="w-full">
+                    <input
+                      type="text"
+                      placeholder="e.g. 1980s Neon Synthwave 3D Render"
+                      value={form.customStyle || ""}
+                      onChange={(e) => handleFormChange("customStyle", e.target.value)}
+                      className="w-full rounded-xl border border-input bg-background px-3 py-1.5 text-xs outline-none focus:ring-2 focus:ring-[#FF5A1F]/40"
+                    />
+                  </div>
                 )}
 
-                <div className="flex items-center gap-1.5 max-w-full">
-                  {/* COPY ALL BUTTON FORMATTED AS scene N [prompt] */}
-                  <button
-                    onClick={() =>
-                      handleCopy(
-                        output.scenes.map((s) => getSceneFormattedPrompt(s)).join("\n\n"),
-                        "all-packages"
-                      )
-                    }
-                    className="inline-flex items-center justify-center gap-1 rounded-xl border border-[#FF5A1F]/40 bg-[#FF5A1F]/10 px-3 py-1.5 text-[11px] font-bold text-[#FF5A1F] hover:bg-[#FF5A1F]/20 transition-colors"
-                    title="Copy all scene prompts in 'Scene N [prompt]' format"
-                  >
-                    {copiedKey === "all-packages" ? (
-                      <Check className="h-3 w-3 text-emerald-500" />
-                    ) : (
-                      <Copy className="h-3 w-3" />
-                    )}
-                    Copy All Prompts
-                  </button>
+                {/* Toggles */}
+                <div className="grid grid-cols-2 gap-2 text-[11px] font-semibold pt-1 border-t border-border/40">
+                  <label className="flex items-center gap-1.5 text-foreground cursor-pointer select-none">
+                    <input
+                      type="checkbox"
+                      checked={form.includeDialogue}
+                      onChange={(e) => handleFormChange("includeDialogue", e.target.checked)}
+                      className="h-3.5 w-3.5 rounded accent-[#FF5A1F]"
+                    />
+                    <MessageSquare className="h-3 w-3 text-[#FF5A1F]" /> Dialogue
+                  </label>
 
-                  <button
-                    onClick={() => exportFormatted("markdown")}
-                    className="inline-flex items-center justify-center gap-1 rounded-xl border border-border/80 bg-background px-2.5 py-1.5 text-[11px] font-semibold text-foreground"
-                  >
-                    <FileText className="h-3 w-3" /> MD
-                  </button>
+                  <label className="flex items-center gap-1.5 text-foreground cursor-pointer select-none">
+                    <input
+                      type="checkbox"
+                      checked={form.includeSFX}
+                      onChange={(e) => handleFormChange("includeSFX", e.target.checked)}
+                      className="h-3.5 w-3.5 rounded accent-[#FF5A1F]"
+                    />
+                    <Volume2 className="h-3 w-3 text-[#FF5A1F]" /> SFX
+                  </label>
 
-                  <button
-                    onClick={() => exportFormatted("json")}
-                    className="inline-flex items-center justify-center gap-1 rounded-xl border border-border/80 bg-background px-2.5 py-1.5 text-[11px] font-semibold text-foreground"
-                  >
-                    <Download className="h-3 w-3" /> JSON
-                  </button>
+                  <label className="flex items-center gap-1.5 text-foreground cursor-pointer select-none">
+                    <input
+                      type="checkbox"
+                      checked={form.includeBackgroundMusic}
+                      onChange={(e) => handleFormChange("includeBackgroundMusic", e.target.checked)}
+                      className="h-3.5 w-3.5 rounded accent-[#FF5A1F]"
+                    />
+                    <Music className="h-3 w-3 text-[#FF5A1F]" /> Music
+                  </label>
+
+                  <label className="flex items-center gap-1.5 text-foreground cursor-pointer select-none">
+                    <input
+                      type="checkbox"
+                      checked={form.safetyNotes}
+                      onChange={(e) => handleFormChange("safetyNotes", e.target.checked)}
+                      className="h-3.5 w-3.5 rounded accent-[#FF5A1F]"
+                    />
+                    <Shield className="h-3 w-3 text-[#FF5A1F]" /> Safety
+                  </label>
                 </div>
               </div>
 
-              {/* ── Generated Scenes List (Paginated: 10 scenes per page) ── */}
-              <div className="space-y-4 max-w-full">
-                {paginatedScenes.map((scene) => {
-                  const isExpanded = expandedScenes[scene.sceneNumber] !== false;
-                  const copyKey = `scene-pkg-${scene.sceneNumber}`;
-
-                  return (
-                    <motion.div
-                      key={scene.sceneNumber}
-                      id={`scene-card-${scene.sceneNumber}`}
-                      layout
-                      className="overflow-hidden rounded-2xl border border-border/80 bg-card p-3.5 sm:p-5 shadow-glass backdrop-blur-xl transition-all hover:border-[#FF5A1F]/30 max-w-full"
-                    >
-                      <div
-                        onClick={() => toggleExpand(scene.sceneNumber)}
-                        className="flex items-start sm:items-center justify-between gap-2 cursor-pointer max-w-full"
-                      >
-                        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-                          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-xl bg-[#FF5A1F] text-xs font-bold text-white shadow-md">
-                            {scene.sceneNumber}
-                          </span>
-                          <div className="min-w-0">
-                            <h3 className="font-display text-xs sm:text-base font-bold text-foreground truncate">
-                              {scene.sceneTitle}
-                            </h3>
-                            <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground mt-0.5">
-                              <span className="shrink-0">⏱ {scene.duration}</span>
-                              <span>•</span>
-                              <span className="truncate">📍 {scene.environment}</span>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="flex items-center gap-1 shrink-0">
-                          <span className="hidden sm:inline-block rounded-full bg-secondary px-2 py-0.5 text-[9px] font-bold text-muted-foreground uppercase">
-                            {scene.visualStyle}
-                          </span>
-                          {isExpanded ? (
-                            <ChevronUp className="h-4 w-4 text-muted-foreground" />
-                          ) : (
-                            <ChevronDown className="h-4 w-4 text-muted-foreground" />
-                          )}
-                        </div>
-                      </div>
-
-                      <AnimatePresence>
-                        {isExpanded && (
-                          <motion.div
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: "auto" }}
-                            exit={{ opacity: 0, height: 0 }}
-                            className="mt-3 sm:mt-4 border-t border-border/40 pt-3 space-y-3 max-w-full overflow-hidden"
-                          >
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs max-w-full">
-                              <div className="rounded-xl border border-border/60 bg-secondary/20 p-2.5 max-w-full">
-                                <span className="font-bold text-foreground uppercase tracking-wider text-[9px]">Characters ({scene.characters?.length || 0})</span>
-                                <div className="flex flex-wrap gap-1 mt-1 max-w-full">
-                                  {scene.characters?.map((c, i) => (
-                                    <span key={i} className="rounded-md bg-background px-1.5 py-0.5 text-[10px] font-semibold text-foreground border border-border/60 break-words">
-                                      {c}
-                                    </span>
-                                  ))}
-                                </div>
-                              </div>
-
-                              <div className="rounded-xl border border-border/60 bg-secondary/20 p-2.5 max-w-full">
-                                <span className="font-bold text-foreground uppercase tracking-wider text-[9px]">Camera & Lens</span>
-                                <p className="mt-0.5 text-[10px] sm:text-[11px] text-muted-foreground break-words">
-                                  {scene.camera?.angle} • {scene.camera?.movement} ({scene.camera?.lens})
-                                </p>
-                              </div>
-                            </div>
-
-                            <div className="rounded-xl border border-[#FF5A1F]/30 bg-background p-3 sm:p-4 space-y-2.5 shadow-sm max-w-full overflow-hidden">
-                              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 border-b border-border/40 pb-2 max-w-full">
-                                <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-[#FF5A1F] flex items-center gap-1">
-                                  <Sparkles className="h-3.5 w-3.5 shrink-0" /> AI Package ({form.promptStyle})
-                                </span>
-                                <button
-                                  onClick={() => handleCopy(getCombinedPackageText(scene), copyKey)}
-                                  className="w-full sm:w-auto inline-flex items-center justify-center gap-1 rounded-lg bg-[#FF5A1F] px-3 py-1.5 text-[11px] font-bold text-white shadow-md active:scale-95"
-                                >
-                                  {copiedKey === copyKey ? (
-                                    <Check className="h-3.5 w-3.5" />
-                                  ) : (
-                                    <Copy className="h-3.5 w-3.5" />
-                                  )}
-                                  Copy Scene Package
-                                </button>
-                              </div>
-
-                              <div className="max-w-full">
-                                <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground block mb-1">
-                                  🎬 Visual AI Prompt (Formatted)
-                                </span>
-                                <p className="text-[11px] sm:text-xs font-mono text-foreground leading-relaxed break-words whitespace-pre-wrap selection:bg-[#FF5A1F]/30">
-                                  {getSceneFormattedPrompt(scene)}
-                                </p>
-                              </div>
-
-                              {scene.dialogue && (
-                                <div className="border-t border-border/30 pt-2 max-w-full">
-                                  <span className="text-[9px] font-bold uppercase tracking-wider text-[#FF5A1F] block mb-1 flex items-center gap-1">
-                                    <MessageSquare className="h-3 w-3 shrink-0" /> Dialogue
-                                  </span>
-                                  <p className="text-[11px] font-mono italic text-foreground bg-[#FF5A1F]/5 p-2 rounded-lg border border-[#FF5A1F]/20 break-words whitespace-pre-wrap">
-                                    "{scene.dialogue}"
-                                  </p>
-                                </div>
-                              )}
-
-                              {scene.sfx && (
-                                <div className="border-t border-border/30 pt-2 max-w-full">
-                                  <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground block mb-1 flex items-center gap-1">
-                                    <Volume2 className="h-3 w-3 shrink-0" /> Sound Effects (SFX)
-                                  </span>
-                                  <p className="text-[11px] font-mono text-muted-foreground bg-secondary/30 p-2 rounded-lg border border-border/40 break-words whitespace-pre-wrap">
-                                    🔊 {scene.sfx}
-                                  </p>
-                                </div>
-                              )}
-
-                              {scene.negativePrompt && (
-                                <div className="border-t border-border/30 pt-1 text-[9px] font-mono text-muted-foreground break-words">
-                                  <strong>Negative Prompt:</strong> {scene.negativePrompt}
-                                </div>
-                              )}
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </motion.div>
-                  );
-                })}
-              </div>
-
-              {/* ── PAGINATION CONTROLS BAR (10 Scenes per Page) ────────────── */}
-              {totalPages > 1 && (
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-glass max-w-full">
-                  <span className="text-xs text-muted-foreground font-medium text-center sm:text-left">
-                    Showing <strong className="text-foreground font-bold">{(currentPage - 1) * SCENES_PER_PAGE + 1}</strong>–
-                    <strong className="text-foreground font-bold">{Math.min(currentPage * SCENES_PER_PAGE, filteredScenes.length)}</strong> of{" "}
-                    <strong className="text-foreground font-bold">{filteredScenes.length}</strong> scenes (Page {currentPage} of {totalPages})
+              {/* ── SCRIPT BOX (BOTTOM LEFT - CHAT-LIKE INPUT BAR) ────────────────── */}
+              <div className="rounded-2xl sm:rounded-3xl border border-border/80 bg-card p-3.5 sm:p-4 shadow-glass backdrop-blur-xl max-w-full space-y-3">
+                <div className="flex items-center justify-between">
+                  <label className="text-[11px] font-bold uppercase tracking-wider text-foreground">
+                    Script / Screenplay Input
+                  </label>
+                  <span className="text-[9px] text-muted-foreground font-mono">
+                    {form.script.length} chars
                   </span>
+                </div>
 
-                  <div className="flex flex-wrap items-center justify-center gap-1 max-w-full">
-                    <button
-                      onClick={() => {
-                        setCurrentPage((prev) => Math.max(1, prev - 1));
-                        const el = document.getElementById("generator-workspace");
-                        if (el) el.scrollIntoView({ behavior: "smooth" });
-                      }}
-                      disabled={currentPage === 1}
-                      className="inline-flex items-center gap-1 rounded-xl border border-border/80 bg-background px-3 py-1.5 text-xs font-semibold text-foreground disabled:opacity-40 transition-all hover:bg-secondary"
-                    >
-                      <ChevronLeft className="h-3.5 w-3.5" /> Previous
-                    </button>
+                <textarea
+                  rows={6}
+                  value={form.script}
+                  onChange={(e) => handleFormChange("script", e.target.value)}
+                  placeholder="Paste your script here..."
+                  className="w-full max-w-full rounded-xl border border-input bg-background/80 px-3 py-2.5 text-xs outline-none focus:ring-2 focus:ring-[#FF5A1F]/40 leading-relaxed font-mono break-words whitespace-pre-wrap min-h-[130px]"
+                  required
+                />
 
-                    <div className="flex items-center gap-1 px-1">
-                      {Array.from({ length: totalPages }, (_, i) => i + 1).map((pg) => {
-                        if (
-                          pg === 1 ||
-                          pg === totalPages ||
-                          (pg >= currentPage - 1 && pg <= currentPage + 1)
-                        ) {
-                          return (
-                            <button
-                              key={pg}
-                              onClick={() => {
-                                setCurrentPage(pg);
-                                const el = document.getElementById("generator-workspace");
-                                if (el) el.scrollIntoView({ behavior: "smooth" });
-                              }}
-                              className={`h-8 w-8 rounded-xl text-xs font-bold transition-all ${
-                                currentPage === pg
-                                  ? "bg-[#FF5A1F] text-white shadow-md"
-                                  : "border border-border/60 bg-background text-muted-foreground hover:bg-secondary"
-                              }`}
-                            >
-                              {pg}
-                            </button>
-                          );
-                        } else if (
-                          (pg === currentPage - 2 && pg > 1) ||
-                          (pg === currentPage + 2 && pg < totalPages)
-                        ) {
-                          return (
-                            <span key={pg} className="px-1 text-xs text-muted-foreground font-bold">
-                              ...
-                            </span>
-                          );
-                        }
-                        return null;
-                      })}
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#FF5A1F] py-3 text-xs font-bold uppercase tracking-widest text-white shadow-xl shadow-[#FF5A1F]/30 transition-transform duration-300 active:scale-95 disabled:opacity-60"
+                >
+                  {loading ? (
+                    <>
+                      <RefreshCw className="h-4 w-4 animate-spin" /> Generating...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="h-4 w-4" /> Generate Storyboard Package
+                    </>
+                  )}
+                </button>
+
+                {error && (
+                  <p className="rounded-xl border border-destructive/30 bg-destructive/10 p-2.5 text-xs font-semibold text-destructive break-words">
+                    {error}
+                  </p>
+                )}
+              </div>
+            </form>
+          </div>
+
+          {/* ── RIGHT STUDIO PANEL (SCENE BOXES ON RIGHT - ONLY SCENE NUMBER & SCENE) ── */}
+          <div className="lg:col-span-7 xl:col-span-8 space-y-4 min-w-0 max-w-full">
+            {!output && !loading && (
+              <div className="flex flex-col items-center justify-center rounded-2xl sm:rounded-3xl border border-dashed border-border/80 bg-card/60 p-6 sm:p-12 text-center min-h-[300px] sm:min-h-[450px] max-w-full">
+                <div className="grid h-12 w-12 sm:h-14 sm:w-14 place-items-center rounded-2xl bg-[#FF5A1F]/10 text-[#FF5A1F]">
+                  <Clapperboard className="h-6 w-6" />
+                </div>
+                <h3 className="mt-3 font-display text-base sm:text-lg font-bold text-foreground">
+                  Ready to Generate Your Storyboard
+                </h3>
+                <p className="mt-1 max-w-md text-xs text-muted-foreground leading-relaxed break-words">
+                  Paste your script on the bottom left, adjust settings above it, and click Generate.
+                </p>
+              </div>
+            )}
+
+            {loading && (
+              <div className="flex flex-col items-center justify-center rounded-2xl sm:rounded-3xl border border-border/80 bg-card/80 p-6 sm:p-12 text-center min-h-[300px] sm:min-h-[450px] shadow-glass backdrop-blur-xl max-w-full">
+                <RefreshCw className="h-8 w-8 text-[#FF5A1F] animate-spin" />
+                <h3 className="mt-4 font-display text-base sm:text-lg font-bold text-foreground">
+                  Building AI Storyboard...
+                </h3>
+                <p className="mt-1 text-xs text-muted-foreground break-words">
+                  Generating scene prompts cleanly on the right.
+                </p>
+              </div>
+            )}
+
+            {output && !loading && (
+              <div className="space-y-4 w-full">
+                {/* Summary Overview Bar */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 max-w-full">
+                  <div className="rounded-xl border border-border/60 bg-card p-2.5 text-center">
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground block">Total Scenes</span>
+                    <p className="font-display text-base font-black text-[#FF5A1F]">{output.scenes?.length || 0}</p>
+                  </div>
+                  <div className="rounded-xl border border-border/60 bg-card p-2.5 text-center">
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground block">Characters</span>
+                    <p className="font-display text-base font-black text-blue-500">{output.characters?.length || 0}</p>
+                  </div>
+                  <div className="rounded-xl border border-border/60 bg-card p-2.5 text-center">
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground block">Environments</span>
+                    <p className="font-display text-base font-black text-emerald-500">{output.environments?.length || 0}</p>
+                  </div>
+                  <div className="rounded-xl border border-border/60 bg-card p-2.5 text-center">
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground block">Est. Runtime</span>
+                    <p className="font-display text-base font-black text-purple-500">{output.analytics?.estimatedRuntime || "1m 30s"}</p>
+                  </div>
+                </div>
+
+                {/* Storyboard Timeline Bar */}
+                {output.timeline && output.timeline.length > 0 && (
+                  <div className="rounded-2xl border border-border/80 bg-card p-3 shadow-glass max-w-full overflow-hidden">
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="font-display text-[11px] font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
+                        <Film className="h-3.5 w-3.5 text-[#FF5A1F]" /> Storyboard Timeline ({output.timeline.length} Scenes)
+                      </h3>
+                      
+                      <div className="flex items-center gap-1">
+                        <button
+                          onClick={() => scrollTimeline("left")}
+                          className="p-1 rounded-lg border border-border/60 bg-background hover:bg-secondary text-muted-foreground transition-colors"
+                          title="Scroll Left"
+                        >
+                          <ChevronLeft className="h-3.5 w-3.5" />
+                        </button>
+                        <button
+                          onClick={() => scrollTimeline("right")}
+                          className="p-1 rounded-lg border border-border/60 bg-background hover:bg-secondary text-muted-foreground transition-colors"
+                          title="Scroll Right"
+                        >
+                          <ChevronRight className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
                     </div>
 
-                    <button
-                      onClick={() => {
-                        setCurrentPage((prev) => Math.min(totalPages, prev + 1));
-                        const el = document.getElementById("generator-workspace");
-                        if (el) el.scrollIntoView({ behavior: "smooth" });
-                      }}
-                      disabled={currentPage === totalPages}
-                      className="inline-flex items-center gap-1 rounded-xl border border-border/80 bg-background px-3 py-1.5 text-xs font-semibold text-foreground disabled:opacity-40 transition-all hover:bg-secondary"
+                    <div
+                      ref={timelineScrollRef}
+                      className="no-scrollbar flex items-center gap-2 overflow-x-auto pb-1 max-w-full scroll-smooth"
                     >
-                      Next <ChevronRight className="h-3.5 w-3.5" />
+                      {output.timeline.map((item) => (
+                        <div
+                          key={item.sceneNumber}
+                          onClick={() => scrollToScene(item.sceneNumber)}
+                          className="flex flex-col justify-between shrink-0 rounded-xl border border-border/60 bg-secondary/30 p-2 cursor-pointer hover:border-[#FF5A1F] hover:bg-secondary transition-all"
+                          style={{ width: "125px" }}
+                        >
+                          <div className="flex items-center justify-between">
+                            <span className="rounded-md bg-[#FF5A1F]/10 px-1.5 py-0.5 text-[9px] font-bold text-[#FF5A1F]">
+                              Sc {item.sceneNumber}
+                            </span>
+                            <span className="text-[9px] text-muted-foreground font-semibold">{item.duration}</span>
+                          </div>
+                          <h4 className="mt-1 font-display text-[11px] font-bold text-foreground line-clamp-1">
+                            {item.sceneTitle}
+                          </h4>
+                          <span className="mt-0.5 text-[9px] text-muted-foreground/80 line-clamp-1">
+                            📍 {item.environment}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Action Toolbar */}
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 rounded-2xl border border-border/80 bg-card p-3 shadow-glass max-w-full">
+                  <div className="relative w-full sm:flex-1 sm:min-w-[160px]">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+                    <input
+                      type="text"
+                      placeholder="Search prompts or scene #..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full rounded-xl border border-input bg-background pl-8 pr-3 py-1.5 text-xs outline-none focus:ring-2 focus:ring-[#FF5A1F]/40"
+                    />
+                  </div>
+
+                  {output.scenes && output.scenes.length > 0 && (
+                    <div className="relative flex items-center gap-1">
+                      <Compass className="h-3.5 w-3.5 text-[#FF5A1F] shrink-0" />
+                      <select
+                        onChange={(e) => {
+                          const val = parseInt(e.target.value);
+                          if (val) scrollToScene(val);
+                        }}
+                        defaultValue=""
+                        className="rounded-xl border border-input bg-background px-2.5 py-1.5 text-xs font-semibold outline-none focus:ring-2 focus:ring-[#FF5A1F]/40"
+                      >
+                        <option value="" disabled>
+                          Jump to Scene...
+                        </option>
+                        {output.scenes.map((s) => (
+                          <option key={s.sceneNumber} value={s.sceneNumber}>
+                            Scene {s.sceneNumber}: {s.sceneTitle}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
+
+                  <div className="flex items-center gap-1.5 max-w-full">
+                    <button
+                      onClick={() =>
+                        handleCopy(
+                          output.scenes.map((s) => getSceneFormattedPrompt(s)).join("\n\n"),
+                          "all-packages"
+                        )
+                      }
+                      className="inline-flex items-center justify-center gap-1 rounded-xl border border-[#FF5A1F]/40 bg-[#FF5A1F]/10 px-3 py-1.5 text-[11px] font-bold text-[#FF5A1F] hover:bg-[#FF5A1F]/20 transition-colors"
+                      title="Copy all scene prompts in 'Scene N [prompt]' format"
+                    >
+                      {copiedKey === "all-packages" ? (
+                        <Check className="h-3 w-3 text-emerald-500" />
+                      ) : (
+                        <Copy className="h-3 w-3" />
+                      )}
+                      Copy All Prompts
+                    </button>
+
+                    <button
+                      onClick={() => exportFormatted("markdown")}
+                      className="inline-flex items-center justify-center gap-1 rounded-xl border border-border/80 bg-background px-2.5 py-1.5 text-[11px] font-semibold text-foreground"
+                    >
+                      <FileText className="h-3 w-3" /> MD
+                    </button>
+
+                    <button
+                      onClick={() => exportFormatted("json")}
+                      className="inline-flex items-center justify-center gap-1 rounded-xl border border-border/80 bg-background px-2.5 py-1.5 text-[11px] font-semibold text-foreground"
+                    >
+                      <Download className="h-3 w-3" /> JSON
                     </button>
                   </div>
                 </div>
-              )}
-            </div>
-          )}
+
+                {/* ── GENERATED SCENE BOXES (RIGHT COLUMN - ONLY SCENE NUMBER & SCENE PROMPT, NOTHING ELSE) ── */}
+                <div className="space-y-3.5 max-w-full">
+                  {paginatedScenes.map((scene) => {
+                    const copyKey = `scene-pkg-${scene.sceneNumber}`;
+
+                    return (
+                      <motion.div
+                        key={scene.sceneNumber}
+                        id={`scene-card-${scene.sceneNumber}`}
+                        layout
+                        className="overflow-hidden rounded-2xl border border-border/80 bg-card p-4 shadow-glass backdrop-blur-xl transition-all hover:border-[#FF5A1F]/30 max-w-full space-y-2.5"
+                      >
+                        {/* Header: Scene Number Badge + Copy Button */}
+                        <div className="flex items-center justify-between border-b border-border/40 pb-2">
+                          <div className="flex items-center gap-2">
+                            <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-[#FF5A1F] text-xs font-bold text-white shadow-md">
+                              {scene.sceneNumber}
+                            </span>
+                            <span className="font-display text-xs font-bold text-foreground">
+                              Scene {scene.sceneNumber}
+                            </span>
+                          </div>
+
+                          <button
+                            onClick={() => handleCopy(getSceneFormattedPrompt(scene), copyKey)}
+                            className="inline-flex items-center gap-1.5 rounded-lg bg-[#FF5A1F]/10 border border-[#FF5A1F]/30 px-2.5 py-1 text-[11px] font-bold text-[#FF5A1F] hover:bg-[#FF5A1F] hover:text-white transition-all"
+                          >
+                            {copiedKey === copyKey ? (
+                              <Check className="h-3.5 w-3.5 text-emerald-500" />
+                            ) : (
+                              <Copy className="h-3.5 w-3.5" />
+                            )}
+                            Copy Scene
+                          </button>
+                        </div>
+
+                        {/* ONLY THE SCENE PROMPT CONTENT (Formated as Scene N [prompt]) */}
+                        <p className="text-xs sm:text-sm font-mono text-foreground leading-relaxed break-words whitespace-pre-wrap selection:bg-[#FF5A1F]/30 bg-background/60 p-3 rounded-xl border border-border/40">
+                          {getSceneFormattedPrompt(scene)}
+                        </p>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+
+                {/* ── PAGINATION CONTROLS BAR (10 Scenes per Page) ────────────── */}
+                {totalPages > 1 && (
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-glass max-w-full">
+                    <span className="text-xs text-muted-foreground font-medium text-center sm:text-left">
+                      Showing <strong className="text-foreground font-bold">{(currentPage - 1) * SCENES_PER_PAGE + 1}</strong>–
+                      <strong className="text-foreground font-bold">{Math.min(currentPage * SCENES_PER_PAGE, filteredScenes.length)}</strong> of{" "}
+                      <strong className="text-foreground font-bold">{filteredScenes.length}</strong> scenes (Page {currentPage} of {totalPages})
+                    </span>
+
+                    <div className="flex flex-wrap items-center justify-center gap-1 max-w-full">
+                      <button
+                        onClick={() => {
+                          setCurrentPage((prev) => Math.max(1, prev - 1));
+                          const el = document.getElementById("generator-workspace");
+                          if (el) el.scrollIntoView({ behavior: "smooth" });
+                        }}
+                        disabled={currentPage === 1}
+                        className="inline-flex items-center gap-1 rounded-xl border border-border/80 bg-background px-3 py-1.5 text-xs font-semibold text-foreground disabled:opacity-40 transition-all hover:bg-secondary"
+                      >
+                        <ChevronLeft className="h-3.5 w-3.5" /> Previous
+                      </button>
+
+                      <div className="flex items-center gap-1 px-1">
+                        {Array.from({ length: totalPages }, (_, i) => i + 1).map((pg) => {
+                          if (
+                            pg === 1 ||
+                            pg === totalPages ||
+                            (pg >= currentPage - 1 && pg <= currentPage + 1)
+                          ) {
+                            return (
+                              <button
+                                key={pg}
+                                onClick={() => {
+                                  setCurrentPage(pg);
+                                  const el = document.getElementById("generator-workspace");
+                                  if (el) el.scrollIntoView({ behavior: "smooth" });
+                                }}
+                                className={`h-8 w-8 rounded-xl text-xs font-bold transition-all ${
+                                  currentPage === pg
+                                    ? "bg-[#FF5A1F] text-white shadow-md"
+                                    : "border border-border/60 bg-background text-muted-foreground hover:bg-secondary"
+                                }`}
+                              >
+                                {pg}
+                              </button>
+                            );
+                          } else if (
+                            (pg === currentPage - 2 && pg > 1) ||
+                            (pg === currentPage + 2 && pg < totalPages)
+                          ) {
+                            return (
+                              <span key={pg} className="px-1 text-xs text-muted-foreground font-bold">
+                                ...
+                              </span>
+                            );
+                          }
+                          return null;
+                        })}
+                      </div>
+
+                      <button
+                        onClick={() => {
+                          setCurrentPage((prev) => Math.min(totalPages, prev + 1));
+                          const el = document.getElementById("generator-workspace");
+                          if (el) el.scrollIntoView({ behavior: "smooth" });
+                        }}
+                        disabled={currentPage === totalPages}
+                        className="inline-flex items-center gap-1 rounded-xl border border-border/80 bg-background px-3 py-1.5 text-xs font-semibold text-foreground disabled:opacity-40 transition-all hover:bg-secondary"
+                      >
+                        Next <ChevronRight className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </section>
 
