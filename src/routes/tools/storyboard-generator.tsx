@@ -31,6 +31,9 @@ import {
   BookOpen,
   PlusCircle,
   Loader2,
+  History,
+  Clock,
+  ExternalLink,
 } from "lucide-react";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { AdPlaceholder } from "@/components/tools/AdPlaceholder";
@@ -213,6 +216,16 @@ const CAMERA_STYLES: CameraStyleOption[] = [
 
 const SCENES_PER_PAGE = 10;
 
+export interface SavedStoryItem {
+  id: string;
+  title: string;
+  timestamp: string;
+  script: string;
+  visualStyle: string;
+  sceneCount: number;
+  output: StoryboardOutput;
+}
+
 // Helper to strip unwanted meta commands (like "(change it again)") from prompt text
 const cleanPromptText = (text: string) => {
   if (!text) return "";
@@ -252,6 +265,7 @@ export function StoryboardGeneratorPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [output, setOutput] = useState<StoryboardOutput | null>(null);
+  const [storyHistory, setStoryHistory] = useState<SavedStoryItem[]>([]);
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeFilter, setActiveFilter] = useState<string>("all");
@@ -265,12 +279,13 @@ export function StoryboardGeneratorPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const timelineScrollRef = useRef<HTMLDivElement>(null);
 
-  // Local Storage Session Recovery
+  // Local Storage Session & History Recovery
   useEffect(() => {
     try {
-      const saved = localStorage.getItem("contentmesh_storyboard_output");
-      if (saved) {
-        const parsed = JSON.parse(saved);
+      // 1. Recover last active output
+      const savedOutput = localStorage.getItem("contentmesh_storyboard_output");
+      if (savedOutput) {
+        const parsed = JSON.parse(savedOutput);
         if (parsed.scenes && parsed.scenes.length > 0) {
           parsed.timeline = parsed.scenes.map((s: StoryboardScene) => ({
             sceneNumber: s.sceneNumber,
@@ -281,6 +296,15 @@ export function StoryboardGeneratorPage() {
           }));
         }
         setOutput(parsed);
+      }
+
+      // 2. Recover user story history list
+      const savedHistory = localStorage.getItem("contentmesh_story_history");
+      if (savedHistory) {
+        const parsedHist = JSON.parse(savedHistory);
+        if (Array.isArray(parsedHist)) {
+          setStoryHistory(parsedHist);
+        }
       }
     } catch {
       /* ignore */
@@ -305,6 +329,27 @@ export function StoryboardGeneratorPage() {
     setOutput(null);
     setStep("script");
     window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  // Open a saved story from history
+  const handleOpenHistoryStory = (item: SavedStoryItem) => {
+    setForm((prev) => ({
+      ...prev,
+      script: item.script,
+      visualStyle: item.visualStyle as VisualStyleOption,
+      numberOfScenes: item.sceneCount,
+    }));
+    setOutput(item.output);
+    setStep("studio");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  // Delete a story from history
+  const handleDeleteHistoryStory = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    const updated = storyHistory.filter((item) => item.id !== id);
+    setStoryHistory(updated);
+    localStorage.setItem("contentmesh_story_history", JSON.stringify(updated));
   };
 
   // Character Upload Handlers
@@ -455,6 +500,21 @@ export function StoryboardGeneratorPage() {
       setOutput(data);
       setCurrentPage(1);
       localStorage.setItem("contentmesh_storyboard_output", JSON.stringify(data));
+
+      // Save to Story History array in localStorage
+      const newHistoryItem: SavedStoryItem = {
+        id: `story-${Date.now()}`,
+        title: data.project?.title || form.script.slice(0, 30) + "...",
+        timestamp: new Date().toLocaleString("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }),
+        script: form.script,
+        visualStyle: form.visualStyle,
+        sceneCount: data.scenes?.length || form.numberOfScenes,
+        output: data,
+      };
+
+      const updatedHistory = [newHistoryItem, ...storyHistory.filter((item) => item.script !== form.script)].slice(0, 15);
+      setStoryHistory(updatedHistory);
+      localStorage.setItem("contentmesh_story_history", JSON.stringify(updatedHistory));
     } catch (err: any) {
       setError(err.message || "An error occurred during generation.");
       setStep("config");
@@ -529,6 +589,13 @@ export function StoryboardGeneratorPage() {
       const newOutput = { ...output, scenes: updatedScenes };
       setOutput(newOutput);
       localStorage.setItem("contentmesh_storyboard_output", JSON.stringify(newOutput));
+
+      // Also update history entry if present
+      const updatedHistory = storyHistory.map((item) =>
+        item.script === form.script ? { ...item, output: newOutput } : item
+      );
+      setStoryHistory(updatedHistory);
+      localStorage.setItem("contentmesh_story_history", JSON.stringify(updatedHistory));
 
       setAssistantLogs((prev) => [
         ...prev,
@@ -667,7 +734,7 @@ export function StoryboardGeneratorPage() {
         </section>
 
         {/* ─────────────────────────────────────────────────────────────────── */}
-        {/* ── STEP 1: INITIAL LANDING SCREEN (MATCHES IMAGE 1) ───────────── */}
+        {/* ── STEP 1: INITIAL LANDING SCREEN (MATCHES IMAGE 1 & USER HISTORY) ─ */}
         {/* ─────────────────────────────────────────────────────────────────── */}
         {step === "script" && (
           <section className="mx-auto max-w-5xl px-4 sm:px-6 py-12 sm:py-20 w-full max-w-full space-y-12">
@@ -731,8 +798,63 @@ export function StoryboardGeneratorPage() {
               )}
             </div>
 
-            {/* History / Example Scripts Section (Matches Screenshot 1 Bottom Grid) */}
-            <div className="space-y-4 pt-4">
+            {/* ── USER'S RECENT STORY HISTORY SECTION (EXPLICIT USER REQUEST) ────── */}
+            {storyHistory.length > 0 && (
+              <div className="space-y-4 pt-2 border-t border-border/40">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-foreground flex items-center gap-2">
+                    <History className="h-4 w-4 text-[#FF5A1F]" /> History of Stories You Worked On ({storyHistory.length})
+                  </h3>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {storyHistory.map((item) => (
+                    <div
+                      key={item.id}
+                      onClick={() => handleOpenHistoryStory(item)}
+                      className="group relative rounded-2xl border border-border/80 bg-card p-4 shadow-glass hover:border-[#FF5A1F]/60 hover:shadow-lg transition-all cursor-pointer space-y-2.5 flex flex-col justify-between"
+                    >
+                      <div className="space-y-1.5">
+                        <div className="flex items-center justify-between">
+                          <span className="rounded-full bg-[#FF5A1F]/10 px-2 py-0.5 text-[9px] font-bold text-[#FF5A1F] uppercase">
+                            {item.visualStyle} • {item.sceneCount} Scenes
+                          </span>
+
+                          <button
+                            type="button"
+                            onClick={(e) => handleDeleteHistoryStory(item.id, e)}
+                            className="text-muted-foreground hover:text-destructive p-1 rounded transition-colors"
+                            title="Delete from History"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
+
+                        <h4 className="text-sm font-bold text-foreground group-hover:text-[#FF5A1F] transition-colors line-clamp-1">
+                          {item.title}
+                        </h4>
+
+                        <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed font-mono">
+                          {item.script}
+                        </p>
+                      </div>
+
+                      <div className="flex items-center justify-between border-t border-border/40 pt-2 text-[10px] text-muted-foreground font-semibold">
+                        <span className="flex items-center gap-1">
+                          <Clock className="h-3 w-3 text-[#FF5A1F]" /> {item.timestamp}
+                        </span>
+                        <span className="font-bold text-[#FF5A1F] group-hover:underline flex items-center gap-0.5">
+                          Open Story <ExternalLink className="h-3 w-3" />
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Example Scripts Section */}
+            <div className="space-y-4 pt-2">
               <div className="flex items-center justify-between">
                 <h3 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
                   <BookOpen className="h-4 w-4 text-[#FF5A1F]" /> Start from an example script
