@@ -974,390 +974,387 @@ export function StoryboardGeneratorPage() {
         )}
 
         {/* ─────────────────────────────────────────────────────────────────── */}
-        {/* ── STEP 3: STUDIO & FULLY FIXED VIEWPORT SIDEBAR (STORYBOARD + ASSISTANT) ─ */}
+        {/* ── STEP 3: STUDIO & ABSOLUTE VIEWPORT FIXED LEFT SIDEBAR DOCK ────── */}
         {/* ─────────────────────────────────────────────────────────────────── */}
         {step === "studio" && (
-          <section className="mx-auto max-w-7xl px-3 sm:px-6 pb-28 w-full max-w-full" id="generator-workspace">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-full items-start">
-
-              {/* ── TRULY FIXED VIEWPORT LEFT SIDEBAR (SCROLL-PROOF) ── */}
-              <div className="lg:col-span-4 xl:col-span-4 lg:sticky lg:top-24 lg:self-start flex flex-col justify-between space-y-4 w-full max-w-full z-40 max-h-[calc(100vh-120px)] overflow-y-auto no-scrollbar pb-4">
-                {/* Storyboard Active Card Header */}
-                <div className="rounded-2xl border border-border/80 bg-card/95 p-3.5 shadow-glass backdrop-blur-xl space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#FF5A1F] flex items-center gap-1">
-                      <Wand2 className="h-3.5 w-3.5" /> Storyboard Active
-                    </span>
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={handleStartNewStory}
-                        className="text-[10px] font-bold text-[#FF5A1F] hover:underline flex items-center gap-0.5"
-                      >
-                        <PlusCircle className="h-3 w-3" /> + New Story
-                      </button>
-                      <button
-                        onClick={() => setStep("config")}
-                        className="text-[10px] font-bold text-muted-foreground hover:text-foreground flex items-center gap-1"
-                      >
-                        <SlidersHorizontal className="h-3 w-3" /> Config
-                      </button>
-                    </div>
-                  </div>
-
-                  <p className="text-xs font-mono text-muted-foreground line-clamp-2">
-                    {form.script}
-                  </p>
-
-                  <div className="flex flex-wrap gap-1 pt-1">
-                    <span className="rounded bg-secondary px-1.5 py-0.5 text-[9px] font-bold text-muted-foreground">
-                      {form.visualStyle}
-                    </span>
-                    <span className="rounded bg-secondary px-1.5 py-0.5 text-[9px] font-bold text-muted-foreground">
-                      {form.promptStyle}
-                    </span>
-                    <span className="rounded bg-secondary px-1.5 py-0.5 text-[9px] font-bold text-muted-foreground">
-                      {output?.scenes?.length || 0} Scenes
-                    </span>
-                  </div>
-                </div>
-
-                {/* ── FIXED AI ASSISTANT CHAT/MODIFIER BOX (MATCHES USER SCREENSHOT) ── */}
-                <div className="rounded-2xl sm:rounded-3xl border border-border/90 bg-card/95 p-3.5 sm:p-4 shadow-2xl shadow-black/20 backdrop-blur-2xl space-y-3">
-                  <div className="flex items-center justify-between border-b border-border/40 pb-2">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-foreground flex items-center gap-1.5">
-                      <Sparkles className="h-3.5 w-3.5 text-[#FF5A1F]" /> AI Assistant (Fixed Viewport)
-                    </span>
-                    <span className="text-[9px] text-emerald-500 font-bold">Online</span>
-                  </div>
-
-                  {/* Assistant Chat Logs */}
-                  {assistantLogs.length > 0 && (
-                    <div className="space-y-2 max-h-[120px] overflow-y-auto no-scrollbar pr-1 text-xs">
-                      {assistantLogs.map((log, idx) => (
-                        <div
-                          key={idx}
-                          className={`p-2 rounded-xl text-[11px] ${
-                            log.sender === "user"
-                              ? "bg-[#FF5A1F]/10 text-foreground border border-[#FF5A1F]/20 ml-4 text-right font-mono"
-                              : "bg-secondary/40 text-muted-foreground border border-border/40 mr-4"
-                          }`}
-                        >
-                          {log.text}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* Quick Modification Chips */}
-                  <div className="flex flex-wrap gap-1">
-                    {[
-                      "Make more dramatic",
-                      "Add camera push-ins",
-                      "Pixar 3D style",
-                    ].map((chip, i) => (
-                      <button
-                        key={i}
-                        type="button"
-                        onClick={() => handleAssistantSubmit(chip)}
-                        className="rounded-full bg-secondary/60 px-2 py-0.5 text-[9px] font-semibold text-muted-foreground hover:bg-[#FF5A1F]/10 hover:text-[#FF5A1F] transition-all"
-                      >
-                        + {chip}
-                      </button>
-                    ))}
-                  </div>
-
-                  {/* Assistant Prompt Input Box */}
-                  <div className="space-y-2">
-                    <textarea
-                      rows={3}
-                      value={assistantInput}
-                      onChange={(e) => setAssistantInput(e.target.value)}
-                      placeholder="Ask AI Assistant to adjust scenes..."
-                      className="w-full rounded-xl border border-input bg-background/90 px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-[#FF5A1F]/40 leading-relaxed font-mono break-words whitespace-pre-wrap"
-                    />
-
+          <section className="mx-auto max-w-7xl px-3 sm:px-6 pb-28 w-full max-w-full relative min-h-[80vh]" id="generator-workspace">
+            {/* ── EXPLICIT FIXED VIEWPORT LEFT SIDEBAR (SCROLL-PROOF) ── */}
+            <aside className="w-full lg:w-[320px] xl:w-[360px] lg:fixed lg:top-24 lg:z-30 space-y-4 max-h-[calc(100vh-120px)] overflow-y-auto no-scrollbar pb-4">
+              {/* Storyboard Active Card Header */}
+              <div className="rounded-2xl border border-border/80 bg-card/95 p-3.5 shadow-glass backdrop-blur-xl space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#FF5A1F] flex items-center gap-1">
+                    <Wand2 className="h-3.5 w-3.5" /> Storyboard Active
+                  </span>
+                  <div className="flex items-center gap-2">
                     <button
-                      type="button"
-                      onClick={() => handleAssistantSubmit(assistantInput)}
-                      className="w-full flex items-center justify-center gap-1.5 rounded-xl bg-[#FF5A1F] py-2.5 text-xs font-bold text-white shadow-md hover:opacity-90 active:scale-95 transition-all"
+                      onClick={handleStartNewStory}
+                      className="text-[10px] font-bold text-[#FF5A1F] hover:underline flex items-center gap-0.5"
                     >
-                      <Wand2 className="h-3.5 w-3.5" /> Apply Change to Scenes
+                      <PlusCircle className="h-3 w-3" /> + New Story
+                    </button>
+                    <button
+                      onClick={() => setStep("config")}
+                      className="text-[10px] font-bold text-muted-foreground hover:text-foreground flex items-center gap-1"
+                    >
+                      <SlidersHorizontal className="h-3 w-3" /> Config
                     </button>
                   </div>
                 </div>
+
+                <p className="text-xs font-mono text-muted-foreground line-clamp-2">
+                  {form.script}
+                </p>
+
+                <div className="flex flex-wrap gap-1 pt-1">
+                  <span className="rounded bg-secondary px-1.5 py-0.5 text-[9px] font-bold text-muted-foreground">
+                    {form.visualStyle}
+                  </span>
+                  <span className="rounded bg-secondary px-1.5 py-0.5 text-[9px] font-bold text-muted-foreground">
+                    {form.promptStyle}
+                  </span>
+                  <span className="rounded bg-secondary px-1.5 py-0.5 text-[9px] font-bold text-muted-foreground">
+                    {output?.scenes?.length || 0} Scenes
+                  </span>
+                </div>
               </div>
 
-              {/* ── RIGHT STUDIO PANEL (SCENE BOXES ON RIGHT) ── */}
-              <div className="lg:col-span-8 xl:col-span-8 space-y-4 min-w-0 max-w-full">
-                {output && (
-                  <div className="space-y-4 w-full">
-                    {/* Summary Overview Bar */}
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 max-w-full">
-                      <div className="rounded-xl border border-border/60 bg-card p-2.5 text-center">
-                        <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground block">Total Scenes</span>
-                        <p className="font-display text-base font-black text-[#FF5A1F]">{output.scenes?.length || 0}</p>
+              {/* ── FIXED AI ASSISTANT CHAT/MODIFIER BOX ── */}
+              <div className="rounded-2xl sm:rounded-3xl border border-border/90 bg-card/95 p-3.5 sm:p-4 shadow-2xl shadow-black/20 backdrop-blur-2xl space-y-3">
+                <div className="flex items-center justify-between border-b border-border/40 pb-2">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-foreground flex items-center gap-1.5">
+                    <Sparkles className="h-3.5 w-3.5 text-[#FF5A1F]" /> AI Assistant (Fixed Viewport)
+                  </span>
+                  <span className="text-[9px] text-emerald-500 font-bold">Online</span>
+                </div>
+
+                {/* Assistant Chat Logs */}
+                {assistantLogs.length > 0 && (
+                  <div className="space-y-2 max-h-[120px] overflow-y-auto no-scrollbar pr-1 text-xs">
+                    {assistantLogs.map((log, idx) => (
+                      <div
+                        key={idx}
+                        className={`p-2 rounded-xl text-[11px] ${
+                          log.sender === "user"
+                            ? "bg-[#FF5A1F]/10 text-foreground border border-[#FF5A1F]/20 ml-4 text-right font-mono"
+                            : "bg-secondary/40 text-muted-foreground border border-border/40 mr-4"
+                        }`}
+                      >
+                        {log.text}
                       </div>
-                      <div className="rounded-xl border border-border/60 bg-card p-2.5 text-center">
-                        <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground block">Characters</span>
-                        <p className="font-display text-base font-black text-blue-500">{output.characters?.length || 0}</p>
-                      </div>
-                      <div className="rounded-xl border border-border/60 bg-card p-2.5 text-center">
-                        <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground block">Environments</span>
-                        <p className="font-display text-base font-black text-emerald-500">{output.environments?.length || 0}</p>
-                      </div>
-                      <div className="rounded-xl border border-border/60 bg-card p-2.5 text-center">
-                        <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground block">Est. Runtime</span>
-                        <p className="font-display text-base font-black text-purple-500">{output.analytics?.estimatedRuntime || "1m 30s"}</p>
-                      </div>
-                    </div>
-
-                    {/* Storyboard Timeline Bar */}
-                    {output.timeline && output.timeline.length > 0 && (
-                      <div className="rounded-2xl border border-border/80 bg-card p-3 shadow-glass max-w-full overflow-hidden">
-                        <div className="flex items-center justify-between mb-2">
-                          <h3 className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
-                            <Film className="h-3.5 w-3.5 text-[#FF5A1F]" /> Storyboard Timeline ({output.timeline.length} Scenes)
-                          </h3>
-                          
-                          <div className="flex items-center gap-1">
-                            <button
-                              onClick={() => scrollTimeline("left")}
-                              className="p-1 rounded-lg border border-border/60 bg-background hover:bg-secondary text-muted-foreground transition-colors"
-                              title="Scroll Left"
-                            >
-                              <ChevronLeft className="h-3.5 w-3.5" />
-                            </button>
-                            <button
-                              onClick={() => scrollTimeline("right")}
-                              className="p-1 rounded-lg border border-border/60 bg-background hover:bg-secondary text-muted-foreground transition-colors"
-                              title="Scroll Right"
-                            >
-                              <ChevronRight className="h-3.5 w-3.5" />
-                            </button>
-                          </div>
-                        </div>
-
-                        <div
-                          ref={timelineScrollRef}
-                          className="no-scrollbar flex items-center gap-2 overflow-x-auto pb-1 max-w-full scroll-smooth"
-                        >
-                          {output.timeline.map((item) => (
-                            <div
-                              key={item.sceneNumber}
-                              onClick={() => scrollToScene(item.sceneNumber)}
-                              className="flex flex-col justify-between shrink-0 rounded-xl border border-border/60 bg-secondary/30 p-2 cursor-pointer hover:border-[#FF5A1F] hover:bg-secondary transition-all"
-                              style={{ width: "125px" }}
-                            >
-                              <div className="flex items-center justify-between">
-                                <span className="rounded-md bg-[#FF5A1F]/10 px-1.5 py-0.5 text-[9px] font-bold text-[#FF5A1F]">
-                                  Sc {item.sceneNumber}
-                                </span>
-                                <span className="text-[9px] text-muted-foreground font-semibold">{item.duration}</span>
-                              </div>
-                              <h4 className="mt-1 text-[11px] font-bold text-foreground line-clamp-1">
-                                {item.sceneTitle}
-                              </h4>
-                              <span className="mt-0.5 text-[9px] text-muted-foreground/80 line-clamp-1">
-                                📍 {item.environment}
-                              </span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Action Toolbar */}
-                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 rounded-2xl border border-border/80 bg-card p-3 shadow-glass max-w-full">
-                      <div className="relative w-full sm:flex-1 sm:min-w-[160px]">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
-                        <input
-                          type="text"
-                          placeholder="Search prompts or scene #..."
-                          value={searchQuery}
-                          onChange={(e) => setSearchQuery(e.target.value)}
-                          className="w-full rounded-xl border border-input bg-background pl-8 pr-3 py-1.5 text-xs outline-none focus:ring-2 focus:ring-[#FF5A1F]/40"
-                        />
-                      </div>
-
-                      {output.scenes && output.scenes.length > 0 && (
-                        <div className="relative flex items-center gap-1">
-                          <Compass className="h-3.5 w-3.5 text-[#FF5A1F] shrink-0" />
-                          <select
-                            onChange={(e) => {
-                              const val = parseInt(e.target.value);
-                              if (val) scrollToScene(val);
-                            }}
-                            defaultValue=""
-                            className="rounded-xl border border-input bg-background px-2.5 py-1.5 text-xs font-semibold outline-none focus:ring-2 focus:ring-[#FF5A1F]/40"
-                          >
-                            <option value="" disabled>
-                              Jump to Scene...
-                            </option>
-                            {output.scenes.map((s) => (
-                              <option key={s.sceneNumber} value={s.sceneNumber}>
-                                Scene {s.sceneNumber}: {s.sceneTitle}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                      )}
-
-                      <div className="flex items-center gap-1.5 max-w-full">
-                        <button
-                          onClick={() =>
-                            handleCopy(
-                              output.scenes.map((s) => getSceneFormattedPrompt(s)).join("\n\n"),
-                              "all-packages"
-                            )
-                          }
-                          className="inline-flex items-center justify-center gap-1 rounded-xl border border-[#FF5A1F]/40 bg-[#FF5A1F]/10 px-3 py-1.5 text-[11px] font-bold text-[#FF5A1F] hover:bg-[#FF5A1F]/20 transition-colors"
-                          title="Copy all scene prompts in 'Scene N [prompt]' format"
-                        >
-                          {copiedKey === "all-packages" ? (
-                            <Check className="h-3 w-3 text-emerald-500" />
-                          ) : (
-                            <Copy className="h-3 w-3" />
-                          )}
-                          Copy All Prompts
-                        </button>
-
-                        <button
-                          onClick={() => exportFormatted("markdown")}
-                          className="inline-flex items-center justify-center gap-1 rounded-xl border border-border/80 bg-background px-2.5 py-1.5 text-[11px] font-semibold text-foreground"
-                        >
-                          <FileText className="h-3 w-3" /> MD
-                        </button>
-
-                        <button
-                          onClick={() => exportFormatted("json")}
-                          className="inline-flex items-center justify-center gap-1 rounded-xl border border-border/80 bg-background px-2.5 py-1.5 text-[11px] font-semibold text-foreground"
-                        >
-                          <Download className="h-3 w-3" /> JSON
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* ── GENERATED SCENE BOXES (CONTAINING ONLY SCENE NUMBER & SCENE PROMPT) ── */}
-                    <div className="space-y-3.5 max-w-full">
-                      {paginatedScenes.map((scene) => {
-                        const copyKey = `scene-pkg-${scene.sceneNumber}`;
-
-                        return (
-                          <motion.div
-                            key={scene.sceneNumber}
-                            id={`scene-card-${scene.sceneNumber}`}
-                            layout
-                            className="overflow-hidden rounded-2xl border border-border/80 bg-card p-4 shadow-glass backdrop-blur-xl transition-all hover:border-[#FF5A1F]/30 max-w-full space-y-2.5"
-                          >
-                            <div className="flex items-center justify-between border-b border-border/40 pb-2">
-                              <div className="flex items-center gap-2">
-                                <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-[#FF5A1F] text-xs font-bold text-white shadow-md">
-                                  {scene.sceneNumber}
-                                </span>
-                                <span className="text-xs font-bold text-foreground">
-                                  Scene {scene.sceneNumber}
-                                </span>
-                              </div>
-
-                              <button
-                                onClick={() => handleCopy(getSceneFormattedPrompt(scene), copyKey)}
-                                className="inline-flex items-center gap-1.5 rounded-lg bg-[#FF5A1F]/10 border border-[#FF5A1F]/30 px-2.5 py-1 text-[11px] font-bold text-[#FF5A1F] hover:bg-[#FF5A1F] hover:text-white transition-all"
-                              >
-                                {copiedKey === copyKey ? (
-                                  <Check className="h-3.5 w-3.5 text-emerald-500" />
-                                ) : (
-                                  <Copy className="h-3.5 w-3.5" />
-                                )}
-                                Copy Scene
-                              </button>
-                            </div>
-
-                            {/* ONLY SCENE NUMBER AND SCENE PROMPT (Scene N [prompt]) */}
-                            <p className="text-xs sm:text-sm font-mono text-foreground leading-relaxed break-words whitespace-pre-wrap selection:bg-[#FF5A1F]/30 bg-background/60 p-3 rounded-xl border border-border/40">
-                              {getSceneFormattedPrompt(scene)}
-                            </p>
-                          </motion.div>
-                        );
-                      })}
-                    </div>
-
-                    {/* ── PAGINATION CONTROLS BAR (10 Scenes per Page) ────────────── */}
-                    {totalPages > 1 && (
-                      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-glass max-w-full">
-                        <span className="text-xs text-muted-foreground font-medium text-center sm:text-left">
-                          Showing <strong className="text-foreground font-bold">{(currentPage - 1) * SCENES_PER_PAGE + 1}</strong>–
-                          <strong className="text-foreground font-bold">{Math.min(currentPage * SCENES_PER_PAGE, filteredScenes.length)}</strong> of{" "}
-                          <strong className="text-foreground font-bold">{filteredScenes.length}</strong> scenes (Page {currentPage} of {totalPages})
-                        </span>
-
-                        <div className="flex flex-wrap items-center justify-center gap-1 max-w-full">
-                          <button
-                            onClick={() => {
-                              setCurrentPage((prev) => Math.max(1, prev - 1));
-                              const el = document.getElementById("generator-workspace");
-                              if (el) el.scrollIntoView({ behavior: "smooth" });
-                            }}
-                            disabled={currentPage === 1}
-                            className="inline-flex items-center gap-1 rounded-xl border border-border/80 bg-background px-3 py-1.5 text-xs font-semibold text-foreground disabled:opacity-40 transition-all hover:bg-secondary"
-                          >
-                            <ChevronLeft className="h-3.5 w-3.5" /> Previous
-                          </button>
-
-                          <div className="flex items-center gap-1 px-1">
-                            {Array.from({ length: totalPages }, (_, i) => i + 1).map((pg) => {
-                              if (
-                                pg === 1 ||
-                                pg === totalPages ||
-                                (pg >= currentPage - 1 && pg <= currentPage + 1)
-                              ) {
-                                return (
-                                  <button
-                                    key={pg}
-                                    onClick={() => {
-                                      setCurrentPage(pg);
-                                      const el = document.getElementById("generator-workspace");
-                                      if (el) el.scrollIntoView({ behavior: "smooth" });
-                                    }}
-                                    className={`h-8 w-8 rounded-xl text-xs font-bold transition-all ${
-                                      currentPage === pg
-                                        ? "bg-[#FF5A1F]"
-                                        : "border border-border/60 bg-background text-muted-foreground hover:bg-secondary"
-                                    }`}
-                                  >
-                                    {pg}
-                                  </button>
-                                );
-                              } else if (
-                                (pg === currentPage - 2 && pg > 1) ||
-                                (pg === currentPage + 2 && pg < totalPages)
-                              ) {
-                                return (
-                                  <span key={pg} className="px-1 text-xs text-muted-foreground font-bold">
-                                    ...
-                                  </span>
-                                );
-                              }
-                              return null;
-                            })}
-                          </div>
-
-                          <button
-                            onClick={() => {
-                              setCurrentPage((prev) => Math.min(totalPages, prev + 1));
-                              const el = document.getElementById("generator-workspace");
-                              if (el) el.scrollIntoView({ behavior: "smooth" });
-                            }}
-                            disabled={currentPage === totalPages}
-                            className="inline-flex items-center gap-1 rounded-xl border border-border/80 bg-background px-3 py-1.5 text-xs font-semibold text-foreground disabled:opacity-40 transition-all hover:bg-secondary"
-                          >
-                            Next <ChevronRight className="h-3.5 w-3.5" />
-                          </button>
-                        </div>
-                      </div>
-                    )}
+                    ))}
                   </div>
                 )}
+
+                {/* Quick Modification Chips */}
+                <div className="flex flex-wrap gap-1">
+                  {[
+                    "Make more dramatic",
+                    "Add camera push-ins",
+                    "Pixar 3D style",
+                  ].map((chip, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      onClick={() => handleAssistantSubmit(chip)}
+                      className="rounded-full bg-secondary/60 px-2 py-0.5 text-[9px] font-semibold text-muted-foreground hover:bg-[#FF5A1F]/10 hover:text-[#FF5A1F] transition-all"
+                    >
+                      + {chip}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Assistant Prompt Input Box */}
+                <div className="space-y-2">
+                  <textarea
+                    rows={3}
+                    value={assistantInput}
+                    onChange={(e) => setAssistantInput(e.target.value)}
+                    placeholder="Ask AI Assistant to adjust scenes..."
+                    className="w-full rounded-xl border border-input bg-background/90 px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-[#FF5A1F]/40 leading-relaxed font-mono break-words whitespace-pre-wrap"
+                  />
+
+                  <button
+                    type="button"
+                    onClick={() => handleAssistantSubmit(assistantInput)}
+                    className="w-full flex items-center justify-center gap-1.5 rounded-xl bg-[#FF5A1F] py-2.5 text-xs font-bold text-white shadow-md hover:opacity-90 active:scale-95 transition-all"
+                  >
+                    <Wand2 className="h-3.5 w-3.5" /> Apply Change to Scenes
+                  </button>
+                </div>
               </div>
+            </aside>
+
+            {/* ── RIGHT STUDIO PANEL WITH MARGIN MATCHING FIXED SIDEBAR ── */}
+            <div className="w-full lg:ml-[340px] xl:ml-[380px] lg:max-w-[calc(100%-350px)] xl:max-w-[calc(100%-390px)] space-y-4 min-w-0">
+              {output && (
+                <div className="space-y-4 w-full">
+                  {/* Summary Overview Bar */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 max-w-full">
+                    <div className="rounded-xl border border-border/60 bg-card p-2.5 text-center">
+                      <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground block">Total Scenes</span>
+                      <p className="font-display text-base font-black text-[#FF5A1F]">{output.scenes?.length || 0}</p>
+                    </div>
+                    <div className="rounded-xl border border-border/60 bg-card p-2.5 text-center">
+                      <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground block">Characters</span>
+                      <p className="font-display text-base font-black text-blue-500">{output.characters?.length || 0}</p>
+                    </div>
+                    <div className="rounded-xl border border-border/60 bg-card p-2.5 text-center">
+                      <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground block">Environments</span>
+                      <p className="font-display text-base font-black text-emerald-500">{output.environments?.length || 0}</p>
+                    </div>
+                    <div className="rounded-xl border border-border/60 bg-card p-2.5 text-center">
+                      <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground block">Est. Runtime</span>
+                      <p className="font-display text-base font-black text-purple-500">{output.analytics?.estimatedRuntime || "1m 30s"}</p>
+                    </div>
+                  </div>
+
+                  {/* Storyboard Timeline Bar */}
+                  {output.timeline && output.timeline.length > 0 && (
+                    <div className="rounded-2xl border border-border/80 bg-card p-3 shadow-glass max-w-full overflow-hidden">
+                      <div className="flex items-center justify-between mb-2">
+                        <h3 className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
+                          <Film className="h-3.5 w-3.5 text-[#FF5A1F]" /> Storyboard Timeline ({output.timeline.length} Scenes)
+                        </h3>
+                        
+                        <div className="flex items-center gap-1">
+                          <button
+                            onClick={() => scrollTimeline("left")}
+                            className="p-1 rounded-lg border border-border/60 bg-background hover:bg-secondary text-muted-foreground transition-colors"
+                            title="Scroll Left"
+                          >
+                            <ChevronLeft className="h-3.5 w-3.5" />
+                          </button>
+                          <button
+                            onClick={() => scrollTimeline("right")}
+                            className="p-1 rounded-lg border border-border/60 bg-background hover:bg-secondary text-muted-foreground transition-colors"
+                            title="Scroll Right"
+                          >
+                            <ChevronRight className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
+                      </div>
+
+                      <div
+                        ref={timelineScrollRef}
+                        className="no-scrollbar flex items-center gap-2 overflow-x-auto pb-1 max-w-full scroll-smooth"
+                      >
+                        {output.timeline.map((item) => (
+                          <div
+                            key={item.sceneNumber}
+                            onClick={() => scrollToScene(item.sceneNumber)}
+                            className="flex flex-col justify-between shrink-0 rounded-xl border border-border/60 bg-secondary/30 p-2 cursor-pointer hover:border-[#FF5A1F] hover:bg-secondary transition-all"
+                            style={{ width: "125px" }}
+                          >
+                            <div className="flex items-center justify-between">
+                              <span className="rounded-md bg-[#FF5A1F]/10 px-1.5 py-0.5 text-[9px] font-bold text-[#FF5A1F]">
+                                Sc {item.sceneNumber}
+                              </span>
+                              <span className="text-[9px] text-muted-foreground font-semibold">{item.duration}</span>
+                            </div>
+                            <h4 className="mt-1 text-[11px] font-bold text-foreground line-clamp-1">
+                              {item.sceneTitle}
+                            </h4>
+                            <span className="mt-0.5 text-[9px] text-muted-foreground/80 line-clamp-1">
+                              📍 {item.environment}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Action Toolbar */}
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 rounded-2xl border border-border/80 bg-card p-3 shadow-glass max-w-full">
+                    <div className="relative w-full sm:flex-1 sm:min-w-[160px]">
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+                      <input
+                        type="text"
+                        placeholder="Search prompts or scene #..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full rounded-xl border border-input bg-background pl-8 pr-3 py-1.5 text-xs outline-none focus:ring-2 focus:ring-[#FF5A1F]/40"
+                      />
+                    </div>
+
+                    {output.scenes && output.scenes.length > 0 && (
+                      <div className="relative flex items-center gap-1">
+                        <Compass className="h-3.5 w-3.5 text-[#FF5A1F] shrink-0" />
+                        <select
+                          onChange={(e) => {
+                            const val = parseInt(e.target.value);
+                            if (val) scrollToScene(val);
+                          }}
+                          defaultValue=""
+                          className="rounded-xl border border-input bg-background px-2.5 py-1.5 text-xs font-semibold outline-none focus:ring-2 focus:ring-[#FF5A1F]/40"
+                        >
+                          <option value="" disabled>
+                            Jump to Scene...
+                          </option>
+                          {output.scenes.map((s) => (
+                            <option key={s.sceneNumber} value={s.sceneNumber}>
+                              Scene {s.sceneNumber}: {s.sceneTitle}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    )}
+
+                    <div className="flex items-center gap-1.5 max-w-full">
+                      <button
+                        onClick={() =>
+                          handleCopy(
+                            output.scenes.map((s) => getSceneFormattedPrompt(s)).join("\n\n"),
+                            "all-packages"
+                          )
+                        }
+                        className="inline-flex items-center justify-center gap-1 rounded-xl border border-[#FF5A1F]/40 bg-[#FF5A1F]/10 px-3 py-1.5 text-[11px] font-bold text-[#FF5A1F] hover:bg-[#FF5A1F]/20 transition-colors"
+                        title="Copy all scene prompts in 'Scene N [prompt]' format"
+                      >
+                        {copiedKey === "all-packages" ? (
+                          <Check className="h-3 w-3 text-emerald-500" />
+                        ) : (
+                          <Copy className="h-3 w-3" />
+                        )}
+                        Copy All Prompts
+                      </button>
+
+                      <button
+                        onClick={() => exportFormatted("markdown")}
+                        className="inline-flex items-center justify-center gap-1 rounded-xl border border-border/80 bg-background px-2.5 py-1.5 text-[11px] font-semibold text-foreground"
+                      >
+                        <FileText className="h-3 w-3" /> MD
+                      </button>
+
+                      <button
+                        onClick={() => exportFormatted("json")}
+                        className="inline-flex items-center justify-center gap-1 rounded-xl border border-border/80 bg-background px-2.5 py-1.5 text-[11px] font-semibold text-foreground"
+                      >
+                        <Download className="h-3 w-3" /> JSON
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* ── GENERATED SCENE BOXES (CONTAINING ONLY SCENE NUMBER & SCENE PROMPT) ── */}
+                  <div className="space-y-3.5 max-w-full">
+                    {paginatedScenes.map((scene) => {
+                      const copyKey = `scene-pkg-${scene.sceneNumber}`;
+
+                      return (
+                        <motion.div
+                          key={scene.sceneNumber}
+                          id={`scene-card-${scene.sceneNumber}`}
+                          layout
+                          className="overflow-hidden rounded-2xl border border-border/80 bg-card p-4 shadow-glass backdrop-blur-xl transition-all hover:border-[#FF5A1F]/30 max-w-full space-y-2.5"
+                        >
+                          <div className="flex items-center justify-between border-b border-border/40 pb-2">
+                            <div className="flex items-center gap-2">
+                              <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-[#FF5A1F] text-xs font-bold text-white shadow-md">
+                                {scene.sceneNumber}
+                              </span>
+                              <span className="text-xs font-bold text-foreground">
+                                Scene {scene.sceneNumber}
+                              </span>
+                            </div>
+
+                            <button
+                              onClick={() => handleCopy(getSceneFormattedPrompt(scene), copyKey)}
+                              className="inline-flex items-center gap-1.5 rounded-lg bg-[#FF5A1F]/10 border border-[#FF5A1F]/30 px-2.5 py-1 text-[11px] font-bold text-[#FF5A1F] hover:bg-[#FF5A1F] hover:text-white transition-all"
+                            >
+                              {copiedKey === copyKey ? (
+                                <Check className="h-3.5 w-3.5 text-emerald-500" />
+                              ) : (
+                                <Copy className="h-3.5 w-3.5" />
+                              )}
+                              Copy Scene
+                            </button>
+                          </div>
+
+                          {/* ONLY SCENE NUMBER AND SCENE PROMPT (Scene N [prompt]) */}
+                          <p className="text-xs sm:text-sm font-mono text-foreground leading-relaxed break-words whitespace-pre-wrap selection:bg-[#FF5A1F]/30 bg-background/60 p-3 rounded-xl border border-border/40">
+                            {getSceneFormattedPrompt(scene)}
+                          </p>
+                        </motion.div>
+                      );
+                    })}
+                  </div>
+
+                  {/* ── PAGINATION CONTROLS BAR (10 Scenes per Page) ────────────── */}
+                  {totalPages > 1 && (
+                    <div className="flex flex-col sm:flex-row items-center justify-between gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-glass max-w-full">
+                      <span className="text-xs text-muted-foreground font-medium text-center sm:text-left">
+                        Showing <strong className="text-foreground font-bold">{(currentPage - 1) * SCENES_PER_PAGE + 1}</strong>–
+                        <strong className="text-foreground font-bold">{Math.min(currentPage * SCENES_PER_PAGE, filteredScenes.length)}</strong> of{" "}
+                        <strong className="text-foreground font-bold">{filteredScenes.length}</strong> scenes (Page {currentPage} of {totalPages})
+                      </span>
+
+                      <div className="flex flex-wrap items-center justify-center gap-1 max-w-full">
+                        <button
+                          onClick={() => {
+                            setCurrentPage((prev) => Math.max(1, prev - 1));
+                            const el = document.getElementById("generator-workspace");
+                            if (el) el.scrollIntoView({ behavior: "smooth" });
+                          }}
+                          disabled={currentPage === 1}
+                          className="inline-flex items-center gap-1 rounded-xl border border-border/80 bg-background px-3 py-1.5 text-xs font-semibold text-foreground disabled:opacity-40 transition-all hover:bg-secondary"
+                        >
+                          <ChevronLeft className="h-3.5 w-3.5" /> Previous
+                        </button>
+
+                        <div className="flex items-center gap-1 px-1">
+                          {Array.from({ length: totalPages }, (_, i) => i + 1).map((pg) => {
+                            if (
+                              pg === 1 ||
+                              pg === totalPages ||
+                              (pg >= currentPage - 1 && pg <= currentPage + 1)
+                            ) {
+                              return (
+                                <button
+                                  key={pg}
+                                  onClick={() => {
+                                    setCurrentPage(pg);
+                                    const el = document.getElementById("generator-workspace");
+                                    if (el) el.scrollIntoView({ behavior: "smooth" });
+                                  }}
+                                  className={`h-8 w-8 rounded-xl text-xs font-bold transition-all ${
+                                    currentPage === pg
+                                      ? "bg-[#FF5A1F]"
+                                      : "border border-border/60 bg-background text-muted-foreground hover:bg-secondary"
+                                  }`}
+                                >
+                                  {pg}
+                                </button>
+                              );
+                            } else if (
+                              (pg === currentPage - 2 && pg > 1) ||
+                              (pg === currentPage + 2 && pg < totalPages)
+                            ) {
+                              return (
+                                <span key={pg} className="px-1 text-xs text-muted-foreground font-bold">
+                                  ...
+                                </span>
+                              );
+                            }
+                            return null;
+                          })}
+                        </div>
+
+                        <button
+                          onClick={() => {
+                            setCurrentPage((prev) => Math.min(totalPages, prev + 1));
+                            const el = document.getElementById("generator-workspace");
+                            if (el) el.scrollIntoView({ behavior: "smooth" });
+                          }}
+                          disabled={currentPage === totalPages}
+                          className="inline-flex items-center gap-1 rounded-xl border border-border/80 bg-background px-3 py-1.5 text-xs font-semibold text-foreground disabled:opacity-40 transition-all hover:bg-secondary"
+                        >
+                          Next <ChevronRight className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </section>
         )}
