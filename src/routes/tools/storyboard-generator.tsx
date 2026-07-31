@@ -8,7 +8,6 @@ import {
   Check,
   Download,
   FileText,
-  Printer,
   RefreshCw,
   Search,
   SlidersHorizontal,
@@ -322,6 +321,12 @@ export function StoryboardGeneratorPage() {
     }
   };
 
+  // Scene N [prompt] Format Generator
+  const getSceneFormattedPrompt = (scene: StoryboardScene) => {
+    const promptText = scene.copyReadyPrompt || scene.generationPrompt;
+    return `Scene ${scene.sceneNumber} [${promptText}]`;
+  };
+
   const getCombinedPackageText = (scene: StoryboardScene) => {
     let pkg = `[SCENE ${scene.sceneNumber}: ${scene.sceneTitle}]\n🎬 VISUAL PROMPT:\n${scene.copyReadyPrompt || scene.generationPrompt}`;
     if (scene.dialogue) {
@@ -435,13 +440,13 @@ export function StoryboardGeneratorPage() {
     } else if (type === "markdown") {
       content = `# ${output.project.title}\n\n**Visual Style:** ${output.project.visualStyle} | **Aspect Ratio:** ${output.project.aspectRatio}\n\n## Summary\n${output.summary}\n\n## Scenes\n`;
       output.scenes.forEach((s) => {
-        content += `\n### Scene ${s.sceneNumber}: ${s.sceneTitle} (${s.duration})\n- **Environment:** ${s.environment}\n- **Characters:** ${s.characters.join(", ")}\n- **Camera:** ${s.camera.angle}, ${s.camera.movement}\n- **Prompt Package:**\n\`\`\`\n${getCombinedPackageText(s)}\n\`\`\`\n`;
+        content += `\n### Scene ${s.sceneNumber}: ${s.sceneTitle} (${s.duration})\n- **Environment:** ${s.environment}\n- **Characters:** ${s.characters.join(", ")}\n- **Camera:** ${s.camera.angle}, ${s.camera.movement}\n- **Prompt Package:**\n\`\`\`\n${getSceneFormattedPrompt(s)}\n\`\`\`\n`;
       });
       mimeType = "text/markdown";
     } else {
-      content = `${output.project.title}\n======================\n${output.summary}\n\nSCENE PACKAGES:\n`;
+      content = `${output.project.title}\n======================\n${output.summary}\n\nSCENE PROMPTS:\n`;
       output.scenes.forEach((s) => {
-        content += `\n${getCombinedPackageText(s)}\n----------------------------------------\n`;
+        content += `${getSceneFormattedPrompt(s)}\n\n`;
       });
     }
 
@@ -899,21 +904,23 @@ export function StoryboardGeneratorPage() {
                 )}
 
                 <div className="flex items-center gap-1.5 max-w-full">
+                  {/* COPY ALL BUTTON FORMATTED AS scene N [prompt] */}
                   <button
                     onClick={() =>
                       handleCopy(
-                        output.scenes.map((s) => getCombinedPackageText(s)).join("\n\n========================================\n\n"),
+                        output.scenes.map((s) => getSceneFormattedPrompt(s)).join("\n\n"),
                         "all-packages"
                       )
                     }
-                    className="inline-flex items-center justify-center gap-1 rounded-xl border border-[#FF5A1F]/40 bg-[#FF5A1F]/10 px-3 py-1.5 text-[11px] font-bold text-[#FF5A1F]"
+                    className="inline-flex items-center justify-center gap-1 rounded-xl border border-[#FF5A1F]/40 bg-[#FF5A1F]/10 px-3 py-1.5 text-[11px] font-bold text-[#FF5A1F] hover:bg-[#FF5A1F]/20 transition-colors"
+                    title="Copy all scene prompts in 'Scene N [prompt]' format"
                   >
                     {copiedKey === "all-packages" ? (
                       <Check className="h-3 w-3 text-emerald-500" />
                     ) : (
                       <Copy className="h-3 w-3" />
                     )}
-                    Copy All
+                    Copy All Prompts
                   </button>
 
                   <button
@@ -1025,10 +1032,10 @@ export function StoryboardGeneratorPage() {
 
                               <div className="max-w-full">
                                 <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground block mb-1">
-                                  🎬 Visual AI Prompt
+                                  🎬 Visual AI Prompt (Formatted)
                                 </span>
                                 <p className="text-[11px] sm:text-xs font-mono text-foreground leading-relaxed break-words whitespace-pre-wrap selection:bg-[#FF5A1F]/30">
-                                  {scene.copyReadyPrompt || scene.generationPrompt}
+                                  {getSceneFormattedPrompt(scene)}
                                 </p>
                               </div>
 
