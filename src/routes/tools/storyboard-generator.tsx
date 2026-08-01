@@ -529,6 +529,13 @@ export function StoryboardGeneratorPage() {
       const isScriptChange =
         /change script|rewrite story|new story|script about|story about|change topic|make a script/i.test(qLower);
 
+      const matchedStyle = VISUAL_STYLES.find((st) =>
+        qLower.includes(st.toLowerCase())
+      );
+
+      const isStyleChange =
+        /style|visual|look|aesthetic|render|theme/i.test(qLower) || Boolean(matchedStyle);
+
       if (isSceneCountChange && numMatch) {
         let targetCount = parseInt(numMatch[1], 10);
         if (qLower.includes("add") || qLower.includes("increase by")) {
@@ -577,6 +584,30 @@ export function StoryboardGeneratorPage() {
         }
 
         setForm((prev) => ({ ...prev, numberOfScenes: targetCount }));
+      } else if (isStyleChange) {
+        const newStyle = matchedStyle || userMsg.replace(/change visual style (to)?|change style (to)?|make style|set style (to)?|use style|style/gi, "").trim();
+
+        if (newStyle) {
+          const validStyle = VISUAL_STYLES.find((st) => st.toLowerCase() === newStyle.toLowerCase()) || (newStyle.charAt(0).toUpperCase() + newStyle.slice(1)) as VisualStyleOption;
+          setForm((prev) => ({ ...prev, visualStyle: validStyle }));
+
+          if (output.project) {
+            output.project.visualStyle = validStyle;
+          }
+
+          newScenes = newScenes.map((scene) => {
+            let promptText = cleanPromptText(scene.generationPrompt || scene.copyReadyPrompt);
+            promptText = `${promptText}, ${validStyle} style, 4K render quality`;
+            promptText = cleanPromptText(promptText);
+            return {
+              ...scene,
+              generationPrompt: promptText,
+              copyReadyPrompt: promptText,
+            };
+          });
+
+          actionDesc = `Updated visual style to "${validStyle}" across all scenes`;
+        }
       } else if (isScriptChange) {
         const topic = userMsg
           .replace(/change script (to|about)?|rewrite story (about)?|script about|story about|make a script (about)?/gi, "")
@@ -1212,12 +1243,12 @@ export function StoryboardGeneratorPage() {
 
             {/* DUAL-PANEL FULL-HEIGHT CONTAINER */}
             <div className="flex-1 flex flex-col lg:flex-row min-h-0 overflow-hidden w-full max-w-7xl mx-auto px-3 sm:px-6 py-3 gap-5">
-              {/* FIXED BOTTOM-LEFT SIDEBAR (AI PROMPT ASSISTANT DOCK AT BOTTOM LEFT) */}
-              <aside className="w-full lg:w-[320px] xl:w-[360px] shrink-0 h-full overflow-hidden flex flex-col justify-end pb-2">
-                {/* ── AI ASSISTANT CHAT DOCK (DOCKED AT BOTTOM LEFT) ── */}
-                <div className="rounded-2xl sm:rounded-3xl border border-slate-200 bg-white p-4 shadow-xl space-y-3 shrink-0">
+              {/* FIXED TALL LEFT SIDEBAR (AI PROMPT ASSISTANT PANEL TOUCHING TOP HEADER LINE) */}
+              <aside className="w-full lg:w-[320px] xl:w-[360px] shrink-0 h-full overflow-hidden flex flex-col">
+                {/* ── AI ASSISTANT CHAT DOCK (FULL HEIGHT - TOUCHING TOP HEADER LINE) ── */}
+                <div className="rounded-2xl sm:rounded-3xl border border-slate-200 bg-white p-4 shadow-xl space-y-3 flex-1 flex flex-col overflow-hidden h-full">
                   <div className="flex items-center justify-between border-b border-slate-100 pb-2.5 shrink-0">
-                    <span className="text-[11px] font-sans uppercase text-slate-800 flex items-center gap-1.5">
+                    <span className="text-[11px] font-sans uppercase font-bold text-slate-800 tracking-wider flex items-center gap-1.5">
                       <Bot className="h-4 w-4 text-slate-700" /> AI Prompt Assistant
                     </span>
                     <span className="text-[9px] text-emerald-600 font-sans flex items-center gap-1 font-semibold">
@@ -1225,38 +1256,46 @@ export function StoryboardGeneratorPage() {
                     </span>
                   </div>
 
-                  {/* Assistant Chat Logs */}
-                  {assistantLogs.length > 0 && (
-                    <div className="space-y-2 max-h-[120px] overflow-y-auto no-scrollbar pr-1 text-xs">
-                      {assistantLogs.map((log, idx) => (
+                  {/* Assistant Chat Logs — EXPANDS to fill full vertical height */}
+                  <div className="flex-1 overflow-y-auto no-scrollbar pr-1 text-xs space-y-2">
+                    {assistantLogs.length === 0 ? (
+                      <div className="h-full flex flex-col items-center justify-center text-center p-4 text-slate-400 space-y-2">
+                        <Bot className="h-8 w-8 text-slate-300" />
+                        <p className="text-xs font-semibold text-slate-600">AI Prompt Assistant</p>
+                        <p className="text-[11px] text-slate-500 leading-relaxed max-w-[220px]">
+                          Ask me to change visual style, add/remove scenes, adjust lighting, or rewrite script topics.
+                        </p>
+                      </div>
+                    ) : (
+                      assistantLogs.map((log, idx) => (
                         <div
                           key={idx}
-                          className={`p-2 rounded-xl text-[11px] font-sans ${
+                          className={`p-2.5 rounded-xl text-[11px] font-sans leading-relaxed ${
                             log.sender === "user"
-                              ? "bg-slate-900 text-white ml-4 text-right"
+                              ? "bg-slate-900 text-white ml-4 text-right font-medium"
                               : "bg-slate-100 text-slate-800 border border-slate-200 mr-4"
                           }`}
                         >
                           {log.text}
                         </div>
-                      ))}
-                    </div>
-                  )}
+                      ))
+                    )}
+                  </div>
 
                   {/* Quick Action Chips */}
-                  <div className="flex flex-wrap gap-1 shrink-0">
+                  <div className="flex flex-wrap gap-1 shrink-0 pt-1">
                     {[
+                      "Change style to Pixar 3D",
+                      "Change style to Anime",
                       "Increase scenes to 12",
                       "Decrease scenes to 5",
-                      "Make dramatic",
-                      "Add camera push-in",
                     ].map((chip, i) => (
                       <button
                         key={i}
                         type="button"
                         onClick={() => handleAssistantSubmit(chip)}
                         disabled={assistantLoading}
-                        className="rounded-full bg-slate-100 px-2 py-0.5 text-[9px] font-sans text-slate-700 border border-slate-200 hover:bg-slate-200 hover:text-slate-950 transition-all disabled:opacity-50"
+                        className="rounded-full bg-slate-100 px-2.5 py-1 text-[9px] font-sans text-slate-700 border border-slate-200 hover:bg-slate-200 hover:text-slate-950 transition-all disabled:opacity-50"
                       >
                         + {chip}
                       </button>
@@ -1264,7 +1303,7 @@ export function StoryboardGeneratorPage() {
                   </div>
 
                   {/* ChatGPT Input Bar */}
-                  <div className="space-y-2 shrink-0">
+                  <div className="space-y-2 shrink-0 pt-1">
                     <textarea
                       rows={2}
                       value={assistantInput}
@@ -1275,7 +1314,7 @@ export function StoryboardGeneratorPage() {
                           handleAssistantSubmit(assistantInput);
                         }
                       }}
-                      placeholder="Ask AI to change script, increase/decrease scene count, or modify visual style..."
+                      placeholder="Ask AI to change visual style (e.g. Pixar 3D, Anime), rewrite script, or adjust scene count..."
                       className="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2 text-xs text-slate-900 placeholder-slate-400 outline-none focus:ring-1 focus:ring-slate-400 leading-relaxed font-sans break-words whitespace-pre-wrap resize-none"
                     />
 
@@ -1283,7 +1322,7 @@ export function StoryboardGeneratorPage() {
                       type="button"
                       onClick={() => handleAssistantSubmit(assistantInput)}
                       disabled={assistantLoading || !assistantInput.trim()}
-                      className="w-full flex items-center justify-center gap-1.5 rounded-xl bg-slate-900 py-2 text-xs font-semibold text-white shadow hover:bg-black active:scale-95 transition-all disabled:opacity-50"
+                      className="w-full flex items-center justify-center gap-1.5 rounded-xl bg-slate-900 py-2.5 text-xs font-semibold text-white shadow hover:bg-black active:scale-95 transition-all disabled:opacity-50"
                     >
                       {assistantLoading ? (
                         <>
