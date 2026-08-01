@@ -1289,8 +1289,8 @@ export function StoryboardGeneratorPage() {
               </div>
             </aside>
 
-            {/* ── RIGHT STUDIO CANVAS ── */}
-            <div className="w-full lg:ml-[340px] xl:ml-[380px] lg:max-w-[calc(100%-350px)] xl:max-w-[calc(100%-390px)] space-y-4 min-w-0">
+            {/* ── RIGHT STUDIO CANVAS (ONLY THIS RED BOX AREA IS SCROLLABLE) ── */}
+            <div className="w-full lg:ml-[340px] xl:ml-[380px] lg:max-w-[calc(100%-350px)] xl:max-w-[calc(100%-390px)] space-y-4 min-w-0 lg:max-h-[calc(100vh-95px)] lg:overflow-y-auto lg:pr-1.5 no-scrollbar">
               {output && (
                 <div className="space-y-4 w-full">
                   {/* Summary Bar */}
