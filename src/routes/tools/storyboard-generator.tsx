@@ -649,38 +649,38 @@ export function StoryboardGeneratorPage() {
 
   return (
     <SiteLayout>
-      {/* ── ULTRA-SLEEK CHATGPT / FIGMA MAKE AI THEME (FULL-SCREEN APP STUDIO) ── */}
-      <div className="font-['Inter'] font-sans text-zinc-100 antialiased bg-[#09090b] min-h-screen w-full max-w-full selection:bg-zinc-700 selection:text-white">
+      {/* ── CLEAN MODERN LIGHT THEME ─────────────────────────────────────── */}
+      <div className="font-['Inter'] font-sans text-slate-900 antialiased bg-slate-50 min-h-screen w-full max-w-full selection:bg-slate-200 selection:text-slate-900">
         {/* ─────────────────────────────────────────────────────────────────── */}
-        {/* ── STEP 1: CHATGPT / FIGMA MAKE AI PROMPT SCREEN ───────────────── */}
+        {/* ── STEP 1: LIGHT MODE PROMPT SCREEN ───────────────────────────── */}
         {/* ─────────────────────────────────────────────────────────────────── */}
         {step === "script" && (
-          <section className="mx-auto max-w-4xl px-4 sm:px-6 py-12 sm:py-24 w-full max-w-full space-y-12">
-            {/* Figma Make AI Hero Title */}
+          <section className="mx-auto max-w-4xl px-4 sm:px-6 py-12 sm:py-20 w-full max-w-full space-y-10">
+            {/* Hero Title */}
             <div className="text-center space-y-4">
-              <div className="inline-flex items-center gap-2 rounded-full border border-zinc-800 bg-zinc-900/80 px-3.5 py-1 text-xs text-zinc-400 font-mono">
-                <Sparkles className="h-3.5 w-3.5 text-zinc-200" /> Powered by Generative Scene Intelligence
+              <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3.5 py-1 text-xs text-slate-600 font-mono shadow-sm">
+                <Sparkles className="h-3.5 w-3.5 text-slate-700" /> Powered by Generative Scene Intelligence
               </div>
-              <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white">
+              <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900">
                 What do you want to create today?
               </h1>
-              <p className="mx-auto max-w-lg text-xs sm:text-sm text-zinc-400 leading-relaxed">
+              <p className="mx-auto max-w-lg text-xs sm:text-sm text-slate-600 leading-relaxed">
                 Transform screenplays, story ideas, or commercial concepts into production-ready 4K AI storyboards and prompts.
               </p>
             </div>
 
-            {/* CHATGPT STYLE FLOATING INPUT BAR */}
-            <div className="mx-auto max-w-3xl rounded-3xl border border-zinc-800 bg-zinc-900/90 p-4 sm:p-5 shadow-2xl shadow-black/80 backdrop-blur-2xl space-y-3 transition-all focus-within:border-zinc-700 focus-within:ring-1 focus-within:ring-zinc-700">
+            {/* LIGHT MODE FLOATING INPUT BAR */}
+            <div className="mx-auto max-w-3xl rounded-3xl border border-slate-200 bg-white p-4 sm:p-5 shadow-xl shadow-slate-200/50 space-y-3 transition-all focus-within:border-slate-400 focus-within:ring-2 focus-within:ring-slate-200">
               <textarea
                 rows={5}
                 value={form.script}
                 onChange={(e) => handleFormChange("script", e.target.value)}
                 placeholder="Describe your scene concept or paste a screenplay here..."
-                className="w-full rounded-2xl border-none bg-transparent px-2 py-1 text-xs sm:text-sm text-zinc-100 placeholder-zinc-500 outline-none leading-relaxed font-mono whitespace-pre-wrap min-h-[140px] resize-none"
+                className="w-full rounded-2xl border-none bg-transparent px-2 py-1 text-xs sm:text-sm text-slate-900 placeholder-slate-400 outline-none leading-relaxed font-mono whitespace-pre-wrap min-h-[140px] resize-none"
               />
 
               {/* Bottom Control Strip inside Input Box */}
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-3 border-t border-zinc-800/60">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-3 border-t border-slate-100">
                 <div className="flex items-center gap-2">
                   <input
                     type="file"
@@ -693,25 +693,25 @@ export function StoryboardGeneratorPage() {
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-zinc-800 bg-zinc-950/60 px-3 py-1.5 text-xs font-medium text-zinc-300 hover:bg-zinc-800 transition-colors"
+                    className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-100 transition-colors"
                   >
-                    <Paperclip className="h-3.5 w-3.5 text-zinc-400" />
+                    <Paperclip className="h-3.5 w-3.5 text-slate-500" />
                     {form.uploadedCharacters?.length ? `${form.uploadedCharacters.length} Files` : "Attach Media"}
                   </button>
 
                   <select
                     value={form.visualStyle}
                     onChange={(e) => handleFormChange("visualStyle", e.target.value)}
-                    className="rounded-full border border-zinc-800 bg-zinc-950/60 px-3 py-1.5 text-xs font-mono text-zinc-300 outline-none hover:bg-zinc-800 transition-colors"
+                    className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-mono text-slate-700 outline-none hover:bg-slate-100 transition-colors"
                   >
                     {VISUAL_STYLES.map((st) => (
-                      <option key={st} value={st} className="bg-zinc-900 text-zinc-200">
+                      <option key={st} value={st} className="bg-white text-slate-900">
                         {st} Style
                       </option>
                     ))}
                   </select>
 
-                  <span className="text-[10px] font-mono text-zinc-500 hidden sm:inline">
+                  <span className="text-[10px] font-mono text-slate-500 hidden sm:inline">
                     {form.script.length} chars
                   </span>
                 </div>
@@ -719,14 +719,14 @@ export function StoryboardGeneratorPage() {
                 <button
                   type="button"
                   onClick={handleProceedToConfig}
-                  className="inline-flex items-center justify-center gap-2 rounded-full bg-zinc-100 px-6 py-2.5 text-xs font-semibold text-zinc-950 hover:bg-white transition-all shadow-md active:scale-95"
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-slate-900 px-6 py-2.5 text-xs font-semibold text-white hover:bg-black transition-all shadow-md active:scale-95"
                 >
                   Configure Story <ArrowRight className="h-4 w-4" />
                 </button>
               </div>
 
               {error && (
-                <p className="rounded-xl border border-red-900/50 bg-red-950/30 p-2.5 text-xs font-medium text-red-400">
+                <p className="rounded-xl border border-red-200 bg-red-50 p-2.5 text-xs font-medium text-red-600">
                   {error}
                 </p>
               )}
@@ -734,10 +734,10 @@ export function StoryboardGeneratorPage() {
 
             {/* ── USER'S RECENT STORY HISTORY SECTION ────────────────────────── */}
             {storyHistory.length > 0 && (
-              <div className="space-y-4 pt-4 border-t border-zinc-800/60">
+              <div className="space-y-4 pt-4 border-t border-slate-200">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-xs font-mono uppercase tracking-wider text-zinc-400 flex items-center gap-2">
-                    <History className="h-4 w-4 text-zinc-400" /> Recent Story Workspaces ({storyHistory.length})
+                  <h3 className="text-xs font-mono uppercase tracking-wider text-slate-500 flex items-center gap-2">
+                    <History className="h-4 w-4 text-slate-500" /> Recent Story Workspaces ({storyHistory.length})
                   </h3>
                 </div>
 
@@ -746,38 +746,38 @@ export function StoryboardGeneratorPage() {
                     <div
                       key={item.id}
                       onClick={() => handleOpenHistoryStory(item)}
-                      className="group relative rounded-2xl border border-zinc-800 bg-zinc-900/60 p-4 shadow-sm hover:border-zinc-700 hover:bg-zinc-900 transition-all cursor-pointer space-y-2.5 flex flex-col justify-between"
+                      className="group relative rounded-2xl border border-slate-200 bg-white p-4 shadow-sm hover:border-slate-300 hover:shadow-md transition-all cursor-pointer space-y-2.5 flex flex-col justify-between"
                     >
                       <div className="space-y-1.5">
                         <div className="flex items-center justify-between">
-                          <span className="rounded-full bg-zinc-800 px-2 py-0.5 text-[9px] font-mono text-zinc-300 border border-zinc-700/50">
+                          <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[9px] font-mono text-slate-700 border border-slate-200">
                             {item.visualStyle} • {item.sceneCount} Scenes
                           </span>
 
                           <button
                             type="button"
                             onClick={(e) => handleDeleteHistoryStory(item.id, e)}
-                            className="text-zinc-500 hover:text-red-400 p-1 rounded transition-colors"
+                            className="text-slate-400 hover:text-red-600 p-1 rounded transition-colors"
                             title="Delete from History"
                           >
                             <Trash2 className="h-3.5 w-3.5" />
                           </button>
                         </div>
 
-                        <h4 className="text-sm font-semibold text-zinc-100 group-hover:text-white transition-colors line-clamp-1">
+                        <h4 className="text-sm font-semibold text-slate-900 group-hover:text-slate-900 transition-colors line-clamp-1">
                           {item.title}
                         </h4>
 
-                        <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed font-mono">
+                        <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed font-mono">
                           {item.script}
                         </p>
                       </div>
 
-                      <div className="flex items-center justify-between border-t border-zinc-800/80 pt-2 text-[10px] text-zinc-500 font-mono">
+                      <div className="flex items-center justify-between border-t border-slate-100 pt-2 text-[10px] text-slate-500 font-mono">
                         <span className="flex items-center gap-1">
-                          <Clock className="h-3 w-3 text-zinc-400" /> {item.timestamp}
+                          <Clock className="h-3 w-3 text-slate-400" /> {item.timestamp}
                         </span>
-                        <span className="font-semibold text-zinc-300 group-hover:text-white flex items-center gap-0.5">
+                        <span className="font-semibold text-slate-800 group-hover:text-slate-950 flex items-center gap-0.5">
                           Open <ExternalLink className="h-3 w-3" />
                         </span>
                       </div>
@@ -790,8 +790,8 @@ export function StoryboardGeneratorPage() {
             {/* Example Scripts Section */}
             <div className="space-y-4 pt-2">
               <div className="flex items-center justify-between">
-                <h3 className="text-xs font-mono uppercase tracking-wider text-zinc-500 flex items-center gap-2">
-                  <BookOpen className="h-4 w-4 text-zinc-400" /> Start from example templates
+                <h3 className="text-xs font-mono uppercase tracking-wider text-slate-500 flex items-center gap-2">
+                  <BookOpen className="h-4 w-4 text-slate-500" /> Start from example templates
                 </h3>
               </div>
 
@@ -803,15 +803,15 @@ export function StoryboardGeneratorPage() {
                       handleFormChange("script", ex.script);
                       window.scrollTo({ top: 150, behavior: "smooth" });
                     }}
-                    className="group rounded-2xl border border-zinc-800/80 bg-zinc-900/40 p-4 shadow-sm hover:border-zinc-700 hover:bg-zinc-900/80 transition-all cursor-pointer space-y-2"
+                    className="group rounded-2xl border border-slate-200 bg-white p-4 shadow-sm hover:border-slate-300 hover:shadow-md transition-all cursor-pointer space-y-2"
                   >
-                    <span className="rounded-full bg-zinc-800 px-2 py-0.5 text-[9px] font-mono text-zinc-400">
+                    <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[9px] font-mono text-slate-600 border border-slate-200">
                       {ex.category}
                     </span>
-                    <h4 className="text-sm font-semibold text-zinc-200 group-hover:text-white transition-colors">
+                    <h4 className="text-sm font-semibold text-slate-800 group-hover:text-slate-950 transition-colors">
                       {ex.title}
                     </h4>
-                    <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed">
+                    <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">
                       {ex.description}
                     </p>
                   </div>
@@ -822,30 +822,30 @@ export function StoryboardGeneratorPage() {
         )}
 
         {/* ─────────────────────────────────────────────────────────────────── */}
-        {/* ── STEP 2: CONFIGURATION PAGE ──────────────────────────────────── */}
+        {/* ── STEP 2: LIGHT MODE CONFIGURATION PAGE ────────────────────────── */}
         {/* ─────────────────────────────────────────────────────────────────── */}
         {step === "config" && (
           <section className="mx-auto max-w-4xl px-4 sm:px-6 py-8 sm:py-16 w-full max-w-full space-y-6">
             {/* Active Script Summary Bar */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 rounded-2xl border border-zinc-800 bg-zinc-900/80 p-4 backdrop-blur-xl">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
               <div className="space-y-1">
-                <span className="text-[10px] font-mono uppercase text-zinc-400">
+                <span className="text-[10px] font-mono uppercase text-slate-500">
                   Selected Screenplay
                 </span>
-                <p className="font-mono text-xs text-zinc-200 line-clamp-1 max-w-xl">
+                <p className="font-mono text-xs text-slate-800 line-clamp-1 max-w-xl">
                   {form.script}
                 </p>
               </div>
               <div className="flex items-center gap-2">
                 <button
                   onClick={handleStartNewStory}
-                  className="inline-flex items-center gap-1 rounded-full bg-zinc-100 px-3 py-1 text-xs font-semibold text-zinc-950 hover:bg-white transition-all"
+                  className="inline-flex items-center gap-1 rounded-full bg-slate-900 px-3 py-1 text-xs font-semibold text-white hover:bg-black transition-all"
                 >
                   <PlusCircle className="h-3.5 w-3.5" /> New Story
                 </button>
                 <button
                   onClick={() => setStep("script")}
-                  className="inline-flex items-center gap-1 text-xs text-zinc-400 hover:text-zinc-200 shrink-0"
+                  className="inline-flex items-center gap-1 text-xs text-slate-600 hover:text-slate-900 shrink-0"
                 >
                   <ArrowLeft className="h-3.5 w-3.5" /> Edit Script
                 </button>
@@ -853,27 +853,27 @@ export function StoryboardGeneratorPage() {
             </div>
 
             {/* DEDICATED PRODUCTION CONFIG CARD */}
-            <div className="rounded-3xl border border-zinc-800 bg-zinc-900/90 p-6 sm:p-8 shadow-2xl backdrop-blur-xl space-y-6">
-              <div className="border-b border-zinc-800 pb-4 flex items-center justify-between">
+            <div className="rounded-3xl border border-slate-200 bg-white p-6 sm:p-8 shadow-xl space-y-6">
+              <div className="border-b border-slate-100 pb-4 flex items-center justify-between">
                 <div>
-                  <h2 className="text-lg font-semibold text-white">
+                  <h2 className="text-lg font-semibold text-slate-900">
                     Production Settings & Visual Targets
                   </h2>
-                  <p className="text-xs text-zinc-400">
+                  <p className="text-xs text-slate-600">
                     Configure visual rendering target, scene density, aspect ratio, and camera direction.
                   </p>
                 </div>
-                <Sliders className="h-5 w-5 text-zinc-400" />
+                <Sliders className="h-5 w-5 text-slate-500" />
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Character Upload Zone */}
-                <div className="rounded-2xl border border-zinc-800 bg-zinc-950/60 p-4 space-y-3">
+                <div className="rounded-2xl border border-slate-200 bg-slate-50/60 p-4 space-y-3">
                   <div className="flex items-center justify-between">
-                    <label className="text-xs font-mono uppercase text-zinc-300 flex items-center gap-1.5">
-                      <ImageIcon className="h-4 w-4 text-zinc-400" /> Character Reference Images
+                    <label className="text-xs font-mono uppercase text-slate-700 flex items-center gap-1.5">
+                      <ImageIcon className="h-4 w-4 text-slate-500" /> Character Reference Images
                     </label>
-                    <span className="text-xs font-mono text-zinc-400">
+                    <span className="text-xs font-mono text-slate-500">
                       {form.uploadedCharacters?.length || 0} Files Attached
                     </span>
                   </div>
@@ -890,9 +890,9 @@ export function StoryboardGeneratorPage() {
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="w-full flex items-center justify-center gap-2 rounded-xl border border-dashed border-zinc-700 bg-zinc-900/60 p-3 text-xs font-medium text-zinc-300 hover:border-zinc-500 hover:bg-zinc-900 transition-colors"
+                    className="w-full flex items-center justify-center gap-2 rounded-xl border border-dashed border-slate-300 bg-white p-3 text-xs font-medium text-slate-700 hover:border-slate-400 hover:bg-slate-50 transition-colors"
                   >
-                    <Upload className="h-4 w-4 text-zinc-400" /> Upload Character Models (PNG/JPG)
+                    <Upload className="h-4 w-4 text-slate-500" /> Upload Character Models (PNG/JPG)
                   </button>
 
                   {form.uploadedCharacters && form.uploadedCharacters.length > 0 && (
@@ -900,16 +900,16 @@ export function StoryboardGeneratorPage() {
                       {form.uploadedCharacters.map((char) => (
                         <div
                           key={char.id}
-                          className="flex items-center gap-2 rounded-xl border border-zinc-800 bg-zinc-900 p-2"
+                          className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white p-2"
                         >
                           {char.imageUrl ? (
                             <img
                               src={char.imageUrl}
                               alt={char.name}
-                              className="h-10 w-10 rounded-lg object-cover border border-zinc-700 shrink-0"
+                              className="h-10 w-10 rounded-lg object-cover border border-slate-200 shrink-0"
                             />
                           ) : (
-                            <div className="h-10 w-10 rounded-lg bg-zinc-800 flex items-center justify-center text-zinc-400 shrink-0">
+                            <div className="h-10 w-10 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500 shrink-0">
                               <Users className="h-4 w-4" />
                             </div>
                           )}
@@ -921,13 +921,13 @@ export function StoryboardGeneratorPage() {
                             onChange={(e) =>
                               handleUpdateUploadedCharacter(char.id, "name", e.target.value)
                             }
-                            className="flex-1 rounded border border-zinc-700 bg-zinc-950 px-2 py-1 text-xs font-mono text-zinc-200 outline-none focus:ring-1 focus:ring-zinc-500"
+                            className="flex-1 rounded border border-slate-300 bg-white px-2 py-1 text-xs font-mono text-slate-900 outline-none focus:ring-1 focus:ring-slate-400"
                           />
 
                           <button
                             type="button"
                             onClick={() => handleRemoveUploadedCharacter(char.id)}
-                            className="p-1 text-zinc-400 hover:text-red-400 shrink-0"
+                            className="p-1 text-slate-400 hover:text-red-600 shrink-0"
                           >
                             <Trash2 className="h-4 w-4" />
                           </button>
@@ -940,7 +940,7 @@ export function StoryboardGeneratorPage() {
                 {/* Main Settings Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   <div>
-                    <label className="block text-xs font-mono uppercase text-zinc-400 mb-1.5">
+                    <label className="block text-xs font-mono uppercase text-slate-600 mb-1.5">
                       Target Scene Count
                     </label>
                     <input
@@ -951,21 +951,21 @@ export function StoryboardGeneratorPage() {
                       onChange={(e) =>
                         handleFormChange("numberOfScenes", parseInt(e.target.value) || 10)
                       }
-                      className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-xs font-mono text-zinc-100 outline-none focus:ring-1 focus:ring-zinc-600"
+                      className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs font-mono text-slate-900 outline-none focus:ring-1 focus:ring-slate-400"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-mono uppercase text-zinc-400 mb-1.5">
+                    <label className="block text-xs font-mono uppercase text-slate-600 mb-1.5">
                       Visual Render Style
                     </label>
                     <select
                       value={form.visualStyle}
                       onChange={(e) => handleFormChange("visualStyle", e.target.value)}
-                      className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-xs font-mono text-zinc-100 outline-none focus:ring-1 focus:ring-zinc-600"
+                      className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs font-mono text-slate-900 outline-none focus:ring-1 focus:ring-slate-400"
                     >
                       {VISUAL_STYLES.map((st) => (
-                        <option key={st} value={st} className="bg-zinc-900">
+                        <option key={st} value={st} className="bg-white">
                           {st}
                         </option>
                       ))}
@@ -973,16 +973,16 @@ export function StoryboardGeneratorPage() {
                   </div>
 
                   <div>
-                    <label className="block text-xs font-mono uppercase text-zinc-400 mb-1.5">
+                    <label className="block text-xs font-mono uppercase text-slate-600 mb-1.5">
                       AI Model Target
                     </label>
                     <select
                       value={form.promptStyle}
                       onChange={(e) => handleFormChange("promptStyle", e.target.value)}
-                      className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-xs font-mono text-zinc-100 outline-none focus:ring-1 focus:ring-zinc-600"
+                      className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs font-mono text-slate-900 outline-none focus:ring-1 focus:ring-slate-400"
                     >
                       {PROMPT_STYLES.map((ps) => (
-                        <option key={ps} value={ps} className="bg-zinc-900">
+                        <option key={ps} value={ps} className="bg-white">
                           {ps}
                         </option>
                       ))}
@@ -990,16 +990,16 @@ export function StoryboardGeneratorPage() {
                   </div>
 
                   <div>
-                    <label className="block text-xs font-mono uppercase text-zinc-400 mb-1.5">
+                    <label className="block text-xs font-mono uppercase text-slate-600 mb-1.5">
                       Aspect Ratio
                     </label>
                     <select
                       value={form.aspectRatio}
                       onChange={(e) => handleFormChange("aspectRatio", e.target.value)}
-                      className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-xs font-mono text-zinc-100 outline-none focus:ring-1 focus:ring-zinc-600"
+                      className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs font-mono text-slate-900 outline-none focus:ring-1 focus:ring-slate-400"
                     >
                       {ASPECT_RATIOS.map((ar) => (
-                        <option key={ar} value={ar} className="bg-zinc-900">
+                        <option key={ar} value={ar} className="bg-white">
                           {ar}
                         </option>
                       ))}
@@ -1007,16 +1007,16 @@ export function StoryboardGeneratorPage() {
                   </div>
 
                   <div>
-                    <label className="block text-xs font-mono uppercase text-zinc-400 mb-1.5">
+                    <label className="block text-xs font-mono uppercase text-slate-600 mb-1.5">
                       Camera Motion
                     </label>
                     <select
                       value={form.cameraStyle}
                       onChange={(e) => handleFormChange("cameraStyle", e.target.value)}
-                      className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-xs font-mono text-zinc-100 outline-none focus:ring-1 focus:ring-zinc-600"
+                      className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs font-mono text-slate-900 outline-none focus:ring-1 focus:ring-slate-400"
                     >
                       {CAMERA_STYLES.map((cs) => (
-                        <option key={cs} value={cs} className="bg-zinc-900">
+                        <option key={cs} value={cs} className="bg-white">
                           {cs}
                         </option>
                       ))}
@@ -1025,45 +1025,45 @@ export function StoryboardGeneratorPage() {
                 </div>
 
                 {/* Toggles Bar */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2 border-t border-zinc-800">
-                  <label className="flex items-center gap-2 text-xs font-mono text-zinc-300 cursor-pointer select-none">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2 border-t border-slate-100">
+                  <label className="flex items-center gap-2 text-xs font-mono text-slate-700 cursor-pointer select-none">
                     <input
                       type="checkbox"
                       checked={form.includeDialogue}
                       onChange={(e) => handleFormChange("includeDialogue", e.target.checked)}
-                      className="h-4 w-4 rounded bg-zinc-900 border-zinc-700 accent-zinc-100"
+                      className="h-4 w-4 rounded bg-white border-slate-300 accent-slate-900"
                     />
-                    <MessageSquare className="h-3.5 w-3.5 text-zinc-400" /> Dialogue
+                    <MessageSquare className="h-3.5 w-3.5 text-slate-500" /> Dialogue
                   </label>
 
-                  <label className="flex items-center gap-2 text-xs font-mono text-zinc-300 cursor-pointer select-none">
+                  <label className="flex items-center gap-2 text-xs font-mono text-slate-700 cursor-pointer select-none">
                     <input
                       type="checkbox"
                       checked={form.includeSFX}
                       onChange={(e) => handleFormChange("includeSFX", e.target.checked)}
-                      className="h-4 w-4 rounded bg-zinc-900 border-zinc-700 accent-zinc-100"
+                      className="h-4 w-4 rounded bg-white border-slate-300 accent-slate-900"
                     />
-                    <Volume2 className="h-3.5 w-3.5 text-zinc-400" /> SFX
+                    <Volume2 className="h-3.5 w-3.5 text-slate-500" /> SFX
                   </label>
 
-                  <label className="flex items-center gap-2 text-xs font-mono text-zinc-300 cursor-pointer select-none">
+                  <label className="flex items-center gap-2 text-xs font-mono text-slate-700 cursor-pointer select-none">
                     <input
                       type="checkbox"
                       checked={form.includeBackgroundMusic}
                       onChange={(e) => handleFormChange("includeBackgroundMusic", e.target.checked)}
-                      className="h-4 w-4 rounded bg-zinc-900 border-zinc-700 accent-zinc-100"
+                      className="h-4 w-4 rounded bg-white border-slate-300 accent-slate-900"
                     />
-                    <Music className="h-3.5 w-3.5 text-zinc-400" /> Music
+                    <Music className="h-3.5 w-3.5 text-slate-500" /> Music
                   </label>
 
-                  <label className="flex items-center gap-2 text-xs font-mono text-zinc-300 cursor-pointer select-none">
+                  <label className="flex items-center gap-2 text-xs font-mono text-slate-700 cursor-pointer select-none">
                     <input
                       type="checkbox"
                       checked={form.safetyNotes}
                       onChange={(e) => handleFormChange("safetyNotes", e.target.checked)}
-                      className="h-4 w-4 rounded bg-zinc-900 border-zinc-700 accent-zinc-100"
+                      className="h-4 w-4 rounded bg-white border-slate-300 accent-slate-900"
                     />
-                    <Shield className="h-3.5 w-3.5 text-zinc-400" /> Safety
+                    <Shield className="h-3.5 w-3.5 text-slate-500" /> Safety
                   </label>
                 </div>
 
@@ -1071,11 +1071,11 @@ export function StoryboardGeneratorPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full flex items-center justify-center gap-2 rounded-2xl bg-zinc-100 py-3.5 text-xs font-semibold text-zinc-950 shadow-xl hover:bg-white transition-all disabled:opacity-60 active:scale-95"
+                  className="w-full flex items-center justify-center gap-2 rounded-2xl bg-slate-900 py-3.5 text-xs font-semibold text-white shadow-lg hover:bg-black transition-all disabled:opacity-60 active:scale-95"
                 >
                   {loading ? (
                     <>
-                      <Loader2 className="h-4 w-4 animate-spin text-zinc-950" /> Generating Scenes...
+                      <Loader2 className="h-4 w-4 animate-spin text-white" /> Generating Scenes...
                     </>
                   ) : (
                     <>
@@ -1089,20 +1089,20 @@ export function StoryboardGeneratorPage() {
         )}
 
         {/* ─────────────────────────────────────────────────────────────────── */}
-        {/* ── STEP 3: FULL-SCREEN APP STUDIO (PINNED HEADER/SIDEBAR, INNER RIGHT CANVAS SCROLL ONLY) ─ */}
+        {/* ── STEP 3: FULL-SCREEN LIGHT APP STUDIO ─────────────────────────── */}
         {/* ─────────────────────────────────────────────────────────────────── */}
         {step === "studio" && (
-          <div className="flex flex-col h-[calc(100vh-76px)] overflow-hidden w-full max-w-full">
+          <div className="flex flex-col h-[calc(100vh-76px)] overflow-hidden w-full max-w-full bg-slate-50">
             {/* PINNED TOP HEADER */}
-            <header className="shrink-0 border-b border-zinc-800/80 bg-[#09090b] px-4 sm:px-6 py-2.5 w-full flex items-center justify-between gap-3 z-30">
+            <header className="shrink-0 border-b border-slate-200 bg-white px-4 sm:px-6 py-2.5 w-full flex items-center justify-between gap-3 z-30 shadow-sm">
               <div className="flex items-center gap-2">
-                <span className="text-xs font-mono text-zinc-400 font-semibold">Storyboard Workspace</span>
+                <span className="text-xs font-mono text-slate-700 font-semibold">Storyboard Workspace</span>
               </div>
 
-              <div className="flex items-center gap-1 sm:gap-1.5 bg-zinc-900/90 border border-zinc-800 p-1 rounded-full shadow-inner">
+              <div className="flex items-center gap-1 sm:gap-1.5 bg-slate-100 border border-slate-200 p-1 rounded-full shadow-inner">
                 <button
                   onClick={handleStartNewStory}
-                  className="flex items-center gap-1.5 rounded-full bg-zinc-100 text-zinc-950 px-3 py-1 text-xs font-semibold hover:bg-white transition-all shadow-sm mr-1"
+                  className="flex items-center gap-1.5 rounded-full bg-slate-900 text-white px-3 py-1 text-xs font-semibold hover:bg-black transition-all shadow-sm mr-1"
                 >
                   <PlusCircle className="h-3.5 w-3.5" /> + New Story
                 </button>
@@ -1111,8 +1111,8 @@ export function StoryboardGeneratorPage() {
                   onClick={() => setStep("script")}
                   className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-all ${
                     step === "script"
-                      ? "bg-zinc-800 text-zinc-100 border border-zinc-700"
-                      : "text-zinc-400 hover:text-zinc-200"
+                      ? "bg-white text-slate-900 border border-slate-300 shadow-sm"
+                      : "text-slate-600 hover:text-slate-900"
                   }`}
                 >
                   <BookOpen className="h-3.5 w-3.5" /> 1. Story
@@ -1122,8 +1122,8 @@ export function StoryboardGeneratorPage() {
                   onClick={() => setStep("config")}
                   className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-all ${
                     step === "config"
-                      ? "bg-zinc-800 text-zinc-100 border border-zinc-700"
-                      : "text-zinc-400 hover:text-zinc-200"
+                      ? "bg-white text-slate-900 border border-slate-300 shadow-sm"
+                      : "text-slate-600 hover:text-slate-900"
                   }`}
                 >
                   <Sliders className="h-3.5 w-3.5" /> 2. Config
@@ -1136,8 +1136,8 @@ export function StoryboardGeneratorPage() {
                   disabled={!output}
                   className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-all ${
                     step === "studio"
-                      ? "bg-zinc-800 text-zinc-100 border border-zinc-700"
-                      : "text-zinc-600 cursor-not-allowed"
+                      ? "bg-white text-slate-900 border border-slate-300 shadow-sm"
+                      : "text-slate-400 cursor-not-allowed"
                   }`}
                 >
                   <Layers className="h-3.5 w-3.5" /> 3. Studio
@@ -1147,55 +1147,55 @@ export function StoryboardGeneratorPage() {
 
             {/* DUAL-PANEL FULL-HEIGHT CONTAINER */}
             <div className="flex-1 flex flex-col lg:flex-row min-h-0 overflow-hidden w-full max-w-7xl mx-auto px-3 sm:px-6 py-3 gap-5">
-              {/* FIXED LEFT SIDEBAR (PINNED TO LEFT - NO SCROLL & NO OVERLAP) */}
+              {/* FIXED LEFT SIDEBAR (PINNED TO LEFT) */}
               <aside className="w-full lg:w-[320px] xl:w-[360px] shrink-0 h-full overflow-hidden flex flex-col gap-3.5">
                 {/* Active Story Overview Card */}
-                <div className="rounded-2xl border border-zinc-800 bg-zinc-900/90 p-4 backdrop-blur-xl space-y-2 shadow-xl shrink-0">
+                <div className="rounded-2xl border border-slate-200 bg-white p-4 space-y-2 shadow-sm shrink-0">
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-mono uppercase text-zinc-400 flex items-center gap-1">
-                      <Terminal className="h-3.5 w-3.5 text-zinc-300" /> Active Workspace
+                    <span className="text-[10px] font-mono uppercase text-slate-500 flex items-center gap-1">
+                      <Terminal className="h-3.5 w-3.5 text-slate-700" /> Active Workspace
                     </span>
                     <div className="flex items-center gap-2">
                       <button
                         onClick={handleStartNewStory}
-                        className="text-[10px] font-mono text-zinc-300 hover:text-white flex items-center gap-0.5"
+                        className="text-[10px] font-mono text-slate-700 hover:text-slate-950 flex items-center gap-0.5"
                       >
                         <PlusCircle className="h-3 w-3" /> + New
                       </button>
                       <button
                         onClick={() => setStep("config")}
-                        className="text-[10px] font-mono text-zinc-500 hover:text-zinc-300 flex items-center gap-1"
+                        className="text-[10px] font-mono text-slate-500 hover:text-slate-700 flex items-center gap-1"
                       >
                         <Sliders className="h-3 w-3" /> Config
                       </button>
                     </div>
                   </div>
 
-                  <p className="text-xs font-mono text-zinc-300 line-clamp-2 leading-relaxed">
+                  <p className="text-xs font-mono text-slate-800 line-clamp-2 leading-relaxed">
                     {form.script}
                   </p>
 
                   <div className="flex flex-wrap gap-1 pt-1">
-                    <span className="rounded bg-zinc-800 px-2 py-0.5 text-[9px] font-mono text-zinc-300 border border-zinc-700/50">
+                    <span className="rounded bg-slate-100 px-2 py-0.5 text-[9px] font-mono text-slate-700 border border-slate-200">
                       {form.visualStyle}
                     </span>
-                    <span className="rounded bg-zinc-800 px-2 py-0.5 text-[9px] font-mono text-zinc-300 border border-zinc-700/50">
+                    <span className="rounded bg-slate-100 px-2 py-0.5 text-[9px] font-mono text-slate-700 border border-slate-200">
                       {form.promptStyle}
                     </span>
-                    <span className="rounded bg-zinc-800 px-2 py-0.5 text-[9px] font-mono text-zinc-300 border border-zinc-700/50">
+                    <span className="rounded bg-slate-100 px-2 py-0.5 text-[9px] font-mono text-slate-700 border border-slate-200">
                       {output?.scenes?.length || 0} Scenes
                     </span>
                   </div>
                 </div>
 
-                {/* ── AI ASSISTANT CHAT DOCK (FILLS REMAINING SIDEBAR HEIGHT) ── */}
-                <div className="rounded-2xl sm:rounded-3xl border border-zinc-800 bg-zinc-900/90 p-4 shadow-2xl backdrop-blur-2xl space-y-3 flex-1 flex flex-col overflow-hidden">
-                  <div className="flex items-center justify-between border-b border-zinc-800 pb-2.5 shrink-0">
-                    <span className="text-[11px] font-mono uppercase text-zinc-300 flex items-center gap-1.5">
-                      <Bot className="h-4 w-4 text-zinc-200" /> AI Prompt Assistant
+                {/* ── AI ASSISTANT CHAT DOCK (LIGHT MODE) ── */}
+                <div className="rounded-2xl sm:rounded-3xl border border-slate-200 bg-white p-4 shadow-sm space-y-3 flex-1 flex flex-col overflow-hidden">
+                  <div className="flex items-center justify-between border-b border-slate-100 pb-2.5 shrink-0">
+                    <span className="text-[11px] font-mono uppercase text-slate-800 flex items-center gap-1.5">
+                      <Bot className="h-4 w-4 text-slate-700" /> AI Prompt Assistant
                     </span>
-                    <span className="text-[9px] text-emerald-400 font-mono flex items-center gap-1">
-                      {assistantLoading && <Loader2 className="h-3 w-3 animate-spin text-zinc-300" />} Ready
+                    <span className="text-[9px] text-emerald-600 font-mono flex items-center gap-1 font-semibold">
+                      {assistantLoading && <Loader2 className="h-3 w-3 animate-spin text-slate-700" />} Ready
                     </span>
                   </div>
 
@@ -1207,8 +1207,8 @@ export function StoryboardGeneratorPage() {
                           key={idx}
                           className={`p-2.5 rounded-xl text-[11px] font-mono ${
                             log.sender === "user"
-                              ? "bg-zinc-800 text-zinc-100 border border-zinc-700 ml-4 text-right"
-                              : "bg-zinc-950 text-zinc-300 border border-zinc-800 mr-4"
+                              ? "bg-slate-900 text-white ml-4 text-right"
+                              : "bg-slate-100 text-slate-800 border border-slate-200 mr-4"
                           }`}
                         >
                           {log.text}
@@ -1230,7 +1230,7 @@ export function StoryboardGeneratorPage() {
                         type="button"
                         onClick={() => handleAssistantSubmit(chip)}
                         disabled={assistantLoading}
-                        className="rounded-full bg-zinc-800/80 px-2 py-0.5 text-[9px] font-mono text-zinc-400 border border-zinc-700/50 hover:bg-zinc-700 hover:text-zinc-100 transition-all disabled:opacity-50"
+                        className="rounded-full bg-slate-100 px-2 py-0.5 text-[9px] font-mono text-slate-700 border border-slate-200 hover:bg-slate-200 hover:text-slate-950 transition-all disabled:opacity-50"
                       >
                         + {chip}
                       </button>
@@ -1250,18 +1250,18 @@ export function StoryboardGeneratorPage() {
                         }
                       }}
                       placeholder="Ask AI to modify scenes (e.g. 'Add dark fog', 'Redo camera angles')..."
-                      className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-xs text-zinc-100 placeholder-zinc-500 outline-none focus:ring-1 focus:ring-zinc-600 leading-relaxed font-mono break-words whitespace-pre-wrap resize-none"
+                      className="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2 text-xs text-slate-900 placeholder-slate-400 outline-none focus:ring-1 focus:ring-slate-400 leading-relaxed font-mono break-words whitespace-pre-wrap resize-none"
                     />
 
                     <button
                       type="button"
                       onClick={() => handleAssistantSubmit(assistantInput)}
                       disabled={assistantLoading || !assistantInput.trim()}
-                      className="w-full flex items-center justify-center gap-1.5 rounded-xl bg-zinc-100 py-2 text-xs font-semibold text-zinc-950 shadow hover:bg-white active:scale-95 transition-all disabled:opacity-50"
+                      className="w-full flex items-center justify-center gap-1.5 rounded-xl bg-slate-900 py-2 text-xs font-semibold text-white shadow hover:bg-black active:scale-95 transition-all disabled:opacity-50"
                     >
                       {assistantLoading ? (
                         <>
-                          <Loader2 className="h-3.5 w-3.5 animate-spin text-zinc-950" /> Modifying...
+                          <Loader2 className="h-3.5 w-3.5 animate-spin text-white" /> Modifying...
                         </>
                       ) : (
                         <>
@@ -1273,49 +1273,49 @@ export function StoryboardGeneratorPage() {
                 </div>
               </aside>
 
-              {/* ── SCROLLABLE RIGHT CANVAS (ONLY THIS BOX SCROLLS) ── */}
+              {/* ── SCROLLABLE RIGHT CANVAS (LIGHT MODE) ── */}
               <main ref={rightCanvasRef} className="flex-1 h-full overflow-y-auto pr-1.5 no-scrollbar space-y-4 min-w-0">
                 {output && (
                   <div className="space-y-4 w-full pb-12">
                     {/* Summary Bar */}
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 max-w-full">
-                      <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-2.5 text-center">
-                        <span className="text-[9px] font-mono uppercase text-zinc-500 block">Total Scenes</span>
-                        <p className="font-mono text-base font-bold text-zinc-100">{output.scenes?.length || 0}</p>
+                      <div className="rounded-xl border border-slate-200 bg-white p-2.5 text-center shadow-sm">
+                        <span className="text-[9px] font-mono uppercase text-slate-500 block">Total Scenes</span>
+                        <p className="font-mono text-base font-bold text-slate-900">{output.scenes?.length || 0}</p>
                       </div>
-                      <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-2.5 text-center">
-                        <span className="text-[9px] font-mono uppercase text-zinc-500 block">Characters</span>
-                        <p className="font-mono text-base font-bold text-zinc-100">{output.characters?.length || 0}</p>
+                      <div className="rounded-xl border border-slate-200 bg-white p-2.5 text-center shadow-sm">
+                        <span className="text-[9px] font-mono uppercase text-slate-500 block">Characters</span>
+                        <p className="font-mono text-base font-bold text-slate-900">{output.characters?.length || 0}</p>
                       </div>
-                      <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-2.5 text-center">
-                        <span className="text-[9px] font-mono uppercase text-zinc-500 block">Environments</span>
-                        <p className="font-mono text-base font-bold text-zinc-100">{output.environments?.length || 0}</p>
+                      <div className="rounded-xl border border-slate-200 bg-white p-2.5 text-center shadow-sm">
+                        <span className="text-[9px] font-mono uppercase text-slate-500 block">Environments</span>
+                        <p className="font-mono text-base font-bold text-slate-900">{output.environments?.length || 0}</p>
                       </div>
-                      <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-2.5 text-center">
-                        <span className="text-[9px] font-mono uppercase text-zinc-500 block">Est. Runtime</span>
-                        <p className="font-mono text-base font-bold text-zinc-100">{output.analytics?.estimatedRuntime || "1m 30s"}</p>
+                      <div className="rounded-xl border border-slate-200 bg-white p-2.5 text-center shadow-sm">
+                        <span className="text-[9px] font-mono uppercase text-slate-500 block">Est. Runtime</span>
+                        <p className="font-mono text-base font-bold text-slate-900">{output.analytics?.estimatedRuntime || "1m 30s"}</p>
                       </div>
                     </div>
 
                     {/* Storyboard Timeline Scrubber Bar */}
                     {output.timeline && output.timeline.length > 0 && (
-                      <div className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-3 max-w-full overflow-hidden">
+                      <div className="rounded-2xl border border-slate-200 bg-white p-3 max-w-full overflow-hidden shadow-sm">
                         <div className="flex items-center justify-between mb-2">
-                          <h3 className="text-[11px] font-mono uppercase text-zinc-400 flex items-center gap-1.5">
-                            <Film className="h-3.5 w-3.5 text-zinc-300" /> Timeline Scrubber ({output.timeline.length} Scenes)
+                          <h3 className="text-[11px] font-mono uppercase text-slate-600 flex items-center gap-1.5 font-semibold">
+                            <Film className="h-3.5 w-3.5 text-slate-700" /> Timeline Scrubber ({output.timeline.length} Scenes)
                           </h3>
                           
                           <div className="flex items-center gap-1">
                             <button
                               onClick={() => scrollTimeline("left")}
-                              className="p-1 rounded-lg border border-zinc-800 bg-zinc-950 hover:bg-zinc-800 text-zinc-400 transition-colors"
+                              className="p-1 rounded-lg border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-600 transition-colors"
                               title="Scroll Left"
                             >
                               <ChevronLeft className="h-3.5 w-3.5" />
                             </button>
                             <button
                               onClick={() => scrollTimeline("right")}
-                              className="p-1 rounded-lg border border-zinc-800 bg-zinc-950 hover:bg-zinc-800 text-zinc-400 transition-colors"
+                              className="p-1 rounded-lg border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-600 transition-colors"
                               title="Scroll Right"
                             >
                               <ChevronRight className="h-3.5 w-3.5" />
@@ -1331,19 +1331,19 @@ export function StoryboardGeneratorPage() {
                             <div
                               key={item.sceneNumber}
                               onClick={() => scrollToScene(item.sceneNumber)}
-                              className="flex flex-col justify-between shrink-0 rounded-xl border border-zinc-800 bg-zinc-950 p-2 cursor-pointer hover:border-zinc-600 hover:bg-zinc-900 transition-all"
+                              className="flex flex-col justify-between shrink-0 rounded-xl border border-slate-200 bg-slate-50 p-2 cursor-pointer hover:border-slate-300 hover:bg-slate-100 transition-all"
                               style={{ width: "125px" }}
                             >
                               <div className="flex items-center justify-between">
-                                <span className="rounded bg-zinc-800 px-1.5 py-0.5 text-[9px] font-mono font-semibold text-zinc-300">
+                                <span className="rounded bg-slate-200 px-1.5 py-0.5 text-[9px] font-mono font-semibold text-slate-800">
                                   Sc {item.sceneNumber}
                                 </span>
-                                <span className="text-[9px] text-zinc-500 font-mono">{item.duration}</span>
+                                <span className="text-[9px] text-slate-500 font-mono">{item.duration}</span>
                               </div>
-                              <h4 className="mt-1 text-[11px] font-semibold text-zinc-200 line-clamp-1">
+                              <h4 className="mt-1 text-[11px] font-semibold text-slate-900 line-clamp-1">
                                 {item.sceneTitle}
                               </h4>
-                              <span className="mt-0.5 text-[9px] text-zinc-500 line-clamp-1 font-mono">
+                              <span className="mt-0.5 text-[9px] text-slate-500 line-clamp-1 font-mono">
                                 📍 {item.environment}
                               </span>
                             </div>
@@ -1353,34 +1353,34 @@ export function StoryboardGeneratorPage() {
                     )}
 
                     {/* Toolbar */}
-                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 rounded-2xl border border-zinc-800 bg-zinc-900/60 p-3 max-w-full">
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 rounded-2xl border border-slate-200 bg-white p-3 max-w-full shadow-sm">
                       <div className="relative w-full sm:flex-1 sm:min-w-[160px]">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-500" />
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
                         <input
                           type="text"
                           placeholder="Search prompts..."
                           value={searchQuery}
                           onChange={(e) => setSearchQuery(e.target.value)}
-                          className="w-full rounded-xl border border-zinc-800 bg-zinc-950 pl-8 pr-3 py-1.5 text-xs text-zinc-200 placeholder-zinc-500 outline-none focus:ring-1 focus:ring-zinc-600 font-mono"
+                          className="w-full rounded-xl border border-slate-200 bg-slate-50 pl-8 pr-3 py-1.5 text-xs text-slate-900 placeholder-slate-400 outline-none focus:ring-1 focus:ring-slate-400 font-mono"
                         />
                       </div>
 
                       {output.scenes && output.scenes.length > 0 && (
                         <div className="relative flex items-center gap-1">
-                          <Compass className="h-3.5 w-3.5 text-zinc-400 shrink-0" />
+                          <Compass className="h-3.5 w-3.5 text-slate-500 shrink-0" />
                           <select
                             onChange={(e) => {
                               const val = parseInt(e.target.value);
                               if (val) scrollToScene(val);
                             }}
                             defaultValue=""
-                            className="rounded-xl border border-zinc-800 bg-zinc-950 px-2.5 py-1.5 text-xs font-mono text-zinc-300 outline-none focus:ring-1 focus:ring-zinc-600"
+                            className="rounded-xl border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-xs font-mono text-slate-700 outline-none focus:ring-1 focus:ring-slate-400"
                           >
-                            <option value="" disabled className="bg-zinc-900">
+                            <option value="" disabled className="bg-white">
                               Jump to Scene...
                             </option>
                             {output.scenes.map((s) => (
-                              <option key={s.sceneNumber} value={s.sceneNumber} className="bg-zinc-900">
+                              <option key={s.sceneNumber} value={s.sceneNumber} className="bg-white">
                                 Scene {s.sceneNumber}: {s.sceneTitle}
                               </option>
                             ))}
@@ -1396,7 +1396,7 @@ export function StoryboardGeneratorPage() {
                               "all-packages"
                             )
                           }
-                          className="inline-flex items-center justify-center gap-1 rounded-xl border border-zinc-700 bg-zinc-800 px-3 py-1.5 text-[11px] font-mono font-semibold text-zinc-100 hover:bg-zinc-700 transition-colors"
+                          className="inline-flex items-center justify-center gap-1 rounded-xl border border-slate-900 bg-slate-900 px-3 py-1.5 text-[11px] font-mono font-semibold text-white hover:bg-black transition-colors shadow-sm"
                           title="Copy all scene prompts in 'Scene N [prompt]' format"
                         >
                           {copiedKey === "all-packages" ? (
@@ -1409,14 +1409,14 @@ export function StoryboardGeneratorPage() {
 
                         <button
                           onClick={() => exportFormatted("markdown")}
-                          className="inline-flex items-center justify-center gap-1 rounded-xl border border-zinc-800 bg-zinc-950 px-2.5 py-1.5 text-[11px] font-mono text-zinc-400 hover:text-zinc-200"
+                          className="inline-flex items-center justify-center gap-1 rounded-xl border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-[11px] font-mono text-slate-700 hover:bg-slate-100"
                         >
                           <FileText className="h-3 w-3" /> MD
                         </button>
 
                         <button
                           onClick={() => exportFormatted("json")}
-                          className="inline-flex items-center justify-center gap-1 rounded-xl border border-zinc-800 bg-zinc-950 px-2.5 py-1.5 text-[11px] font-mono text-zinc-400 hover:text-zinc-200"
+                          className="inline-flex items-center justify-center gap-1 rounded-xl border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-[11px] font-mono text-slate-700 hover:bg-slate-100"
                         >
                           <Download className="h-3 w-3" /> JSON
                         </button>
@@ -1433,24 +1433,24 @@ export function StoryboardGeneratorPage() {
                             key={scene.sceneNumber}
                             id={`scene-card-${scene.sceneNumber}`}
                             layout
-                            className="overflow-hidden rounded-2xl border border-zinc-800/90 bg-zinc-900/80 p-4 backdrop-blur-xl transition-all hover:border-zinc-700 max-w-full space-y-2.5"
+                            className="overflow-hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition-all hover:border-slate-300 hover:shadow max-w-full space-y-2.5"
                           >
-                            <div className="flex items-center justify-between border-b border-zinc-800 pb-2">
+                            <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                               <div className="flex items-center gap-2">
-                                <span className="flex h-5 w-5 items-center justify-center rounded bg-zinc-800 text-[10px] font-mono font-bold text-zinc-200 border border-zinc-700">
+                                <span className="flex h-5 w-5 items-center justify-center rounded bg-slate-100 text-[10px] font-mono font-bold text-slate-800 border border-slate-200">
                                   {scene.sceneNumber}
                                 </span>
-                                <span className="text-xs font-mono font-semibold text-zinc-300">
+                                <span className="text-xs font-mono font-semibold text-slate-800">
                                   Scene {scene.sceneNumber}
                                 </span>
                               </div>
 
                               <button
                                 onClick={() => handleCopy(getSceneFormattedPrompt(scene), copyKey)}
-                                className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-800 bg-zinc-950 px-2.5 py-1 text-[11px] font-mono text-zinc-300 hover:bg-zinc-800 hover:text-white transition-all"
+                                className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1 text-[11px] font-mono text-slate-700 hover:bg-slate-100 hover:text-slate-950 transition-all"
                               >
                                 {copiedKey === copyKey ? (
-                                  <Check className="h-3.5 w-3.5 text-emerald-400" />
+                                  <Check className="h-3.5 w-3.5 text-emerald-600" />
                                 ) : (
                                   <Copy className="h-3.5 w-3.5" />
                                 )}
@@ -1459,7 +1459,7 @@ export function StoryboardGeneratorPage() {
                             </div>
 
                             {/* ONLY SCENE NUMBER AND SCENE PROMPT (Scene N [prompt]) */}
-                            <p className="text-xs sm:text-sm font-mono text-zinc-200 leading-relaxed break-words whitespace-pre-wrap bg-zinc-950 p-3 rounded-xl border border-zinc-800/80 selection:bg-zinc-700 selection:text-white">
+                            <p className="text-xs sm:text-sm font-mono text-slate-900 leading-relaxed break-words whitespace-pre-wrap bg-slate-50 p-3 rounded-xl border border-slate-200 selection:bg-slate-200 selection:text-slate-900">
                               {getSceneFormattedPrompt(scene)}
                             </p>
                           </motion.div>
@@ -1469,8 +1469,8 @@ export function StoryboardGeneratorPage() {
 
                     {/* ── PAGINATION CONTROLS BAR (10 Scenes per Page) ────────────── */}
                     {totalPages > 1 && (
-                      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 rounded-2xl border border-zinc-800 bg-zinc-900/60 p-4 max-w-full">
-                        <span className="text-xs font-mono text-zinc-400 text-center sm:text-left">
+                      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white p-4 max-w-full shadow-sm">
+                        <span className="text-xs font-mono text-slate-600 text-center sm:text-left">
                           Showing {(currentPage - 1) * SCENES_PER_PAGE + 1}–{Math.min(currentPage * SCENES_PER_PAGE, filteredScenes.length)} of {filteredScenes.length} scenes (Page {currentPage} of {totalPages})
                         </span>
 
@@ -1483,7 +1483,7 @@ export function StoryboardGeneratorPage() {
                               }
                             }}
                             disabled={currentPage === 1}
-                            className="inline-flex items-center gap-1 rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-1.5 text-xs font-mono text-zinc-300 disabled:opacity-40 transition-all hover:bg-zinc-800"
+                            className="inline-flex items-center gap-1 rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-mono text-slate-700 disabled:opacity-40 transition-all hover:bg-slate-100"
                           >
                             <ChevronLeft className="h-3.5 w-3.5" /> Prev
                           </button>
@@ -1506,8 +1506,8 @@ export function StoryboardGeneratorPage() {
                                     }}
                                     className={`h-7 w-7 rounded-lg text-xs font-mono transition-all ${
                                       currentPage === pg
-                                        ? "bg-zinc-100 text-zinc-950 font-bold"
-                                        : "border border-zinc-800 bg-zinc-950 text-zinc-400 hover:bg-zinc-800"
+                                        ? "bg-slate-900 text-white font-bold"
+                                        : "border border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100"
                                     }`}
                                   >
                                     {pg}
@@ -1518,7 +1518,7 @@ export function StoryboardGeneratorPage() {
                                 (pg === currentPage + 2 && pg < totalPages)
                               ) {
                                 return (
-                                  <span key={pg} className="px-1 text-xs text-zinc-500 font-mono">
+                                  <span key={pg} className="px-1 text-xs text-slate-400 font-mono">
                                     ...
                                   </span>
                                 );
@@ -1535,7 +1535,7 @@ export function StoryboardGeneratorPage() {
                               }
                             }}
                             disabled={currentPage === totalPages}
-                            className="inline-flex items-center gap-1 rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-1.5 text-xs font-mono text-zinc-300 disabled:opacity-40 transition-all hover:bg-zinc-800"
+                            className="inline-flex items-center gap-1 rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-mono text-slate-700 disabled:opacity-40 transition-all hover:bg-slate-100"
                           >
                             Next <ChevronRight className="h-3.5 w-3.5" />
                           </button>
@@ -1554,13 +1554,13 @@ export function StoryboardGeneratorPage() {
 
         {/* ── Sleek Modern Footer Footprint ───────────────────────────────────── */}
         {step !== "studio" && (
-          <footer className="border-t border-zinc-800/80 bg-[#09090b] py-12 px-4 sm:px-6 w-full max-w-full">
+          <footer className="border-t border-slate-200 bg-white py-12 px-4 sm:px-6 w-full max-w-full">
             <div className="mx-auto max-w-4xl text-center space-y-4">
               <div className="flex items-center justify-center gap-2">
-                <Sparkles className="h-4 w-4 text-zinc-400" />
-                <span className="font-mono text-xs text-zinc-400">Make AI Storyboard Engine</span>
+                <Sparkles className="h-4 w-4 text-slate-600" />
+                <span className="font-mono text-xs text-slate-600">Make AI Storyboard Engine</span>
               </div>
-              <p className="text-xs text-zinc-500 max-w-xl mx-auto font-mono">
+              <p className="text-xs text-slate-500 max-w-xl mx-auto font-mono">
                 Designed for directors, filmmakers, animators, and prompt engineers creating multi-scene AI video productions.
               </p>
             </div>
