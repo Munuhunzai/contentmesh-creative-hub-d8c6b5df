@@ -657,7 +657,7 @@ export function StoryboardGeneratorPage() {
       {/* ── ULTRA-SLEEK CHATGPT / FIGMA MAKE AI THEME (NO LOUD BRANDING) ───────── */}
       <div className="font-['Inter'] font-sans text-zinc-100 antialiased bg-[#09090b] min-h-screen w-full max-w-full selection:bg-zinc-700 selection:text-white">
         {/* ── SLEEK FIGMA MAKE AI HEADER BAR ─────────────────────────────────── */}
-        <header className="sticky top-0 z-40 border-b border-zinc-800/80 bg-[#09090b]/90 backdrop-blur-xl px-4 sm:px-6 py-3 w-full max-w-full">
+        <header className="sticky top-[72px] z-40 border-b border-zinc-800/80 bg-[#09090b]/95 backdrop-blur-xl px-4 sm:px-6 py-2.5 w-full max-w-full">
           <div className="mx-auto max-w-7xl flex flex-wrap items-center justify-end sm:justify-between gap-3">
             <div className="flex items-center gap-2">
               <span className="text-xs font-mono text-zinc-400 font-semibold">Storyboard Workspace</span>
@@ -1154,7 +1154,7 @@ export function StoryboardGeneratorPage() {
         {step === "studio" && (
           <section className="mx-auto max-w-7xl px-3 sm:px-6 pb-28 pt-4 w-full max-w-full relative min-h-[80vh]" id="generator-workspace">
             {/* ── CHATGPT STYLE VIEWPORT FIXED LEFT SIDEBAR ── */}
-            <aside className="w-full lg:w-[320px] xl:w-[360px] lg:fixed lg:top-20 lg:z-30 space-y-3.5 max-h-[calc(100vh-100px)] overflow-y-auto no-scrollbar pb-4">
+            <aside className="w-full lg:w-[320px] xl:w-[360px] lg:fixed lg:top-[136px] lg:z-30 space-y-3.5 max-h-[calc(100vh-150px)] overflow-y-auto no-scrollbar pb-4">
               {/* Active Story Overview Card */}
               <div className="rounded-2xl border border-zinc-800 bg-zinc-900/90 p-4 backdrop-blur-xl space-y-2 shadow-xl">
                 <div className="flex items-center justify-between">
@@ -1280,7 +1280,7 @@ export function StoryboardGeneratorPage() {
             </aside>
 
             {/* ── RIGHT STUDIO CANVAS (ONLY THIS RED BOX AREA IS SCROLLABLE) ── */}
-            <div className="w-full lg:ml-[340px] xl:ml-[380px] lg:max-w-[calc(100%-350px)] xl:max-w-[calc(100%-390px)] space-y-4 min-w-0 lg:max-h-[calc(100vh-95px)] lg:overflow-y-auto lg:pr-1.5 no-scrollbar">
+            <div className="w-full lg:ml-[340px] xl:ml-[380px] lg:max-w-[calc(100%-350px)] xl:max-w-[calc(100%-390px)] space-y-4 min-w-0 lg:max-h-[calc(100vh-150px)] lg:overflow-y-auto lg:pr-1.5 no-scrollbar">
               {output && (
                 <div className="space-y-4 w-full">
                   {/* Summary Bar */}
