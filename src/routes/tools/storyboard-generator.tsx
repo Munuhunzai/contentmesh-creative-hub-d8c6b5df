@@ -1093,100 +1093,27 @@ export function StoryboardGeneratorPage() {
         {/* ─────────────────────────────────────────────────────────────────── */}
         {step === "studio" && (
           <div className="flex flex-col h-[calc(100vh-76px)] overflow-hidden w-full max-w-full bg-slate-50">
-            {/* PINNED TOP HEADER */}
-            <header className="shrink-0 border-b border-slate-200 bg-white px-4 sm:px-6 py-2.5 w-full flex items-center justify-between gap-3 z-30 shadow-sm">
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-mono text-slate-700 font-semibold">Storyboard Workspace</span>
-              </div>
+            {/* PINNED TOP HEADER WITH ONLY TWO BUTTONS */}
+            <header className="shrink-0 border-b border-slate-200 bg-white px-4 sm:px-6 py-2.5 w-full flex items-center justify-end gap-2.5 z-30 shadow-sm">
+              <button
+                onClick={handleStartNewStory}
+                className="flex items-center gap-1.5 rounded-full bg-slate-900 text-white px-4 py-1.5 text-xs font-semibold hover:bg-black transition-all shadow-sm"
+              >
+                <PlusCircle className="h-3.5 w-3.5" /> + New Story
+              </button>
 
-              <div className="flex items-center gap-1 sm:gap-1.5 bg-slate-100 border border-slate-200 p-1 rounded-full shadow-inner">
-                <button
-                  onClick={handleStartNewStory}
-                  className="flex items-center gap-1.5 rounded-full bg-slate-900 text-white px-3 py-1 text-xs font-semibold hover:bg-black transition-all shadow-sm mr-1"
-                >
-                  <PlusCircle className="h-3.5 w-3.5" /> + New Story
-                </button>
-
-                <button
-                  onClick={() => setStep("script")}
-                  className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-all ${
-                    step === "script"
-                      ? "bg-white text-slate-900 border border-slate-300 shadow-sm"
-                      : "text-slate-600 hover:text-slate-900"
-                  }`}
-                >
-                  <BookOpen className="h-3.5 w-3.5" /> 1. Story
-                </button>
-
-                <button
-                  onClick={() => setStep("config")}
-                  className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-all ${
-                    step === "config"
-                      ? "bg-white text-slate-900 border border-slate-300 shadow-sm"
-                      : "text-slate-600 hover:text-slate-900"
-                  }`}
-                >
-                  <Sliders className="h-3.5 w-3.5" /> 2. Config
-                </button>
-
-                <button
-                  onClick={() => {
-                    if (output) setStep("studio");
-                  }}
-                  disabled={!output}
-                  className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-all ${
-                    step === "studio"
-                      ? "bg-white text-slate-900 border border-slate-300 shadow-sm"
-                      : "text-slate-400 cursor-not-allowed"
-                  }`}
-                >
-                  <Layers className="h-3.5 w-3.5" /> 3. Studio
-                </button>
-              </div>
+              <button
+                onClick={() => setStep("config")}
+                className="flex items-center gap-1.5 rounded-full bg-slate-100 border border-slate-200 text-slate-800 px-4 py-1.5 text-xs font-medium hover:bg-slate-200 transition-all"
+              >
+                <Sliders className="h-3.5 w-3.5" /> Config
+              </button>
             </header>
 
             {/* DUAL-PANEL FULL-HEIGHT CONTAINER */}
             <div className="flex-1 flex flex-col lg:flex-row min-h-0 overflow-hidden w-full max-w-7xl mx-auto px-3 sm:px-6 py-3 gap-5">
-              {/* FIXED LEFT SIDEBAR (PINNED TO LEFT) */}
-              <aside className="w-full lg:w-[320px] xl:w-[360px] shrink-0 h-full overflow-hidden flex flex-col gap-3.5">
-                {/* Active Story Overview Card */}
-                <div className="rounded-2xl border border-slate-200 bg-white p-4 space-y-2 shadow-sm shrink-0">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-mono uppercase text-slate-500 flex items-center gap-1">
-                      <Terminal className="h-3.5 w-3.5 text-slate-700" /> Active Workspace
-                    </span>
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={handleStartNewStory}
-                        className="text-[10px] font-mono text-slate-700 hover:text-slate-950 flex items-center gap-0.5"
-                      >
-                        <PlusCircle className="h-3 w-3" /> + New
-                      </button>
-                      <button
-                        onClick={() => setStep("config")}
-                        className="text-[10px] font-mono text-slate-500 hover:text-slate-700 flex items-center gap-1"
-                      >
-                        <Sliders className="h-3 w-3" /> Config
-                      </button>
-                    </div>
-                  </div>
-
-                  <p className="text-xs font-mono text-slate-800 line-clamp-2 leading-relaxed">
-                    {form.script}
-                  </p>
-
-                  <div className="flex flex-wrap gap-1 pt-1">
-                    <span className="rounded bg-slate-100 px-2 py-0.5 text-[9px] font-mono text-slate-700 border border-slate-200">
-                      {form.visualStyle}
-                    </span>
-                    <span className="rounded bg-slate-100 px-2 py-0.5 text-[9px] font-mono text-slate-700 border border-slate-200">
-                      {form.promptStyle}
-                    </span>
-                    <span className="rounded bg-slate-100 px-2 py-0.5 text-[9px] font-mono text-slate-700 border border-slate-200">
-                      {output?.scenes?.length || 0} Scenes
-                    </span>
-                  </div>
-                </div>
+              {/* FIXED LEFT SIDEBAR (AI PROMPT ASSISTANT DOCK ONLY) */}
+              <aside className="w-full lg:w-[320px] xl:w-[360px] shrink-0 h-full overflow-hidden flex flex-col">
 
                 {/* ── AI ASSISTANT CHAT DOCK (LIGHT MODE) ── */}
                 <div className="rounded-2xl sm:rounded-3xl border border-slate-200 bg-white p-4 shadow-sm space-y-3 flex-1 flex flex-col overflow-hidden">

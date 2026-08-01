@@ -52,6 +52,8 @@ export function Navbar() {
     return () => { document.body.style.overflow = ""; };
   }, [open]);
 
+  const isAiTool = pathname.startsWith("/tools/storyboard-generator");
+
   return (
     <>
       {/* ══════════════════════ HEADER ══════════════════════ */}
@@ -79,43 +81,44 @@ export function Navbar() {
             {/* Logo */}
             <Logo />
 
-            {/* Desktop links — increased padding/margin from logo (ml-8 lg:ml-12) */}
-            <LayoutGroup id="navbar-pills">
-            <nav className="ml-8 hidden items-center gap-1.5 lg:flex lg:ml-12" aria-label="Main navigation">
-              {NAV.map((n) => {
-                const active = pathname.startsWith(n.to);
-                return (
-                  <Link
-                    key={n.to}
-                    to={n.to}
-                    className="relative px-5 py-2 text-sm font-medium transition-colors"
-                    style={{ color: active ? "#111" : "#666" }}
-                  >
-                    {/* Single layoutId pill — Framer Motion slides it between whichever link is active */}
-                    {active && (
-                      <motion.span
-                        layoutId="nav-active-pill"
-                        className="absolute inset-0"
-                        style={{
-                          borderRadius: "36px",
-                          borderLeft: "4px solid #FF5A1F",
-                          background: "rgba(0,0,0,0.04)",
-                          boxShadow: "-4px 0 12px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.6)",
-                        }}
-                        transition={{
-                          type: "spring",
-                          stiffness: 420,
-                          damping: 34,
-                          mass: 0.8,
-                        }}
-                      />
-                    )}
-                    <span className="relative z-10">{n.label}</span>
-                  </Link>
-                );
-              })}
-            </nav>
-            </LayoutGroup>
+            {/* Desktop links — hidden on AI Tool page */}
+            {!isAiTool && (
+              <LayoutGroup id="navbar-pills">
+                <nav className="ml-8 hidden items-center gap-1.5 lg:flex lg:ml-12" aria-label="Main navigation">
+                  {NAV.map((n) => {
+                    const active = pathname.startsWith(n.to);
+                    return (
+                      <Link
+                        key={n.to}
+                        to={n.to}
+                        className="relative px-5 py-2 text-sm font-medium transition-colors"
+                        style={{ color: active ? "#111" : "#666" }}
+                      >
+                        {active && (
+                          <motion.span
+                            layoutId="nav-active-pill"
+                            className="absolute inset-0"
+                            style={{
+                              borderRadius: "36px",
+                              borderLeft: "4px solid #FF5A1F",
+                              background: "rgba(0,0,0,0.04)",
+                              boxShadow: "-4px 0 12px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.6)",
+                            }}
+                            transition={{
+                              type: "spring",
+                              stiffness: 420,
+                              damping: 34,
+                              mass: 0.8,
+                            }}
+                          />
+                        )}
+                        <span className="relative z-10">{n.label}</span>
+                      </Link>
+                    );
+                  })}
+                </nav>
+              </LayoutGroup>
+            )}
 
             {/* Mobile hamburger (inside pill) */}
             <button
@@ -153,8 +156,9 @@ export function Navbar() {
             </button>
           </div>
 
-          {/* ── Action Buttons Container: Place Order (Orange) + WhatsApp Contact Us (Green) ── */}
-          <div className="hidden items-center gap-1.5 sm:inline-flex">
+          {/* ── Action Buttons Container: Place Order (Orange) + WhatsApp Contact Us (Green) — hidden on AI Tool page ── */}
+          {!isAiTool && (
+            <div className="hidden items-center gap-1.5 sm:inline-flex">
             {/* Place Order Button — Orange */}
             <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
               <Link
@@ -181,6 +185,7 @@ export function Navbar() {
               Contact Us
             </motion.a>
           </div>
+          )}
         </div>
       </motion.header>
 
