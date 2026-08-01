@@ -10,9 +10,10 @@ interface SiteLayoutProps {
   children: ReactNode;
   /** Optional full-bleed slot rendered BEFORE the padded main (e.g. full-screen Hero). */
   heroSlot?: ReactNode;
+  noTopPadding?: boolean;
 }
 
-export function SiteLayout({ children, heroSlot }: SiteLayoutProps) {
+export function SiteLayout({ children, heroSlot, noTopPadding }: SiteLayoutProps) {
   const [showTop, setShowTop] = useState(false);
   useEffect(() => {
     const on = () => setShowTop(window.scrollY > 600);
@@ -26,7 +27,7 @@ export function SiteLayout({ children, heroSlot }: SiteLayoutProps) {
       <Navbar />
       {/* Hero renders here — behind the fixed navbar, no pt-28 */}
       {heroSlot}
-      <main className={`w-full max-w-full overflow-x-hidden ${heroSlot ? "" : "pt-28"}`}>{children}</main>
+      <main className={`w-full max-w-full overflow-x-hidden ${heroSlot || noTopPadding ? "pt-16 sm:pt-20" : "pt-28"}`}>{children}</main>
       <Footer />
       <FloatingChatbot />
       <AnimatePresence>

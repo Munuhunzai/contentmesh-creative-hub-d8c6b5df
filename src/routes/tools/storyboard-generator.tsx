@@ -648,14 +648,14 @@ export function StoryboardGeneratorPage() {
   };
 
   return (
-    <SiteLayout>
+    <SiteLayout noTopPadding>
       {/* ── CLEAN MODERN LIGHT THEME ─────────────────────────────────────── */}
       <div className="font-['Inter'] font-sans text-slate-900 antialiased bg-slate-50 min-h-screen w-full max-w-full selection:bg-slate-200 selection:text-slate-900">
         {/* ─────────────────────────────────────────────────────────────────── */}
         {/* ── STEP 1: LIGHT MODE PROMPT SCREEN ───────────────────────────── */}
         {/* ─────────────────────────────────────────────────────────────────── */}
         {step === "script" && (
-          <section className="mx-auto max-w-4xl px-4 sm:px-6 py-12 sm:py-20 w-full max-w-full space-y-10">
+          <section className="mx-auto max-w-4xl px-4 sm:px-6 pt-2 sm:pt-4 pb-12 w-full max-w-full space-y-8">
             {/* Hero Title */}
             <div className="text-center space-y-4">
               <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3.5 py-1 text-xs text-slate-600 font-mono shadow-sm">
@@ -825,7 +825,7 @@ export function StoryboardGeneratorPage() {
         {/* ── STEP 2: LIGHT MODE CONFIGURATION PAGE ────────────────────────── */}
         {/* ─────────────────────────────────────────────────────────────────── */}
         {step === "config" && (
-          <section className="mx-auto max-w-4xl px-4 sm:px-6 py-8 sm:py-16 w-full max-w-full space-y-6">
+          <section className="mx-auto max-w-4xl px-4 sm:px-6 pt-2 sm:pt-4 pb-12 w-full max-w-full space-y-6">
             {/* Active Script Summary Bar */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
               <div className="space-y-1">
@@ -1092,7 +1092,7 @@ export function StoryboardGeneratorPage() {
         {/* ── STEP 3: FULL-SCREEN LIGHT APP STUDIO ─────────────────────────── */}
         {/* ─────────────────────────────────────────────────────────────────── */}
         {step === "studio" && (
-          <div className="flex flex-col h-[calc(100vh-76px)] overflow-hidden w-full max-w-full bg-slate-50">
+          <div className="flex flex-col h-[calc(100vh-64px)] overflow-hidden w-full max-w-full bg-slate-50">
             {/* PINNED TOP HEADER WITH ONLY TWO BUTTONS */}
             <header className="shrink-0 border-b border-slate-200 bg-white px-4 sm:px-6 py-2.5 w-full flex items-center justify-end gap-2.5 z-30 shadow-sm">
               <button
