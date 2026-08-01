@@ -1340,8 +1340,48 @@ export function StoryboardGeneratorPage() {
 
               {/* ── SCROLLABLE RIGHT CANVAS ── */}
               <main ref={rightCanvasRef} className="flex-1 h-full overflow-y-auto pr-1.5 no-scrollbar space-y-4 min-w-0">
-                {output && (
+                {loading || !output ? (
+                  /* ── FULL SCENE CANVAS LOADING SCREEN ── */
+                  <div className="flex flex-col items-center justify-center min-h-[480px] h-full space-y-6 text-center p-6 bg-white rounded-3xl border border-slate-200 shadow-sm my-auto">
+                    <div className="relative flex items-center justify-center">
+                      <div className="h-16 w-16 rounded-full border-4 border-slate-200 border-t-slate-900 animate-spin" />
+                      <Sparkles className="h-6 w-6 text-slate-800 absolute animate-pulse" />
+                    </div>
+
+                    <div className="space-y-2 max-w-sm">
+                      <h3 className="text-base font-bold text-slate-900">Generating Storyboard Package</h3>
+                      <p className="text-xs text-slate-500 leading-relaxed font-sans">
+                        Creating 4K scene prompts, camera movements, character direction, and lighting specifications...
+                      </p>
+                    </div>
+
+                    {/* Shimmering Skeleton Cards Preview */}
+                    <div className="w-full space-y-3 pt-2 max-w-lg">
+                      {[1, 2, 3].map((i) => (
+                        <div key={i} className="rounded-2xl border border-slate-200 bg-slate-50 p-4 space-y-2.5 animate-pulse text-left">
+                          <div className="flex items-center justify-between">
+                            <div className="h-4 w-20 bg-slate-200 rounded-md" />
+                            <div className="h-4 w-16 bg-slate-200 rounded-md" />
+                          </div>
+                          <div className="h-3 w-full bg-slate-200 rounded-md" />
+                          <div className="h-3 w-3/4 bg-slate-200 rounded-md" />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
                   <div className="space-y-4 w-full pb-12">
+                    {/* Assistant Modifying Scenes Indicator */}
+                    {assistantLoading && (
+                      <div className="rounded-2xl border border-slate-900 bg-slate-900 text-white p-3.5 shadow-lg flex items-center justify-between gap-3 animate-pulse">
+                        <div className="flex items-center gap-2 text-xs font-semibold">
+                          <Loader2 className="h-4 w-4 animate-spin text-white" />
+                          <span>AI Assistant is updating story scenes & visual style...</span>
+                        </div>
+                        <span className="text-[10px] font-sans bg-white/20 px-2 py-0.5 rounded-full text-white">Generating</span>
+                      </div>
+                    )}
+
                     {/* Summary Bar */}
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 max-w-full">
                       <div className="rounded-xl border border-slate-200 bg-white p-2.5 text-center shadow-sm">
