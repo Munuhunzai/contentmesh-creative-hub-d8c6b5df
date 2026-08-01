@@ -508,215 +508,73 @@ export function StoryboardGeneratorPage() {
     }
   };
 
-  /* ── FULLY FUNCTIONAL AI PROMPT ASSISTANT HANDLER ── */
-  const handleAssistantSubmit = (query: string) => {
+  /* ── DEEPSEEK MEMORY-POWERED AI PROMPT ASSISTANT HANDLER ── */
+  const handleAssistantSubmit = async (query: string) => {
     if (!query || !query.trim() || !output) return;
     const userMsg = query.trim();
-    setAssistantLogs((prev) => [...prev, { sender: "user", text: userMsg }]);
+    const updatedLogs = [...assistantLogs, { sender: "user" as const, text: userMsg }];
+    setAssistantLogs(updatedLogs);
     setAssistantInput("");
     setAssistantLoading(true);
 
-    setTimeout(() => {
-      const qLower = userMsg.toLowerCase();
-      let actionDesc = "";
-      let newScenes = [...output.scenes];
-      let newFormScript = form.script;
+    try {
+      const res = await fetch("/api/assistant-modify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userQuery: userMsg,
+          currentForm: form,
+          currentOutput: output,
+          chatHistory: updatedLogs,
+        }),
+      });
 
-      const numMatch = qLower.match(/\b(\d+)\b/);
-      const isSceneCountChange =
-        /\b(scene|scenes|count|increase|decrease|add|reduce|make|set)\b/i.test(qLower) && numMatch;
-
-      const isScriptChange =
-        /change script|rewrite story|new story|script about|story about|change topic|make a script/i.test(qLower);
-
-      const matchedStyle = VISUAL_STYLES.find((st) =>
-        qLower.includes(st.toLowerCase())
-      );
-
-      const isStyleChange =
-        /style|visual|look|aesthetic|render|theme/i.test(qLower) || Boolean(matchedStyle);
-
-      if (isSceneCountChange && numMatch) {
-        let targetCount = parseInt(numMatch[1], 10);
-        if (qLower.includes("add") || qLower.includes("increase by")) {
-          targetCount = newScenes.length + targetCount;
-        } else if (qLower.includes("reduce by") || qLower.includes("decrease by")) {
-          targetCount = Math.max(1, newScenes.length - targetCount);
-        }
-
-        targetCount = Math.min(Math.max(1, targetCount), 50);
-
-        if (targetCount > newScenes.length) {
-          const currentLen = newScenes.length;
-          const CAMERA_VARIATIONS = [
-            "35mm anamorphic lens, slow push-in tracking shot, cinematic lighting",
-            "wide-angle establishing shot, golden hour illumination, rich textures",
-            "low-angle dynamic perspective, dramatic rim lighting, high contrast",
-            "over-the-shoulder medium shot, shallow depth of field",
-          ];
-
-          for (let i = currentLen; i < targetCount; i++) {
-            const scNum = i + 1;
-            const camVar = CAMERA_VARIATIONS[i % CAMERA_VARIATIONS.length];
-            const basePrompt = cleanPromptText(
-              newScenes[currentLen - 1]?.generationPrompt || "Cinematic scene action"
-            );
-            const promptText = `Scene ${scNum} [${basePrompt}, continuation sequence ${scNum}, ${camVar}]`;
-
-            newScenes.push({
-              sceneNumber: scNum,
-              sceneTitle: `Scene ${scNum}`,
-              duration: "6s",
-              environment: newScenes[currentLen - 1]?.environment || "Studio Setting",
-              characters: newScenes[currentLen - 1]?.characters || [],
-              dialogue: `Dialogue line for scene ${scNum}`,
-              sfx: "Ambient atmosphere",
-              cameraDirection: camVar,
-              generationPrompt: promptText,
-              copyReadyPrompt: promptText,
-            });
-          }
-          actionDesc = `Increased scene count from ${currentLen} to ${targetCount} scenes`;
-        } else if (targetCount < newScenes.length) {
-          const currentLen = newScenes.length;
-          newScenes = newScenes.slice(0, targetCount);
-          actionDesc = `Decreased scene count from ${currentLen} to ${targetCount} scenes`;
-        }
-
-        setForm((prev) => ({ ...prev, numberOfScenes: targetCount }));
-      } else if (isStyleChange) {
-        const newStyle = matchedStyle || userMsg.replace(/change visual style (to)?|change style (to)?|make style|set style (to)?|use style|style/gi, "").trim();
-
-        if (newStyle) {
-          const validStyle = VISUAL_STYLES.find((st) => st.toLowerCase() === newStyle.toLowerCase()) || (newStyle.charAt(0).toUpperCase() + newStyle.slice(1)) as VisualStyleOption;
-          setForm((prev) => ({ ...prev, visualStyle: validStyle }));
-
-          if (output.project) {
-            output.project.visualStyle = validStyle;
-          }
-
-          newScenes = newScenes.map((scene) => {
-            let promptText = cleanPromptText(scene.generationPrompt || scene.copyReadyPrompt);
-            promptText = `${promptText}, ${validStyle} style, 4K render quality`;
-            promptText = cleanPromptText(promptText);
-            return {
-              ...scene,
-              generationPrompt: promptText,
-              copyReadyPrompt: promptText,
-            };
-          });
-
-          actionDesc = `Updated visual style to "${validStyle}" across all scenes`;
-        }
-      } else if (isScriptChange) {
-        const topic = userMsg
-          .replace(/change script (to|about)?|rewrite story (about)?|script about|story about|make a script (about)?/gi, "")
-          .trim();
-
-        if (topic) {
-          newFormScript = `Title: ${topic.toUpperCase()}\n\nStory about ${topic}`;
-          setForm((prev) => ({ ...prev, script: newFormScript }));
-
-          newScenes = newScenes.map((scene) => {
-            const promptText = `Scene ${scene.sceneNumber} [${form.visualStyle} style, ${topic}, cinematic 4K resolution, 16:9, dramatic lighting, high detail]`;
-            return {
-              ...scene,
-              sceneTitle: `Scene ${scene.sceneNumber}: ${topic.slice(0, 20)}`,
-              generationPrompt: promptText,
-              copyReadyPrompt: promptText,
-            };
-          });
-          actionDesc = `Rewrote screenplay topic to "${topic}" and updated scene prompts`;
-        }
-      } else {
-        const CAMERA_VARIATIONS = [
-          "35mm anamorphic lens, cinematic lighting, slow tracking shot",
-          "wide-angle establishing view, golden hour sunlight, detailed texture",
-          "low-angle dynamic perspective, high-contrast atmospheric grade",
-          "over-the-shoulder shot, shallow depth of field, soft rim lighting",
-        ];
-
-        const isRegenReq = /change|redo|again|regenerate|rewrite|try again|fresh|variation/i.test(qLower);
-
-        newScenes = newScenes.map((scene, idx) => {
-          let promptText = cleanPromptText(scene.generationPrompt || scene.copyReadyPrompt);
-
-          if (isRegenReq) {
-            const varAngle = CAMERA_VARIATIONS[idx % CAMERA_VARIATIONS.length];
-            promptText = `${promptText}, ${varAngle}`;
-            actionDesc = "Generated fresh scene variations with dynamic camera angles & lighting";
-          } else if (qLower.includes("dramatic") || qLower.includes("intense")) {
-            promptText = `${promptText}, intense dramatic lighting, high contrast cinematic grade`;
-            actionDesc = "Applied intense dramatic lighting to all scenes";
-          } else if (qLower.includes("push in") || qLower.includes("zoom") || qLower.includes("camera")) {
-            promptText = `${promptText}, 35mm anamorphic camera lens, slow push-in tracking shot`;
-            actionDesc = "Added 35mm camera motion and tracking to scenes";
-          } else if (qLower.includes("pixar") || qLower.includes("3d")) {
-            promptText = `${promptText}, Pixar 3D animated render, vibrant warm colors`;
-            actionDesc = "Updated style to Pixar 3D animation";
-          } else if (qLower.includes("anime") || qLower.includes("ghibli")) {
-            promptText = `${promptText}, hand-drawn anime aesthetic, Studio Ghibli style, vibrant colors`;
-            actionDesc = "Updated style to Anime & Ghibli aesthetic";
-          } else if (qLower.includes("rain") || qLower.includes("storm") || qLower.includes("wet")) {
-            promptText = `${promptText}, heavy rain pouring down, wet reflective ground, water droplets`;
-            actionDesc = "Added heavy rain and wet reflections to scenes";
-          } else if (qLower.includes("night") || qLower.includes("dark")) {
-            promptText = `${promptText}, atmospheric night time lighting, deep shadows, neon glows`;
-            actionDesc = "Adjusted lighting to atmospheric night scene";
-          } else if (qLower.includes("cyberpunk") || qLower.includes("neon")) {
-            promptText = `${promptText}, glowing neon lights, futuristic cyberpunk city backdrop`;
-            actionDesc = "Injected cyberpunk neon aesthetics into scenes";
-          } else {
-            promptText = `${promptText}, ${userMsg}`;
-            actionDesc = `Applied "${userMsg}" to all scenes`;
-          }
-
-          promptText = cleanPromptText(promptText);
-
-          return {
-            ...scene,
-            generationPrompt: promptText,
-            copyReadyPrompt: promptText,
-          };
-        });
+      if (!res.ok) {
+        throw new Error("Assistant service failed.");
       }
 
-      const newTimeline = newScenes.map((s) => ({
-        sceneNumber: s.sceneNumber,
-        sceneTitle: s.sceneTitle || `Scene ${s.sceneNumber}`,
-        duration: s.duration || "5s",
-        environment: s.environment || "Location",
-        characters: s.characters || [],
-      }));
+      const data = await res.json();
+      const actionDesc = data.actionSummary || "Updated storyboard package";
 
-      const newOutput = {
-        ...output,
-        scenes: newScenes,
-        timeline: newTimeline,
-      };
+      if (data.updatedForm) {
+        setForm((prev) => ({
+          ...prev,
+          ...data.updatedForm,
+        }));
+      }
 
-      setOutput(newOutput);
-      localStorage.setItem("contentmesh_storyboard_output", JSON.stringify(newOutput));
+      if (data.updatedOutput && data.updatedOutput.scenes) {
+        const newOutput = data.updatedOutput;
+        setOutput(newOutput);
+        localStorage.setItem("contentmesh_storyboard_output", JSON.stringify(newOutput));
 
-      const updatedHistory = storyHistory.map((item) =>
-        item.script === form.script
-          ? {
-              ...item,
-              script: newFormScript,
-              sceneCount: newScenes.length,
-              output: newOutput,
-            }
-          : item
-      );
-      setStoryHistory(updatedHistory);
-      localStorage.setItem("contentmesh_story_history", JSON.stringify(updatedHistory));
+        const updatedHistory = storyHistory.map((item) =>
+          item.script === form.script || item.output?.project?.title === output.project?.title
+            ? {
+                ...item,
+                script: data.updatedForm?.script || item.script,
+                visualStyle: data.updatedForm?.visualStyle || item.visualStyle,
+                sceneCount: newOutput.scenes.length,
+                output: newOutput,
+              }
+            : item
+        );
+        setStoryHistory(updatedHistory);
+        localStorage.setItem("contentmesh_story_history", JSON.stringify(updatedHistory));
+      }
 
       setAssistantLogs((prev) => [
         ...prev,
         { sender: "ai", text: `✨ ${actionDesc}` },
       ]);
+    } catch (err: any) {
+      setAssistantLogs((prev) => [
+        ...prev,
+        { sender: "ai", text: `⚠️ ${err.message || "Request failed. Please try again."}` },
+      ]);
+    } finally {
       setAssistantLoading(false);
-    }, 450);
+    }
   };
 
   const filteredScenes = useMemo(() => {

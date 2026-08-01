@@ -19,6 +19,7 @@ import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as TermsRouteImport } from './routes/terms'
+import { Route as ApiAssistantModifyRouteImport } from './routes/api/assistant-modify'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as ApiContactRouteImport } from './routes/api/contact'
 import { Route as ApiGenerateStoryboardRouteImport } from './routes/api/generate-storyboard'
@@ -77,6 +78,11 @@ const TermsRoute = TermsRouteImport.update({
   path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAssistantModifyRoute = ApiAssistantModifyRouteImport.update({
+  id: '/api/assistant-modify',
+  path: '/api/assistant-modify',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiChatRoute = ApiChatRouteImport.update({
   id: '/api/chat',
   path: '/api/chat',
@@ -125,6 +131,7 @@ export interface FileRoutesByFullPath {
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
+  '/api/assistant-modify': typeof ApiAssistantModifyRoute
   '/api/chat': typeof ApiChatRoute
   '/api/contact': typeof ApiContactRoute
   '/api/generate-storyboard': typeof ApiGenerateStoryboardRoute
@@ -144,6 +151,7 @@ export interface FileRoutesByTo {
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
+  '/api/assistant-modify': typeof ApiAssistantModifyRoute
   '/api/chat': typeof ApiChatRoute
   '/api/contact': typeof ApiContactRoute
   '/api/generate-storyboard': typeof ApiGenerateStoryboardRoute
@@ -164,6 +172,7 @@ export interface FileRoutesById {
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
+  '/api/assistant-modify': typeof ApiAssistantModifyRoute
   '/api/chat': typeof ApiChatRoute
   '/api/contact': typeof ApiContactRoute
   '/api/generate-storyboard': typeof ApiGenerateStoryboardRoute
@@ -185,6 +194,7 @@ export interface FileRouteTypes {
     | '/services'
     | '/sitemap.xml'
     | '/terms'
+    | '/api/assistant-modify'
     | '/api/chat'
     | '/api/contact'
     | '/api/generate-storyboard'
@@ -204,6 +214,7 @@ export interface FileRouteTypes {
     | '/services'
     | '/sitemap.xml'
     | '/terms'
+    | '/api/assistant-modify'
     | '/api/chat'
     | '/api/contact'
     | '/api/generate-storyboard'
@@ -223,6 +234,7 @@ export interface FileRouteTypes {
     | '/services'
     | '/sitemap.xml'
     | '/terms'
+    | '/api/assistant-modify'
     | '/api/chat'
     | '/api/contact'
     | '/api/generate-storyboard'
@@ -243,6 +255,7 @@ export interface RootRouteChildren {
   ServicesRoute: typeof ServicesRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TermsRoute: typeof TermsRoute
+  ApiAssistantModifyRoute: typeof ApiAssistantModifyRoute
   ApiChatRoute: typeof ApiChatRoute
   ApiContactRoute: typeof ApiContactRoute
   ApiGenerateStoryboardRoute: typeof ApiGenerateStoryboardRoute
@@ -323,6 +336,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/assistant-modify': {
+      id: '/api/assistant-modify'
+      path: '/api/assistant-modify'
+      fullPath: '/api/assistant-modify'
+      preLoaderRoute: typeof ApiAssistantModifyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/chat': {
       id: '/api/chat'
       path: '/api/chat'
@@ -396,6 +416,7 @@ const rootRouteChildren: RootRouteChildren = {
   ServicesRoute: ServicesRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TermsRoute: TermsRoute,
+  ApiAssistantModifyRoute: ApiAssistantModifyRoute,
   ApiChatRoute: ApiChatRoute,
   ApiContactRoute: ApiContactRoute,
   ApiGenerateStoryboardRoute: ApiGenerateStoryboardRoute,
