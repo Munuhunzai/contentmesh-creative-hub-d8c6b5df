@@ -227,7 +227,6 @@ export interface SavedStoryItem {
   output: StoryboardOutput;
 }
 
-// Helper to strip unwanted meta commands (like "(change it again)") from prompt text
 const cleanPromptText = (text: string) => {
   if (!text) return "";
   return text
@@ -239,10 +238,8 @@ const cleanPromptText = (text: string) => {
 };
 
 export function StoryboardGeneratorPage() {
-  // Navigation Wizard Step State: "script" | "config" | "studio"
   const [step, setStep] = useState<"script" | "config" | "studio">("script");
 
-  // Form State
   const [form, setForm] = useState<StoryboardFormInput>({
     script: DEFAULT_SCRIPT,
     numberOfScenes: 10,
@@ -262,7 +259,6 @@ export function StoryboardGeneratorPage() {
     safetyNotes: true,
   });
 
-  // UI & Output State
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [output, setOutput] = useState<StoryboardOutput | null>(null);
@@ -272,7 +268,6 @@ export function StoryboardGeneratorPage() {
   const [activeFilter, setActiveFilter] = useState<string>("all");
   const [currentPage, setCurrentPage] = useState(1);
 
-  // AI Assistant Chat state for Step 3
   const [assistantInput, setAssistantInput] = useState("");
   const [assistantLogs, setAssistantLogs] = useState<Array<{ sender: "user" | "ai"; text: string }>>([]);
   const [assistantLoading, setAssistantLoading] = useState(false);
@@ -280,7 +275,6 @@ export function StoryboardGeneratorPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const timelineScrollRef = useRef<HTMLDivElement>(null);
 
-  // Local Storage Session & History Recovery
   useEffect(() => {
     try {
       const savedOutput = localStorage.getItem("contentmesh_storyboard_output");
@@ -656,61 +650,6 @@ export function StoryboardGeneratorPage() {
     <SiteLayout>
       {/* ── ULTRA-SLEEK CHATGPT / FIGMA MAKE AI THEME (NO LOUD BRANDING) ───────── */}
       <div className="font-['Inter'] font-sans text-zinc-100 antialiased bg-[#09090b] min-h-screen w-full max-w-full selection:bg-zinc-700 selection:text-white">
-        {/* ── SLEEK FIGMA MAKE AI HEADER BAR ─────────────────────────────────── */}
-        <header className="sticky top-[72px] z-40 border-b border-zinc-800/80 bg-[#09090b]/95 backdrop-blur-xl px-4 sm:px-6 py-2.5 w-full max-w-full">
-          <div className="mx-auto max-w-7xl flex flex-wrap items-center justify-end sm:justify-between gap-3">
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-mono text-zinc-400 font-semibold">Storyboard Workspace</span>
-            </div>
-
-            {/* Figma AI Style Floating Pill Wizard Navigation */}
-            <div className="flex items-center gap-1 sm:gap-1.5 bg-zinc-900/90 border border-zinc-800 p-1 rounded-full shadow-inner">
-              <button
-                onClick={handleStartNewStory}
-                className="flex items-center gap-1.5 rounded-full bg-zinc-100 text-zinc-950 px-3 py-1 text-xs font-semibold hover:bg-white transition-all shadow-sm mr-1"
-              >
-                <PlusCircle className="h-3.5 w-3.5" /> + New Story
-              </button>
-
-              <button
-                onClick={() => setStep("script")}
-                className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-all ${
-                  step === "script"
-                    ? "bg-zinc-800 text-zinc-100 border border-zinc-700"
-                    : "text-zinc-400 hover:text-zinc-200"
-                }`}
-              >
-                <BookOpen className="h-3.5 w-3.5" /> 1. Story
-              </button>
-
-              <button
-                onClick={() => setStep("config")}
-                className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-all ${
-                  step === "config"
-                    ? "bg-zinc-800 text-zinc-100 border border-zinc-700"
-                    : "text-zinc-400 hover:text-zinc-200"
-                }`}
-              >
-                <Sliders className="h-3.5 w-3.5" /> 2. Config
-              </button>
-
-              <button
-                onClick={() => {
-                  if (output) setStep("studio");
-                }}
-                disabled={!output}
-                className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-all ${
-                  step === "studio"
-                    ? "bg-zinc-800 text-zinc-100 border border-zinc-700"
-                    : "text-zinc-600 cursor-not-allowed"
-                }`}
-              >
-                <Layers className="h-3.5 w-3.5" /> 3. Studio
-              </button>
-            </div>
-          </div>
-        </header>
-
         {/* ─────────────────────────────────────────────────────────────────── */}
         {/* ── STEP 1: CHATGPT / FIGMA MAKE AI PROMPT SCREEN ───────────────── */}
         {/* ─────────────────────────────────────────────────────────────────── */}
@@ -729,7 +668,7 @@ export function StoryboardGeneratorPage() {
               </p>
             </div>
 
-            {/* CHATGPT STYLE FLOATING INPUT BAR (MATCHES CHATGPT & FIGMA MAKE AI) */}
+            {/* CHATGPT STYLE FLOATING INPUT BAR */}
             <div className="mx-auto max-w-3xl rounded-3xl border border-zinc-800 bg-zinc-900/90 p-4 sm:p-5 shadow-2xl shadow-black/80 backdrop-blur-2xl space-y-3 transition-all focus-within:border-zinc-700 focus-within:ring-1 focus-within:ring-zinc-700">
               <textarea
                 rows={5}
@@ -882,7 +821,7 @@ export function StoryboardGeneratorPage() {
         )}
 
         {/* ─────────────────────────────────────────────────────────────────── */}
-        {/* ── STEP 2: CONFIGURATION PAGE (FIGMA MAKE AI SETTINGS) ─────────── */}
+        {/* ── STEP 2: CONFIGURATION PAGE ──────────────────────────────────── */}
         {/* ─────────────────────────────────────────────────────────────────── */}
         {step === "config" && (
           <section className="mx-auto max-w-4xl px-4 sm:px-6 py-8 sm:py-16 w-full max-w-full space-y-6">
@@ -1149,404 +1088,459 @@ export function StoryboardGeneratorPage() {
         )}
 
         {/* ─────────────────────────────────────────────────────────────────── */}
-        {/* ── STEP 3: STUDIO WORKSPACE & CHATGPT SIDEBAR ──────────────────── */}
+        {/* ── STEP 3: INTEGRATED 2-COLUMN STUDIO WORKSPACE (ZERO OVERLAP) ──── */}
         {/* ─────────────────────────────────────────────────────────────────── */}
         {step === "studio" && (
-          <section className="mx-auto max-w-7xl px-3 sm:px-6 pb-28 pt-4 w-full max-w-full relative min-h-[80vh]" id="generator-workspace">
-            {/* ── CHATGPT STYLE VIEWPORT FIXED LEFT SIDEBAR ── */}
-            <aside className="w-full lg:w-[320px] xl:w-[360px] lg:fixed lg:top-[136px] lg:z-30 space-y-3.5 max-h-[calc(100vh-150px)] overflow-y-auto no-scrollbar pb-4">
-              {/* Active Story Overview Card */}
-              <div className="rounded-2xl border border-zinc-800 bg-zinc-900/90 p-4 backdrop-blur-xl space-y-2 shadow-xl">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-mono uppercase text-zinc-400 flex items-center gap-1">
-                    <Terminal className="h-3.5 w-3.5 text-zinc-300" /> Active Workspace
-                  </span>
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={handleStartNewStory}
-                      className="text-[10px] font-mono text-zinc-300 hover:text-white flex items-center gap-0.5"
-                    >
-                      <PlusCircle className="h-3 w-3" /> + New
-                    </button>
-                    <button
-                      onClick={() => setStep("config")}
-                      className="text-[10px] font-mono text-zinc-500 hover:text-zinc-300 flex items-center gap-1"
-                    >
-                      <Sliders className="h-3 w-3" /> Config
-                    </button>
+          <section className="mx-auto max-w-7xl px-3 sm:px-6 pb-20 pt-2 w-full max-w-full space-y-4" id="generator-workspace">
+            {/* Top Workspace Toolbar Bar (Embedded inside workspace - NO OVERLAP) */}
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-zinc-800/80 pb-3 pt-1">
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-mono text-zinc-400 font-semibold">Storyboard Workspace</span>
+              </div>
+
+              <div className="flex items-center gap-1 sm:gap-1.5 bg-zinc-900/90 border border-zinc-800 p-1 rounded-full shadow-inner">
+                <button
+                  onClick={handleStartNewStory}
+                  className="flex items-center gap-1.5 rounded-full bg-zinc-100 text-zinc-950 px-3 py-1 text-xs font-semibold hover:bg-white transition-all shadow-sm mr-1"
+                >
+                  <PlusCircle className="h-3.5 w-3.5" /> + New Story
+                </button>
+
+                <button
+                  onClick={() => setStep("script")}
+                  className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-all ${
+                    step === "script"
+                      ? "bg-zinc-800 text-zinc-100 border border-zinc-700"
+                      : "text-zinc-400 hover:text-zinc-200"
+                  }`}
+                >
+                  <BookOpen className="h-3.5 w-3.5" /> 1. Story
+                </button>
+
+                <button
+                  onClick={() => setStep("config")}
+                  className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-all ${
+                    step === "config"
+                      ? "bg-zinc-800 text-zinc-100 border border-zinc-700"
+                      : "text-zinc-400 hover:text-zinc-200"
+                  }`}
+                >
+                  <Sliders className="h-3.5 w-3.5" /> 2. Config
+                </button>
+
+                <button
+                  onClick={() => {
+                    if (output) setStep("studio");
+                  }}
+                  disabled={!output}
+                  className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-all ${
+                    step === "studio"
+                      ? "bg-zinc-800 text-zinc-100 border border-zinc-700"
+                      : "text-zinc-600 cursor-not-allowed"
+                  }`}
+                >
+                  <Layers className="h-3.5 w-3.5" /> 3. Studio
+                </button>
+              </div>
+            </div>
+
+            {/* 2-Column Flex Studio Workspace Layout */}
+            <div className="flex flex-col lg:flex-row gap-5 items-start">
+              {/* ── LEFT SIDEBAR (STICKY ON DESKTOP UNDER NAVBAR) ── */}
+              <aside className="w-full lg:w-[320px] xl:w-[360px] lg:sticky lg:top-[85px] space-y-3.5 shrink-0">
+                {/* Active Story Overview Card */}
+                <div className="rounded-2xl border border-zinc-800 bg-zinc-900/90 p-4 backdrop-blur-xl space-y-2 shadow-xl">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-mono uppercase text-zinc-400 flex items-center gap-1">
+                      <Terminal className="h-3.5 w-3.5 text-zinc-300" /> Active Workspace
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={handleStartNewStory}
+                        className="text-[10px] font-mono text-zinc-300 hover:text-white flex items-center gap-0.5"
+                      >
+                        <PlusCircle className="h-3 w-3" /> + New
+                      </button>
+                      <button
+                        onClick={() => setStep("config")}
+                        className="text-[10px] font-mono text-zinc-500 hover:text-zinc-300 flex items-center gap-1"
+                      >
+                        <Sliders className="h-3 w-3" /> Config
+                      </button>
+                    </div>
+                  </div>
+
+                  <p className="text-xs font-mono text-zinc-300 line-clamp-2 leading-relaxed">
+                    {form.script}
+                  </p>
+
+                  <div className="flex flex-wrap gap-1 pt-1">
+                    <span className="rounded bg-zinc-800 px-2 py-0.5 text-[9px] font-mono text-zinc-300 border border-zinc-700/50">
+                      {form.visualStyle}
+                    </span>
+                    <span className="rounded bg-zinc-800 px-2 py-0.5 text-[9px] font-mono text-zinc-300 border border-zinc-700/50">
+                      {form.promptStyle}
+                    </span>
+                    <span className="rounded bg-zinc-800 px-2 py-0.5 text-[9px] font-mono text-zinc-300 border border-zinc-700/50">
+                      {output?.scenes?.length || 0} Scenes
+                    </span>
                   </div>
                 </div>
 
-                <p className="text-xs font-mono text-zinc-300 line-clamp-2 leading-relaxed">
-                  {form.script}
-                </p>
+                {/* ── AI ASSISTANT CHAT DOCK ── */}
+                <div className="rounded-2xl sm:rounded-3xl border border-zinc-800 bg-zinc-900/90 p-4 shadow-2xl backdrop-blur-2xl space-y-3">
+                  <div className="flex items-center justify-between border-b border-zinc-800 pb-2.5">
+                    <span className="text-[11px] font-mono uppercase text-zinc-300 flex items-center gap-1.5">
+                      <Bot className="h-4 w-4 text-zinc-200" /> AI Prompt Assistant
+                    </span>
+                    <span className="text-[9px] text-emerald-400 font-mono flex items-center gap-1">
+                      {assistantLoading && <Loader2 className="h-3 w-3 animate-spin text-zinc-300" />} Ready
+                    </span>
+                  </div>
 
-                <div className="flex flex-wrap gap-1 pt-1">
-                  <span className="rounded bg-zinc-800 px-2 py-0.5 text-[9px] font-mono text-zinc-300 border border-zinc-700/50">
-                    {form.visualStyle}
-                  </span>
-                  <span className="rounded bg-zinc-800 px-2 py-0.5 text-[9px] font-mono text-zinc-300 border border-zinc-700/50">
-                    {form.promptStyle}
-                  </span>
-                  <span className="rounded bg-zinc-800 px-2 py-0.5 text-[9px] font-mono text-zinc-300 border border-zinc-700/50">
-                    {output?.scenes?.length || 0} Scenes
-                  </span>
-                </div>
-              </div>
+                  {/* Assistant Chat Logs */}
+                  {assistantLogs.length > 0 && (
+                    <div className="space-y-2 max-h-[140px] overflow-y-auto no-scrollbar pr-1 text-xs">
+                      {assistantLogs.map((log, idx) => (
+                        <div
+                          key={idx}
+                          className={`p-2.5 rounded-xl text-[11px] font-mono ${
+                            log.sender === "user"
+                              ? "bg-zinc-800 text-zinc-100 border border-zinc-700 ml-4 text-right"
+                              : "bg-zinc-950 text-zinc-300 border border-zinc-800 mr-4"
+                          }`}
+                        >
+                          {log.text}
+                        </div>
+                      ))}
+                    </div>
+                  )}
 
-              {/* ── CHATGPT STYLE AI ASSISTANT CHAT DOCK ── */}
-              <div className="rounded-2xl sm:rounded-3xl border border-zinc-800 bg-zinc-900/90 p-4 shadow-2xl backdrop-blur-2xl space-y-3">
-                <div className="flex items-center justify-between border-b border-zinc-800 pb-2.5">
-                  <span className="text-[11px] font-mono uppercase text-zinc-300 flex items-center gap-1.5">
-                    <Bot className="h-4 w-4 text-zinc-200" /> AI Prompt Assistant
-                  </span>
-                  <span className="text-[9px] text-emerald-400 font-mono flex items-center gap-1">
-                    {assistantLoading && <Loader2 className="h-3 w-3 animate-spin text-zinc-300" />} Ready
-                  </span>
-                </div>
-
-                {/* Assistant Chat Logs */}
-                {assistantLogs.length > 0 && (
-                  <div className="space-y-2 max-h-[140px] overflow-y-auto no-scrollbar pr-1 text-xs">
-                    {assistantLogs.map((log, idx) => (
-                      <div
-                        key={idx}
-                        className={`p-2.5 rounded-xl text-[11px] font-mono ${
-                          log.sender === "user"
-                            ? "bg-zinc-800 text-zinc-100 border border-zinc-700 ml-4 text-right"
-                            : "bg-zinc-950 text-zinc-300 border border-zinc-800 mr-4"
-                        }`}
+                  {/* Quick Action Chips */}
+                  <div className="flex flex-wrap gap-1">
+                    {[
+                      "Make dramatic",
+                      "Add camera push-in",
+                      "Pixar 3D",
+                      "New scene variations",
+                    ].map((chip, i) => (
+                      <button
+                        key={i}
+                        type="button"
+                        onClick={() => handleAssistantSubmit(chip)}
+                        disabled={assistantLoading}
+                        className="rounded-full bg-zinc-800/80 px-2 py-0.5 text-[9px] font-mono text-zinc-400 border border-zinc-700/50 hover:bg-zinc-700 hover:text-zinc-100 transition-all disabled:opacity-50"
                       >
-                        {log.text}
-                      </div>
+                        + {chip}
+                      </button>
                     ))}
                   </div>
-                )}
 
-                {/* Quick Action Chips */}
-                <div className="flex flex-wrap gap-1">
-                  {[
-                    "Make dramatic",
-                    "Add camera push-in",
-                    "Pixar 3D",
-                    "New scene variations",
-                  ].map((chip, i) => (
-                    <button
-                      key={i}
-                      type="button"
-                      onClick={() => handleAssistantSubmit(chip)}
-                      disabled={assistantLoading}
-                      className="rounded-full bg-zinc-800/80 px-2 py-0.5 text-[9px] font-mono text-zinc-400 border border-zinc-700/50 hover:bg-zinc-700 hover:text-zinc-100 transition-all disabled:opacity-50"
-                    >
-                      + {chip}
-                    </button>
-                  ))}
-                </div>
-
-                {/* ChatGPT Input Bar */}
-                <div className="space-y-2">
-                  <textarea
-                    rows={3}
-                    value={assistantInput}
-                    onChange={(e) => setAssistantInput(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" && !e.shiftKey) {
-                        e.preventDefault();
-                        handleAssistantSubmit(assistantInput);
-                      }
-                    }}
-                    placeholder="Ask AI to modify scenes (e.g. 'Add dark fog', 'Make photorealistic', 'Redo camera angles')..."
-                    className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-xs text-zinc-100 placeholder-zinc-500 outline-none focus:ring-1 focus:ring-zinc-600 leading-relaxed font-mono break-words whitespace-pre-wrap resize-none"
-                  />
-
-                  <button
-                    type="button"
-                    onClick={() => handleAssistantSubmit(assistantInput)}
-                    disabled={assistantLoading || !assistantInput.trim()}
-                    className="w-full flex items-center justify-center gap-1.5 rounded-xl bg-zinc-100 py-2.5 text-xs font-semibold text-zinc-950 shadow hover:bg-white active:scale-95 transition-all disabled:opacity-50"
-                  >
-                    {assistantLoading ? (
-                      <>
-                        <Loader2 className="h-3.5 w-3.5 animate-spin text-zinc-950" /> Modifying...
-                      </>
-                    ) : (
-                      <>
-                        <Send className="h-3.5 w-3.5" /> Apply Change to Scenes
-                      </>
-                    )}
-                  </button>
-                </div>
-              </div>
-            </aside>
-
-            {/* ── RIGHT STUDIO CANVAS (ONLY THIS RED BOX AREA IS SCROLLABLE) ── */}
-            <div className="w-full lg:ml-[340px] xl:ml-[380px] lg:max-w-[calc(100%-350px)] xl:max-w-[calc(100%-390px)] space-y-4 min-w-0 lg:max-h-[calc(100vh-150px)] lg:overflow-y-auto lg:pr-1.5 no-scrollbar">
-              {output && (
-                <div className="space-y-4 w-full">
-                  {/* Summary Bar */}
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 max-w-full">
-                    <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-2.5 text-center">
-                      <span className="text-[9px] font-mono uppercase text-zinc-500 block">Total Scenes</span>
-                      <p className="font-mono text-base font-bold text-zinc-100">{output.scenes?.length || 0}</p>
-                    </div>
-                    <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-2.5 text-center">
-                      <span className="text-[9px] font-mono uppercase text-zinc-500 block">Characters</span>
-                      <p className="font-mono text-base font-bold text-zinc-100">{output.characters?.length || 0}</p>
-                    </div>
-                    <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-2.5 text-center">
-                      <span className="text-[9px] font-mono uppercase text-zinc-500 block">Environments</span>
-                      <p className="font-mono text-base font-bold text-zinc-100">{output.environments?.length || 0}</p>
-                    </div>
-                    <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-2.5 text-center">
-                      <span className="text-[9px] font-mono uppercase text-zinc-500 block">Est. Runtime</span>
-                      <p className="font-mono text-base font-bold text-zinc-100">{output.analytics?.estimatedRuntime || "1m 30s"}</p>
-                    </div>
-                  </div>
-
-                  {/* Storyboard Timeline Scrubber Bar */}
-                  {output.timeline && output.timeline.length > 0 && (
-                    <div className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-3 max-w-full overflow-hidden">
-                      <div className="flex items-center justify-between mb-2">
-                        <h3 className="text-[11px] font-mono uppercase text-zinc-400 flex items-center gap-1.5">
-                          <Film className="h-3.5 w-3.5 text-zinc-300" /> Timeline Scrubber ({output.timeline.length} Scenes)
-                        </h3>
-                        
-                        <div className="flex items-center gap-1">
-                          <button
-                            onClick={() => scrollTimeline("left")}
-                            className="p-1 rounded-lg border border-zinc-800 bg-zinc-950 hover:bg-zinc-800 text-zinc-400 transition-colors"
-                            title="Scroll Left"
-                          >
-                            <ChevronLeft className="h-3.5 w-3.5" />
-                          </button>
-                          <button
-                            onClick={() => scrollTimeline("right")}
-                            className="p-1 rounded-lg border border-zinc-800 bg-zinc-950 hover:bg-zinc-800 text-zinc-400 transition-colors"
-                            title="Scroll Right"
-                          >
-                            <ChevronRight className="h-3.5 w-3.5" />
-                          </button>
-                        </div>
-                      </div>
-
-                      <div
-                        ref={timelineScrollRef}
-                        className="no-scrollbar flex items-center gap-2 overflow-x-auto pb-1 max-w-full scroll-smooth"
-                      >
-                        {output.timeline.map((item) => (
-                          <div
-                            key={item.sceneNumber}
-                            onClick={() => scrollToScene(item.sceneNumber)}
-                            className="flex flex-col justify-between shrink-0 rounded-xl border border-zinc-800 bg-zinc-950 p-2 cursor-pointer hover:border-zinc-600 hover:bg-zinc-900 transition-all"
-                            style={{ width: "125px" }}
-                          >
-                            <div className="flex items-center justify-between">
-                              <span className="rounded bg-zinc-800 px-1.5 py-0.5 text-[9px] font-mono font-semibold text-zinc-300">
-                                Sc {item.sceneNumber}
-                              </span>
-                              <span className="text-[9px] text-zinc-500 font-mono">{item.duration}</span>
-                            </div>
-                            <h4 className="mt-1 text-[11px] font-semibold text-zinc-200 line-clamp-1">
-                              {item.sceneTitle}
-                            </h4>
-                            <span className="mt-0.5 text-[9px] text-zinc-500 line-clamp-1 font-mono">
-                              📍 {item.environment}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Toolbar */}
-                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 rounded-2xl border border-zinc-800 bg-zinc-900/60 p-3 max-w-full">
-                    <div className="relative w-full sm:flex-1 sm:min-w-[160px]">
-                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-500" />
-                      <input
-                        type="text"
-                        placeholder="Search prompts..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full rounded-xl border border-zinc-800 bg-zinc-950 pl-8 pr-3 py-1.5 text-xs text-zinc-200 placeholder-zinc-500 outline-none focus:ring-1 focus:ring-zinc-600 font-mono"
-                      />
-                    </div>
-
-                    {output.scenes && output.scenes.length > 0 && (
-                      <div className="relative flex items-center gap-1">
-                        <Compass className="h-3.5 w-3.5 text-zinc-400 shrink-0" />
-                        <select
-                          onChange={(e) => {
-                            const val = parseInt(e.target.value);
-                            if (val) scrollToScene(val);
-                          }}
-                          defaultValue=""
-                          className="rounded-xl border border-zinc-800 bg-zinc-950 px-2.5 py-1.5 text-xs font-mono text-zinc-300 outline-none focus:ring-1 focus:ring-zinc-600"
-                        >
-                          <option value="" disabled className="bg-zinc-900">
-                            Jump to Scene...
-                          </option>
-                          {output.scenes.map((s) => (
-                            <option key={s.sceneNumber} value={s.sceneNumber} className="bg-zinc-900">
-                              Scene {s.sceneNumber}: {s.sceneTitle}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    )}
-
-                    <div className="flex items-center gap-1.5 max-w-full">
-                      <button
-                        onClick={() =>
-                          handleCopy(
-                            output.scenes.map((s) => getSceneFormattedPrompt(s)).join("\n\n"),
-                            "all-packages"
-                          )
+                  {/* ChatGPT Input Bar */}
+                  <div className="space-y-2">
+                    <textarea
+                      rows={3}
+                      value={assistantInput}
+                      onChange={(e) => setAssistantInput(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" && !e.shiftKey) {
+                          e.preventDefault();
+                          handleAssistantSubmit(assistantInput);
                         }
-                        className="inline-flex items-center justify-center gap-1 rounded-xl border border-zinc-700 bg-zinc-800 px-3 py-1.5 text-[11px] font-mono font-semibold text-zinc-100 hover:bg-zinc-700 transition-colors"
-                        title="Copy all scene prompts in 'Scene N [prompt]' format"
-                      >
-                        {copiedKey === "all-packages" ? (
-                          <Check className="h-3 w-3 text-emerald-400" />
-                        ) : (
-                          <Copy className="h-3 w-3" />
-                        )}
-                        Copy All Prompts
-                      </button>
+                      }}
+                      placeholder="Ask AI to modify scenes (e.g. 'Add dark fog', 'Make photorealistic', 'Redo camera angles')..."
+                      className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-xs text-zinc-100 placeholder-zinc-500 outline-none focus:ring-1 focus:ring-zinc-600 leading-relaxed font-mono break-words whitespace-pre-wrap resize-none"
+                    />
 
-                      <button
-                        onClick={() => exportFormatted("markdown")}
-                        className="inline-flex items-center justify-center gap-1 rounded-xl border border-zinc-800 bg-zinc-950 px-2.5 py-1.5 text-[11px] font-mono text-zinc-400 hover:text-zinc-200"
-                      >
-                        <FileText className="h-3 w-3" /> MD
-                      </button>
-
-                      <button
-                        onClick={() => exportFormatted("json")}
-                        className="inline-flex items-center justify-center gap-1 rounded-xl border border-zinc-800 bg-zinc-950 px-2.5 py-1.5 text-[11px] font-mono text-zinc-400 hover:text-zinc-200"
-                      >
-                        <Download className="h-3 w-3" /> JSON
-                      </button>
-                    </div>
+                    <button
+                      type="button"
+                      onClick={() => handleAssistantSubmit(assistantInput)}
+                      disabled={assistantLoading || !assistantInput.trim()}
+                      className="w-full flex items-center justify-center gap-1.5 rounded-xl bg-zinc-100 py-2.5 text-xs font-semibold text-zinc-950 shadow hover:bg-white active:scale-95 transition-all disabled:opacity-50"
+                    >
+                      {assistantLoading ? (
+                        <>
+                          <Loader2 className="h-3.5 w-3.5 animate-spin text-zinc-950" /> Modifying...
+                        </>
+                      ) : (
+                        <>
+                          <Send className="h-3.5 w-3.5" /> Apply Change to Scenes
+                        </>
+                      )}
+                    </button>
                   </div>
+                </div>
+              </aside>
 
-                  {/* ── GENERATED SCENE CARDS (Scene N [prompt]) ── */}
-                  <div className="space-y-3 max-w-full">
-                    {paginatedScenes.map((scene) => {
-                      const copyKey = `scene-pkg-${scene.sceneNumber}`;
+              {/* ── RIGHT STUDIO CANVAS (ZERO OVERLAP FLEX ITEM) ── */}
+              <main className="flex-1 w-full min-w-0 space-y-4">
+                {output && (
+                  <div className="space-y-4 w-full">
+                    {/* Summary Bar */}
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 max-w-full">
+                      <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-2.5 text-center">
+                        <span className="text-[9px] font-mono uppercase text-zinc-500 block">Total Scenes</span>
+                        <p className="font-mono text-base font-bold text-zinc-100">{output.scenes?.length || 0}</p>
+                      </div>
+                      <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-2.5 text-center">
+                        <span className="text-[9px] font-mono uppercase text-zinc-500 block">Characters</span>
+                        <p className="font-mono text-base font-bold text-zinc-100">{output.characters?.length || 0}</p>
+                      </div>
+                      <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-2.5 text-center">
+                        <span className="text-[9px] font-mono uppercase text-zinc-500 block">Environments</span>
+                        <p className="font-mono text-base font-bold text-zinc-100">{output.environments?.length || 0}</p>
+                      </div>
+                      <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-2.5 text-center">
+                        <span className="text-[9px] font-mono uppercase text-zinc-500 block">Est. Runtime</span>
+                        <p className="font-mono text-base font-bold text-zinc-100">{output.analytics?.estimatedRuntime || "1m 30s"}</p>
+                      </div>
+                    </div>
 
-                      return (
-                        <motion.div
-                          key={scene.sceneNumber}
-                          id={`scene-card-${scene.sceneNumber}`}
-                          layout
-                          className="overflow-hidden rounded-2xl border border-zinc-800/90 bg-zinc-900/80 p-4 backdrop-blur-xl transition-all hover:border-zinc-700 max-w-full space-y-2.5"
-                        >
-                          <div className="flex items-center justify-between border-b border-zinc-800 pb-2">
-                            <div className="flex items-center gap-2">
-                              <span className="flex h-5 w-5 items-center justify-center rounded bg-zinc-800 text-[10px] font-mono font-bold text-zinc-200 border border-zinc-700">
-                                {scene.sceneNumber}
-                              </span>
-                              <span className="text-xs font-mono font-semibold text-zinc-300">
-                                Scene {scene.sceneNumber}
-                              </span>
-                            </div>
-
+                    {/* Storyboard Timeline Scrubber Bar */}
+                    {output.timeline && output.timeline.length > 0 && (
+                      <div className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-3 max-w-full overflow-hidden">
+                        <div className="flex items-center justify-between mb-2">
+                          <h3 className="text-[11px] font-mono uppercase text-zinc-400 flex items-center gap-1.5">
+                            <Film className="h-3.5 w-3.5 text-zinc-300" /> Timeline Scrubber ({output.timeline.length} Scenes)
+                          </h3>
+                          
+                          <div className="flex items-center gap-1">
                             <button
-                              onClick={() => handleCopy(getSceneFormattedPrompt(scene), copyKey)}
-                              className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-800 bg-zinc-950 px-2.5 py-1 text-[11px] font-mono text-zinc-300 hover:bg-zinc-800 hover:text-white transition-all"
+                              onClick={() => scrollTimeline("left")}
+                              className="p-1 rounded-lg border border-zinc-800 bg-zinc-950 hover:bg-zinc-800 text-zinc-400 transition-colors"
+                              title="Scroll Left"
                             >
-                              {copiedKey === copyKey ? (
-                                <Check className="h-3.5 w-3.5 text-emerald-400" />
-                              ) : (
-                                <Copy className="h-3.5 w-3.5" />
-                              )}
-                              Copy Scene
+                              <ChevronLeft className="h-3.5 w-3.5" />
+                            </button>
+                            <button
+                              onClick={() => scrollTimeline("right")}
+                              className="p-1 rounded-lg border border-zinc-800 bg-zinc-950 hover:bg-zinc-800 text-zinc-400 transition-colors"
+                              title="Scroll Right"
+                            >
+                              <ChevronRight className="h-3.5 w-3.5" />
                             </button>
                           </div>
-
-                          {/* ONLY SCENE NUMBER AND SCENE PROMPT (Scene N [prompt]) */}
-                          <p className="text-xs sm:text-sm font-mono text-zinc-200 leading-relaxed break-words whitespace-pre-wrap bg-zinc-950 p-3 rounded-xl border border-zinc-800/80 selection:bg-zinc-700 selection:text-white">
-                            {getSceneFormattedPrompt(scene)}
-                          </p>
-                        </motion.div>
-                      );
-                    })}
-                  </div>
-
-                  {/* ── PAGINATION CONTROLS BAR (10 Scenes per Page) ────────────── */}
-                  {totalPages > 1 && (
-                    <div className="flex flex-col sm:flex-row items-center justify-between gap-3 rounded-2xl border border-zinc-800 bg-zinc-900/60 p-4 max-w-full">
-                      <span className="text-xs font-mono text-zinc-400 text-center sm:text-left">
-                        Showing {(currentPage - 1) * SCENES_PER_PAGE + 1}–{Math.min(currentPage * SCENES_PER_PAGE, filteredScenes.length)} of {filteredScenes.length} scenes (Page {currentPage} of {totalPages})
-                      </span>
-
-                      <div className="flex flex-wrap items-center justify-center gap-1 max-w-full">
-                        <button
-                          onClick={() => {
-                            setCurrentPage((prev) => Math.max(1, prev - 1));
-                            const el = document.getElementById("generator-workspace");
-                            if (el) el.scrollIntoView({ behavior: "smooth" });
-                          }}
-                          disabled={currentPage === 1}
-                          className="inline-flex items-center gap-1 rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-1.5 text-xs font-mono text-zinc-300 disabled:opacity-40 transition-all hover:bg-zinc-800"
-                        >
-                          <ChevronLeft className="h-3.5 w-3.5" /> Prev
-                        </button>
-
-                        <div className="flex items-center gap-1 px-1">
-                          {Array.from({ length: totalPages }, (_, i) => i + 1).map((pg) => {
-                            if (
-                              pg === 1 ||
-                              pg === totalPages ||
-                              (pg >= currentPage - 1 && pg <= currentPage + 1)
-                            ) {
-                              return (
-                                <button
-                                  key={pg}
-                                  onClick={() => {
-                                    setCurrentPage(pg);
-                                    const el = document.getElementById("generator-workspace");
-                                    if (el) el.scrollIntoView({ behavior: "smooth" });
-                                  }}
-                                  className={`h-7 w-7 rounded-lg text-xs font-mono transition-all ${
-                                    currentPage === pg
-                                      ? "bg-zinc-100 text-zinc-950 font-bold"
-                                      : "border border-zinc-800 bg-zinc-950 text-zinc-400 hover:bg-zinc-800"
-                                  }`}
-                                >
-                                  {pg}
-                                </button>
-                              );
-                            } else if (
-                              (pg === currentPage - 2 && pg > 1) ||
-                              (pg === currentPage + 2 && pg < totalPages)
-                            ) {
-                              return (
-                                <span key={pg} className="px-1 text-xs text-zinc-500 font-mono">
-                                  ...
-                                </span>
-                              );
-                            }
-                            return null;
-                          })}
                         </div>
 
-                        <button
-                          onClick={() => {
-                            setCurrentPage((prev) => Math.min(totalPages, prev + 1));
-                            const el = document.getElementById("generator-workspace");
-                            if (el) el.scrollIntoView({ behavior: "smooth" });
-                          }}
-                          disabled={currentPage === totalPages}
-                          className="inline-flex items-center gap-1 rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-1.5 text-xs font-mono text-zinc-300 disabled:opacity-40 transition-all hover:bg-zinc-800"
+                        <div
+                          ref={timelineScrollRef}
+                          className="no-scrollbar flex items-center gap-2 overflow-x-auto pb-1 max-w-full scroll-smooth"
                         >
-                          Next <ChevronRight className="h-3.5 w-3.5" />
+                          {output.timeline.map((item) => (
+                            <div
+                              key={item.sceneNumber}
+                              onClick={() => scrollToScene(item.sceneNumber)}
+                              className="flex flex-col justify-between shrink-0 rounded-xl border border-zinc-800 bg-zinc-950 p-2 cursor-pointer hover:border-zinc-600 hover:bg-zinc-900 transition-all"
+                              style={{ width: "125px" }}
+                            >
+                              <div className="flex items-center justify-between">
+                                <span className="rounded bg-zinc-800 px-1.5 py-0.5 text-[9px] font-mono font-semibold text-zinc-300">
+                                  Sc {item.sceneNumber}
+                                </span>
+                                <span className="text-[9px] text-zinc-500 font-mono">{item.duration}</span>
+                              </div>
+                              <h4 className="mt-1 text-[11px] font-semibold text-zinc-200 line-clamp-1">
+                                {item.sceneTitle}
+                              </h4>
+                              <span className="mt-0.5 text-[9px] text-zinc-500 line-clamp-1 font-mono">
+                                📍 {item.environment}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Toolbar */}
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 rounded-2xl border border-zinc-800 bg-zinc-900/60 p-3 max-w-full">
+                      <div className="relative w-full sm:flex-1 sm:min-w-[160px]">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-500" />
+                        <input
+                          type="text"
+                          placeholder="Search prompts..."
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          className="w-full rounded-xl border border-zinc-800 bg-zinc-950 pl-8 pr-3 py-1.5 text-xs text-zinc-200 placeholder-zinc-500 outline-none focus:ring-1 focus:ring-zinc-600 font-mono"
+                        />
+                      </div>
+
+                      {output.scenes && output.scenes.length > 0 && (
+                        <div className="relative flex items-center gap-1">
+                          <Compass className="h-3.5 w-3.5 text-zinc-400 shrink-0" />
+                          <select
+                            onChange={(e) => {
+                              const val = parseInt(e.target.value);
+                              if (val) scrollToScene(val);
+                            }}
+                            defaultValue=""
+                            className="rounded-xl border border-zinc-800 bg-zinc-950 px-2.5 py-1.5 text-xs font-mono text-zinc-300 outline-none focus:ring-1 focus:ring-zinc-600"
+                          >
+                            <option value="" disabled className="bg-zinc-900">
+                              Jump to Scene...
+                            </option>
+                            {output.scenes.map((s) => (
+                              <option key={s.sceneNumber} value={s.sceneNumber} className="bg-zinc-900">
+                                Scene {s.sceneNumber}: {s.sceneTitle}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      )}
+
+                      <div className="flex items-center gap-1.5 max-w-full">
+                        <button
+                          onClick={() =>
+                            handleCopy(
+                              output.scenes.map((s) => getSceneFormattedPrompt(s)).join("\n\n"),
+                              "all-packages"
+                            )
+                          }
+                          className="inline-flex items-center justify-center gap-1 rounded-xl border border-zinc-700 bg-zinc-800 px-3 py-1.5 text-[11px] font-mono font-semibold text-zinc-100 hover:bg-zinc-700 transition-colors"
+                          title="Copy all scene prompts in 'Scene N [prompt]' format"
+                        >
+                          {copiedKey === "all-packages" ? (
+                            <Check className="h-3 w-3 text-emerald-400" />
+                          ) : (
+                            <Copy className="h-3 w-3" />
+                          )}
+                          Copy All Prompts
+                        </button>
+
+                        <button
+                          onClick={() => exportFormatted("markdown")}
+                          className="inline-flex items-center justify-center gap-1 rounded-xl border border-zinc-800 bg-zinc-950 px-2.5 py-1.5 text-[11px] font-mono text-zinc-400 hover:text-zinc-200"
+                        >
+                          <FileText className="h-3 w-3" /> MD
+                        </button>
+
+                        <button
+                          onClick={() => exportFormatted("json")}
+                          className="inline-flex items-center justify-center gap-1 rounded-xl border border-zinc-800 bg-zinc-950 px-2.5 py-1.5 text-[11px] font-mono text-zinc-400 hover:text-zinc-200"
+                        >
+                          <Download className="h-3 w-3" /> JSON
                         </button>
                       </div>
                     </div>
-                  )}
-                </div>
-              )}
+
+                    {/* ── GENERATED SCENE CARDS (Scene N [prompt]) ── */}
+                    <div className="space-y-3 max-w-full">
+                      {paginatedScenes.map((scene) => {
+                        const copyKey = `scene-pkg-${scene.sceneNumber}`;
+
+                        return (
+                          <motion.div
+                            key={scene.sceneNumber}
+                            id={`scene-card-${scene.sceneNumber}`}
+                            layout
+                            className="overflow-hidden rounded-2xl border border-zinc-800/90 bg-zinc-900/80 p-4 backdrop-blur-xl transition-all hover:border-zinc-700 max-w-full space-y-2.5"
+                          >
+                            <div className="flex items-center justify-between border-b border-zinc-800 pb-2">
+                              <div className="flex items-center gap-2">
+                                <span className="flex h-5 w-5 items-center justify-center rounded bg-zinc-800 text-[10px] font-mono font-bold text-zinc-200 border border-zinc-700">
+                                  {scene.sceneNumber}
+                                </span>
+                                <span className="text-xs font-mono font-semibold text-zinc-300">
+                                  Scene {scene.sceneNumber}
+                                </span>
+                              </div>
+
+                              <button
+                                onClick={() => handleCopy(getSceneFormattedPrompt(scene), copyKey)}
+                                className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-800 bg-zinc-950 px-2.5 py-1 text-[11px] font-mono text-zinc-300 hover:bg-zinc-800 hover:text-white transition-all"
+                              >
+                                {copiedKey === copyKey ? (
+                                  <Check className="h-3.5 w-3.5 text-emerald-400" />
+                                ) : (
+                                  <Copy className="h-3.5 w-3.5" />
+                                )}
+                                Copy Scene
+                              </button>
+                            </div>
+
+                            {/* ONLY SCENE NUMBER AND SCENE PROMPT (Scene N [prompt]) */}
+                            <p className="text-xs sm:text-sm font-mono text-zinc-200 leading-relaxed break-words whitespace-pre-wrap bg-zinc-950 p-3 rounded-xl border border-zinc-800/80 selection:bg-zinc-700 selection:text-white">
+                              {getSceneFormattedPrompt(scene)}
+                            </p>
+                          </motion.div>
+                        );
+                      })}
+                    </div>
+
+                    {/* ── PAGINATION CONTROLS BAR (10 Scenes per Page) ────────────── */}
+                    {totalPages > 1 && (
+                      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 rounded-2xl border border-zinc-800 bg-zinc-900/60 p-4 max-w-full">
+                        <span className="text-xs font-mono text-zinc-400 text-center sm:text-left">
+                          Showing {(currentPage - 1) * SCENES_PER_PAGE + 1}–{Math.min(currentPage * SCENES_PER_PAGE, filteredScenes.length)} of {filteredScenes.length} scenes (Page {currentPage} of {totalPages})
+                        </span>
+
+                        <div className="flex flex-wrap items-center justify-center gap-1 max-w-full">
+                          <button
+                            onClick={() => {
+                              setCurrentPage((prev) => Math.max(1, prev - 1));
+                              const el = document.getElementById("generator-workspace");
+                              if (el) el.scrollIntoView({ behavior: "smooth" });
+                            }}
+                            disabled={currentPage === 1}
+                            className="inline-flex items-center gap-1 rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-1.5 text-xs font-mono text-zinc-300 disabled:opacity-40 transition-all hover:bg-zinc-800"
+                          >
+                            <ChevronLeft className="h-3.5 w-3.5" /> Prev
+                          </button>
+
+                          <div className="flex items-center gap-1 px-1">
+                            {Array.from({ length: totalPages }, (_, i) => i + 1).map((pg) => {
+                              if (
+                                pg === 1 ||
+                                pg === totalPages ||
+                                (pg >= currentPage - 1 && pg <= currentPage + 1)
+                              ) {
+                                return (
+                                  <button
+                                    key={pg}
+                                    onClick={() => {
+                                      setCurrentPage(pg);
+                                      const el = document.getElementById("generator-workspace");
+                                      if (el) el.scrollIntoView({ behavior: "smooth" });
+                                    }}
+                                    className={`h-7 w-7 rounded-lg text-xs font-mono transition-all ${
+                                      currentPage === pg
+                                        ? "bg-zinc-100 text-zinc-950 font-bold"
+                                        : "border border-zinc-800 bg-zinc-950 text-zinc-400 hover:bg-zinc-800"
+                                    }`}
+                                  >
+                                    {pg}
+                                  </button>
+                                );
+                              } else if (
+                                (pg === currentPage - 2 && pg > 1) ||
+                                (pg === currentPage + 2 && pg < totalPages)
+                              ) {
+                                return (
+                                  <span key={pg} className="px-1 text-xs text-zinc-500 font-mono">
+                                    ...
+                                  </span>
+                                );
+                              }
+                              return null;
+                            })}
+                          </div>
+
+                          <button
+                            onClick={() => {
+                              setCurrentPage((prev) => Math.min(totalPages, prev + 1));
+                              const el = document.getElementById("generator-workspace");
+                              if (el) el.scrollIntoView({ behavior: "smooth" });
+                            }}
+                            disabled={currentPage === totalPages}
+                            className="inline-flex items-center gap-1 rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-1.5 text-xs font-mono text-zinc-300 disabled:opacity-40 transition-all hover:bg-zinc-800"
+                          >
+                            Next <ChevronRight className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </main>
             </div>
           </section>
         )}
