@@ -45,6 +45,8 @@ const VISUAL_STYLES: VisualStyleOption[] = [
 const cleanPromptText = (text: string) => {
   if (!text) return "";
   return text
+    .replace(/^Scene\s*\d+[:\-\s\\[]*/gi, "")
+    .replace(/^Scene\s*\d+:\s*/gi, "")
     .replace(/,\s*\([^)]*(change|redo|try again|again|rewrite)[^)]*\)/gi, "")
     .replace(/\(\s*(change|redo|try again|again|rewrite)[^)]*\)/gi, "")
     .replace(/,\s*,/g, ",")

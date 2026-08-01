@@ -230,6 +230,8 @@ export interface SavedStoryItem {
 const cleanPromptText = (text: string) => {
   if (!text) return "";
   return text
+    .replace(/^Scene\s*\d+[:\-\s\\[]*/gi, "")
+    .replace(/^Scene\s*\d+:\s*/gi, "")
     .replace(/,\s*\([^)]*(change|redo|try again|again|rewrite)[^)]*\)/gi, "")
     .replace(/\(\s*(change|redo|try again|again|rewrite)[^)]*\)/gi, "")
     .replace(/,\s*,/g, ",")
@@ -425,7 +427,12 @@ export function StoryboardGeneratorPage() {
   };
 
   const getSceneFormattedPrompt = (scene: StoryboardScene) => {
-    const promptText = cleanPromptText(scene.copyReadyPrompt || scene.generationPrompt);
+    let promptText = cleanPromptText(scene.copyReadyPrompt || scene.generationPrompt);
+    const scenePrefixRegex = new RegExp(`^Scene\\s*${scene.sceneNumber}\\s*[\\[:]*`, "i");
+    promptText = promptText.replace(scenePrefixRegex, "").trim();
+    if (promptText.endsWith("]")) {
+      promptText = promptText.slice(0, -1).trim();
+    }
     return `Scene ${scene.sceneNumber} [${promptText}]`;
   };
 
