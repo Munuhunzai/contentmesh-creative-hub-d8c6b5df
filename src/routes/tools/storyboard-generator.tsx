@@ -34,6 +34,12 @@ import {
   History,
   Clock,
   ExternalLink,
+  Send,
+  Sliders,
+  Layers,
+  Bot,
+  Terminal,
+  Paperclip,
 } from "lucide-react";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { AdPlaceholder } from "@/components/tools/AdPlaceholder";
@@ -53,7 +59,7 @@ export const Route = createFileRoute("/tools/storyboard-generator")({
     meta: [
       {
         title:
-          "AI Storyboard & Scene Prompt Generator | ContentMesh Studios",
+          "AI Storyboard & Scene Prompt Studio | Make AI",
       },
       {
         name: "description",
@@ -62,7 +68,7 @@ export const Route = createFileRoute("/tools/storyboard-generator")({
       },
       {
         property: "og:title",
-        content: "AI Storyboard & Scene Prompt Generator | ContentMesh Studios",
+        content: "AI Storyboard & Scene Prompt Studio | Make AI",
       },
       {
         property: "og:description",
@@ -88,17 +94,12 @@ export const Route = createFileRoute("/tools/storyboard-generator")({
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "WebApplication",
-          name: "ContentMesh AI Storyboard & Prompt Generator",
+          name: "Make AI Storyboard & Prompt Studio",
           url: "https://contentmesh.ai/tools/storyboard-generator",
           description:
             "Free AI tool to generate complete storyboards, scene prompts, character actions, and camera direction from scripts.",
           applicationCategory: "MultimediaApplication",
           operatingSystem: "All",
-          provider: {
-            "@type": "Organization",
-            name: "ContentMesh Studios",
-            url: "https://contentmesh.ai",
-          },
         }),
       },
     ],
@@ -282,7 +283,6 @@ export function StoryboardGeneratorPage() {
   // Local Storage Session & History Recovery
   useEffect(() => {
     try {
-      // 1. Recover last active output
       const savedOutput = localStorage.getItem("contentmesh_storyboard_output");
       if (savedOutput) {
         const parsed = JSON.parse(savedOutput);
@@ -298,7 +298,6 @@ export function StoryboardGeneratorPage() {
         setOutput(parsed);
       }
 
-      // 2. Recover user story history list
       const savedHistory = localStorage.getItem("contentmesh_story_history");
       if (savedHistory) {
         const parsedHist = JSON.parse(savedHistory);
@@ -311,7 +310,6 @@ export function StoryboardGeneratorPage() {
     }
   }, []);
 
-  // Reset pagination to page 1 whenever filters or search query changes
   useEffect(() => {
     setCurrentPage(1);
   }, [searchQuery, activeFilter]);
@@ -323,7 +321,6 @@ export function StoryboardGeneratorPage() {
     setForm((prev) => ({ ...prev, [key]: value }));
   };
 
-  // Reset / New Story Handler
   const handleStartNewStory = () => {
     setForm((prev) => ({ ...prev, script: "" }));
     setOutput(null);
@@ -331,7 +328,6 @@ export function StoryboardGeneratorPage() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // Open a saved story from history
   const handleOpenHistoryStory = (item: SavedStoryItem) => {
     setForm((prev) => ({
       ...prev,
@@ -344,7 +340,6 @@ export function StoryboardGeneratorPage() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // Delete a story from history
   const handleDeleteHistoryStory = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
     const updated = storyHistory.filter((item) => item.id !== id);
@@ -352,7 +347,6 @@ export function StoryboardGeneratorPage() {
     localStorage.setItem("contentmesh_story_history", JSON.stringify(updated));
   };
 
-  // Character Upload Handlers
   const handleImageFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
@@ -435,13 +429,11 @@ export function StoryboardGeneratorPage() {
     }
   };
 
-  // Scene N [prompt] Format Generator
   const getSceneFormattedPrompt = (scene: StoryboardScene) => {
     const promptText = cleanPromptText(scene.copyReadyPrompt || scene.generationPrompt);
     return `Scene ${scene.sceneNumber} [${promptText}]`;
   };
 
-  // Step 1 -> Step 2 transition
   const handleProceedToConfig = () => {
     if (!form.script || form.script.trim().length < 10) {
       setError("Please paste a story or script with at least 10 characters.");
@@ -451,7 +443,6 @@ export function StoryboardGeneratorPage() {
     setStep("config");
   };
 
-  // Step 2 -> Step 3 Submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.script || form.script.trim().length < 10) {
@@ -501,7 +492,6 @@ export function StoryboardGeneratorPage() {
       setCurrentPage(1);
       localStorage.setItem("contentmesh_storyboard_output", JSON.stringify(data));
 
-      // Save to Story History array in localStorage
       const newHistoryItem: SavedStoryItem = {
         id: `story-${Date.now()}`,
         title: data.project?.title || form.script.slice(0, 30) + "...",
@@ -523,7 +513,6 @@ export function StoryboardGeneratorPage() {
     }
   };
 
-  // Intelligent AI Assistant Request Handler (Step 3)
   const handleAssistantSubmit = (query: string) => {
     if (!query || !query.trim() || !output) return;
     const userMsg = query.trim();
@@ -590,7 +579,6 @@ export function StoryboardGeneratorPage() {
       setOutput(newOutput);
       localStorage.setItem("contentmesh_storyboard_output", JSON.stringify(newOutput));
 
-      // Also update history entry if present
       const updatedHistory = storyHistory.map((item) =>
         item.script === form.script ? { ...item, output: newOutput } : item
       );
@@ -605,7 +593,6 @@ export function StoryboardGeneratorPage() {
     }, 400);
   };
 
-  // Filtered Scenes List
   const filteredScenes = useMemo(() => {
     if (!output?.scenes) return [];
     return output.scenes.filter((scene) => {
@@ -628,14 +615,12 @@ export function StoryboardGeneratorPage() {
     });
   }, [output, searchQuery, activeFilter]);
 
-  // Paginated Scenes Slicing (10 scenes per page)
   const totalPages = Math.ceil(filteredScenes.length / SCENES_PER_PAGE);
   const paginatedScenes = useMemo(() => {
     const start = (currentPage - 1) * SCENES_PER_PAGE;
     return filteredScenes.slice(start, start + SCENES_PER_PAGE);
   }, [filteredScenes, currentPage]);
 
-  // Export Utilities
   const exportFormatted = (type: "markdown" | "txt" | "json") => {
     if (!output) return;
     let content = "";
@@ -669,97 +654,103 @@ export function StoryboardGeneratorPage() {
 
   return (
     <SiteLayout>
-      {/* ── ENFORCE INTER FONT TYPOGRAPHY ACROSS ENTIRE AI TOOL ──────────────── */}
-      <div className="font-['Inter'] font-sans text-foreground antialiased selection:bg-[#FF5A1F]/30 w-full max-w-full">
-        {/* ── TOP STEP NAVIGATION WIZARD BAR ───────────────────────────────── */}
-        <section className="relative border-b border-border/40 bg-secondary/10 py-3 px-4 sm:px-6 w-full max-w-full">
+      {/* ── ULTRA-SLEEK CHATGPT / FIGMA MAKE AI THEME (NO LOUD BRANDING) ───────── */}
+      <div className="font-['Inter'] font-sans text-zinc-100 antialiased bg-[#09090b] min-h-screen w-full max-w-full selection:bg-zinc-700 selection:text-white">
+        {/* ── SLEEK FIGMA MAKE AI HEADER BAR ─────────────────────────────────── */}
+        <header className="sticky top-0 z-40 border-b border-zinc-800/80 bg-[#09090b]/90 backdrop-blur-xl px-4 sm:px-6 py-3 w-full max-w-full">
           <div className="mx-auto max-w-7xl flex flex-wrap items-center justify-between gap-3">
-            <div className="flex items-center gap-2">
-              <Clapperboard className="h-4 w-4 text-[#FF5A1F]" />
-              <span className="font-bold text-xs sm:text-sm text-foreground">
-                AI Storyboard Studio
-              </span>
+            <div className="flex items-center gap-2.5">
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-zinc-800 border border-zinc-700/60 shadow-sm text-zinc-100">
+                <Sparkles className="h-4 w-4 text-zinc-200" />
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="font-semibold text-xs sm:text-sm text-zinc-100 tracking-tight">
+                  Make AI
+                </span>
+                <span className="text-[10px] font-mono text-zinc-500 bg-zinc-800/80 px-1.5 py-0.5 rounded border border-zinc-700/50">
+                  Storyboard Studio
+                </span>
+              </div>
             </div>
 
-            {/* Wizard Step Breadcrumb Buttons & + New Story CTA */}
-            <div className="flex items-center gap-1.5 sm:gap-2">
+            {/* Figma AI Style Floating Pill Wizard Navigation */}
+            <div className="flex items-center gap-1 sm:gap-1.5 bg-zinc-900/90 border border-zinc-800 p-1 rounded-full shadow-inner">
               <button
                 onClick={handleStartNewStory}
-                className="flex items-center gap-1 rounded-full bg-[#FF5A1F] px-3 py-1 text-xs font-bold text-white shadow-md hover:bg-[#FF5A1F]/90 transition-all mr-2"
+                className="flex items-center gap-1.5 rounded-full bg-zinc-100 text-zinc-950 px-3 py-1 text-xs font-semibold hover:bg-white transition-all shadow-sm mr-1"
               >
                 <PlusCircle className="h-3.5 w-3.5" /> + New Story
               </button>
 
               <button
                 onClick={() => setStep("script")}
-                className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold transition-all ${
+                className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-all ${
                   step === "script"
-                    ? "bg-[#FF5A1F] text-white shadow-md"
-                    : "bg-secondary text-muted-foreground hover:bg-secondary/80"
+                    ? "bg-zinc-800 text-zinc-100 border border-zinc-700"
+                    : "text-zinc-400 hover:text-zinc-200"
                 }`}
               >
-                <BookOpen className="h-3.5 w-3.5" /> 1. Story Input
+                <BookOpen className="h-3.5 w-3.5" /> 1. Story
               </button>
-
-              <span className="text-muted-foreground text-xs font-bold">→</span>
 
               <button
                 onClick={() => setStep("config")}
-                className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold transition-all ${
+                className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-all ${
                   step === "config"
-                    ? "bg-[#FF5A1F] text-white shadow-md"
-                    : "bg-secondary text-muted-foreground hover:bg-secondary/80"
+                    ? "bg-zinc-800 text-zinc-100 border border-zinc-700"
+                    : "text-zinc-400 hover:text-zinc-200"
                 }`}
               >
-                <SlidersHorizontal className="h-3.5 w-3.5" /> 2. Config
+                <Sliders className="h-3.5 w-3.5" /> 2. Config
               </button>
-
-              <span className="text-muted-foreground text-xs font-bold">→</span>
 
               <button
                 onClick={() => {
                   if (output) setStep("studio");
                 }}
                 disabled={!output}
-                className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold transition-all ${
+                className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-all ${
                   step === "studio"
-                    ? "bg-[#FF5A1F] text-white shadow-md"
-                    : "bg-secondary text-muted-foreground opacity-50 cursor-not-allowed"
+                    ? "bg-zinc-800 text-zinc-100 border border-zinc-700"
+                    : "text-zinc-600 cursor-not-allowed"
                 }`}
               >
-                <Sparkles className="h-3.5 w-3.5" /> 3. Studio & Assistant
+                <Layers className="h-3.5 w-3.5" /> 3. Studio
               </button>
             </div>
           </div>
-        </section>
+        </header>
 
         {/* ─────────────────────────────────────────────────────────────────── */}
-        {/* ── STEP 1: INITIAL LANDING SCREEN (MATCHES IMAGE 1 & USER HISTORY) ─ */}
+        {/* ── STEP 1: CHATGPT / FIGMA MAKE AI PROMPT SCREEN ───────────────── */}
         {/* ─────────────────────────────────────────────────────────────────── */}
         {step === "script" && (
-          <section className="mx-auto max-w-5xl px-4 sm:px-6 py-12 sm:py-20 w-full max-w-full space-y-12">
-            {/* Centered Title & Header */}
-            <div className="text-center space-y-3">
-              <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight text-foreground">
-                What story do you want to make?
+          <section className="mx-auto max-w-4xl px-4 sm:px-6 py-12 sm:py-24 w-full max-w-full space-y-12">
+            {/* Figma Make AI Hero Title */}
+            <div className="text-center space-y-4">
+              <div className="inline-flex items-center gap-2 rounded-full border border-zinc-800 bg-zinc-900/80 px-3.5 py-1 text-xs text-zinc-400 font-mono">
+                <Sparkles className="h-3.5 w-3.5 text-zinc-200" /> Powered by Generative Scene Intelligence
+              </div>
+              <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white">
+                What do you want to create today?
               </h1>
-              <p className="mx-auto max-w-xl text-xs sm:text-sm text-muted-foreground">
-                Describe your story idea or paste your script to generate complete 4K AI storyboards and scene prompts.
+              <p className="mx-auto max-w-lg text-xs sm:text-sm text-zinc-400 leading-relaxed">
+                Transform screenplays, story ideas, or commercial concepts into production-ready 4K AI storyboards and prompts.
               </p>
             </div>
 
-            {/* Centered Floating Story Input Box (Matches Screenshot 1) */}
-            <div className="mx-auto max-w-3xl rounded-3xl border border-border/80 bg-card p-4 sm:p-6 shadow-2xl shadow-[#FF5A1F]/10 backdrop-blur-2xl space-y-4">
+            {/* CHATGPT STYLE FLOATING INPUT BAR (MATCHES CHATGPT & FIGMA MAKE AI) */}
+            <div className="mx-auto max-w-3xl rounded-3xl border border-zinc-800 bg-zinc-900/90 p-4 sm:p-5 shadow-2xl shadow-black/80 backdrop-blur-2xl space-y-3 transition-all focus-within:border-zinc-700 focus-within:ring-1 focus-within:ring-zinc-700">
               <textarea
-                rows={6}
+                rows={5}
                 value={form.script}
                 onChange={(e) => handleFormChange("script", e.target.value)}
-                placeholder="Describe your story idea or paste a screenplay here..."
-                className="w-full rounded-2xl border border-input bg-background/80 px-4 py-3 text-xs sm:text-sm outline-none focus:ring-2 focus:ring-[#FF5A1F]/40 leading-relaxed font-mono whitespace-pre-wrap min-h-[160px]"
+                placeholder="Describe your scene concept or paste a screenplay here..."
+                className="w-full rounded-2xl border-none bg-transparent px-2 py-1 text-xs sm:text-sm text-zinc-100 placeholder-zinc-500 outline-none leading-relaxed font-mono whitespace-pre-wrap min-h-[140px] resize-none"
               />
 
-              {/* Bottom Tools & Action Bar Inside Card */}
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-1 border-t border-border/40">
+              {/* Bottom Control Strip inside Input Box */}
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-3 border-t border-zinc-800/60">
                 <div className="flex items-center gap-2">
                   <input
                     type="file"
@@ -772,79 +763,92 @@ export function StoryboardGeneratorPage() {
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-border/80 bg-secondary/30 px-3 py-1.5 text-xs font-bold text-muted-foreground hover:bg-secondary transition-colors"
+                    className="inline-flex items-center gap-1.5 rounded-full border border-zinc-800 bg-zinc-950/60 px-3 py-1.5 text-xs font-medium text-zinc-300 hover:bg-zinc-800 transition-colors"
                   >
-                    <Upload className="h-3.5 w-3.5 text-[#FF5A1F]" />
-                    {form.uploadedCharacters?.length ? `${form.uploadedCharacters.length} Images` : "Attach Images"}
+                    <Paperclip className="h-3.5 w-3.5 text-zinc-400" />
+                    {form.uploadedCharacters?.length ? `${form.uploadedCharacters.length} Files` : "Attach Media"}
                   </button>
-                  <span className="text-[10px] font-mono text-muted-foreground">
-                    {form.script.length} characters
+
+                  <select
+                    value={form.visualStyle}
+                    onChange={(e) => handleFormChange("visualStyle", e.target.value)}
+                    className="rounded-full border border-zinc-800 bg-zinc-950/60 px-3 py-1.5 text-xs font-mono text-zinc-300 outline-none hover:bg-zinc-800 transition-colors"
+                  >
+                    {VISUAL_STYLES.map((st) => (
+                      <option key={st} value={st} className="bg-zinc-900 text-zinc-200">
+                        {st} Style
+                      </option>
+                    ))}
+                  </select>
+
+                  <span className="text-[10px] font-mono text-zinc-500 hidden sm:inline">
+                    {form.script.length} chars
                   </span>
                 </div>
 
                 <button
                   type="button"
                   onClick={handleProceedToConfig}
-                  className="inline-flex items-center justify-center gap-2 rounded-full bg-[#FF5A1F] px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-lg shadow-[#FF5A1F]/30 hover:scale-105 transition-all"
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-zinc-100 px-6 py-2.5 text-xs font-semibold text-zinc-950 hover:bg-white transition-all shadow-md active:scale-95"
                 >
-                  Continue to Config <ArrowRight className="h-4 w-4" />
+                  Configure Story <ArrowRight className="h-4 w-4" />
                 </button>
               </div>
 
               {error && (
-                <p className="rounded-xl border border-destructive/30 bg-destructive/10 p-2.5 text-xs font-semibold text-destructive">
+                <p className="rounded-xl border border-red-900/50 bg-red-950/30 p-2.5 text-xs font-medium text-red-400">
                   {error}
                 </p>
               )}
             </div>
 
-            {/* ── USER'S RECENT STORY HISTORY SECTION (EXPLICIT USER REQUEST) ────── */}
+            {/* ── USER'S RECENT STORY HISTORY SECTION ────────────────────────── */}
             {storyHistory.length > 0 && (
-              <div className="space-y-4 pt-2 border-t border-border/40">
+              <div className="space-y-4 pt-4 border-t border-zinc-800/60">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-foreground flex items-center gap-2">
-                    <History className="h-4 w-4 text-[#FF5A1F]" /> History of Stories You Worked On ({storyHistory.length})
+                  <h3 className="text-xs font-mono uppercase tracking-wider text-zinc-400 flex items-center gap-2">
+                    <History className="h-4 w-4 text-zinc-400" /> Recent Story Workspaces ({storyHistory.length})
                   </h3>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
                   {storyHistory.map((item) => (
                     <div
                       key={item.id}
                       onClick={() => handleOpenHistoryStory(item)}
-                      className="group relative rounded-2xl border border-border/80 bg-card p-4 shadow-glass hover:border-[#FF5A1F]/60 hover:shadow-lg transition-all cursor-pointer space-y-2.5 flex flex-col justify-between"
+                      className="group relative rounded-2xl border border-zinc-800 bg-zinc-900/60 p-4 shadow-sm hover:border-zinc-700 hover:bg-zinc-900 transition-all cursor-pointer space-y-2.5 flex flex-col justify-between"
                     >
                       <div className="space-y-1.5">
                         <div className="flex items-center justify-between">
-                          <span className="rounded-full bg-[#FF5A1F]/10 px-2 py-0.5 text-[9px] font-bold text-[#FF5A1F] uppercase">
+                          <span className="rounded-full bg-zinc-800 px-2 py-0.5 text-[9px] font-mono text-zinc-300 border border-zinc-700/50">
                             {item.visualStyle} • {item.sceneCount} Scenes
                           </span>
 
                           <button
                             type="button"
                             onClick={(e) => handleDeleteHistoryStory(item.id, e)}
-                            className="text-muted-foreground hover:text-destructive p-1 rounded transition-colors"
+                            className="text-zinc-500 hover:text-red-400 p-1 rounded transition-colors"
                             title="Delete from History"
                           >
                             <Trash2 className="h-3.5 w-3.5" />
                           </button>
                         </div>
 
-                        <h4 className="text-sm font-bold text-foreground group-hover:text-[#FF5A1F] transition-colors line-clamp-1">
+                        <h4 className="text-sm font-semibold text-zinc-100 group-hover:text-white transition-colors line-clamp-1">
                           {item.title}
                         </h4>
 
-                        <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed font-mono">
+                        <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed font-mono">
                           {item.script}
                         </p>
                       </div>
 
-                      <div className="flex items-center justify-between border-t border-border/40 pt-2 text-[10px] text-muted-foreground font-semibold">
+                      <div className="flex items-center justify-between border-t border-zinc-800/80 pt-2 text-[10px] text-zinc-500 font-mono">
                         <span className="flex items-center gap-1">
-                          <Clock className="h-3 w-3 text-[#FF5A1F]" /> {item.timestamp}
+                          <Clock className="h-3 w-3 text-zinc-400" /> {item.timestamp}
                         </span>
-                        <span className="font-bold text-[#FF5A1F] group-hover:underline flex items-center gap-0.5">
-                          Open Story <ExternalLink className="h-3 w-3" />
+                        <span className="font-semibold text-zinc-300 group-hover:text-white flex items-center gap-0.5">
+                          Open <ExternalLink className="h-3 w-3" />
                         </span>
                       </div>
                     </div>
@@ -856,12 +860,12 @@ export function StoryboardGeneratorPage() {
             {/* Example Scripts Section */}
             <div className="space-y-4 pt-2">
               <div className="flex items-center justify-between">
-                <h3 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
-                  <BookOpen className="h-4 w-4 text-[#FF5A1F]" /> Start from an example script
+                <h3 className="text-xs font-mono uppercase tracking-wider text-zinc-500 flex items-center gap-2">
+                  <BookOpen className="h-4 w-4 text-zinc-400" /> Start from example templates
                 </h3>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
                 {EXAMPLE_SCRIPTS.map((ex) => (
                   <div
                     key={ex.id}
@@ -869,15 +873,15 @@ export function StoryboardGeneratorPage() {
                       handleFormChange("script", ex.script);
                       window.scrollTo({ top: 150, behavior: "smooth" });
                     }}
-                    className="group rounded-2xl border border-border/70 bg-card p-4 shadow-sm hover:border-[#FF5A1F]/50 hover:shadow-md transition-all cursor-pointer space-y-2"
+                    className="group rounded-2xl border border-zinc-800/80 bg-zinc-900/40 p-4 shadow-sm hover:border-zinc-700 hover:bg-zinc-900/80 transition-all cursor-pointer space-y-2"
                   >
-                    <span className="rounded-full bg-[#FF5A1F]/10 px-2 py-0.5 text-[9px] font-bold text-[#FF5A1F] uppercase">
+                    <span className="rounded-full bg-zinc-800 px-2 py-0.5 text-[9px] font-mono text-zinc-400">
                       {ex.category}
                     </span>
-                    <h4 className="text-sm font-bold text-foreground group-hover:text-[#FF5A1F] transition-colors">
+                    <h4 className="text-sm font-semibold text-zinc-200 group-hover:text-white transition-colors">
                       {ex.title}
                     </h4>
-                    <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+                    <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed">
                       {ex.description}
                     </p>
                   </div>
@@ -888,59 +892,59 @@ export function StoryboardGeneratorPage() {
         )}
 
         {/* ─────────────────────────────────────────────────────────────────── */}
-        {/* ── STEP 2: PRODUCTION SETTINGS PAGE (SCREEN 2 - ONLY SETTINGS) ─── */}
+        {/* ── STEP 2: CONFIGURATION PAGE (FIGMA MAKE AI SETTINGS) ─────────── */}
         {/* ─────────────────────────────────────────────────────────────────── */}
         {step === "config" && (
-          <section className="mx-auto max-w-4xl px-4 sm:px-6 py-8 sm:py-12 w-full max-w-full space-y-6">
-            {/* Top Banner with Script Summary & Back Button */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 rounded-2xl border border-border/80 bg-card p-4 shadow-glass">
+          <section className="mx-auto max-w-4xl px-4 sm:px-6 py-8 sm:py-16 w-full max-w-full space-y-6">
+            {/* Active Script Summary Bar */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 rounded-2xl border border-zinc-800 bg-zinc-900/80 p-4 backdrop-blur-xl">
               <div className="space-y-1">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-[#FF5A1F]">
-                  Active Screenplay
+                <span className="text-[10px] font-mono uppercase text-zinc-400">
+                  Selected Screenplay
                 </span>
-                <p className="font-mono text-xs text-foreground line-clamp-1 max-w-xl">
+                <p className="font-mono text-xs text-zinc-200 line-clamp-1 max-w-xl">
                   {form.script}
                 </p>
               </div>
               <div className="flex items-center gap-2">
                 <button
                   onClick={handleStartNewStory}
-                  className="inline-flex items-center gap-1 rounded-full bg-[#FF5A1F] px-3 py-1 text-xs font-bold text-white shadow-md hover:bg-[#FF5A1F]/90 transition-all"
+                  className="inline-flex items-center gap-1 rounded-full bg-zinc-100 px-3 py-1 text-xs font-semibold text-zinc-950 hover:bg-white transition-all"
                 >
-                  <PlusCircle className="h-3.5 w-3.5" /> + New Story
+                  <PlusCircle className="h-3.5 w-3.5" /> New Story
                 </button>
                 <button
                   onClick={() => setStep("script")}
-                  className="inline-flex items-center gap-1 text-xs font-bold text-muted-foreground hover:text-foreground shrink-0"
+                  className="inline-flex items-center gap-1 text-xs text-zinc-400 hover:text-zinc-200 shrink-0"
                 >
-                  <ArrowLeft className="h-3.5 w-3.5" /> Edit Story
+                  <ArrowLeft className="h-3.5 w-3.5" /> Edit Script
                 </button>
               </div>
             </div>
 
             {/* DEDICATED PRODUCTION CONFIG CARD */}
-            <div className="rounded-3xl border border-border/80 bg-card p-5 sm:p-8 shadow-glass backdrop-blur-xl space-y-6">
-              <div className="border-b border-border/40 pb-3 flex items-center justify-between">
+            <div className="rounded-3xl border border-zinc-800 bg-zinc-900/90 p-6 sm:p-8 shadow-2xl backdrop-blur-xl space-y-6">
+              <div className="border-b border-zinc-800 pb-4 flex items-center justify-between">
                 <div>
-                  <h2 className="text-lg font-bold text-foreground">
-                    Production & Visual Settings
+                  <h2 className="text-lg font-semibold text-white">
+                    Production Settings & Visual Targets
                   </h2>
-                  <p className="text-xs text-muted-foreground">
-                    Configure visual style, scene count, aspect ratio, and AI prompt format.
+                  <p className="text-xs text-zinc-400">
+                    Configure visual rendering target, scene density, aspect ratio, and camera direction.
                   </p>
                 </div>
-                <SlidersHorizontal className="h-5 w-5 text-[#FF5A1F]" />
+                <Sliders className="h-5 w-5 text-zinc-400" />
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Character Reference Upload Zone */}
-                <div className="rounded-2xl border border-border/70 bg-secondary/20 p-4 space-y-3">
+                {/* Character Upload Zone */}
+                <div className="rounded-2xl border border-zinc-800 bg-zinc-950/60 p-4 space-y-3">
                   <div className="flex items-center justify-between">
-                    <label className="text-xs font-bold uppercase tracking-wider text-foreground flex items-center gap-1.5">
-                      <ImageIcon className="h-4 w-4 text-[#FF5A1F]" /> Character Visual Reference Images
+                    <label className="text-xs font-mono uppercase text-zinc-300 flex items-center gap-1.5">
+                      <ImageIcon className="h-4 w-4 text-zinc-400" /> Character Reference Images
                     </label>
-                    <span className="text-xs font-bold text-[#FF5A1F]">
-                      {form.uploadedCharacters?.length || 0} Attached
+                    <span className="text-xs font-mono text-zinc-400">
+                      {form.uploadedCharacters?.length || 0} Files Attached
                     </span>
                   </div>
 
@@ -956,9 +960,9 @@ export function StoryboardGeneratorPage() {
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="w-full flex items-center justify-center gap-2 rounded-xl border border-dashed border-[#FF5A1F]/50 bg-[#FF5A1F]/5 p-3 text-xs font-bold text-[#FF5A1F] hover:bg-[#FF5A1F]/10 transition-colors"
+                    className="w-full flex items-center justify-center gap-2 rounded-xl border border-dashed border-zinc-700 bg-zinc-900/60 p-3 text-xs font-medium text-zinc-300 hover:border-zinc-500 hover:bg-zinc-900 transition-colors"
                   >
-                    <Upload className="h-4 w-4" /> Upload Character Reference Images (PNG/JPG)
+                    <Upload className="h-4 w-4 text-zinc-400" /> Upload Character Models (PNG/JPG)
                   </button>
 
                   {form.uploadedCharacters && form.uploadedCharacters.length > 0 && (
@@ -966,16 +970,16 @@ export function StoryboardGeneratorPage() {
                       {form.uploadedCharacters.map((char) => (
                         <div
                           key={char.id}
-                          className="flex items-center gap-2 rounded-xl border border-border/60 bg-background p-2"
+                          className="flex items-center gap-2 rounded-xl border border-zinc-800 bg-zinc-900 p-2"
                         >
                           {char.imageUrl ? (
                             <img
                               src={char.imageUrl}
                               alt={char.name}
-                              className="h-10 w-10 rounded-lg object-cover border border-border/40 shrink-0"
+                              className="h-10 w-10 rounded-lg object-cover border border-zinc-700 shrink-0"
                             />
                           ) : (
-                            <div className="h-10 w-10 rounded-lg bg-secondary flex items-center justify-center text-muted-foreground shrink-0">
+                            <div className="h-10 w-10 rounded-lg bg-zinc-800 flex items-center justify-center text-zinc-400 shrink-0">
                               <Users className="h-4 w-4" />
                             </div>
                           )}
@@ -987,13 +991,13 @@ export function StoryboardGeneratorPage() {
                             onChange={(e) =>
                               handleUpdateUploadedCharacter(char.id, "name", e.target.value)
                             }
-                            className="flex-1 rounded border border-input bg-background px-2 py-1 text-xs font-bold text-foreground outline-none focus:ring-1 focus:ring-[#FF5A1F]"
+                            className="flex-1 rounded border border-zinc-700 bg-zinc-950 px-2 py-1 text-xs font-mono text-zinc-200 outline-none focus:ring-1 focus:ring-zinc-500"
                           />
 
                           <button
                             type="button"
                             onClick={() => handleRemoveUploadedCharacter(char.id)}
-                            className="p-1 text-muted-foreground hover:text-destructive shrink-0"
+                            className="p-1 text-zinc-400 hover:text-red-400 shrink-0"
                           >
                             <Trash2 className="h-4 w-4" />
                           </button>
@@ -1006,8 +1010,8 @@ export function StoryboardGeneratorPage() {
                 {/* Main Settings Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-foreground mb-1.5">
-                      Target Scene Count (1–200)
+                    <label className="block text-xs font-mono uppercase text-zinc-400 mb-1.5">
+                      Target Scene Count
                     </label>
                     <input
                       type="number"
@@ -1017,21 +1021,21 @@ export function StoryboardGeneratorPage() {
                       onChange={(e) =>
                         handleFormChange("numberOfScenes", parseInt(e.target.value) || 10)
                       }
-                      className="w-full rounded-xl border border-input bg-background px-3 py-2 text-xs font-semibold outline-none focus:ring-2 focus:ring-[#FF5A1F]/40"
+                      className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-xs font-mono text-zinc-100 outline-none focus:ring-1 focus:ring-zinc-600"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-foreground mb-1.5">
+                    <label className="block text-xs font-mono uppercase text-zinc-400 mb-1.5">
                       Visual Render Style
                     </label>
                     <select
                       value={form.visualStyle}
                       onChange={(e) => handleFormChange("visualStyle", e.target.value)}
-                      className="w-full rounded-xl border border-input bg-background px-3 py-2 text-xs font-semibold outline-none focus:ring-2 focus:ring-[#FF5A1F]/40"
+                      className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-xs font-mono text-zinc-100 outline-none focus:ring-1 focus:ring-zinc-600"
                     >
                       {VISUAL_STYLES.map((st) => (
-                        <option key={st} value={st}>
+                        <option key={st} value={st} className="bg-zinc-900">
                           {st}
                         </option>
                       ))}
@@ -1039,16 +1043,16 @@ export function StoryboardGeneratorPage() {
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-foreground mb-1.5">
-                      AI Generator Target
+                    <label className="block text-xs font-mono uppercase text-zinc-400 mb-1.5">
+                      AI Model Target
                     </label>
                     <select
                       value={form.promptStyle}
                       onChange={(e) => handleFormChange("promptStyle", e.target.value)}
-                      className="w-full rounded-xl border border-input bg-background px-3 py-2 text-xs font-semibold outline-none focus:ring-2 focus:ring-[#FF5A1F]/40"
+                      className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-xs font-mono text-zinc-100 outline-none focus:ring-1 focus:ring-zinc-600"
                     >
                       {PROMPT_STYLES.map((ps) => (
-                        <option key={ps} value={ps}>
+                        <option key={ps} value={ps} className="bg-zinc-900">
                           {ps}
                         </option>
                       ))}
@@ -1056,16 +1060,16 @@ export function StoryboardGeneratorPage() {
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-foreground mb-1.5">
+                    <label className="block text-xs font-mono uppercase text-zinc-400 mb-1.5">
                       Aspect Ratio
                     </label>
                     <select
                       value={form.aspectRatio}
                       onChange={(e) => handleFormChange("aspectRatio", e.target.value)}
-                      className="w-full rounded-xl border border-input bg-background px-3 py-2 text-xs font-semibold outline-none focus:ring-2 focus:ring-[#FF5A1F]/40"
+                      className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-xs font-mono text-zinc-100 outline-none focus:ring-1 focus:ring-zinc-600"
                     >
                       {ASPECT_RATIOS.map((ar) => (
-                        <option key={ar} value={ar}>
+                        <option key={ar} value={ar} className="bg-zinc-900">
                           {ar}
                         </option>
                       ))}
@@ -1073,16 +1077,16 @@ export function StoryboardGeneratorPage() {
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-foreground mb-1.5">
+                    <label className="block text-xs font-mono uppercase text-zinc-400 mb-1.5">
                       Camera Motion
                     </label>
                     <select
                       value={form.cameraStyle}
                       onChange={(e) => handleFormChange("cameraStyle", e.target.value)}
-                      className="w-full rounded-xl border border-input bg-background px-3 py-2 text-xs font-semibold outline-none focus:ring-2 focus:ring-[#FF5A1F]/40"
+                      className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-xs font-mono text-zinc-100 outline-none focus:ring-1 focus:ring-zinc-600"
                     >
                       {CAMERA_STYLES.map((cs) => (
-                        <option key={cs} value={cs}>
+                        <option key={cs} value={cs} className="bg-zinc-900">
                           {cs}
                         </option>
                       ))}
@@ -1091,45 +1095,45 @@ export function StoryboardGeneratorPage() {
                 </div>
 
                 {/* Toggles Bar */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2 border-t border-border/40">
-                  <label className="flex items-center gap-2 text-xs font-semibold text-foreground cursor-pointer select-none">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2 border-t border-zinc-800">
+                  <label className="flex items-center gap-2 text-xs font-mono text-zinc-300 cursor-pointer select-none">
                     <input
                       type="checkbox"
                       checked={form.includeDialogue}
                       onChange={(e) => handleFormChange("includeDialogue", e.target.checked)}
-                      className="h-4 w-4 rounded accent-[#FF5A1F]"
+                      className="h-4 w-4 rounded bg-zinc-900 border-zinc-700 accent-zinc-100"
                     />
-                    <MessageSquare className="h-3.5 w-3.5 text-[#FF5A1F]" /> Dialogue
+                    <MessageSquare className="h-3.5 w-3.5 text-zinc-400" /> Dialogue
                   </label>
 
-                  <label className="flex items-center gap-2 text-xs font-semibold text-foreground cursor-pointer select-none">
+                  <label className="flex items-center gap-2 text-xs font-mono text-zinc-300 cursor-pointer select-none">
                     <input
                       type="checkbox"
                       checked={form.includeSFX}
                       onChange={(e) => handleFormChange("includeSFX", e.target.checked)}
-                      className="h-4 w-4 rounded accent-[#FF5A1F]"
+                      className="h-4 w-4 rounded bg-zinc-900 border-zinc-700 accent-zinc-100"
                     />
-                    <Volume2 className="h-3.5 w-3.5 text-[#FF5A1F]" /> SFX
+                    <Volume2 className="h-3.5 w-3.5 text-zinc-400" /> SFX
                   </label>
 
-                  <label className="flex items-center gap-2 text-xs font-semibold text-foreground cursor-pointer select-none">
+                  <label className="flex items-center gap-2 text-xs font-mono text-zinc-300 cursor-pointer select-none">
                     <input
                       type="checkbox"
                       checked={form.includeBackgroundMusic}
                       onChange={(e) => handleFormChange("includeBackgroundMusic", e.target.checked)}
-                      className="h-4 w-4 rounded accent-[#FF5A1F]"
+                      className="h-4 w-4 rounded bg-zinc-900 border-zinc-700 accent-zinc-100"
                     />
-                    <Music className="h-3.5 w-3.5 text-[#FF5A1F]" /> Music
+                    <Music className="h-3.5 w-3.5 text-zinc-400" /> Music
                   </label>
 
-                  <label className="flex items-center gap-2 text-xs font-semibold text-foreground cursor-pointer select-none">
+                  <label className="flex items-center gap-2 text-xs font-mono text-zinc-300 cursor-pointer select-none">
                     <input
                       type="checkbox"
                       checked={form.safetyNotes}
                       onChange={(e) => handleFormChange("safetyNotes", e.target.checked)}
-                      className="h-4 w-4 rounded accent-[#FF5A1F]"
+                      className="h-4 w-4 rounded bg-zinc-900 border-zinc-700 accent-zinc-100"
                     />
-                    <Shield className="h-3.5 w-3.5 text-[#FF5A1F]" /> Safety Prompts
+                    <Shield className="h-3.5 w-3.5 text-zinc-400" /> Safety
                   </label>
                 </div>
 
@@ -1137,15 +1141,15 @@ export function StoryboardGeneratorPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full flex items-center justify-center gap-2 rounded-2xl bg-[#FF5A1F] py-4 text-xs font-bold uppercase tracking-widest text-white shadow-xl shadow-[#FF5A1F]/30 hover:scale-[1.01] transition-transform active:scale-95 disabled:opacity-60"
+                  className="w-full flex items-center justify-center gap-2 rounded-2xl bg-zinc-100 py-3.5 text-xs font-semibold text-zinc-950 shadow-xl hover:bg-white transition-all disabled:opacity-60 active:scale-95"
                 >
                   {loading ? (
                     <>
-                      <RefreshCw className="h-4 w-4 animate-spin" /> Generating Packages...
+                      <Loader2 className="h-4 w-4 animate-spin text-zinc-950" /> Generating Scenes...
                     </>
                   ) : (
                     <>
-                      <Sparkles className="h-4 w-4" /> ✨ Generate Storyboard Package
+                      <Sparkles className="h-4 w-4" /> Generate Storyboard Package ✦
                     </>
                   )}
                 </button>
@@ -1155,59 +1159,59 @@ export function StoryboardGeneratorPage() {
         )}
 
         {/* ─────────────────────────────────────────────────────────────────── */}
-        {/* ── STEP 3: STUDIO & ABSOLUTE VIEWPORT FIXED LEFT SIDEBAR DOCK ────── */}
+        {/* ── STEP 3: STUDIO WORKSPACE & CHATGPT SIDEBAR ──────────────────── */}
         {/* ─────────────────────────────────────────────────────────────────── */}
         {step === "studio" && (
-          <section className="mx-auto max-w-7xl px-3 sm:px-6 pb-28 w-full max-w-full relative min-h-[80vh]" id="generator-workspace">
-            {/* ── EXPLICIT FIXED VIEWPORT LEFT SIDEBAR (SCROLL-PROOF) ── */}
-            <aside className="w-full lg:w-[320px] xl:w-[360px] lg:fixed lg:top-24 lg:z-30 space-y-4 max-h-[calc(100vh-120px)] overflow-y-auto no-scrollbar pb-4">
-              {/* Storyboard Active Card Header */}
-              <div className="rounded-2xl border border-border/80 bg-card/95 p-3.5 shadow-glass backdrop-blur-xl space-y-2">
+          <section className="mx-auto max-w-7xl px-3 sm:px-6 pb-28 pt-4 w-full max-w-full relative min-h-[80vh]" id="generator-workspace">
+            {/* ── CHATGPT STYLE VIEWPORT FIXED LEFT SIDEBAR ── */}
+            <aside className="w-full lg:w-[320px] xl:w-[360px] lg:fixed lg:top-20 lg:z-30 space-y-3.5 max-h-[calc(100vh-100px)] overflow-y-auto no-scrollbar pb-4">
+              {/* Active Story Overview Card */}
+              <div className="rounded-2xl border border-zinc-800 bg-zinc-900/90 p-4 backdrop-blur-xl space-y-2 shadow-xl">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#FF5A1F] flex items-center gap-1">
-                    <Wand2 className="h-3.5 w-3.5" /> Storyboard Active
+                  <span className="text-[10px] font-mono uppercase text-zinc-400 flex items-center gap-1">
+                    <Terminal className="h-3.5 w-3.5 text-zinc-300" /> Active Workspace
                   </span>
                   <div className="flex items-center gap-2">
                     <button
                       onClick={handleStartNewStory}
-                      className="text-[10px] font-bold text-[#FF5A1F] hover:underline flex items-center gap-0.5"
+                      className="text-[10px] font-mono text-zinc-300 hover:text-white flex items-center gap-0.5"
                     >
-                      <PlusCircle className="h-3 w-3" /> + New Story
+                      <PlusCircle className="h-3 w-3" /> + New
                     </button>
                     <button
                       onClick={() => setStep("config")}
-                      className="text-[10px] font-bold text-muted-foreground hover:text-foreground flex items-center gap-1"
+                      className="text-[10px] font-mono text-zinc-500 hover:text-zinc-300 flex items-center gap-1"
                     >
-                      <SlidersHorizontal className="h-3 w-3" /> Config
+                      <Sliders className="h-3 w-3" /> Config
                     </button>
                   </div>
                 </div>
 
-                <p className="text-xs font-mono text-muted-foreground line-clamp-2">
+                <p className="text-xs font-mono text-zinc-300 line-clamp-2 leading-relaxed">
                   {form.script}
                 </p>
 
                 <div className="flex flex-wrap gap-1 pt-1">
-                  <span className="rounded bg-secondary px-1.5 py-0.5 text-[9px] font-bold text-muted-foreground">
+                  <span className="rounded bg-zinc-800 px-2 py-0.5 text-[9px] font-mono text-zinc-300 border border-zinc-700/50">
                     {form.visualStyle}
                   </span>
-                  <span className="rounded bg-secondary px-1.5 py-0.5 text-[9px] font-bold text-muted-foreground">
+                  <span className="rounded bg-zinc-800 px-2 py-0.5 text-[9px] font-mono text-zinc-300 border border-zinc-700/50">
                     {form.promptStyle}
                   </span>
-                  <span className="rounded bg-secondary px-1.5 py-0.5 text-[9px] font-bold text-muted-foreground">
+                  <span className="rounded bg-zinc-800 px-2 py-0.5 text-[9px] font-mono text-zinc-300 border border-zinc-700/50">
                     {output?.scenes?.length || 0} Scenes
                   </span>
                 </div>
               </div>
 
-              {/* ── FIXED AI ASSISTANT CHAT/MODIFIER BOX ── */}
-              <div className="rounded-2xl sm:rounded-3xl border border-border/90 bg-card/95 p-3.5 sm:p-4 shadow-2xl shadow-black/20 backdrop-blur-2xl space-y-3">
-                <div className="flex items-center justify-between border-b border-border/40 pb-2">
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-foreground flex items-center gap-1.5">
-                    <Sparkles className="h-3.5 w-3.5 text-[#FF5A1F]" /> AI Assistant (Live Prompt Modifier)
+              {/* ── CHATGPT STYLE AI ASSISTANT CHAT DOCK ── */}
+              <div className="rounded-2xl sm:rounded-3xl border border-zinc-800 bg-zinc-900/90 p-4 shadow-2xl backdrop-blur-2xl space-y-3">
+                <div className="flex items-center justify-between border-b border-zinc-800 pb-2.5">
+                  <span className="text-[11px] font-mono uppercase text-zinc-300 flex items-center gap-1.5">
+                    <Bot className="h-4 w-4 text-zinc-200" /> AI Prompt Assistant
                   </span>
-                  <span className="text-[9px] text-emerald-500 font-bold flex items-center gap-1">
-                    {assistantLoading && <Loader2 className="h-3 w-3 animate-spin text-[#FF5A1F]" />} Online
+                  <span className="text-[9px] text-emerald-400 font-mono flex items-center gap-1">
+                    {assistantLoading && <Loader2 className="h-3 w-3 animate-spin text-zinc-300" />} Ready
                   </span>
                 </div>
 
@@ -1217,10 +1221,10 @@ export function StoryboardGeneratorPage() {
                     {assistantLogs.map((log, idx) => (
                       <div
                         key={idx}
-                        className={`p-2 rounded-xl text-[11px] ${
+                        className={`p-2.5 rounded-xl text-[11px] font-mono ${
                           log.sender === "user"
-                            ? "bg-[#FF5A1F]/10 text-foreground border border-[#FF5A1F]/20 ml-4 text-right font-mono"
-                            : "bg-secondary/60 text-foreground border border-border/40 mr-4 font-semibold"
+                            ? "bg-zinc-800 text-zinc-100 border border-zinc-700 ml-4 text-right"
+                            : "bg-zinc-950 text-zinc-300 border border-zinc-800 mr-4"
                         }`}
                       >
                         {log.text}
@@ -1229,12 +1233,12 @@ export function StoryboardGeneratorPage() {
                   </div>
                 )}
 
-                {/* Quick Modification Chips */}
+                {/* Quick Action Chips */}
                 <div className="flex flex-wrap gap-1">
                   {[
-                    "Make more dramatic",
-                    "Add camera push-ins",
-                    "Pixar 3D style",
+                    "Make dramatic",
+                    "Add camera push-in",
+                    "Pixar 3D",
                     "New scene variations",
                   ].map((chip, i) => (
                     <button
@@ -1242,14 +1246,14 @@ export function StoryboardGeneratorPage() {
                       type="button"
                       onClick={() => handleAssistantSubmit(chip)}
                       disabled={assistantLoading}
-                      className="rounded-full bg-secondary/60 px-2 py-0.5 text-[9px] font-semibold text-muted-foreground hover:bg-[#FF5A1F]/10 hover:text-[#FF5A1F] transition-all disabled:opacity-50"
+                      className="rounded-full bg-zinc-800/80 px-2 py-0.5 text-[9px] font-mono text-zinc-400 border border-zinc-700/50 hover:bg-zinc-700 hover:text-zinc-100 transition-all disabled:opacity-50"
                     >
                       + {chip}
                     </button>
                   ))}
                 </div>
 
-                {/* Assistant Prompt Input Box */}
+                {/* ChatGPT Input Bar */}
                 <div className="space-y-2">
                   <textarea
                     rows={3}
@@ -1261,23 +1265,23 @@ export function StoryboardGeneratorPage() {
                         handleAssistantSubmit(assistantInput);
                       }
                     }}
-                    placeholder="Ask AI Assistant to adjust scenes (e.g. 'Make lighting darker', 'Add rain', 'Make more dramatic')..."
-                    className="w-full rounded-xl border border-input bg-background/90 px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-[#FF5A1F]/40 leading-relaxed font-mono break-words whitespace-pre-wrap"
+                    placeholder="Ask AI to modify scenes (e.g. 'Add dark fog', 'Make photorealistic', 'Redo camera angles')..."
+                    className="w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-xs text-zinc-100 placeholder-zinc-500 outline-none focus:ring-1 focus:ring-zinc-600 leading-relaxed font-mono break-words whitespace-pre-wrap resize-none"
                   />
 
                   <button
                     type="button"
                     onClick={() => handleAssistantSubmit(assistantInput)}
                     disabled={assistantLoading || !assistantInput.trim()}
-                    className="w-full flex items-center justify-center gap-1.5 rounded-xl bg-[#FF5A1F] py-2.5 text-xs font-bold text-white shadow-md hover:opacity-90 active:scale-95 transition-all disabled:opacity-50"
+                    className="w-full flex items-center justify-center gap-1.5 rounded-xl bg-zinc-100 py-2.5 text-xs font-semibold text-zinc-950 shadow hover:bg-white active:scale-95 transition-all disabled:opacity-50"
                   >
                     {assistantLoading ? (
                       <>
-                        <Loader2 className="h-3.5 w-3.5 animate-spin" /> Modifying Scenes...
+                        <Loader2 className="h-3.5 w-3.5 animate-spin text-zinc-950" /> Modifying...
                       </>
                     ) : (
                       <>
-                        <Wand2 className="h-3.5 w-3.5" /> Apply Change to Scenes
+                        <Send className="h-3.5 w-3.5" /> Apply Change to Scenes
                       </>
                     )}
                   </button>
@@ -1285,49 +1289,49 @@ export function StoryboardGeneratorPage() {
               </div>
             </aside>
 
-            {/* ── RIGHT STUDIO PANEL WITH MARGIN MATCHING FIXED SIDEBAR ── */}
+            {/* ── RIGHT STUDIO CANVAS ── */}
             <div className="w-full lg:ml-[340px] xl:ml-[380px] lg:max-w-[calc(100%-350px)] xl:max-w-[calc(100%-390px)] space-y-4 min-w-0">
               {output && (
                 <div className="space-y-4 w-full">
-                  {/* Summary Overview Bar */}
+                  {/* Summary Bar */}
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 max-w-full">
-                    <div className="rounded-xl border border-border/60 bg-card p-2.5 text-center">
-                      <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground block">Total Scenes</span>
-                      <p className="font-display text-base font-black text-[#FF5A1F]">{output.scenes?.length || 0}</p>
+                    <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-2.5 text-center">
+                      <span className="text-[9px] font-mono uppercase text-zinc-500 block">Total Scenes</span>
+                      <p className="font-mono text-base font-bold text-zinc-100">{output.scenes?.length || 0}</p>
                     </div>
-                    <div className="rounded-xl border border-border/60 bg-card p-2.5 text-center">
-                      <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground block">Characters</span>
-                      <p className="font-display text-base font-black text-blue-500">{output.characters?.length || 0}</p>
+                    <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-2.5 text-center">
+                      <span className="text-[9px] font-mono uppercase text-zinc-500 block">Characters</span>
+                      <p className="font-mono text-base font-bold text-zinc-100">{output.characters?.length || 0}</p>
                     </div>
-                    <div className="rounded-xl border border-border/60 bg-card p-2.5 text-center">
-                      <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground block">Environments</span>
-                      <p className="font-display text-base font-black text-emerald-500">{output.environments?.length || 0}</p>
+                    <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-2.5 text-center">
+                      <span className="text-[9px] font-mono uppercase text-zinc-500 block">Environments</span>
+                      <p className="font-mono text-base font-bold text-zinc-100">{output.environments?.length || 0}</p>
                     </div>
-                    <div className="rounded-xl border border-border/60 bg-card p-2.5 text-center">
-                      <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground block">Est. Runtime</span>
-                      <p className="font-display text-base font-black text-purple-500">{output.analytics?.estimatedRuntime || "1m 30s"}</p>
+                    <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-2.5 text-center">
+                      <span className="text-[9px] font-mono uppercase text-zinc-500 block">Est. Runtime</span>
+                      <p className="font-mono text-base font-bold text-zinc-100">{output.analytics?.estimatedRuntime || "1m 30s"}</p>
                     </div>
                   </div>
 
-                  {/* Storyboard Timeline Bar */}
+                  {/* Storyboard Timeline Scrubber Bar */}
                   {output.timeline && output.timeline.length > 0 && (
-                    <div className="rounded-2xl border border-border/80 bg-card p-3 shadow-glass max-w-full overflow-hidden">
+                    <div className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-3 max-w-full overflow-hidden">
                       <div className="flex items-center justify-between mb-2">
-                        <h3 className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
-                          <Film className="h-3.5 w-3.5 text-[#FF5A1F]" /> Storyboard Timeline ({output.timeline.length} Scenes)
+                        <h3 className="text-[11px] font-mono uppercase text-zinc-400 flex items-center gap-1.5">
+                          <Film className="h-3.5 w-3.5 text-zinc-300" /> Timeline Scrubber ({output.timeline.length} Scenes)
                         </h3>
                         
                         <div className="flex items-center gap-1">
                           <button
                             onClick={() => scrollTimeline("left")}
-                            className="p-1 rounded-lg border border-border/60 bg-background hover:bg-secondary text-muted-foreground transition-colors"
+                            className="p-1 rounded-lg border border-zinc-800 bg-zinc-950 hover:bg-zinc-800 text-zinc-400 transition-colors"
                             title="Scroll Left"
                           >
                             <ChevronLeft className="h-3.5 w-3.5" />
                           </button>
                           <button
                             onClick={() => scrollTimeline("right")}
-                            className="p-1 rounded-lg border border-border/60 bg-background hover:bg-secondary text-muted-foreground transition-colors"
+                            className="p-1 rounded-lg border border-zinc-800 bg-zinc-950 hover:bg-zinc-800 text-zinc-400 transition-colors"
                             title="Scroll Right"
                           >
                             <ChevronRight className="h-3.5 w-3.5" />
@@ -1343,19 +1347,19 @@ export function StoryboardGeneratorPage() {
                           <div
                             key={item.sceneNumber}
                             onClick={() => scrollToScene(item.sceneNumber)}
-                            className="flex flex-col justify-between shrink-0 rounded-xl border border-border/60 bg-secondary/30 p-2 cursor-pointer hover:border-[#FF5A1F] hover:bg-secondary transition-all"
+                            className="flex flex-col justify-between shrink-0 rounded-xl border border-zinc-800 bg-zinc-950 p-2 cursor-pointer hover:border-zinc-600 hover:bg-zinc-900 transition-all"
                             style={{ width: "125px" }}
                           >
                             <div className="flex items-center justify-between">
-                              <span className="rounded-md bg-[#FF5A1F]/10 px-1.5 py-0.5 text-[9px] font-bold text-[#FF5A1F]">
+                              <span className="rounded bg-zinc-800 px-1.5 py-0.5 text-[9px] font-mono font-semibold text-zinc-300">
                                 Sc {item.sceneNumber}
                               </span>
-                              <span className="text-[9px] text-muted-foreground font-semibold">{item.duration}</span>
+                              <span className="text-[9px] text-zinc-500 font-mono">{item.duration}</span>
                             </div>
-                            <h4 className="mt-1 text-[11px] font-bold text-foreground line-clamp-1">
+                            <h4 className="mt-1 text-[11px] font-semibold text-zinc-200 line-clamp-1">
                               {item.sceneTitle}
                             </h4>
-                            <span className="mt-0.5 text-[9px] text-muted-foreground/80 line-clamp-1">
+                            <span className="mt-0.5 text-[9px] text-zinc-500 line-clamp-1 font-mono">
                               📍 {item.environment}
                             </span>
                           </div>
@@ -1364,35 +1368,35 @@ export function StoryboardGeneratorPage() {
                     </div>
                   )}
 
-                  {/* Action Toolbar */}
-                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 rounded-2xl border border-border/80 bg-card p-3 shadow-glass max-w-full">
+                  {/* Toolbar */}
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 rounded-2xl border border-zinc-800 bg-zinc-900/60 p-3 max-w-full">
                     <div className="relative w-full sm:flex-1 sm:min-w-[160px]">
-                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-500" />
                       <input
                         type="text"
-                        placeholder="Search prompts or scene #..."
+                        placeholder="Search prompts..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full rounded-xl border border-input bg-background pl-8 pr-3 py-1.5 text-xs outline-none focus:ring-2 focus:ring-[#FF5A1F]/40"
+                        className="w-full rounded-xl border border-zinc-800 bg-zinc-950 pl-8 pr-3 py-1.5 text-xs text-zinc-200 placeholder-zinc-500 outline-none focus:ring-1 focus:ring-zinc-600 font-mono"
                       />
                     </div>
 
                     {output.scenes && output.scenes.length > 0 && (
                       <div className="relative flex items-center gap-1">
-                        <Compass className="h-3.5 w-3.5 text-[#FF5A1F] shrink-0" />
+                        <Compass className="h-3.5 w-3.5 text-zinc-400 shrink-0" />
                         <select
                           onChange={(e) => {
                             const val = parseInt(e.target.value);
                             if (val) scrollToScene(val);
                           }}
                           defaultValue=""
-                          className="rounded-xl border border-input bg-background px-2.5 py-1.5 text-xs font-semibold outline-none focus:ring-2 focus:ring-[#FF5A1F]/40"
+                          className="rounded-xl border border-zinc-800 bg-zinc-950 px-2.5 py-1.5 text-xs font-mono text-zinc-300 outline-none focus:ring-1 focus:ring-zinc-600"
                         >
-                          <option value="" disabled>
+                          <option value="" disabled className="bg-zinc-900">
                             Jump to Scene...
                           </option>
                           {output.scenes.map((s) => (
-                            <option key={s.sceneNumber} value={s.sceneNumber}>
+                            <option key={s.sceneNumber} value={s.sceneNumber} className="bg-zinc-900">
                               Scene {s.sceneNumber}: {s.sceneTitle}
                             </option>
                           ))}
@@ -1408,11 +1412,11 @@ export function StoryboardGeneratorPage() {
                             "all-packages"
                           )
                         }
-                        className="inline-flex items-center justify-center gap-1 rounded-xl border border-[#FF5A1F]/40 bg-[#FF5A1F]/10 px-3 py-1.5 text-[11px] font-bold text-[#FF5A1F] hover:bg-[#FF5A1F]/20 transition-colors"
+                        className="inline-flex items-center justify-center gap-1 rounded-xl border border-zinc-700 bg-zinc-800 px-3 py-1.5 text-[11px] font-mono font-semibold text-zinc-100 hover:bg-zinc-700 transition-colors"
                         title="Copy all scene prompts in 'Scene N [prompt]' format"
                       >
                         {copiedKey === "all-packages" ? (
-                          <Check className="h-3 w-3 text-emerald-500" />
+                          <Check className="h-3 w-3 text-emerald-400" />
                         ) : (
                           <Copy className="h-3 w-3" />
                         )}
@@ -1421,22 +1425,22 @@ export function StoryboardGeneratorPage() {
 
                       <button
                         onClick={() => exportFormatted("markdown")}
-                        className="inline-flex items-center justify-center gap-1 rounded-xl border border-border/80 bg-background px-2.5 py-1.5 text-[11px] font-semibold text-foreground"
+                        className="inline-flex items-center justify-center gap-1 rounded-xl border border-zinc-800 bg-zinc-950 px-2.5 py-1.5 text-[11px] font-mono text-zinc-400 hover:text-zinc-200"
                       >
                         <FileText className="h-3 w-3" /> MD
                       </button>
 
                       <button
                         onClick={() => exportFormatted("json")}
-                        className="inline-flex items-center justify-center gap-1 rounded-xl border border-border/80 bg-background px-2.5 py-1.5 text-[11px] font-semibold text-foreground"
+                        className="inline-flex items-center justify-center gap-1 rounded-xl border border-zinc-800 bg-zinc-950 px-2.5 py-1.5 text-[11px] font-mono text-zinc-400 hover:text-zinc-200"
                       >
                         <Download className="h-3 w-3" /> JSON
                       </button>
                     </div>
                   </div>
 
-                  {/* ── GENERATED SCENE BOXES (CONTAINING ONLY SCENE NUMBER & SCENE PROMPT) ── */}
-                  <div className="space-y-3.5 max-w-full">
+                  {/* ── GENERATED SCENE CARDS (Scene N [prompt]) ── */}
+                  <div className="space-y-3 max-w-full">
                     {paginatedScenes.map((scene) => {
                       const copyKey = `scene-pkg-${scene.sceneNumber}`;
 
@@ -1445,24 +1449,24 @@ export function StoryboardGeneratorPage() {
                           key={scene.sceneNumber}
                           id={`scene-card-${scene.sceneNumber}`}
                           layout
-                          className="overflow-hidden rounded-2xl border border-border/80 bg-card p-4 shadow-glass backdrop-blur-xl transition-all hover:border-[#FF5A1F]/30 max-w-full space-y-2.5"
+                          className="overflow-hidden rounded-2xl border border-zinc-800/90 bg-zinc-900/80 p-4 backdrop-blur-xl transition-all hover:border-zinc-700 max-w-full space-y-2.5"
                         >
-                          <div className="flex items-center justify-between border-b border-border/40 pb-2">
+                          <div className="flex items-center justify-between border-b border-zinc-800 pb-2">
                             <div className="flex items-center gap-2">
-                              <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-[#FF5A1F] text-xs font-bold text-white shadow-md">
+                              <span className="flex h-5 w-5 items-center justify-center rounded bg-zinc-800 text-[10px] font-mono font-bold text-zinc-200 border border-zinc-700">
                                 {scene.sceneNumber}
                               </span>
-                              <span className="text-xs font-bold text-foreground">
+                              <span className="text-xs font-mono font-semibold text-zinc-300">
                                 Scene {scene.sceneNumber}
                               </span>
                             </div>
 
                             <button
                               onClick={() => handleCopy(getSceneFormattedPrompt(scene), copyKey)}
-                              className="inline-flex items-center gap-1.5 rounded-lg bg-[#FF5A1F]/10 border border-[#FF5A1F]/30 px-2.5 py-1 text-[11px] font-bold text-[#FF5A1F] hover:bg-[#FF5A1F] hover:text-white transition-all"
+                              className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-800 bg-zinc-950 px-2.5 py-1 text-[11px] font-mono text-zinc-300 hover:bg-zinc-800 hover:text-white transition-all"
                             >
                               {copiedKey === copyKey ? (
-                                <Check className="h-3.5 w-3.5 text-emerald-500" />
+                                <Check className="h-3.5 w-3.5 text-emerald-400" />
                               ) : (
                                 <Copy className="h-3.5 w-3.5" />
                               )}
@@ -1471,7 +1475,7 @@ export function StoryboardGeneratorPage() {
                           </div>
 
                           {/* ONLY SCENE NUMBER AND SCENE PROMPT (Scene N [prompt]) */}
-                          <p className="text-xs sm:text-sm font-mono text-foreground leading-relaxed break-words whitespace-pre-wrap selection:bg-[#FF5A1F]/30 bg-background/60 p-3 rounded-xl border border-border/40">
+                          <p className="text-xs sm:text-sm font-mono text-zinc-200 leading-relaxed break-words whitespace-pre-wrap bg-zinc-950 p-3 rounded-xl border border-zinc-800/80 selection:bg-zinc-700 selection:text-white">
                             {getSceneFormattedPrompt(scene)}
                           </p>
                         </motion.div>
@@ -1481,11 +1485,9 @@ export function StoryboardGeneratorPage() {
 
                   {/* ── PAGINATION CONTROLS BAR (10 Scenes per Page) ────────────── */}
                   {totalPages > 1 && (
-                    <div className="flex flex-col sm:flex-row items-center justify-between gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-glass max-w-full">
-                      <span className="text-xs text-muted-foreground font-medium text-center sm:text-left">
-                        Showing <strong className="text-foreground font-bold">{(currentPage - 1) * SCENES_PER_PAGE + 1}</strong>–
-                        <strong className="text-foreground font-bold">{Math.min(currentPage * SCENES_PER_PAGE, filteredScenes.length)}</strong> of{" "}
-                        <strong className="text-foreground font-bold">{filteredScenes.length}</strong> scenes (Page {currentPage} of {totalPages})
+                    <div className="flex flex-col sm:flex-row items-center justify-between gap-3 rounded-2xl border border-zinc-800 bg-zinc-900/60 p-4 max-w-full">
+                      <span className="text-xs font-mono text-zinc-400 text-center sm:text-left">
+                        Showing {(currentPage - 1) * SCENES_PER_PAGE + 1}–{Math.min(currentPage * SCENES_PER_PAGE, filteredScenes.length)} of {filteredScenes.length} scenes (Page {currentPage} of {totalPages})
                       </span>
 
                       <div className="flex flex-wrap items-center justify-center gap-1 max-w-full">
@@ -1496,9 +1498,9 @@ export function StoryboardGeneratorPage() {
                             if (el) el.scrollIntoView({ behavior: "smooth" });
                           }}
                           disabled={currentPage === 1}
-                          className="inline-flex items-center gap-1 rounded-xl border border-border/80 bg-background px-3 py-1.5 text-xs font-semibold text-foreground disabled:opacity-40 transition-all hover:bg-secondary"
+                          className="inline-flex items-center gap-1 rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-1.5 text-xs font-mono text-zinc-300 disabled:opacity-40 transition-all hover:bg-zinc-800"
                         >
-                          <ChevronLeft className="h-3.5 w-3.5" /> Previous
+                          <ChevronLeft className="h-3.5 w-3.5" /> Prev
                         </button>
 
                         <div className="flex items-center gap-1 px-1">
@@ -1516,10 +1518,10 @@ export function StoryboardGeneratorPage() {
                                     const el = document.getElementById("generator-workspace");
                                     if (el) el.scrollIntoView({ behavior: "smooth" });
                                   }}
-                                  className={`h-8 w-8 rounded-xl text-xs font-bold transition-all ${
+                                  className={`h-7 w-7 rounded-lg text-xs font-mono transition-all ${
                                     currentPage === pg
-                                      ? "bg-[#FF5A1F]"
-                                      : "border border-border/60 bg-background text-muted-foreground hover:bg-secondary"
+                                      ? "bg-zinc-100 text-zinc-950 font-bold"
+                                      : "border border-zinc-800 bg-zinc-950 text-zinc-400 hover:bg-zinc-800"
                                   }`}
                                 >
                                   {pg}
@@ -1530,7 +1532,7 @@ export function StoryboardGeneratorPage() {
                               (pg === currentPage + 2 && pg < totalPages)
                             ) {
                               return (
-                                <span key={pg} className="px-1 text-xs text-muted-foreground font-bold">
+                                <span key={pg} className="px-1 text-xs text-zinc-500 font-mono">
                                   ...
                                 </span>
                               );
@@ -1546,7 +1548,7 @@ export function StoryboardGeneratorPage() {
                             if (el) el.scrollIntoView({ behavior: "smooth" });
                           }}
                           disabled={currentPage === totalPages}
-                          className="inline-flex items-center gap-1 rounded-xl border border-border/80 bg-background px-3 py-1.5 text-xs font-semibold text-foreground disabled:opacity-40 transition-all hover:bg-secondary"
+                          className="inline-flex items-center gap-1 rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-1.5 text-xs font-mono text-zinc-300 disabled:opacity-40 transition-all hover:bg-zinc-800"
                         >
                           Next <ChevronRight className="h-3.5 w-3.5" />
                         </button>
@@ -1559,32 +1561,21 @@ export function StoryboardGeneratorPage() {
           </section>
         )}
 
-        {/* ── Bottom Future Footer Ad Banner Placeholder ────────────────────── */}
+        {/* ── Bottom Footer Ad Placeholder ────────────────────────────────────── */}
         <AdPlaceholder type="footer-banner" className="mb-12" />
 
-        {/* ── Agency Conversion CTA Footprint ─────────────────────────────────── */}
-        <section className="relative overflow-hidden border-t border-border/60 bg-gradient-to-b from-secondary/40 via-background to-background py-12 sm:py-16 w-full max-w-full">
-          <div className="mx-auto max-w-4xl px-4 sm:px-6 text-center">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-[#FF5A1F]/30 bg-[#FF5A1F]/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-[#FF5A1F]">
-              <Zap className="h-3.5 w-3.5" /> Need Full Commercial Production?
-            </span>
-            <h2 className="mt-3 text-xl sm:text-3xl font-black tracking-tight text-foreground break-words">
-              Want ContentMesh Studios to Turn Your Storyboard into a Finished Commercial Video?
-            </h2>
-            <p className="mt-2 text-xs sm:text-base leading-relaxed text-muted-foreground break-words">
-              Our team handles full-stack AI production: scriptwriting, character design, 4K generative video renders, voiceover dubbing, and senior color grading.
-            </p>
-
-            <div className="mt-5 sm:mt-8 flex justify-center">
-              <Link
-                to="/contact"
-                className="inline-flex items-center gap-2 rounded-full bg-[#FF5A1F] px-6 py-3 text-xs font-bold uppercase tracking-widest text-white shadow-xl shadow-[#FF5A1F]/30 transition-transform duration-300 hover:scale-105"
-              >
-                Hire ContentMesh Studios <ArrowRight className="h-4 w-4" />
-              </Link>
+        {/* ── Sleek Modern Footer Footprint ───────────────────────────────────── */}
+        <footer className="border-t border-zinc-800/80 bg-[#09090b] py-12 px-4 sm:px-6 w-full max-w-full">
+          <div className="mx-auto max-w-4xl text-center space-y-4">
+            <div className="flex items-center justify-center gap-2">
+              <Sparkles className="h-4 w-4 text-zinc-400" />
+              <span className="font-mono text-xs text-zinc-400">Make AI Storyboard Engine</span>
             </div>
+            <p className="text-xs text-zinc-500 max-w-xl mx-auto font-mono">
+              Designed for directors, filmmakers, animators, and prompt engineers creating multi-scene AI video productions.
+            </p>
           </div>
-        </section>
+        </footer>
       </div>
     </SiteLayout>
   );
