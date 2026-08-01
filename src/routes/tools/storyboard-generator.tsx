@@ -658,19 +658,9 @@ export function StoryboardGeneratorPage() {
       <div className="font-['Inter'] font-sans text-zinc-100 antialiased bg-[#09090b] min-h-screen w-full max-w-full selection:bg-zinc-700 selection:text-white">
         {/* ── SLEEK FIGMA MAKE AI HEADER BAR ─────────────────────────────────── */}
         <header className="sticky top-0 z-40 border-b border-zinc-800/80 bg-[#09090b]/90 backdrop-blur-xl px-4 sm:px-6 py-3 w-full max-w-full">
-          <div className="mx-auto max-w-7xl flex flex-wrap items-center justify-between gap-3">
-            <div className="flex items-center gap-2.5">
-              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-zinc-800 border border-zinc-700/60 shadow-sm text-zinc-100">
-                <Sparkles className="h-4 w-4 text-zinc-200" />
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="font-semibold text-xs sm:text-sm text-zinc-100 tracking-tight">
-                  Make AI
-                </span>
-                <span className="text-[10px] font-mono text-zinc-500 bg-zinc-800/80 px-1.5 py-0.5 rounded border border-zinc-700/50">
-                  Storyboard Studio
-                </span>
-              </div>
+          <div className="mx-auto max-w-7xl flex flex-wrap items-center justify-end sm:justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-mono text-zinc-400 font-semibold">Storyboard Workspace</span>
             </div>
 
             {/* Figma AI Style Floating Pill Wizard Navigation */}
