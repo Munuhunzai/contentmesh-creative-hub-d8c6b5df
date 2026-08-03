@@ -29,10 +29,19 @@ export default defineType({
               description: "Big bold uppercase heading shown bottom-left.",
             }),
             defineField({
+              name: "videoFile",
+              title: "Direct Video Upload",
+              type: "file",
+              options: {
+                accept: "video/*",
+              },
+              description: "Upload a video file directly (.mp4, .webm, .mov) to play as the slide video.",
+            }),
+            defineField({
               name: "youtubeUrl",
-              title: "YouTube Video URL",
+              title: "YouTube / Video URL (Alternative)",
               type: "url",
-              description: "Paste a YouTube link (e.g. https://youtu.be/xxxxx). Video opens in a popup when the play button is clicked. Leave blank to hide the play button.",
+              description: "Or paste a YouTube or external video link (e.g. https://youtu.be/xxxxx).",
             }),
             defineField({
               name: "backgroundImage",

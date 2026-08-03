@@ -18,7 +18,14 @@ export default defineType({
     defineField({ name: "completionDate", type: "date" }),
     defineField({ name: "description", type: "text", rows: 4 }),
     defineField({ name: "thumbnail", type: "image", options: { hotspot: true } }),
-    defineField({ name: "videoUrl", type: "url", description: "YouTube / Vimeo / mp4 URL" }),
+    defineField({
+      name: "videoFile",
+      title: "Direct Video Upload",
+      type: "file",
+      options: { accept: "video/*" },
+      description: "Upload a video file directly (.mp4, .webm, .mov) instead of pasting a URL.",
+    }),
+    defineField({ name: "videoUrl", type: "url", description: "YouTube / Vimeo / mp4 URL (Alternative)" }),
     defineField({
       name: "gallery",
       type: "array",

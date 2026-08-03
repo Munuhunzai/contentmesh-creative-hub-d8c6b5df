@@ -11,6 +11,7 @@ type HeroSlide = {
   category?: string;
   title?: string;
   youtubeUrl?: string;
+  videoFileUrl?: string;
   backgroundImageUrl?: string;
 };
 
@@ -168,8 +169,27 @@ export function Hero() {
         />
       </AnimatePresence>
 
+      {/* ── Direct Video Upload background (muted, autoplay, looping) ── */}
+      {slides.map((s, i) => {
+        if (!s.videoFileUrl) return null;
+        return (
+          <video
+            key={`direct-vid-${i}`}
+            src={s.videoFileUrl}
+            autoPlay
+            loop
+            muted
+            playsInline
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+              i === current ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+            }`}
+          />
+        );
+      })}
+
       {/* ── YouTube background video (muted, autoplay, looping) ── */}
       {slides.map((s, i) => {
+        if (s.videoFileUrl) return null;
         const id = s.youtubeUrl ? extractYouTubeId(s.youtubeUrl) : null;
         if (!id) return null;
         return (
