@@ -654,9 +654,6 @@ export function StoryboardGeneratorPage() {
           <section className="mx-auto max-w-4xl px-4 sm:px-6 pt-2 sm:pt-4 pb-12 w-full max-w-full space-y-8">
             {/* Hero Title */}
             <div className="text-center space-y-4">
-              <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3.5 py-1 text-xs text-slate-600 font-sans shadow-sm">
-                <Sparkles className="h-3.5 w-3.5 text-slate-700" /> Powered by Generative Scene Intelligence
-              </div>
               <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900">
                 What do you want to create today?
               </h1>
