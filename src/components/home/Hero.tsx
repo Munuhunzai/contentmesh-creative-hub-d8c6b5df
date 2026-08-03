@@ -150,23 +150,29 @@ export function Hero() {
       className="relative w-full overflow-hidden aspect-[16/9] min-h-[340px] max-h-[65vh] sm:aspect-none sm:max-h-none sm:h-[100dvh]"
       aria-label="Hero"
     >
-      {/* ── Static background (image upload or gradient fallback) ── */}
+      {/* ── Background Image / Animated GIF ── */}
       <AnimatePresence mode="sync">
         <motion.div
           key={`bg-${current}`}
-          initial={{ opacity: 0, scale: 1.04 }}
+          initial={{ opacity: 0, scale: 1.02 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="absolute inset-0"
-          style={{
-            backgroundImage: slide.backgroundImageUrl
-              ? `url(${slide.backgroundImageUrl})`
-              : bgGradient,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        />
+        >
+          {slide.backgroundImageUrl ? (
+            <img
+              src={slide.backgroundImageUrl}
+              alt={slide.title || "Hero Slide"}
+              className="h-full w-full object-cover object-center"
+            />
+          ) : (
+            <div
+              className="h-full w-full"
+              style={{ background: bgGradient }}
+            />
+          )}
+        </motion.div>
       </AnimatePresence>
 
       {/* ── Direct Video Upload background (muted, autoplay, looping) ── */}

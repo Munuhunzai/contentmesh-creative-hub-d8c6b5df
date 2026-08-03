@@ -46,10 +46,10 @@ export default defineType({
             }),
             defineField({
               name: "backgroundImage",
-              title: "Background Image",
+              title: "Hero Background GIF / Image (.gif, .png, .jpg, .webp)",
               type: "image",
               options: { hotspot: true },
-              description: "Full-screen background image for this slide. Required for the slide to display properly.",
+              description: "Upload an animated GIF or background image for this slide. Animated GIFs play smoothly in full screen.",
             }),
           ],
           preview: {
