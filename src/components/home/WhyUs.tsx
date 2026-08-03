@@ -73,7 +73,7 @@ export function WhyUs() {
                 className="grid gap-8 lg:grid-cols-3 lg:items-center"
               >
                 <div className="lg:col-span-2">
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-[#FF5A1F]/30 bg-[#FF5A1F]/10 px-3.5 py-1 text-[11px] font-bold uppercase tracking-widest text-[#FF5A1F]">
+                  <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-[#FF5A1F]">
                     <Zap className="h-3.5 w-3.5" /> High-Velocity Output
                   </span>
                   <h3 className="mt-4 font-display text-2xl font-black text-foreground sm:text-3xl lg:text-4xl">
@@ -119,7 +119,7 @@ export function WhyUs() {
                 className="grid gap-8 lg:grid-cols-3 lg:items-center"
               >
                 <div className="lg:col-span-2">
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-destructive/30 bg-destructive/10 px-3.5 py-1 text-[11px] font-bold uppercase tracking-widest text-destructive">
+                  <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-destructive">
                     <Clock className="h-3.5 w-3.5" /> Traditional Bottlenecks
                   </span>
                   <h3 className="mt-4 font-display text-2xl font-black text-foreground sm:text-3xl lg:text-4xl">

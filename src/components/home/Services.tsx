@@ -290,8 +290,8 @@ export function SectionHeader({
   return (
     <div className="mx-auto max-w-2xl text-center">
       {eyebrow && (
-        <p className="inline-flex items-center gap-1.5 rounded-full border border-[#FF5A1F]/30 bg-[#FF5A1F]/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-[#FF5A1F] backdrop-blur-md">
-          <Sparkles className="h-3.5 w-3.5" /> {eyebrow}
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#FF5A1F]">
+          {eyebrow}
         </p>
       )}
       <h2 className="mt-4 font-display text-3xl font-black tracking-tight text-foreground sm:text-4xl md:text-5xl">
@@ -525,7 +525,7 @@ export function Services() {
                 </div>
 
                 <div>
-                  <span className="inline-block rounded-full bg-[#FF5A1F]/10 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-[#FF5A1F]">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-[#FF5A1F]">
                     {selectedService.category}
                   </span>
                   <h3 className="mt-1 font-display text-xl font-bold tracking-tight text-foreground sm:text-2xl">

@@ -139,7 +139,7 @@ function Blog() {
                 )}
                 {/* Badge */}
                 <div className="absolute left-6 top-6">
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-black/60 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-orange-400 backdrop-blur-md border border-white/10">
+                  <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-orange-400">
                     <Sparkles className="h-3 w-3" /> Featured Story
                   </span>
                 </div>
