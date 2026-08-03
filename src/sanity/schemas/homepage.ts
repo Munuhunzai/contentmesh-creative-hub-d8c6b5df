@@ -30,12 +30,13 @@ export default defineType({
             }),
             defineField({
               name: "videoFile",
-              title: "Direct Video Upload",
+              title: "Direct Video Upload (.mp4, .webm, .mov)",
               type: "file",
               options: {
-                accept: "video/*",
+                accept: "video/mp4,video/webm,video/quicktime,video/*",
+                storeOriginalFilename: true,
               },
-              description: "Upload a video file directly (.mp4, .webm, .mov) to play as the slide video.",
+              description: "Upload a video file directly to play as the slide background video.",
             }),
             defineField({
               name: "youtubeUrl",
