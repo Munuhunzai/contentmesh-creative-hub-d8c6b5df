@@ -29,6 +29,12 @@ export default defineType({
               description: "Big bold uppercase heading shown bottom-left.",
             }),
             defineField({
+              name: "youtubeUrl",
+              title: "Video Link — Google Drive / YouTube / Vimeo / MP4 (Recommended)",
+              type: "url",
+              description: "⭐ Recommended: Paste a link from Google Drive (set access to 'Anyone with link'), YouTube, Vimeo, or direct MP4 URL.",
+            }),
+            defineField({
               name: "videoFile",
               title: "Direct Video Upload (.mp4, .webm, .mov)",
               type: "file",
@@ -36,13 +42,7 @@ export default defineType({
                 accept: "video/mp4,video/webm,video/quicktime,video/*",
                 storeOriginalFilename: true,
               },
-              description: "Upload a video file directly to play as the slide background video.",
-            }),
-            defineField({
-              name: "youtubeUrl",
-              title: "YouTube / Video URL (Alternative)",
-              type: "url",
-              description: "Or paste a YouTube or external video link (e.g. https://youtu.be/xxxxx).",
+              description: "Direct upload for small video files (<50MB).",
             }),
             defineField({
               name: "backgroundImage",

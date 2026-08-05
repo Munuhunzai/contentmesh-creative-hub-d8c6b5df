@@ -19,6 +19,12 @@ export default defineType({
     defineField({ name: "description", type: "text", rows: 4 }),
     defineField({ name: "thumbnail", type: "image", options: { hotspot: true } }),
     defineField({
+      name: "videoUrl",
+      type: "url",
+      title: "Video Link — Google Drive / YouTube / Vimeo / MP4 (Recommended)",
+      description: "⭐ Recommended for HD/4K videos: Upload to Google Drive (set access to 'Anyone with the link'), YouTube, or Vimeo, then paste the link here (e.g. https://drive.google.com/file/d/xxxx/view).",
+    }),
+    defineField({
       name: "videoFile",
       title: "Direct Video Upload (.mp4, .webm, .mov)",
       type: "file",
@@ -26,13 +32,7 @@ export default defineType({
         accept: "video/mp4,video/webm,video/quicktime,video/*",
         storeOriginalFilename: true,
       },
-      description: "Upload a video file directly (.mp4, .webm, .mov) instead of pasting a URL.",
-    }),
-    defineField({
-      name: "videoUrl",
-      type: "url",
-      title: "Video Link (Google Drive / YouTube / Vimeo / MP4 URL)",
-      description: "Or paste a link from Google Drive (e.g. https://drive.google.com/file/d/.../view), YouTube, Vimeo, or direct MP4 URL.",
+      description: "Direct upload for small video files (<50MB). Note: Requires CORS allowed in sanity.io/manage for embedded studio.",
     }),
     defineField({
       name: "gallery",
