@@ -28,7 +28,12 @@ export default defineType({
       },
       description: "Upload a video file directly (.mp4, .webm, .mov) instead of pasting a URL.",
     }),
-    defineField({ name: "videoUrl", type: "url", description: "YouTube / Vimeo / mp4 URL (Alternative)" }),
+    defineField({
+      name: "videoUrl",
+      type: "url",
+      title: "Video Link (Google Drive / YouTube / Vimeo / MP4 URL)",
+      description: "Or paste a link from Google Drive (e.g. https://drive.google.com/file/d/.../view), YouTube, Vimeo, or direct MP4 URL.",
+    }),
     defineField({
       name: "gallery",
       type: "array",

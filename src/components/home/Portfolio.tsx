@@ -12,6 +12,7 @@ type Item = {
   description?: string;
   thumbnailUrl?: string | null;
   videoUrl?: string;
+  videoFileUrl?: string;
   client?: string;
 };
 
@@ -35,6 +36,30 @@ const GRADIENTS = [
   "linear-gradient(135deg,#FF5A1F,#F6C244)",
 ];
 const SPANS = ["sm:col-span-2 sm:row-span-2", "", "", "sm:col-span-2", "", "", "sm:col-span-2", ""];
+
+/** Extract Google Drive embed preview URL from shareable links */
+function getGoogleDriveEmbedUrl(url: string): string | null {
+  try {
+    const fileIdMatch = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+    if (fileIdMatch && fileIdMatch[1]) {
+      return `https://drive.google.com/file/d/${fileIdMatch[1]}/preview`;
+    }
+  } catch {
+    return null;
+  }
+  return null;
+}
+
+/** Extract Vimeo ID */
+function getVimeoId(url: string): string | null {
+  try {
+    const match = url.match(/vimeo\.com\/(?:video\/)?([0-9]+)/);
+    if (match && match[1]) return match[1];
+  } catch {
+    return null;
+  }
+  return null;
+}
 
 /** Extract a YouTube video ID from any YouTube URL format */
 function getYouTubeId(url: string): string | null {
@@ -143,7 +168,24 @@ export function Portfolio() {
 
               {/* Video / thumbnail area */}
               <div className="aspect-video w-full bg-black">
-                {open.videoUrl && getYouTubeId(open.videoUrl) ? (
+                {open.videoFileUrl ? (
+                  <video
+                    src={open.videoFileUrl}
+                    controls
+                    autoPlay
+                    playsInline
+                    className="h-full w-full object-contain"
+                  />
+                ) : open.videoUrl && getGoogleDriveEmbedUrl(open.videoUrl) ? (
+                  <iframe
+                    src={getGoogleDriveEmbedUrl(open.videoUrl)!}
+                    title={open.title}
+                    allow="autoplay; encrypted-media; picture-in-picture"
+                    allowFullScreen
+                    className="h-full w-full"
+                    style={{ border: "none" }}
+                  />
+                ) : open.videoUrl && getYouTubeId(open.videoUrl) ? (
                   <iframe
                     src={`https://www.youtube-nocookie.com/embed/${getYouTubeId(open.videoUrl)}?autoplay=1&rel=0&modestbranding=1`}
                     title={open.title}
@@ -151,6 +193,23 @@ export function Portfolio() {
                     allowFullScreen
                     className="h-full w-full"
                     style={{ border: "none" }}
+                  />
+                ) : open.videoUrl && getVimeoId(open.videoUrl) ? (
+                  <iframe
+                    src={`https://player.vimeo.com/video/${getVimeoId(open.videoUrl)}?autoplay=1`}
+                    title={open.title}
+                    allow="autoplay; fullscreen; picture-in-picture"
+                    allowFullScreen
+                    className="h-full w-full"
+                    style={{ border: "none" }}
+                  />
+                ) : open.videoUrl ? (
+                  <video
+                    src={open.videoUrl}
+                    controls
+                    autoPlay
+                    playsInline
+                    className="h-full w-full object-contain"
                   />
                 ) : open.thumbnailUrl ? (
                   <img
