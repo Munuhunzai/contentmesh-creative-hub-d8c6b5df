@@ -11,7 +11,7 @@ export default defineType({
       name: "category",
       type: "string",
       options: {
-        list: ["AI Ads", "Product Videos", "Animations", "Corporate", "Explainers", "Reels", "Health & Wellness"],
+        list: ["AI Ads", "Product Videos", "Animations", "Corporate", "Explainers", "Reels", "Health & Wellness", "Science"],
       },
     }),
     defineField({
