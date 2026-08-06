@@ -9,6 +9,7 @@ type Item = {
   _id: string;
   title: string;
   category?: string;
+  featured?: boolean;
   description?: string;
   thumbnailUrl?: string | null;
   videoUrl?: string;
@@ -17,10 +18,10 @@ type Item = {
 };
 
 const FALLBACK_ITEMS: Item[] = [
-  { _id: "f1", title: "Aurea × Launch Film", category: "AI Ads" },
-  { _id: "f2", title: "Halo Wireless — Hero", category: "Product Videos" },
-  { _id: "f3", title: "Nova Robotics Loop", category: "Animations" },
-  { _id: "f4", title: "Fjord — Field Story", category: "Corporate" },
+  { _id: "f1", title: "Aurea × Launch Film", category: "AI Ads", featured: true },
+  { _id: "f2", title: "Halo Wireless — Hero", category: "Product Videos", featured: true },
+  { _id: "f3", title: "Nova Robotics Loop", category: "Animations", featured: true },
+  { _id: "f4", title: "Fjord — Field Story", category: "Corporate", featured: true },
   { _id: "f5", title: "Kairos AI Explainer", category: "Explainers" },
   { _id: "f6", title: "Vantage Reels Set", category: "Reels" },
   { _id: "f7", title: "Lumen Series — S02", category: "AI Ads" },
@@ -80,10 +81,16 @@ function getYouTubeId(url: string): string | null {
 
 export function Portfolio() {
   const items = useSanity<Item[]>(["sanity", "portfolio"], portfolioQuery, FALLBACK_ITEMS);
-  const cats = ["All", ...Array.from(new Set(items.map((i) => i.category).filter(Boolean) as string[]))];
-  const [cat, setCat] = useState<string>("All");
+  const categories = Array.from(new Set(items.map((i) => i.category).filter(Boolean) as string[]));
+  const cats = ["Featured", ...categories];
+  const [cat, setCat] = useState<string>("Featured");
   const [open, setOpen] = useState<Item | null>(null);
-  const list = cat === "All" ? items : items.filter((p) => p.category === cat);
+
+  const featuredItems = items.filter((p) => p.featured);
+  const list =
+    cat === "Featured"
+      ? (featuredItems.length > 0 ? featuredItems : items)
+      : items.filter((p) => p.category === cat);
 
   return (
     <section className="mx-auto max-w-7xl px-6 py-24" id="portfolio">

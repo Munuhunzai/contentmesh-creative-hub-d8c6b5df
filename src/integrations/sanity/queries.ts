@@ -23,7 +23,7 @@ export const servicesQuery = /* groq */ `*[_type == "service"] | order(order asc
 }`;
 
 export const portfolioQuery = /* groq */ `*[_type == "portfolioItem"] | order(completionDate desc){
-  _id, title, "slug": slug.current, category, client, completionDate,
+  _id, title, "slug": slug.current, category, featured, client, completionDate,
   description, "thumbnailUrl": thumbnail.asset->url, videoUrl,
   "videoFileUrl": videoFile.asset->url,
   gallery[]{ "url": asset->url, alt }

@@ -14,6 +14,13 @@ export default defineType({
         list: ["AI Ads", "Product Videos", "Animations", "Corporate", "Explainers", "Reels"],
       },
     }),
+    defineField({
+      name: "featured",
+      title: "Featured Portfolio Item",
+      type: "boolean",
+      initialValue: false,
+      description: "Turn ON to display this item in the default 'Featured' tab on the portfolio grid.",
+    }),
     defineField({ name: "client", type: "string" }),
     defineField({ name: "completionDate", type: "date" }),
     defineField({ name: "description", type: "text", rows: 4 }),
