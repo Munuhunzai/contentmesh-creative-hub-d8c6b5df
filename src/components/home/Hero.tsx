@@ -150,30 +150,35 @@ export function Hero() {
       className="relative w-full overflow-hidden aspect-[16/9] min-h-[340px] max-h-[65vh] sm:aspect-none sm:max-h-none sm:h-[100dvh]"
       aria-label="Hero"
     >
-      {/* ── Background Image / Animated GIF ── */}
-      <AnimatePresence mode="sync">
-        <motion.div
-          key={`bg-${current}`}
-          initial={{ opacity: 0, scale: 1.02 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="absolute inset-0"
-        >
-          {slide.backgroundImageUrl ? (
-            <img
-              src={slide.backgroundImageUrl}
-              alt={slide.title || "Hero Slide"}
-              className="h-full w-full object-cover object-center"
-            />
-          ) : (
-            <div
-              className="h-full w-full"
-              style={{ background: bgGradient }}
-            />
-          )}
-        </motion.div>
-      </AnimatePresence>
+      {/* ── Background Image / Animated GIF layers (Preloaded & Persistent) ── */}
+      {slides.map((s, i) => {
+        const bgGrad = FALLBACK_GRADIENTS[i % FALLBACK_GRADIENTS.length];
+        const isActive = i === current;
+        return (
+          <div
+            key={`bg-layer-${i}`}
+            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+              isActive ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+            }`}
+          >
+            {s.backgroundImageUrl ? (
+              <img
+                src={s.backgroundImageUrl}
+                alt={s.title || `Hero Slide ${i + 1}`}
+                loading={i === 0 ? "eager" : "lazy"}
+                fetchPriority={i === 0 ? "high" : "low"}
+                decoding="async"
+                className="h-full w-full object-cover object-center"
+              />
+            ) : (
+              <div
+                className="h-full w-full"
+                style={{ background: bgGrad }}
+              />
+            )}
+          </div>
+        );
+      })}
 
       {/* ── Direct Video Upload background (muted, autoplay, looping) ── */}
       {slides.map((s, i) => {
