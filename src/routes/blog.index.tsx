@@ -6,7 +6,7 @@ import { ArrowUpRight, Clock, Sparkles } from "lucide-react";
 import { useSanity } from "@/integrations/sanity/useSanity";
 import { blogListQuery } from "@/integrations/sanity/queries";
 
-export const Route = createFileRoute("/blog")({
+export const Route = createFileRoute("/blog/")({
   head: () => ({
     meta: [
       { title: "Blog & Playbooks — ContentMesh" },
@@ -122,7 +122,7 @@ function Blog() {
           >
             <Link
               to="/blog/$slug"
-              params={{ slug: featured.slug }}
+              params={{ slug: featured.slug || "state-of-ai-video-2026" }}
               className="group mb-14 block overflow-hidden rounded-[2.5rem] border border-border/80 bg-card shadow-xl transition-all hover:shadow-2xl hover:border-primary/40 cursor-pointer"
             >
               <div className="grid gap-0 lg:grid-cols-12">
@@ -209,7 +209,7 @@ function Blog() {
             >
               <Link
                 to="/blog/$slug"
-                params={{ slug: p.slug }}
+                params={{ slug: p.slug || "state-of-ai-video-2026" }}
                 className="group relative flex flex-col h-full overflow-hidden rounded-[2rem] border border-border/70 bg-card p-6 shadow-sm transition-all hover:-translate-y-1.5 hover:border-primary/30 hover:shadow-xl cursor-pointer"
               >
                 {/* Image / Gradient preview */}

@@ -16,10 +16,10 @@ import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as PortfolioRouteImport } from './routes/portfolio'
 import { Route as ContactRouteImport } from './routes/contact'
-import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as StudioIndexRouteImport } from './routes/studio.index'
+import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as ToolsStoryboardGeneratorRouteImport } from './routes/tools/storyboard-generator'
 import { Route as StudioSplatRouteImport } from './routes/studio.$'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
@@ -63,11 +63,6 @@ const ContactRoute = ContactRouteImport.update({
   path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BlogRoute = BlogRouteImport.update({
-  id: '/blog',
-  path: '/blog',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
@@ -83,6 +78,11 @@ const StudioIndexRoute = StudioIndexRouteImport.update({
   path: '/studio/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ToolsStoryboardGeneratorRoute =
   ToolsStoryboardGeneratorRouteImport.update({
     id: '/tools/storyboard-generator',
@@ -95,9 +95,9 @@ const StudioSplatRoute = StudioSplatRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const BlogSlugRoute = BlogSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => BlogRoute,
+  id: '/blog/$slug',
+  path: '/blog/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ApiGenerateStoryboardRoute = ApiGenerateStoryboardRouteImport.update({
   id: '/api/generate-storyboard',
@@ -123,7 +123,6 @@ const ApiAssistantModifyRoute = ApiAssistantModifyRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/blog': typeof BlogRouteWithChildren
   '/contact': typeof ContactRoute
   '/portfolio': typeof PortfolioRoute
   '/pricing': typeof PricingRoute
@@ -138,12 +137,12 @@ export interface FileRoutesByFullPath {
   '/blog/$slug': typeof BlogSlugRoute
   '/studio/$': typeof StudioSplatRoute
   '/tools/storyboard-generator': typeof ToolsStoryboardGeneratorRoute
+  '/blog/': typeof BlogIndexRoute
   '/studio/': typeof StudioIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/blog': typeof BlogRouteWithChildren
   '/contact': typeof ContactRoute
   '/portfolio': typeof PortfolioRoute
   '/pricing': typeof PricingRoute
@@ -158,13 +157,13 @@ export interface FileRoutesByTo {
   '/blog/$slug': typeof BlogSlugRoute
   '/studio/$': typeof StudioSplatRoute
   '/tools/storyboard-generator': typeof ToolsStoryboardGeneratorRoute
+  '/blog': typeof BlogIndexRoute
   '/studio': typeof StudioIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/blog': typeof BlogRouteWithChildren
   '/contact': typeof ContactRoute
   '/portfolio': typeof PortfolioRoute
   '/pricing': typeof PricingRoute
@@ -179,6 +178,7 @@ export interface FileRoutesById {
   '/blog/$slug': typeof BlogSlugRoute
   '/studio/$': typeof StudioSplatRoute
   '/tools/storyboard-generator': typeof ToolsStoryboardGeneratorRoute
+  '/blog/': typeof BlogIndexRoute
   '/studio/': typeof StudioIndexRoute
 }
 export interface FileRouteTypes {
@@ -186,7 +186,6 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
-    | '/blog'
     | '/contact'
     | '/portfolio'
     | '/pricing'
@@ -201,12 +200,12 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/studio/$'
     | '/tools/storyboard-generator'
+    | '/blog/'
     | '/studio/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
-    | '/blog'
     | '/contact'
     | '/portfolio'
     | '/pricing'
@@ -221,12 +220,12 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/studio/$'
     | '/tools/storyboard-generator'
+    | '/blog'
     | '/studio'
   id:
     | '__root__'
     | '/'
     | '/about'
-    | '/blog'
     | '/contact'
     | '/portfolio'
     | '/pricing'
@@ -241,13 +240,13 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/studio/$'
     | '/tools/storyboard-generator'
+    | '/blog/'
     | '/studio/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
-  BlogRoute: typeof BlogRouteWithChildren
   ContactRoute: typeof ContactRoute
   PortfolioRoute: typeof PortfolioRoute
   PricingRoute: typeof PricingRoute
@@ -259,8 +258,10 @@ export interface RootRouteChildren {
   ApiChatRoute: typeof ApiChatRoute
   ApiContactRoute: typeof ApiContactRoute
   ApiGenerateStoryboardRoute: typeof ApiGenerateStoryboardRoute
+  BlogSlugRoute: typeof BlogSlugRoute
   StudioSplatRoute: typeof StudioSplatRoute
   ToolsStoryboardGeneratorRoute: typeof ToolsStoryboardGeneratorRoute
+  BlogIndexRoute: typeof BlogIndexRoute
   StudioIndexRoute: typeof StudioIndexRoute
 }
 
@@ -315,13 +316,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/blog': {
-      id: '/blog'
-      path: '/blog'
-      fullPath: '/blog'
-      preLoaderRoute: typeof BlogRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/about': {
       id: '/about'
       path: '/about'
@@ -343,6 +337,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StudioIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog/': {
+      id: '/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tools/storyboard-generator': {
       id: '/tools/storyboard-generator'
       path: '/tools/storyboard-generator'
@@ -359,10 +360,10 @@ declare module '@tanstack/react-router' {
     }
     '/blog/$slug': {
       id: '/blog/$slug'
-      path: '/$slug'
+      path: '/blog/$slug'
       fullPath: '/blog/$slug'
       preLoaderRoute: typeof BlogSlugRouteImport
-      parentRoute: typeof BlogRoute
+      parentRoute: typeof rootRouteImport
     }
     '/api/generate-storyboard': {
       id: '/api/generate-storyboard'
@@ -395,20 +396,9 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface BlogRouteChildren {
-  BlogSlugRoute: typeof BlogSlugRoute
-}
-
-const BlogRouteChildren: BlogRouteChildren = {
-  BlogSlugRoute: BlogSlugRoute,
-}
-
-const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
-  BlogRoute: BlogRouteWithChildren,
   ContactRoute: ContactRoute,
   PortfolioRoute: PortfolioRoute,
   PricingRoute: PricingRoute,
@@ -420,8 +410,10 @@ const rootRouteChildren: RootRouteChildren = {
   ApiChatRoute: ApiChatRoute,
   ApiContactRoute: ApiContactRoute,
   ApiGenerateStoryboardRoute: ApiGenerateStoryboardRoute,
+  BlogSlugRoute: BlogSlugRoute,
   StudioSplatRoute: StudioSplatRoute,
   ToolsStoryboardGeneratorRoute: ToolsStoryboardGeneratorRoute,
+  BlogIndexRoute: BlogIndexRoute,
   StudioIndexRoute: StudioIndexRoute,
 }
 export const routeTree = rootRouteImport
