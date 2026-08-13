@@ -22,10 +22,10 @@ const FALLBACK_ITEMS: Item[] = [
   { _id: "f2", title: "Halo Wireless — Hero", category: "Product Videos", featured: true },
   { _id: "f3", title: "Nova Robotics Loop", category: "Animations", featured: true },
   { _id: "f4", title: "Fjord — Field Story", category: "Corporate", featured: true },
-  { _id: "f5", title: "Kairos AI Explainer", category: "Explainers" },
+  { _id: "f5", title: "Kairos AI Explainer", category: "Talking Head" },
   { _id: "f6", title: "Vantage Reels Set", category: "Reels" },
   { _id: "f7", title: "Lumen Series — S02", category: "AI Ads" },
-  { _id: "f8", title: "Orbita — Onboarding", category: "Explainers" },
+  { _id: "f8", title: "Orbita — Onboarding", category: "Talking Head" },
 ];
 
 const GRADIENTS = [

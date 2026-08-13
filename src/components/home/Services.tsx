@@ -175,8 +175,8 @@ const SERVICES_DATA: ServiceItem[] = [
   },
   {
     _id: "8",
-    title: "Explainers",
-    fullTitle: "Corporate Explainers & SaaS Product Demos",
+    title: "Talking Head",
+    fullTitle: "Talking Head & SaaS Product Demos",
     category: "Production",
     color: "#fde047", // Soft Gold
     iconImg: "/services/explainers.jpg",
