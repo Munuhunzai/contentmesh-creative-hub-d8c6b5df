@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Zap,
   Award,
-  Sparkles,
   ShieldCheck,
   CheckCircle2,
   XCircle,
@@ -45,7 +44,7 @@ export function WhyUs() {
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              <Sparkles className="h-4 w-4" /> ContentMesh AI Studio
+              ContentMesh AI Studio
             </button>
             <button
               onClick={() => setActiveTab("traditional")}
