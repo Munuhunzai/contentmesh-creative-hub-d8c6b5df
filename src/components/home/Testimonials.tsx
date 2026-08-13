@@ -146,8 +146,8 @@ export function Testimonials() {
                 aria-label={`Go to review slide ${idx + 1}`}
                 className={`h-1.5 rounded-full transition-all duration-300 ${
                   isActive
-                    ? "w-8 bg-[#0d9488]"
-                    : "w-6 bg-[#99f6e4] opacity-60 hover:opacity-100"
+                    ? "w-8 bg-[#FF5A1F]"
+                    : "w-6 bg-[#ffb899] opacity-60 hover:opacity-100"
                 }`}
               />
             );
