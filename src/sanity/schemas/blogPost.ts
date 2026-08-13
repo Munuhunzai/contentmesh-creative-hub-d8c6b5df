@@ -13,7 +13,17 @@ export default defineType({
       name: "body",
       type: "array",
       of: [
-        { type: "block" },
+        {
+          type: "block",
+          styles: [
+            { title: "Normal", value: "normal" },
+            { title: "Heading 1 (H1)", value: "h1" },
+            { title: "Heading 2 (H2)", value: "h2" },
+            { title: "Heading 3 (H3)", value: "h3" },
+            { title: "Heading 4 (H4)", value: "h4" },
+            { title: "Quote", value: "blockquote" },
+          ],
+        },
         { type: "image", options: { hotspot: true } },
       ],
     }),
