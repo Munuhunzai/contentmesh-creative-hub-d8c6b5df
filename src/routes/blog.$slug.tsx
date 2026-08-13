@@ -129,6 +129,77 @@ export const Route = createFileRoute("/blog/$slug")({
   notFoundComponent: PostNotFound,
 });
 
+const portableTextComponents = {
+  block: {
+    h1: ({ children }: any) => (
+      <h1 className="mt-12 mb-4 font-display text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
+        {children}
+      </h1>
+    ),
+    h2: ({ children }: any) => (
+      <h2 className="mt-10 mb-4 font-display text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
+        {children}
+      </h2>
+    ),
+    h3: ({ children }: any) => (
+      <h3 className="mt-8 mb-3 font-display text-xl sm:text-2xl font-semibold text-foreground">
+        {children}
+      </h3>
+    ),
+    h4: ({ children }: any) => (
+      <h4 className="mt-6 mb-2 font-display text-lg font-semibold text-foreground">
+        {children}
+      </h4>
+    ),
+    normal: ({ children }: any) => (
+      <p className="mb-6 leading-relaxed text-foreground/90 text-base">
+        {children}
+      </p>
+    ),
+    blockquote: ({ children }: any) => (
+      <blockquote className="my-6 border-l-4 border-accent pl-4 italic text-muted-foreground">
+        {children}
+      </blockquote>
+    ),
+  },
+  list: {
+    bullet: ({ children }: any) => (
+      <ul className="mb-6 ml-6 list-disc space-y-2 text-foreground/90">
+        {children}
+      </ul>
+    ),
+    number: ({ children }: any) => (
+      <ol className="mb-6 ml-6 list-decimal space-y-2 text-foreground/90">
+        {children}
+      </ol>
+    ),
+  },
+  listItem: {
+    bullet: ({ children }: any) => <li>{children}</li>,
+    number: ({ children }: any) => <li>{children}</li>,
+  },
+  marks: {
+    strong: ({ children }: any) => <strong className="font-semibold text-foreground">{children}</strong>,
+    em: ({ children }: any) => <em className="italic">{children}</em>,
+    code: ({ children }: any) => (
+      <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-sm">{children}</code>
+    ),
+    link: ({ value, children }: any) => {
+      const target = (value?.href || "").startsWith("http") ? "_blank" : undefined;
+      return (
+        <a
+          href={value?.href}
+          target={target}
+          rel={target === "_blank" ? "noindex nofollow" : undefined}
+          className="font-medium text-accent underline underline-offset-4 hover:opacity-80"
+        >
+          {children}
+        </a>
+      );
+    },
+  },
+};
+
 function BlogPost() {
   const post = Route.useLoaderData();
   if (!post) throw notFound();
@@ -147,7 +218,7 @@ function BlogPost() {
         </div>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           {post.body ? (
-            <PortableText value={post.body} />
+            <PortableText value={post.body} components={portableTextComponents} />
           ) : post.contentBlocks ? (
             <div className="space-y-6 text-foreground/90 leading-relaxed whitespace-pre-line">
               {post.contentBlocks.map((block, idx) => (
