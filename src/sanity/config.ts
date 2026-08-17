@@ -32,6 +32,7 @@ export default defineConfig({
             S.documentTypeListItem("teamMember").title("Team"),
             S.documentTypeListItem("faq").title("FAQs"),
             S.documentTypeListItem("blogPost").title("Blog Posts"),
+            S.documentTypeListItem("pricingPlan").title("Pricing Plans"),
           ]),
     }),
     visionTool({ defaultApiVersion: SANITY_API_VERSION }),
