@@ -29,11 +29,12 @@ export default defineType({
     defineField({ name: "address", type: "text", rows: 2 }),
     defineField({
       name: "defaultSeo",
+      title: "Default SEO Settings",
       type: "object",
       fields: [
-        defineField({ name: "metaTitle", type: "string" }),
-        defineField({ name: "metaDescription", type: "text", rows: 2 }),
-        defineField({ name: "ogImage", type: "image" }),
+        defineField({ name: "metaTitle", title: "SEO Meta Title", type: "string" }),
+        defineField({ name: "metaDescription", title: "SEO Meta Description", type: "text", rows: 2 }),
+        defineField({ name: "ogImage", title: "SEO Social Sharing Image", type: "image" }),
       ],
     }),
   ],
