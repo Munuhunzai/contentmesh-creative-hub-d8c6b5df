@@ -141,12 +141,6 @@ function Blog() {
                       <Sparkles className="h-20 w-20 text-white/20" />
                     </div>
                   )}
-                  {/* Badge */}
-                  <div className="absolute left-6 top-6">
-                    <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-orange-400">
-                      <Sparkles className="h-3 w-3" /> Featured Story
-                    </span>
-                  </div>
                 </div>
 
                 {/* Text content */}

@@ -42,9 +42,9 @@ export const faqQuery = /* groq */ `*[_type == "faq"] | order(order asc){
   _id, question, answer, category
 }`;
 
-export const blogListQuery = /* groq */ `*[_type == "blogPost"] | order(coalesce(publishedAt, _createdAt) desc){
+export const blogListQuery = /* groq */ `*[_type == "blogPost"] | order(isFeatured desc, coalesce(publishedAt, _createdAt) desc){
   _id, title, "slug": slug.current, excerpt,
-  "coverUrl": cover.asset->url, publishedAt, tags,
+  "coverUrl": cover.asset->url, publishedAt, tags, isFeatured,
   "authorName": author->name
 }`;
 

@@ -29,6 +29,13 @@ export default defineType({
     }),
     defineField({ name: "author", type: "reference", to: [{ type: "teamMember" }] }),
     defineField({ name: "publishedAt", type: "datetime" }),
+    defineField({
+      name: "isFeatured",
+      title: "Featured Article (Show at Top)",
+      type: "boolean",
+      description: "Toggle ON to feature this article at the top of the blog page.",
+      initialValue: false,
+    }),
     defineField({ name: "tags", type: "array", of: [{ type: "string" }], options: { layout: "tags" } }),
   ],
   preview: { select: { title: "title", subtitle: "publishedAt", media: "cover" } },
