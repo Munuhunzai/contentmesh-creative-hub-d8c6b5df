@@ -4,7 +4,7 @@ import { SiteLayout } from "@/components/layout/SiteLayout";
 import { PageHero } from "@/components/layout/PageHero";
 import { sanityClient } from "@/integrations/sanity/client";
 import { blogPostBySlugQuery } from "@/integrations/sanity/queries";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 type Post = {
   _id: string;
@@ -229,9 +229,36 @@ function BlogPost() {
             <p className="text-muted-foreground">This article has no content yet.</p>
           )}
         </div>
-        <Link to="/blog" className="mt-12 inline-flex items-center gap-1.5 text-sm font-semibold text-accent">
-          <ArrowLeft className="h-3.5 w-3.5" /> Back to blog
-        </Link>
+
+        {/* ── End of Blog CTA Banner ── */}
+        <div className="mt-14 relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#040816] via-[#0E447F] to-[#FF5A1F] p-6 sm:p-8 text-white shadow-2xl">
+          <div className="absolute inset-0 mesh-bg opacity-30 mix-blend-overlay pointer-events-none" />
+          <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+            <div className="max-w-xl">
+              <span className="text-[11px] font-bold uppercase tracking-widest text-[#FF5A1F] bg-white/10 px-3 py-1 rounded-full inline-block backdrop-blur-sm">
+                Ready to Scale Your Visuals?
+              </span>
+              <h3 className="mt-3 font-display text-2xl sm:text-3xl font-bold leading-tight">
+                Get Custom AI Video & Creative Services
+              </h3>
+              <p className="mt-2 text-xs sm:text-sm text-white/80 leading-relaxed">
+                Let ContentMesh build high-performing AI video ads, product showcases, animations, or custom avatars for your brand.
+              </p>
+            </div>
+            <Link
+              to="/contact"
+              className="inline-flex shrink-0 items-center gap-2 rounded-full bg-[#FF5A1F] px-6 py-3.5 text-xs sm:text-sm font-bold uppercase tracking-wider text-white shadow-lg shadow-[#FF5A1F]/30 transition-transform hover:scale-105 hover:bg-[#ff6e38]"
+            >
+              Get Our Services <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </div>
+
+        <div className="mt-10 flex items-center justify-between">
+          <Link to="/blog" className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent hover:underline">
+            <ArrowLeft className="h-3.5 w-3.5" /> Back to all articles
+          </Link>
+        </div>
       </article>
     </SiteLayout>
   );
