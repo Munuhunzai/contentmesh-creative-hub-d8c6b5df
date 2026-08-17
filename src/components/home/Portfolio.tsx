@@ -52,20 +52,27 @@ function getGoogleDriveFileId(url: string): string | null {
   return null;
 }
 
-/** Native HTML5 video player for Google Drive video streams with iframe fallback */
+/** Native HTML5 video player for Google Drive video streams with iframe fallback and pop-out button mask */
 function GoogleDriveVideoPlayer({ fileId, title }: { fileId: string; title: string }) {
   const [failedDirect, setFailedDirect] = useState(false);
 
   if (failedDirect) {
     return (
-      <iframe
-        src={`https://drive.google.com/file/d/${fileId}/preview`}
-        title={title}
-        allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
-        allowFullScreen
-        className="h-full w-full max-h-[50dvh] sm:max-h-[55vh]"
-        style={{ border: "none" }}
-      />
+      <div className="relative w-full h-full max-h-[50dvh] sm:max-h-[55vh] overflow-hidden bg-black">
+        <iframe
+          src={`https://drive.google.com/file/d/${fileId}/preview`}
+          title={title}
+          allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+          allowFullScreen
+          className="h-full w-full"
+          style={{ border: "none" }}
+        />
+        {/* Mask to block & hide Google Drive top-right pop-out button [↗] */}
+        <div
+          className="absolute top-0 right-0 h-14 w-20 bg-black z-20 pointer-events-auto"
+          aria-hidden
+        />
+      </div>
     );
   }
 
