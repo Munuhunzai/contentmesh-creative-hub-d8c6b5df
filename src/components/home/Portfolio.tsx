@@ -4,6 +4,7 @@ import { Play, X } from "lucide-react";
 import { useSanity } from "@/integrations/sanity/useSanity";
 import { portfolioQuery } from "@/integrations/sanity/queries";
 import { SectionHeader } from "./Services";
+import { optimizeSanityImage } from "@/lib/sanity-image";
 
 type Item = {
   _id: string;
@@ -129,7 +130,7 @@ export function Portfolio() {
                 exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ duration: 0.35 }}
                 className={`group relative overflow-hidden rounded-3xl text-left ${span}`}
-                style={{ background: p.thumbnailUrl ? `url(${p.thumbnailUrl}) center/cover` : gradient }}
+                style={{ background: p.thumbnailUrl ? `url(${optimizeSanityImage(p.thumbnailUrl, 800, 75)}) center/cover` : gradient }}
               >
                 {!p.thumbnailUrl && <div className="absolute inset-0 mesh-bg opacity-40 mix-blend-overlay" />}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80" />

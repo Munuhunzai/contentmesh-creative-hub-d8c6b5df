@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { useSanity } from "@/integrations/sanity/useSanity";
 import { homepageQuery } from "@/integrations/sanity/queries";
+import { optimizeSanityImage } from "@/lib/sanity-image";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -163,7 +164,7 @@ export function Hero() {
           >
             {s.backgroundImageUrl ? (
               <img
-                src={s.backgroundImageUrl}
+                src={optimizeSanityImage(s.backgroundImageUrl, 1600, 80)}
                 alt={s.title || `Hero Slide ${i + 1}`}
                 loading={i === 0 ? "eager" : "lazy"}
                 fetchPriority={i === 0 ? "high" : "low"}
@@ -191,6 +192,7 @@ export function Hero() {
             loop
             muted
             playsInline
+            preload={i === current ? "auto" : "none"}
             className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
               i === current ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
             }`}
@@ -198,11 +200,11 @@ export function Hero() {
         );
       })}
 
-      {/* ── YouTube background video (muted, autoplay, looping) ── */}
+      {/* ── YouTube background video (muted, autoplay, looping - active slide only) ── */}
       {slides.map((s, i) => {
         if (s.videoFileUrl) return null;
         const id = s.youtubeUrl ? extractYouTubeId(s.youtubeUrl) : null;
-        if (!id) return null;
+        if (!id || i !== current) return null;
         return (
           <YouTubeBackground key={`yt-${i}`} videoId={id} active={i === current} />
         );
