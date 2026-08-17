@@ -39,17 +39,53 @@ const GRADIENTS = [
 ];
 const SPANS = ["sm:col-span-2 sm:row-span-2", "", "", "sm:col-span-2", "", "", "sm:col-span-2", ""];
 
-/** Extract Google Drive embed preview URL from shareable links */
-function getGoogleDriveEmbedUrl(url: string): string | null {
+/** Extract Google Drive file ID */
+function getGoogleDriveFileId(url: string): string | null {
   try {
     const fileIdMatch = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
     if (fileIdMatch && fileIdMatch[1]) {
-      return `https://drive.google.com/file/d/${fileIdMatch[1]}/preview`;
+      return fileIdMatch[1];
     }
   } catch {
     return null;
   }
   return null;
+}
+
+/** Native HTML5 video player for Google Drive video streams with iframe fallback */
+function GoogleDriveVideoPlayer({ fileId, title }: { fileId: string; title: string }) {
+  const [failedDirect, setFailedDirect] = useState(false);
+
+  if (failedDirect) {
+    return (
+      <iframe
+        src={`https://drive.google.com/file/d/${fileId}/preview`}
+        title={title}
+        allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+        allowFullScreen
+        className="h-full w-full max-h-[50dvh] sm:max-h-[55vh]"
+        style={{ border: "none" }}
+      />
+    );
+  }
+
+  return (
+    <video
+      ref={(el) => {
+        if (el) {
+          const p = el.play();
+          if (p !== undefined) p.catch(() => {});
+        }
+      }}
+      onError={() => setFailedDirect(true)}
+      src={`https://lh3.googleusercontent.com/d/${fileId}`}
+      controls
+      autoPlay
+      playsInline
+      preload="auto"
+      className="h-full w-full max-h-[50dvh] sm:max-h-[55vh] object-contain bg-black"
+    />
+  );
 }
 
 /** Extract Vimeo ID */
@@ -197,14 +233,10 @@ export function Portfolio() {
                     preload="auto"
                     className="h-full w-full max-h-[50dvh] sm:max-h-[55vh] object-contain bg-black"
                   />
-                ) : open.videoUrl && getGoogleDriveEmbedUrl(open.videoUrl) ? (
-                  <iframe
-                    src={getGoogleDriveEmbedUrl(open.videoUrl)!}
+                ) : open.videoUrl && getGoogleDriveFileId(open.videoUrl) ? (
+                  <GoogleDriveVideoPlayer
+                    fileId={getGoogleDriveFileId(open.videoUrl)!}
                     title={open.title}
-                    allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
-                    allowFullScreen
-                    className="h-full w-full max-h-[50dvh] sm:max-h-[55vh]"
-                    style={{ border: "none" }}
                   />
                 ) : open.videoUrl && getYouTubeId(open.videoUrl) ? (
                   <iframe
