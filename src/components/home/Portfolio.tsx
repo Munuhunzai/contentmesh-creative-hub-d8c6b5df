@@ -162,19 +162,25 @@ export function Portfolio() {
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.95, y: 20 }}
               onClick={(e) => e.stopPropagation()}
-              className="relative flex flex-col w-full max-w-3xl max-h-[90dvh] sm:max-h-[85vh] my-auto overflow-hidden rounded-2xl sm:rounded-3xl bg-card shadow-2xl"
+              className="relative flex flex-col w-full max-w-3xl max-h-[92dvh] sm:max-h-[85vh] my-auto overflow-hidden rounded-2xl sm:rounded-3xl bg-card shadow-2xl border border-border/40"
             >
-              {/* Close */}
-              <button
-                onClick={() => setOpen(null)}
-                className="absolute right-3 top-3 sm:right-4 sm:top-4 z-30 grid h-9 w-9 sm:h-10 sm:w-10 place-items-center rounded-full bg-black/80 text-white border border-white/20 shadow-2xl backdrop-blur-md transition-all hover:bg-black hover:scale-105 active:scale-95"
-                aria-label="Close"
-              >
-                <X className="h-4 w-4 sm:h-5 sm:w-5" />
-              </button>
+              {/* Header Bar — 100% separate from video controls */}
+              <div className="flex items-center justify-between px-4 py-3 border-b border-border/40 bg-card shrink-0 z-30">
+                <div className="min-w-0 pr-3">
+                  <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-widest text-accent">{open.category}</p>
+                  <h3 className="text-base sm:text-lg font-display font-bold text-foreground truncate">{open.title}</h3>
+                </div>
+                <button
+                  onClick={() => setOpen(null)}
+                  className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-muted text-foreground transition-all hover:bg-muted/80 active:scale-95 border border-border/50"
+                  aria-label="Close modal"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
 
-              {/* Video / thumbnail area */}
-              <div className="relative w-full shrink-0 bg-black flex items-center justify-center max-h-[50dvh] sm:max-h-[60vh] aspect-video">
+              {/* Video / thumbnail area — Completely clean, zero control overlap! */}
+              <div className="relative w-full shrink-0 bg-black flex items-center justify-center max-h-[50dvh] sm:max-h-[55vh] aspect-video">
                 {open.videoFileUrl ? (
                   <video
                     ref={(el) => {
@@ -188,7 +194,7 @@ export function Portfolio() {
                     autoPlay
                     playsInline
                     preload="auto"
-                    className="h-full w-full max-h-[50dvh] sm:max-h-[60vh] object-contain bg-black"
+                    className="h-full w-full max-h-[50dvh] sm:max-h-[55vh] object-contain bg-black"
                   />
                 ) : open.videoUrl && getGoogleDriveEmbedUrl(open.videoUrl) ? (
                   <iframe
@@ -196,7 +202,7 @@ export function Portfolio() {
                     title={open.title}
                     allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
                     allowFullScreen
-                    className="h-full w-full max-h-[50dvh] sm:max-h-[60vh]"
+                    className="h-full w-full max-h-[50dvh] sm:max-h-[55vh]"
                     style={{ border: "none" }}
                   />
                 ) : open.videoUrl && getYouTubeId(open.videoUrl) ? (
@@ -205,7 +211,7 @@ export function Portfolio() {
                     title={open.title}
                     allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
                     allowFullScreen
-                    className="h-full w-full max-h-[50dvh] sm:max-h-[60vh]"
+                    className="h-full w-full max-h-[50dvh] sm:max-h-[55vh]"
                     style={{ border: "none" }}
                   />
                 ) : open.videoUrl && getVimeoId(open.videoUrl) ? (
@@ -214,7 +220,7 @@ export function Portfolio() {
                     title={open.title}
                     allow="autoplay; fullscreen; picture-in-picture"
                     allowFullScreen
-                    className="h-full w-full max-h-[50dvh] sm:max-h-[60vh]"
+                    className="h-full w-full max-h-[50dvh] sm:max-h-[55vh]"
                     style={{ border: "none" }}
                   />
                 ) : open.videoUrl ? (
@@ -230,17 +236,17 @@ export function Portfolio() {
                     autoPlay
                     playsInline
                     preload="auto"
-                    className="h-full w-full max-h-[50dvh] sm:max-h-[60vh] object-contain bg-black"
+                    className="h-full w-full max-h-[50dvh] sm:max-h-[55vh] object-contain bg-black"
                   />
                 ) : open.thumbnailUrl ? (
                   <img
                     src={open.thumbnailUrl}
                     alt={open.title}
-                    className="h-full w-full max-h-[50dvh] sm:max-h-[60vh] object-cover"
+                    className="h-full w-full max-h-[50dvh] sm:max-h-[55vh] object-cover"
                   />
                 ) : (
                   <div
-                    className="h-full w-full max-h-[50dvh] sm:max-h-[60vh]"
+                    className="h-full w-full max-h-[50dvh] sm:max-h-[55vh]"
                     style={{ background: "linear-gradient(135deg,#0D4C92,#FF5A1F)" }}
                   >
                     <div className="h-full w-full mesh-bg mix-blend-overlay" />
@@ -248,14 +254,12 @@ export function Portfolio() {
                 )}
               </div>
 
-              {/* Info */}
-              <div className="p-4 sm:p-6 overflow-y-auto min-h-0 flex-1">
-                <p className="text-xs font-semibold uppercase tracking-widest text-accent">{open.category}</p>
-                <h3 className="mt-1 sm:mt-2 font-display text-xl sm:text-2xl font-bold">{open.title}</h3>
+              {/* Info Description */}
+              <div className="p-4 sm:p-5 overflow-y-auto min-h-0 flex-1 bg-card">
                 {open.client && (
-                  <p className="mt-1 text-xs sm:text-sm text-muted-foreground">Client: {open.client}</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground font-medium mb-1">Client: {open.client}</p>
                 )}
-                <p className="mt-2 sm:mt-3 text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
                   {open.description ?? "A cinematic production blending AI generation, live-action plates and premium sound design."}
                 </p>
               </div>
