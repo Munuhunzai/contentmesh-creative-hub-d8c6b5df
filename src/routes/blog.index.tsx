@@ -3,7 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { PageHero } from "@/components/layout/PageHero";
-import { ArrowUpRight, Clock, Sparkles, Search, X } from "lucide-react";
+import { ArrowUpRight, Clock, Sparkles, Search, X, ChevronDown } from "lucide-react";
 import { useSanity } from "@/integrations/sanity/useSanity";
 import { blogListQuery } from "@/integrations/sanity/queries";
 
@@ -136,49 +136,70 @@ function Blog() {
 
       <section className="mx-auto max-w-7xl px-6 pb-24">
         {/* ── Search Bar & Category Filter ── */}
-        <div className="mb-12 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
-          {/* Search Input */}
-          <div className="relative w-full sm:max-w-md">
-            <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search articles, topics, playbooks..."
-              className="w-full rounded-full border border-border/80 bg-background/90 py-3 pl-11 pr-10 text-sm text-foreground placeholder:text-muted-foreground focus:border-[#FF5A1F] focus:outline-none focus:ring-2 focus:ring-[#FF5A1F]/20 backdrop-blur-xl shadow-sm transition-all"
-            />
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery("")}
-                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground p-1"
-                aria-label="Clear search"
-              >
-                <X className="h-4 w-4" />
-              </button>
+        <div className="mb-12 space-y-4">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+            {/* Search Input */}
+            <div className="relative w-full sm:max-w-md">
+              <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search articles, topics, playbooks..."
+                className="w-full rounded-full border border-border/80 bg-background/90 py-3 pl-11 pr-10 text-sm text-foreground placeholder:text-muted-foreground focus:border-[#FF5A1F] focus:outline-none focus:ring-2 focus:ring-[#FF5A1F]/20 backdrop-blur-xl shadow-sm transition-all"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground p-1"
+                  aria-label="Clear search"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              )}
+            </div>
+
+            {/* Category Dropdown (Mobile view) */}
+            {allTags.length > 0 && (
+              <div className="sm:hidden relative w-full">
+                <select
+                  value={selectedTag ?? ""}
+                  onChange={(e) => setSelectedTag(e.target.value || null)}
+                  className="w-full appearance-none rounded-full border border-border/80 bg-background/90 py-3 px-5 text-xs font-bold text-foreground focus:border-[#FF5A1F] focus:outline-none shadow-sm"
+                >
+                  <option value="">All Categories ({list.length})</option>
+                  {allTags.map((tag) => (
+                    <option key={tag} value={tag}>
+                      {tag}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+              </div>
             )}
           </div>
 
-          {/* Tag Filter Pills */}
+          {/* Category Tag Pills (Desktop / Tablet view) — Flex wrap grid without scrollbar */}
           {allTags.length > 0 && (
-            <div className="flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0 scrollbar-none">
+            <div className="hidden sm:flex flex-wrap items-center gap-2 pt-2">
               <button
                 onClick={() => setSelectedTag(null)}
-                className={`rounded-full px-4 py-2 text-xs font-bold transition-all whitespace-nowrap ${
+                className={`rounded-full px-4 py-2 text-xs font-bold transition-all ${
                   selectedTag === null
-                    ? "bg-[#FF5A1F] text-white shadow-md shadow-[#FF5A1F]/20"
-                    : "bg-secondary text-muted-foreground hover:text-foreground"
+                    ? "bg-[#FF5A1F] text-white shadow-md shadow-[#FF5A1F]/20 scale-105"
+                    : "bg-secondary/80 text-muted-foreground hover:text-foreground hover:bg-secondary"
                 }`}
               >
-                All Articles
+                All Articles ({list.length})
               </button>
               {allTags.map((tag) => (
                 <button
                   key={tag}
                   onClick={() => setSelectedTag(tag === selectedTag ? null : tag)}
-                  className={`rounded-full px-4 py-2 text-xs font-bold transition-all whitespace-nowrap ${
+                  className={`rounded-full px-4 py-2 text-xs font-bold transition-all ${
                     selectedTag === tag
-                      ? "bg-[#FF5A1F] text-white shadow-md shadow-[#FF5A1F]/20"
-                      : "bg-secondary text-muted-foreground hover:text-foreground"
+                      ? "bg-[#FF5A1F] text-white shadow-md shadow-[#FF5A1F]/20 scale-105"
+                      : "bg-secondary/80 text-muted-foreground hover:text-foreground hover:bg-secondary"
                   }`}
                 >
                   {tag}
