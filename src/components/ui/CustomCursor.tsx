@@ -12,7 +12,7 @@ export function CustomCursor() {
   const mouseX = useMotionValue(-100);
   const mouseY = useMotionValue(-100);
 
-  // Responsive spring with high stiffness & low mass for tight, smooth tracking
+  // High stiffness spring for responsive, smooth tracking
   const springConfig = { damping: 30, stiffness: 500, mass: 0.15 };
   const cursorX = useSpring(mouseX, springConfig);
   const cursorY = useSpring(mouseY, springConfig);
@@ -37,21 +37,21 @@ export function CustomCursor() {
       const dx = e.clientX - lastPosRef.current.x;
       const dy = e.clientY - lastPosRef.current.y;
       const distance = Math.hypot(dx, dy);
-      const currentSpeed = distance / dt; // px per ms
+      const currentSpeed = distance / dt;
 
       lastPosRef.current = { x: e.clientX, y: e.clientY, time: now };
 
       mouseX.set(e.clientX);
       mouseY.set(e.clientY);
 
-      // Speed stretch calculation (subtly stretch orange streaks during fast movement)
+      // Speed stretch calculation
       const normalizedSpeed = Math.min(currentSpeed * 12, 1);
       setSpeed(normalizedSpeed);
 
       if (speedTimeoutRef.current) clearTimeout(speedTimeoutRef.current);
       speedTimeoutRef.current = setTimeout(() => setSpeed(0), 40);
 
-      // Check target under pointer
+      // Target element detection
       const target = e.target as HTMLElement | null;
       if (target) {
         // Text field detection
@@ -113,8 +113,11 @@ export function CustomCursor() {
   const size = isHovered ? 38 : 30;
 
   // Streak stretch & click compression
-  const scaleXStretch = 1 + speed * 0.3; // subtle stretch on fast motion
-  const clickScale = isClicked ? 0.85 : 1; // 85% compression on mousedown
+  const scaleXStretch = 1 + speed * 0.25;
+  const clickScale = isClicked ? 0.85 : 1;
+
+  // Active cursor image asset: Arrow vs Hand on hover
+  const activeCursorSrc = isHovered ? "/cursor_hand.png" : "/cursor.png";
 
   return (
     <motion.div
@@ -132,8 +135,8 @@ export function CustomCursor() {
           scaleX: scaleXStretch * clickScale,
           scaleY: clickScale,
           filter: isHovered
-            ? "drop-shadow(0 0 12px rgba(255, 90, 31, 0.8)) drop-shadow(0 0 20px rgba(255, 90, 31, 0.45))"
-            : "drop-shadow(0 0 5px rgba(255, 90, 31, 0.35))",
+            ? "drop-shadow(0 0 12px rgba(255, 90, 31, 0.85)) drop-shadow(0 0 20px rgba(13, 76, 146, 0.5))"
+            : "drop-shadow(0 0 6px rgba(255, 90, 31, 0.4))",
         }}
         transition={{
           width: { duration: 0.15, ease: "easeOut" },
@@ -148,7 +151,8 @@ export function CustomCursor() {
         }}
       >
         <img
-          src="/cursor.png"
+          key={activeCursorSrc}
+          src={activeCursorSrc}
           alt=""
           className="h-full w-full object-contain pointer-events-none"
         />
