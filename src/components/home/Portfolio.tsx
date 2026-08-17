@@ -155,78 +155,92 @@ export function Portfolio() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setOpen(null)}
-            className="fixed inset-0 z-[200] grid place-items-center bg-black/85 p-4 backdrop-blur-md"
+            className="fixed inset-0 z-[200] grid place-items-center bg-black/85 p-2 sm:p-4 backdrop-blur-md overflow-y-auto"
           >
             <motion.div
               initial={{ scale: 0.95, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.95, y: 20 }}
               onClick={(e) => e.stopPropagation()}
-              className="relative w-full max-w-3xl overflow-hidden rounded-3xl bg-card shadow-2xl"
+              className="relative flex flex-col w-full max-w-3xl max-h-[90dvh] sm:max-h-[85vh] my-auto overflow-hidden rounded-2xl sm:rounded-3xl bg-card shadow-2xl"
             >
               {/* Close */}
               <button
                 onClick={() => setOpen(null)}
-                className="absolute right-4 top-4 z-20 grid h-10 w-10 place-items-center rounded-full bg-black/75 text-white border border-white/20 shadow-xl transition-all hover:bg-black hover:scale-105 active:scale-95"
+                className="absolute right-3 top-3 sm:right-4 sm:top-4 z-30 grid h-9 w-9 sm:h-10 sm:w-10 place-items-center rounded-full bg-black/80 text-white border border-white/20 shadow-2xl backdrop-blur-md transition-all hover:bg-black hover:scale-105 active:scale-95"
                 aria-label="Close"
               >
-                <X className="h-5 w-5" />
+                <X className="h-4 w-4 sm:h-5 sm:w-5" />
               </button>
 
               {/* Video / thumbnail area */}
-              <div className="aspect-video w-full bg-black">
+              <div className="relative w-full shrink-0 bg-black flex items-center justify-center max-h-[50dvh] sm:max-h-[60vh] aspect-video">
                 {open.videoFileUrl ? (
                   <video
+                    ref={(el) => {
+                      if (el) {
+                        const p = el.play();
+                        if (p !== undefined) p.catch(() => {});
+                      }
+                    }}
                     src={open.videoFileUrl}
                     controls
                     autoPlay
                     playsInline
-                    className="h-full w-full object-contain"
+                    preload="auto"
+                    className="h-full w-full max-h-[50dvh] sm:max-h-[60vh] object-contain bg-black"
                   />
                 ) : open.videoUrl && getGoogleDriveEmbedUrl(open.videoUrl) ? (
                   <iframe
                     src={getGoogleDriveEmbedUrl(open.videoUrl)!}
                     title={open.title}
-                    allow="autoplay; encrypted-media; picture-in-picture"
+                    allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
                     allowFullScreen
-                    className="h-full w-full"
+                    className="h-full w-full max-h-[50dvh] sm:max-h-[60vh]"
                     style={{ border: "none" }}
                   />
                 ) : open.videoUrl && getYouTubeId(open.videoUrl) ? (
                   <iframe
-                    src={`https://www.youtube-nocookie.com/embed/${getYouTubeId(open.videoUrl)}?autoplay=1&rel=0&modestbranding=1`}
+                    src={`https://www.youtube-nocookie.com/embed/${getYouTubeId(open.videoUrl)}?autoplay=1&playsinline=1&rel=0&modestbranding=1&enablejsapi=1`}
                     title={open.title}
-                    allow="autoplay; encrypted-media; picture-in-picture"
+                    allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
                     allowFullScreen
-                    className="h-full w-full"
+                    className="h-full w-full max-h-[50dvh] sm:max-h-[60vh]"
                     style={{ border: "none" }}
                   />
                 ) : open.videoUrl && getVimeoId(open.videoUrl) ? (
                   <iframe
-                    src={`https://player.vimeo.com/video/${getVimeoId(open.videoUrl)}?autoplay=1`}
+                    src={`https://player.vimeo.com/video/${getVimeoId(open.videoUrl)}?autoplay=1&playsinline=1`}
                     title={open.title}
                     allow="autoplay; fullscreen; picture-in-picture"
                     allowFullScreen
-                    className="h-full w-full"
+                    className="h-full w-full max-h-[50dvh] sm:max-h-[60vh]"
                     style={{ border: "none" }}
                   />
                 ) : open.videoUrl ? (
                   <video
+                    ref={(el) => {
+                      if (el) {
+                        const p = el.play();
+                        if (p !== undefined) p.catch(() => {});
+                      }
+                    }}
                     src={open.videoUrl}
                     controls
                     autoPlay
                     playsInline
-                    className="h-full w-full object-contain"
+                    preload="auto"
+                    className="h-full w-full max-h-[50dvh] sm:max-h-[60vh] object-contain bg-black"
                   />
                 ) : open.thumbnailUrl ? (
                   <img
                     src={open.thumbnailUrl}
                     alt={open.title}
-                    className="h-full w-full object-cover"
+                    className="h-full w-full max-h-[50dvh] sm:max-h-[60vh] object-cover"
                   />
                 ) : (
                   <div
-                    className="h-full w-full"
+                    className="h-full w-full max-h-[50dvh] sm:max-h-[60vh]"
                     style={{ background: "linear-gradient(135deg,#0D4C92,#FF5A1F)" }}
                   >
                     <div className="h-full w-full mesh-bg mix-blend-overlay" />
@@ -235,13 +249,13 @@ export function Portfolio() {
               </div>
 
               {/* Info */}
-              <div className="p-6">
+              <div className="p-4 sm:p-6 overflow-y-auto min-h-0 flex-1">
                 <p className="text-xs font-semibold uppercase tracking-widest text-accent">{open.category}</p>
-                <h3 className="mt-2 font-display text-2xl font-bold">{open.title}</h3>
+                <h3 className="mt-1 sm:mt-2 font-display text-xl sm:text-2xl font-bold">{open.title}</h3>
                 {open.client && (
-                  <p className="mt-1 text-sm text-muted-foreground">Client: {open.client}</p>
+                  <p className="mt-1 text-xs sm:text-sm text-muted-foreground">Client: {open.client}</p>
                 )}
-                <p className="mt-3 text-sm text-muted-foreground">
+                <p className="mt-2 sm:mt-3 text-xs sm:text-sm text-muted-foreground leading-relaxed">
                   {open.description ?? "A cinematic production blending AI generation, live-action plates and premium sound design."}
                 </p>
               </div>
