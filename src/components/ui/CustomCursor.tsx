@@ -6,6 +6,7 @@ export function CustomCursor() {
   const [isHovered, setIsHovered] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
   const [isOverTextField, setIsOverTextField] = useState(false);
+  const [isInStudio, setIsInStudio] = useState(false);
   const [speed, setSpeed] = useState(0);
 
   // Direct mouse position motion values (instant 1:1 hardware device tracking)
@@ -16,6 +17,25 @@ export function CustomCursor() {
   const lastPosRef = useRef({ x: 0, y: 0, time: performance.now() });
 
   useEffect(() => {
+    // Detect Sanity Studio route
+    const checkStudio = () => {
+      const isStudio =
+        typeof window !== "undefined" &&
+        (window.location.pathname.startsWith("/studio") ||
+          Boolean(document.getElementById("sanity") || document.querySelector('[id*="sanity"]')));
+
+      setIsInStudio(isStudio);
+      if (isStudio) {
+        document.body.classList.add("sanity-studio");
+      } else {
+        document.body.classList.remove("sanity-studio");
+      }
+    };
+
+    checkStudio();
+    window.addEventListener("popstate", checkStudio);
+    const interval = setInterval(checkStudio, 500);
+
     // Detect touch device
     const checkTouch = () => {
       const isCoarse = window.matchMedia("(pointer: coarse)").matches;
@@ -90,6 +110,8 @@ export function CustomCursor() {
     document.addEventListener("mouseleave", handleMouseLeave);
 
     return () => {
+      window.removeEventListener("popstate", checkStudio);
+      clearInterval(interval);
       window.removeEventListener("resize", checkTouch);
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mousedown", handleMouseDown);
@@ -99,8 +121,8 @@ export function CustomCursor() {
     };
   }, [mouseX, mouseY]);
 
-  // Completely disable on touch devices or over text fields
-  if (isTouchDevice || isOverTextField) {
+  // Completely disable on touch devices, in Sanity Studio, or over text fields
+  if (isTouchDevice || isOverTextField || isInStudio) {
     return null;
   }
 

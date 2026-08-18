@@ -2,9 +2,14 @@
 @source "../src";
 @import "tw-animate-css";
 
-/* Custom Cursor Desktop Override Rules */
+/* Custom Cursor Desktop Override Rules (Excludes Sanity Studio) */
 @media (pointer: fine) {
-  html, body, a, button, [role="button"], .cursor-pointer {
+  body:not(.sanity-studio) html,
+  body:not(.sanity-studio),
+  body:not(.sanity-studio) a,
+  body:not(.sanity-studio) button,
+  body:not(.sanity-studio) [role="button"],
+  body:not(.sanity-studio) .cursor-pointer {
     cursor: none !important;
   }
 
