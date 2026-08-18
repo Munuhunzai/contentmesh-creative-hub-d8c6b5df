@@ -4,8 +4,8 @@
 export function AmbientBackground() {
   return (
     <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-      {/* Base warm light orange cream background */}
-      <div className="absolute inset-0 bg-[#FAF3EE]" />
+      {/* Base pure white background */}
+      <div className="absolute inset-0 bg-white" />
 
       {/* Light orange crumpled paper texture overlay */}
       <div
