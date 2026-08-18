@@ -126,9 +126,8 @@ export function CustomCursor() {
     return null;
   }
 
-  // Sizing for split arrow cursor: ~28px height normal, ~36px on clickable links/buttons
-  const width = isHovered ? 24 : 18;
-  const height = isHovered ? 36 : 28;
+  // Sizing for 3D Paper Plane cursor: ~28px normal, ~36px on clickable links/buttons
+  const size = isHovered ? 36 : 28;
 
   // Motion stretch & click compression
   const scaleXStretch = 1 + speed * 0.2; // subtle stretch on fast motion
@@ -145,8 +144,8 @@ export function CustomCursor() {
     >
       <motion.div
         animate={{
-          width: width,
-          height: height,
+          width: size,
+          height: size,
           scaleX: scaleXStretch * clickScale,
           scaleY: clickScale,
           filter: isHovered
