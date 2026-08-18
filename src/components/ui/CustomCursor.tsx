@@ -8,14 +8,9 @@ export function CustomCursor() {
   const [isOverTextField, setIsOverTextField] = useState(false);
   const [speed, setSpeed] = useState(0);
 
-  // Mouse position motion values
+  // Direct mouse position motion values (instant 1:1 hardware device tracking)
   const mouseX = useMotionValue(-100);
   const mouseY = useMotionValue(-100);
-
-  // Responsive spring with high stiffness & low mass for tight, smooth tracking
-  const springConfig = { damping: 30, stiffness: 500, mass: 0.15 };
-  const cursorX = useSpring(mouseX, springConfig);
-  const cursorY = useSpring(mouseY, springConfig);
 
   const speedTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastPosRef = useRef({ x: 0, y: 0, time: performance.now() });
@@ -121,8 +116,8 @@ export function CustomCursor() {
       aria-hidden="true"
       className="pointer-events-none fixed left-0 top-0 z-[999999] select-none will-change-transform"
       style={{
-        x: cursorX,
-        y: cursorY,
+        x: mouseX,
+        y: mouseY,
       }}
     >
       <motion.div
