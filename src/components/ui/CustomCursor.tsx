@@ -126,11 +126,12 @@ export function CustomCursor() {
     return null;
   }
 
-  // Sizing: ~30px normal, ~38px on clickable links/buttons
-  const size = isHovered ? 38 : 30;
+  // Sizing for split arrow cursor: ~28px height normal, ~36px on clickable links/buttons
+  const width = isHovered ? 24 : 18;
+  const height = isHovered ? 36 : 28;
 
-  // Streak stretch & click compression
-  const scaleXStretch = 1 + speed * 0.3; // subtle stretch on fast motion
+  // Motion stretch & click compression
+  const scaleXStretch = 1 + speed * 0.2; // subtle stretch on fast motion
   const clickScale = isClicked ? 0.85 : 1; // 85% compression on mousedown
 
   return (
@@ -144,8 +145,8 @@ export function CustomCursor() {
     >
       <motion.div
         animate={{
-          width: size,
-          height: size,
+          width: width,
+          height: height,
           scaleX: scaleXStretch * clickScale,
           scaleY: clickScale,
           filter: isHovered
