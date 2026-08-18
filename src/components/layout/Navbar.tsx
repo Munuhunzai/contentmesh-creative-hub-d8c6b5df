@@ -66,9 +66,9 @@ export function Navbar() {
         <div className="flex w-full max-w-[1720px] items-center justify-between gap-4">
           {/* ── White glass pill: logo + desktop nav ── */}
           <div
-            className="flex h-[56px] items-center gap-1 rounded-[24px] px-4 py-1.5"
+            className="relative overflow-hidden flex h-[56px] items-center gap-1 rounded-[24px] px-4 py-1.5"
             style={{
-              background: "rgba(255,255,255,0.88)",
+              background: "rgba(255,255,255,0.85)",
               backdropFilter: "blur(28px) saturate(180%)",
               WebkitBackdropFilter: "blur(28px) saturate(180%)",
               boxShadow: scrolled
@@ -78,6 +78,12 @@ export function Navbar() {
               transition: "box-shadow 0.4s",
             }}
           >
+            {/* Neutral monochrome crumpled paper texture overlay */}
+            <div
+              className="pointer-events-none absolute inset-0 opacity-35 mix-blend-multiply bg-repeat bg-center bg-[length:420px_auto]"
+              style={{ backgroundImage: "url('/paper-monochrome.webp')" }}
+            />
+
             {/* Logo */}
             <Logo />
 
