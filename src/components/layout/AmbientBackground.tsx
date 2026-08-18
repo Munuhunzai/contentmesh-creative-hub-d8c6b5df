@@ -9,7 +9,7 @@ export function AmbientBackground() {
 
       {/* Light orange crumpled paper texture overlay */}
       <div
-        className="absolute inset-0 opacity-40 mix-blend-multiply bg-repeat bg-center bg-[length:640px_auto]"
+        className="absolute inset-0 opacity-70 mix-blend-multiply bg-repeat bg-center bg-[length:540px_auto]"
         style={{
           backgroundImage: "url('/bg-texture.webp')",
         }}
