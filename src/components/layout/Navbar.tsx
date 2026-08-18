@@ -68,24 +68,26 @@ export function Navbar() {
           <div
             className="relative overflow-hidden flex h-[56px] items-center gap-1 rounded-[24px] px-4 py-1.5"
             style={{
-              background: "rgba(255,255,255,0.85)",
-              backdropFilter: "blur(28px) saturate(180%)",
-              WebkitBackdropFilter: "blur(28px) saturate(180%)",
+              background: "rgba(255,255,255,0.72)",
+              backdropFilter: "blur(24px) saturate(180%)",
+              WebkitBackdropFilter: "blur(24px) saturate(180%)",
               boxShadow: scrolled
                 ? "0 8px 32px rgba(0,0,0,0.18), 0 1px 0 rgba(255,255,255,0.9) inset"
                 : "0 4px 20px rgba(0,0,0,0.12), 0 1px 0 rgba(255,255,255,0.9) inset",
-              border: "1px solid rgba(255,255,255,0.75)",
+              border: "1px solid rgba(255,255,255,0.85)",
               transition: "box-shadow 0.4s",
             }}
           >
             {/* Neutral monochrome crumpled paper texture overlay */}
             <div
-              className="pointer-events-none absolute inset-0 opacity-35 mix-blend-multiply bg-repeat bg-center bg-[length:420px_auto]"
+              className="pointer-events-none absolute inset-0 opacity-70 mix-blend-multiply bg-repeat bg-center bg-[length:480px_auto] z-0"
               style={{ backgroundImage: "url('/paper-monochrome.webp')" }}
             />
 
             {/* Logo */}
-            <Logo />
+            <div className="relative z-10 flex items-center">
+              <Logo />
+            </div>
 
             {/* Desktop links — hidden on AI Tool page */}
             {!isAiTool && (
