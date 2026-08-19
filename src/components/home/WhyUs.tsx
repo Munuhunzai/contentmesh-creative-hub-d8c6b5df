@@ -1,115 +1,127 @@
 import { motion } from "framer-motion";
 import {
+  TrendingDown,
   Zap,
   Award,
   ShieldCheck,
-  TrendingDown,
   ArrowRight,
 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 
+const FEATURES = [
+  {
+    icon: TrendingDown,
+    title: "Competitive Pricing & 70%+ Savings",
+    desc: "Experience studio-grade commercial quality without traditional video agency markup — flat-rate pricing with zero hidden shoot fees.",
+  },
+  {
+    icon: Zap,
+    title: "3–5 Day Lightning Turnaround",
+    desc: "Don't let 6-week production schedules stall your marketing — ship high-converting video ads, reels, and product explainers in 72 hours.",
+  },
+  {
+    icon: Award,
+    title: "Certified AI Directors & Editors",
+    desc: "Our team combines cutting-edge AI generation models with senior filmmakers, motion designers, and sound engineers for flawless execution.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "100% Quality & Revisions Guarantee",
+    desc: "Prioritize creative excellence with guaranteed brand safety, licensed commercial usage rights, and multi-round revision passes on every campaign.",
+  },
+];
+
 export function WhyUs() {
   return (
-    <section className="relative py-20 sm:py-28" id="why-us">
+    <section className="relative py-16 sm:py-24" id="why-us">
       <div className="mx-auto max-w-7xl px-6">
-        <div className="grid gap-12 lg:grid-cols-12 lg:items-center">
+        {/* ── Dark Navy Section Container ── */}
+        <div className="relative overflow-hidden rounded-[2.5rem] bg-[#0B1526] p-8 sm:p-12 lg:p-16 text-white shadow-2xl">
+          {/* Subtle warm glow background wash */}
+          <div
+            className="pointer-events-none absolute -left-20 -top-20 h-96 w-96 rounded-full opacity-25 blur-3xl"
+            style={{ background: "radial-gradient(circle, #FF5A1F 0%, transparent 70%)" }}
+          />
 
-          {/* ── Left Column (Main Headline & CTA) ────────────────────── */}
-          <div className="lg:col-span-5 flex flex-col justify-center">
-            <span className="text-sm font-bold uppercase tracking-widest text-[#FF5A1F]">
-              / Why ContentMesh?
-            </span>
+          <div className="relative grid gap-12 lg:grid-cols-12 lg:items-center">
 
-            <h2 className="mt-4 font-display text-4xl font-black tracking-tight text-foreground sm:text-5xl lg:text-6xl leading-[1.1]">
-              Why Leading Brands Partner with ContentMesh AI Video Studio
-            </h2>
-
-            <p className="mt-6 text-base sm:text-lg leading-relaxed text-muted-foreground">
-              We combine generative AI speed with senior human cinematic direction — giving your brand 10x content velocity at a fraction of traditional video agency costs.
-            </p>
-
-            <div className="mt-8 flex flex-wrap items-center gap-6 text-sm font-bold">
-              <Link
-                to="/contact"
-                className="inline-flex items-center gap-2 text-[#FF5A1F] hover:text-[#ff6e38] transition-colors group"
-              >
-                Book Free Discovery <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Link>
-
-              <Link
-                to="/portfolio"
-                className="inline-flex items-center gap-2 text-[#FF5A1F] hover:text-[#ff6e38] transition-colors group"
-              >
-                Explore Portfolio <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Link>
-            </div>
-          </div>
-
-          {/* ── Right Column (2x2 Grid with Divider Lines) ────────────── */}
-          <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-8 lg:border-l lg:border-border/60 lg:pl-10">
-
-            {/* Point 1: Competitive Pricing */}
-            <div className="flex items-start gap-4 pb-6 sm:pb-8 border-b border-border/60">
-              <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400">
-                <TrendingDown className="h-6 w-6" />
-              </div>
+            {/* ── Left Column (Title + Subtitle + Featured Team/Studio Image) ── */}
+            <div className="lg:col-span-5 flex flex-col justify-between space-y-6">
               <div>
-                <h3 className="font-display text-xl font-bold text-foreground">
-                  Competitive Pricing
-                </h3>
-                <p className="mt-2 text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                  Experience studio quality without breaking the bank — we offer fair, transparent, and flat-rate pricing with zero hidden shoot fees.
+                <span className="text-xs font-bold uppercase tracking-widest text-[#FF5A1F]">
+                  / Why ContentMesh?
+                </span>
+
+                <h2 className="mt-3 font-display text-3xl font-black tracking-tight text-white sm:text-4xl lg:text-5xl leading-tight">
+                  Why choose us ?
+                </h2>
+
+                <p className="mt-4 text-sm sm:text-base leading-relaxed text-slate-300">
+                  Built specifically for ambitious brands to scale content velocity, save time, stay ahead of competitors, and drive high-ROI video campaigns with less effort.
                 </p>
               </div>
-            </div>
 
-            {/* Point 2: 3-5 Day Turnaround */}
-            <div className="flex items-start gap-4 pb-6 sm:pb-8 border-b border-border/60">
-              <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400">
-                <Zap className="h-6 w-6" />
+              {/* Featured Image Box */}
+              <div className="overflow-hidden rounded-2xl border border-white/10 shadow-lg group">
+                <img
+                  src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80"
+                  alt="ContentMesh AI Video Directors & Team collaborating"
+                  className="h-52 sm:h-60 w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
               </div>
-              <div>
-                <h3 className="font-display text-xl font-bold text-foreground">
-                  3–5 Day Turnaround
-                </h3>
-                <p className="mt-2 text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                  Don't let traditional 6-week shoot schedules slow your growth — ship high-converting video ads and social reels in 72 hours.
-                </p>
+
+              {/* Action Links */}
+              <div className="flex flex-wrap items-center gap-5 pt-1 text-sm font-bold">
+                <Link
+                  to="/contact"
+                  className="inline-flex items-center gap-2 text-[#FF7A3F] hover:text-white transition-colors group"
+                >
+                  Book Free Discovery <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </Link>
+                <Link
+                  to="/portfolio"
+                  className="inline-flex items-center gap-2 text-slate-300 hover:text-white transition-colors group"
+                >
+                  Explore Portfolio <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </Link>
               </div>
             </div>
 
-            {/* Point 3: Certified Experts */}
-            <div className="flex items-start gap-4 pt-2 sm:pt-4">
-              <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400">
-                <Award className="h-6 w-6" />
-              </div>
-              <div>
-                <h3 className="font-display text-xl font-bold text-foreground">
-                  Certified Experts
-                </h3>
-                <p className="mt-2 text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                  Choose ContentMesh for proven creative excellence backed by senior commercial filmmakers and specialized AI directors.
-                </p>
-              </div>
-            </div>
+            {/* ── Right Column (4 Stacked Dark Cards) ── */}
+            <div className="lg:col-span-7 space-y-4">
+              {FEATURES.map((item, idx) => {
+                const Icon = item.icon;
+                return (
+                  <motion.div
+                    key={item.title}
+                    initial={{ opacity: 0, x: 20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: idx * 0.08, duration: 0.5 }}
+                    className="group relative overflow-hidden rounded-2xl bg-[#142338] p-6 sm:p-7 border border-white/10 transition-all hover:bg-[#182a44] hover:border-white/20 hover:shadow-xl"
+                  >
+                    <div className="flex items-start gap-4">
+                      {/* Icon Badge */}
+                      <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-white/10 text-white group-hover:bg-[#FF5A1F] group-hover:text-white transition-colors">
+                        <Icon className="h-5 w-5" />
+                      </div>
 
-            {/* Point 4: 100% Quality Guarantee */}
-            <div className="flex items-start gap-4 pt-2 sm:pt-4">
-              <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400">
-                <ShieldCheck className="h-6 w-6" />
-              </div>
-              <div>
-                <h3 className="font-display text-xl font-bold text-foreground">
-                  100% Quality Guarantee
-                </h3>
-                <p className="mt-2 text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                  Don't just take our word for it — explore our client case studies and see what founders say about working with ContentMesh.
-                </p>
-              </div>
+                      {/* Text Details */}
+                      <div>
+                        <h3 className="font-display text-lg font-bold text-white tracking-tight">
+                          {item.title}
+                        </h3>
+                        <p className="mt-2 text-xs sm:text-sm text-slate-300 leading-relaxed">
+                          {item.desc}
+                        </p>
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })}
             </div>
 
           </div>
-
         </div>
       </div>
     </section>
