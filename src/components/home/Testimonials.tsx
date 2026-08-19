@@ -69,7 +69,7 @@ export function Testimonials() {
         {/* ── Section Title ─────────────────────────────────────────────────── */}
         <div className="text-center">
           <h2 className="font-display text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-            Testimonials
+            Client Success: High-ROI Commercials & AI Campaigns
           </h2>
         </div>
 

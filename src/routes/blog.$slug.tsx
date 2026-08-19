@@ -238,9 +238,9 @@ function BlogPost() {
               <span className="text-[11px] font-bold uppercase tracking-widest text-[#FF5A1F] bg-white/10 px-3 py-1 rounded-full inline-block backdrop-blur-sm">
                 Ready to Scale Your Visuals?
               </span>
-              <h3 className="mt-3 font-display text-2xl sm:text-3xl font-bold leading-tight">
-                Get Custom AI Video & Creative Services
-              </h3>
+              <h2 className="mt-3 font-display text-2xl sm:text-3xl font-bold leading-tight">
+                Ready to Scale Your Brand with Custom AI Video Production?
+              </h2>
               <p className="mt-2 text-xs sm:text-sm text-white/80 leading-relaxed">
                 Let ContentMesh build high-performing AI video ads, product showcases, animations, or custom avatars for your brand.
               </p>

@@ -138,7 +138,7 @@ export function Portfolio() {
 
   return (
     <section className="mx-auto max-w-7xl px-6 py-24" id="portfolio">
-      <SectionHeader eyebrow="Portfolio" title="Work that moves — literally" desc="A curated snapshot of recent productions across formats and industries." />
+      <SectionHeader eyebrow="Portfolio" title="Featured AI Video Portfolio: High-Converting Campaigns & Commercials" desc="A curated showcase of recent AI video productions, commercial ads, animations, and spokesperson reels." />
 
       {/* Category filter pills */}
       <div className="mt-8 flex flex-wrap justify-center gap-2">

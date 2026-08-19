@@ -21,7 +21,7 @@ export function WhyUs() {
             </span>
 
             <h2 className="mt-4 font-display text-4xl font-black tracking-tight text-foreground sm:text-5xl lg:text-6xl leading-[1.1]">
-              The ContentMesh Difference
+              Why Leading Brands Partner with ContentMesh AI Video Studio
             </h2>
 
             <p className="mt-6 text-base sm:text-lg leading-relaxed text-muted-foreground">

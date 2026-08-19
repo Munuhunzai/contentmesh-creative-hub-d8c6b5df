@@ -406,8 +406,8 @@ export function Services() {
         {/* ── Centered Section Header ─────────────────────────────────────────── */}
         <SectionHeader
           eyebrow="Service Categories"
-          title="Categories & Capabilities"
-          desc="Slide through our core services below. Click any category to inspect deliverables and book."
+          title="Next-Gen AI Video Production Services Built to Scale Your Brand"
+          desc="Slide through our core AI video production services below. Click any category to inspect deliverables and request a quote."
         />
       </div>
 

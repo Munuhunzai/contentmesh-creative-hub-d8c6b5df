@@ -83,8 +83,8 @@ function About() {
       <Stats />
 
       <section className="mx-auto max-w-7xl px-6 py-16">
-        <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">The team</h2>
-        <p className="mt-2 text-muted-foreground">Senior creatives, deeply hands-on.</p>
+        <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">Meet the AI Video Directors & Engineers Behind ContentMesh</h2>
+        <p className="mt-2 text-muted-foreground">Senior filmmakers, prompt engineers, and motion designers deeply hands-on with every production.</p>
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {team.map((m, i) => (
             <motion.div key={m._id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.06 }}

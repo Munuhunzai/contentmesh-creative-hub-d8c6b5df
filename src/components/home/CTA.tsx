@@ -11,9 +11,9 @@ type Data = {
 };
 
 const FALLBACK: Data = {
-  ctaTitle: "Ready to",
-  ctaTitleAccent: "create something unforgettable?",
-  ctaSubtitle: "Book a 20-minute discovery call. We'll map a creative roadmap tailored to your goals and audience.",
+  ctaTitle: "Ready to Scale Your Brand with",
+  ctaTitleAccent: "High-Impact AI Commercials?",
+  ctaSubtitle: "Book a 20-minute discovery call. We'll map a high-converting video roadmap tailored to your audience and revenue goals.",
 };
 
 export function CTA() {

@@ -60,7 +60,7 @@ export function Pricing() {
 
   return (
     <section className="relative mx-auto max-w-7xl px-6 py-24 sm:py-32" id="pricing">
-      <SectionHeader eyebrow="Pricing" title="Simple, scalable creative retainers" desc="Transparent monthly plans — no hidden fees, no long agency contracts." />
+      <SectionHeader eyebrow="Pricing" title="Transparent AI Video Production Pricing & Monthly Retainer Plans" desc="Scalable monthly plans tailored for ambitious brands — no hidden fees, no long lock-in contracts." />
       <div className="mt-16 grid gap-6 lg:grid-cols-3">
         {tiers.map((t, i) => (
           <motion.div

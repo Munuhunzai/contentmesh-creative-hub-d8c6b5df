@@ -850,7 +850,7 @@ export function StoryboardGeneratorPage() {
               <div className="border-b border-slate-100 pb-4 flex items-center justify-between">
                 <div>
                   <h2 className="text-lg font-semibold text-slate-900">
-                    Production Settings & Visual Targets
+                    AI Video Storyboard Production Settings & Visual Targets
                   </h2>
                   <p className="text-xs text-slate-600">
                     Configure visual rendering target, scene density, aspect ratio, and camera direction.

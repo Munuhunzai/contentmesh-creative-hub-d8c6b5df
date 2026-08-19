@@ -120,8 +120,8 @@ export function Process() {
       <div className="relative mx-auto max-w-7xl px-6">
         <SectionHeader
           eyebrow="Process"
-          title="A tight, transparent creative workflow"
-          desc="Six focused steps from brief to broadcast — with checkpoints at every stage."
+          title="Our Proven 6-Step AI Video Production Process"
+          desc="From initial creative brief to final 4K master export — six transparent steps to high-performing video campaigns."
         />
 
         {/* ── Horizontal connector line (desktop) ── */}
