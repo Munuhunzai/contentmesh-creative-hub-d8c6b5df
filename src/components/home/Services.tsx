@@ -340,9 +340,21 @@ export function Services() {
   // ── 2. Auto-Loop Animation + Wrap-Around Handler ────────────────────────────
   useEffect(() => {
     let animId: number;
+    let isVisible = false;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        isVisible = entries[0]?.isIntersecting ?? false;
+      },
+      { threshold: 0.1 }
+    );
+
+    if (scrollRef.current) {
+      observer.observe(scrollRef.current);
+    }
 
     const autoScroll = () => {
-      if (scrollRef.current && !isInteractingRef.current && !isMouseDownRef.current) {
+      if (isVisible && scrollRef.current && !isInteractingRef.current && !isMouseDownRef.current) {
         scrollRef.current.scrollLeft += 0.8; // Smooth auto-slide step
 
         const halfWidth = scrollRef.current.scrollWidth / 2;
@@ -354,7 +366,10 @@ export function Services() {
     };
 
     animId = requestAnimationFrame(autoScroll);
-    return () => cancelAnimationFrame(animId);
+    return () => {
+      cancelAnimationFrame(animId);
+      observer.disconnect();
+    };
   }, []);
 
   const handleUserInteractionStart = () => {
