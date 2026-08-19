@@ -445,25 +445,25 @@ export function Services() {
             }
           }
         }}
-        className="no-scrollbar mt-14 flex items-center gap-8 overflow-x-auto py-6 px-4 select-none cursor-grab active:cursor-grabbing w-full"
+        className="no-scrollbar mt-10 flex items-center gap-5 overflow-x-auto py-4 px-4 select-none cursor-grab active:cursor-grabbing w-full"
       >
         {LOOP_SERVICES.map((item, idx) => {
           const Icon = item.iconComponent;
           return (
             <motion.div
               key={`${item._id}-${idx}`}
-              whileHover={{ scale: 1.08, y: -6 }}
+              whileHover={{ scale: 1.08, y: -4 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => handleCardClick(item)}
               className="group flex flex-col items-center shrink-0 cursor-pointer text-center"
-              style={{ width: "140px" }}
+              style={{ width: "96px" }}
             >
-              {/* Vibrant Circular Card Badge */}
+              {/* Compact Circular Card Badge */}
               <div
-                className="relative flex h-32 w-32 items-center justify-center rounded-full shadow-lg transition-all duration-300 group-hover:shadow-2xl overflow-hidden"
+                className="relative flex h-20 w-20 items-center justify-center rounded-full shadow-md transition-all duration-300 group-hover:shadow-xl overflow-hidden"
                 style={{
                   backgroundColor: item.color,
-                  boxShadow: `0 16px 32px -8px ${item.color}88`,
+                  boxShadow: `0 10px 20px -6px ${item.color}88`,
                 }}
               >
                 {/* Custom 3D Icon Image or Fallback Icon */}
@@ -475,7 +475,7 @@ export function Services() {
                   />
                 ) : (
                   <div className="flex h-full w-full items-center justify-center bg-black/10 text-black pointer-events-none">
-                    <Icon className="h-12 w-12 drop-shadow-md" />
+                    <Icon className="h-8 w-8 drop-shadow-md" />
                   </div>
                 )}
 
@@ -484,7 +484,7 @@ export function Services() {
               </div>
 
               {/* Service Category Title */}
-              <span className="mt-4 font-display text-sm font-bold tracking-tight text-foreground transition-colors group-hover:text-[#FF5A1F] pointer-events-none">
+              <span className="mt-2.5 font-display text-xs font-bold tracking-tight text-foreground transition-colors group-hover:text-[#FF5A1F] pointer-events-none line-clamp-2 leading-tight">
                 {item.title}
               </span>
             </motion.div>
