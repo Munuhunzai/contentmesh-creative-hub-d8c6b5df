@@ -35,12 +35,18 @@ export function WhyUs() {
   return (
     <section className="relative py-16 sm:py-24" id="why-us">
       <div className="mx-auto max-w-7xl px-6">
-        {/* ── Brand Orange Section Container ── */}
-        <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-[#FF5A1F] via-[#FF480B] to-[#E03A00] p-8 sm:p-12 lg:p-16 text-white shadow-2xl shadow-[#FF5A1F]/30">
-          {/* Subtle radial light wash */}
+        {/* ── White Transparent Glass Section Container ── */}
+        <div className="relative overflow-hidden rounded-[2.5rem] bg-white/75 backdrop-blur-2xl p-8 sm:p-12 lg:p-16 text-foreground border border-white/90 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.06)]">
+          {/* Neutral paper texture overlay */}
           <div
-            className="pointer-events-none absolute -right-20 -top-20 h-[450px] w-[450px] rounded-full opacity-20 blur-3xl"
-            style={{ background: "radial-gradient(circle, #FFFFFF 0%, transparent 70%)" }}
+            className="pointer-events-none absolute inset-0 opacity-40 mix-blend-multiply bg-repeat bg-center bg-[length:480px_auto]"
+            style={{ backgroundImage: "url('/paper-monochrome.webp')" }}
+          />
+
+          {/* Subtle warm glow background wash */}
+          <div
+            className="pointer-events-none absolute -left-20 -top-20 h-96 w-96 rounded-full opacity-15 blur-3xl"
+            style={{ background: "radial-gradient(circle, #FF5A1F 0%, transparent 70%)" }}
           />
 
           <div className="relative grid gap-12 lg:grid-cols-12 lg:items-center">
@@ -48,21 +54,21 @@ export function WhyUs() {
             {/* ── Left Column (Title + Subtitle + Featured Team/Studio Image) ── */}
             <div className="lg:col-span-5 flex flex-col justify-between space-y-6">
               <div>
-                <span className="inline-block rounded-full bg-white/15 px-3.5 py-1 text-xs font-bold uppercase tracking-widest text-white border border-white/20 backdrop-blur-sm">
+                <span className="text-xs font-bold uppercase tracking-widest text-[#FF5A1F]">
                   / Why ContentMesh?
                 </span>
 
-                <h2 className="mt-4 font-display text-3xl font-black tracking-tight text-white sm:text-4xl lg:text-5xl leading-tight">
+                <h2 className="mt-3 font-display text-3xl font-black tracking-tight text-foreground sm:text-4xl lg:text-5xl leading-tight">
                   Why choose us ?
                 </h2>
 
-                <p className="mt-4 text-sm sm:text-base leading-relaxed text-white/90">
+                <p className="mt-4 text-sm sm:text-base leading-relaxed text-muted-foreground">
                   Built specifically for ambitious brands to scale content velocity, save time, stay ahead of competitors, and drive high-ROI video campaigns with less effort.
                 </p>
               </div>
 
               {/* Featured Image Box */}
-              <div className="overflow-hidden rounded-2xl border border-white/25 shadow-xl group">
+              <div className="overflow-hidden rounded-2xl border border-border/80 shadow-md group">
                 <img
                   src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80"
                   alt="ContentMesh AI Video Directors & Team collaborating"
@@ -71,23 +77,23 @@ export function WhyUs() {
               </div>
 
               {/* Action Links */}
-              <div className="flex flex-wrap items-center gap-4 pt-1 text-sm font-bold">
+              <div className="flex flex-wrap items-center gap-5 pt-1 text-sm font-bold">
                 <Link
                   to="/contact"
-                  className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-xs sm:text-sm font-bold uppercase tracking-wider text-[#FF5A1F] shadow-lg transition-transform hover:scale-105 hover:bg-slate-50 group"
+                  className="inline-flex items-center gap-2 rounded-full bg-[#FF5A1F] px-5 py-2.5 text-xs sm:text-sm font-bold uppercase tracking-wider text-white shadow-md transition-transform hover:scale-105 hover:bg-[#ff6e38] group"
                 >
                   Book Free Discovery <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Link>
                 <Link
                   to="/portfolio"
-                  className="inline-flex items-center gap-2 text-white/90 hover:text-white transition-colors group px-3 py-2"
+                  className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors group px-2 py-2"
                 >
                   Explore Portfolio <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Link>
               </div>
             </div>
 
-            {/* ── Right Column (4 Stacked Glass Cards on Orange) ── */}
+            {/* ── Right Column (4 Stacked White Glass Cards) ── */}
             <div className="lg:col-span-7 space-y-4">
               {FEATURES.map((item, idx) => {
                 const Icon = item.icon;
@@ -98,20 +104,20 @@ export function WhyUs() {
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: idx * 0.08, duration: 0.5 }}
-                    className="group relative overflow-hidden rounded-2xl bg-white/10 p-6 sm:p-7 border border-white/20 backdrop-blur-md transition-all hover:bg-white/20 hover:border-white/35 hover:shadow-xl"
+                    className="group relative overflow-hidden rounded-2xl bg-white/80 p-6 sm:p-7 border border-slate-200/70 shadow-sm backdrop-blur-md transition-all hover:bg-white hover:border-[#FF5A1F]/30 hover:shadow-md"
                   >
                     <div className="flex items-start gap-4">
                       {/* Icon Badge */}
-                      <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-white text-[#FF5A1F] shadow-md group-hover:scale-110 transition-transform">
+                      <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#FF5A1F]/10 text-[#FF5A1F] group-hover:bg-[#FF5A1F] group-hover:text-white transition-colors">
                         <Icon className="h-5 w-5" />
                       </div>
 
                       {/* Text Details */}
                       <div>
-                        <h3 className="font-display text-lg font-bold text-white tracking-tight">
+                        <h3 className="font-display text-lg font-bold text-foreground tracking-tight">
                           {item.title}
                         </h3>
-                        <p className="mt-2 text-xs sm:text-sm text-white/85 leading-relaxed">
+                        <p className="mt-2 text-xs sm:text-sm text-muted-foreground leading-relaxed">
                           {item.desc}
                         </p>
                       </div>
