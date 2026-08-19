@@ -41,7 +41,7 @@ const SERVICES_DATA: ServiceItem[] = [
     fullTitle: "AI Commercial Video Production Services",
     category: "Production",
     color: "#b4f07e", // Vibrant Lime Green
-    iconImg: "/services/ai-video.jpg",
+    iconImg: "/services/ai-video.webp",
     iconComponent: Video,
     shortDescription:
       "Full-stack AI video creation, generative visuals, and script-to-screen commercial production.",
@@ -61,7 +61,7 @@ const SERVICES_DATA: ServiceItem[] = [
     fullTitle: "AI Animation & 3D Motion Visuals",
     category: "Animation",
     color: "#fca5d5", // Vibrant Pink
-    iconImg: "/services/ai-animation.jpg",
+    iconImg: "/services/ai-animation.webp",
     iconComponent: Wand2,
     shortDescription:
       "Cinema-grade 2D/3D character animation, product concepts, and kinetic motion graphics.",
@@ -81,7 +81,7 @@ const SERVICES_DATA: ServiceItem[] = [
     fullTitle: "Multilingual AI Voiceovers & Video Dubbing",
     category: "Voice & Audio",
     color: "#fed766", // Bright Yellow
-    iconImg: "/services/voiceovers.jpg",
+    iconImg: "/services/voiceovers.webp",
     iconComponent: Mic,
     shortDescription:
       "Studio-grade AI voice cloning, lip-syncing, and audio translation in 40+ global languages.",
@@ -101,7 +101,7 @@ const SERVICES_DATA: ServiceItem[] = [
     fullTitle: "UGC Video Editing & Performance Ads",
     category: "Marketing",
     color: "#7ef0e8", // Cyan / Aqua
-    iconImg: "/services/ugc-editing.jpg",
+    iconImg: "/services/ugc-editing.webp",
     iconComponent: Film,
     shortDescription:
       "High-converting UGC video ad editing for performance marketing agencies on Meta & TikTok.",
@@ -121,7 +121,7 @@ const SERVICES_DATA: ServiceItem[] = [
     fullTitle: "Custom AI Presenter Avatars for Onboarding & Training",
     category: "Avatars",
     color: "#ffaa7e", // Warm Orange / Peach
-    iconImg: "/services/ai-avatar.jpg",
+    iconImg: "/services/ai-avatar.webp",
     iconComponent: Sparkles,
     shortDescription:
       "Custom AI avatars for company onboarding, internal training, and self-service helpdesk portals.",
@@ -141,7 +141,7 @@ const SERVICES_DATA: ServiceItem[] = [
     fullTitle: "High-Impact Commercial Ads & CTV Campaigns",
     category: "Advertising",
     color: "#d8b4fe", // Purple / Violet
-    iconImg: "/services/commercial-ads.jpg",
+    iconImg: "/services/commercial-ads.webp",
     iconComponent: Megaphone,
     shortDescription:
       "High-converting spots engineered for Meta, YouTube, TikTok, and Connected TV (CTV).",
@@ -160,7 +160,7 @@ const SERVICES_DATA: ServiceItem[] = [
     fullTitle: "Social Media Video Agency & Vertical Content",
     category: "Marketing",
     color: "#93c5fd", // Light Blue
-    iconImg: "/services/social-reels.jpg",
+    iconImg: "/services/social-reels.webp",
     iconComponent: Share2,
     shortDescription:
       "Scroll-stopping vertical-native video content designed for organic and paid growth.",
@@ -179,7 +179,7 @@ const SERVICES_DATA: ServiceItem[] = [
     fullTitle: "Talking Head & SaaS Product Demos",
     category: "Production",
     color: "#fde047", // Soft Gold
-    iconImg: "/services/explainers.jpg",
+    iconImg: "/services/explainers.webp",
     iconComponent: PlayCircle,
     shortDescription:
       "Clear, elegant product explainers that turn complex technical concepts into sales.",
@@ -198,7 +198,7 @@ const SERVICES_DATA: ServiceItem[] = [
     fullTitle: "In-House Studio Stage & Hybrid Production",
     category: "Production",
     color: "#a7f3d0", // Mint Green
-    iconImg: "/services/studio-stages.jpg",
+    iconImg: "/services/studio-stages.webp",
     iconComponent: Building2,
     shortDescription:
       "In-house lighting stage, camera crew, edit bays, and AI hybrid production workflows.",
@@ -217,7 +217,7 @@ const SERVICES_DATA: ServiceItem[] = [
     fullTitle: "Full-Stack YouTube Channel Automation & Editing",
     category: "Marketing",
     color: "#f87171", // Coral Red
-    iconImg: "/services/youtube-studio.jpg",
+    iconImg: "/services/youtube-studio.webp",
     iconComponent: Youtube,
     shortDescription:
       "Full-stack channel management: topic research, scriptwriting, AI voice, edit & thumbnails.",
@@ -236,7 +236,7 @@ const SERVICES_DATA: ServiceItem[] = [
     fullTitle: "Documentary Brand Films & Executive Stories",
     category: "Production",
     color: "#cbd5e1", // Slate Silver
-    iconImg: "/services/brand-films.jpg",
+    iconImg: "/services/brand-films.webp",
     iconComponent: BookOpen,
     shortDescription:
       "Documentary-style narratives and brand films engineered for emotional resonance.",
@@ -255,7 +255,7 @@ const SERVICES_DATA: ServiceItem[] = [
     fullTitle: "AI Video Content Strategy & Roadmap",
     category: "Strategy",
     color: "#f472b6", // Rose Pink
-    iconImg: "/services/ai-strategy.jpg",
+    iconImg: "/services/ai-strategy.webp",
     iconComponent: Brain,
     shortDescription:
       "Data-driven creative roadmaps tuned to your marketing funnel, audience & revenue targets.",
@@ -445,25 +445,25 @@ export function Services() {
             }
           }
         }}
-        className="no-scrollbar mt-10 flex items-center gap-5 overflow-x-auto py-4 px-4 select-none cursor-grab active:cursor-grabbing w-full"
+        className="no-scrollbar mt-14 flex items-center gap-8 overflow-x-auto py-6 px-4 select-none cursor-grab active:cursor-grabbing w-full"
       >
         {LOOP_SERVICES.map((item, idx) => {
           const Icon = item.iconComponent;
           return (
             <motion.div
               key={`${item._id}-${idx}`}
-              whileHover={{ scale: 1.08, y: -4 }}
+              whileHover={{ scale: 1.08, y: -6 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => handleCardClick(item)}
               className="group flex flex-col items-center shrink-0 cursor-pointer text-center"
-              style={{ width: "96px" }}
+              style={{ width: "140px" }}
             >
-              {/* Compact Circular Card Badge */}
+              {/* Vibrant Circular Card Badge */}
               <div
-                className="relative flex h-20 w-20 items-center justify-center rounded-full shadow-md transition-all duration-300 group-hover:shadow-xl overflow-hidden"
+                className="relative flex h-32 w-32 items-center justify-center rounded-full shadow-lg transition-all duration-300 group-hover:shadow-2xl overflow-hidden"
                 style={{
                   backgroundColor: item.color,
-                  boxShadow: `0 10px 20px -6px ${item.color}88`,
+                  boxShadow: `0 16px 32px -8px ${item.color}88`,
                 }}
               >
                 {/* Custom 3D Icon Image or Fallback Icon */}
@@ -472,10 +472,12 @@ export function Services() {
                     src={item.iconImg}
                     alt={item.title}
                     className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110 pointer-events-none"
+                    loading="lazy"
+                    decoding="async"
                   />
                 ) : (
                   <div className="flex h-full w-full items-center justify-center bg-black/10 text-black pointer-events-none">
-                    <Icon className="h-8 w-8 drop-shadow-md" />
+                    <Icon className="h-12 w-12 drop-shadow-md" />
                   </div>
                 )}
 
@@ -484,7 +486,7 @@ export function Services() {
               </div>
 
               {/* Service Category Title */}
-              <span className="mt-2.5 font-display text-xs font-bold tracking-tight text-foreground transition-colors group-hover:text-[#FF5A1F] pointer-events-none line-clamp-2 leading-tight">
+              <span className="mt-4 font-display text-sm font-bold tracking-tight text-foreground transition-colors group-hover:text-[#FF5A1F] pointer-events-none">
                 {item.title}
               </span>
             </motion.div>
