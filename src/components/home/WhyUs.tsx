@@ -7,7 +7,6 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
-import { optimizeSanityImage } from "@/lib/sanity-image";
 
 const FEATURES = [
   {
@@ -71,12 +70,8 @@ export function WhyUs() {
               {/* Featured Image Box */}
               <div className="overflow-hidden rounded-2xl border border-border/80 shadow-md group">
                 <img
-                  src={optimizeSanityImage("https://images.unsplash.com/photo-1522071820081-009f0129c71c", 800, 80)}
+                  src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80"
                   alt="ContentMesh AI Video Directors & Team collaborating"
-                  width={800}
-                  height={600}
-                  loading="lazy"
-                  decoding="async"
                   className="h-52 sm:h-60 w-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
               </div>

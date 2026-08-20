@@ -899,10 +899,6 @@ export function StoryboardGeneratorPage() {
                             <img
                               src={char.imageUrl}
                               alt={char.name}
-                              width={40}
-                              height={40}
-                              loading="lazy"
-                              decoding="async"
                               className="h-10 w-10 rounded-lg object-cover border border-slate-200 shrink-0"
                             />
                           ) : (

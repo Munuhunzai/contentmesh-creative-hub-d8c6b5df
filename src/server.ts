@@ -44,43 +44,18 @@ function isH3SwallowedErrorBody(body: string): boolean {
   }
 }
 
-const SECURITY_HEADERS: Record<string, string> = {
-  "Content-Security-Policy":
-    "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.youtube.com https://www.youtube-nocookie.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; media-src 'self' https:; connect-src 'self' https://cdn.sanity.io https://lh3.googleusercontent.com https://images.unsplash.com https://api.resend.com; frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com; frame-ancestors 'self';",
-  "Strict-Transport-Security": "max-age=31536000; includeSubDomains; preload",
-  "X-Frame-Options": "SAMEORIGIN",
-  "X-Content-Type-Options": "nosniff",
-  "Referrer-Policy": "strict-origin-when-cross-origin",
-};
-
-function attachSecurityHeaders(response: Response): Response {
-  const newHeaders = new Headers(response.headers);
-  for (const [key, val] of Object.entries(SECURITY_HEADERS)) {
-    if (!newHeaders.has(key)) {
-      newHeaders.set(key, val);
-    }
-  }
-  return new Response(response.body, {
-    status: response.status,
-    statusText: response.statusText,
-    headers: newHeaders,
-  });
-}
-
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
       const handler = await getServerEntry();
-      const rawResponse = await handler.fetch(request, env, ctx);
-      const normalized = await normalizeCatastrophicSsrResponse(rawResponse);
-      return attachSecurityHeaders(normalized);
+      const response = await handler.fetch(request, env, ctx);
+      return await normalizeCatastrophicSsrResponse(response);
     } catch (error) {
       console.error(error);
-      const errResponse = new Response(renderErrorPage(), {
+      return new Response(renderErrorPage(), {
         status: 500,
         headers: { "content-type": "text/html; charset=utf-8" },
       });
-      return attachSecurityHeaders(errResponse);
     }
   },
 };
