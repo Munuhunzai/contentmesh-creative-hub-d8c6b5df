@@ -12,7 +12,6 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { ThemeProvider } from "@/components/theme-provider";
-import { CustomCursor } from "@/components/ui/CustomCursor";
 
 function NotFoundComponent() {
   return (
@@ -156,7 +155,6 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
-        <CustomCursor />
         <Outlet />
       </ThemeProvider>
     </QueryClientProvider>
