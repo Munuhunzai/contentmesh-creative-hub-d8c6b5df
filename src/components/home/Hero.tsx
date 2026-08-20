@@ -62,6 +62,16 @@ function extractYouTubeId(url: string): string | null {
 // ─── YouTube background iframe (muted autoplay) ─────────────────────────────
 
 function YouTubeBackground({ videoId, active }: { videoId: string; active: boolean }) {
+  const [shouldLoad, setShouldLoad] = useState(false);
+
+  useEffect(() => {
+    // Delay loading the YouTube iframe until initial page paint finishes to preserve LCP/FCP
+    const timer = setTimeout(() => setShouldLoad(true), 1200);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (!shouldLoad) return null;
+
   return (
     <div
       className="absolute inset-0 overflow-hidden pointer-events-none"
