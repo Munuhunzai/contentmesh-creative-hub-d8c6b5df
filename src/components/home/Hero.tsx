@@ -176,6 +176,8 @@ export function Hero() {
               <img
                 src={optimizeSanityImage(s.backgroundImageUrl, 1600, 80)}
                 alt={s.title || `Hero Slide ${i + 1}`}
+                width={1600}
+                height={900}
                 loading={i === 0 ? "eager" : "lazy"}
                 fetchPriority={i === 0 ? "high" : "low"}
                 decoding="async"

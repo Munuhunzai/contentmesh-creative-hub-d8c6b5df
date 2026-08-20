@@ -280,8 +280,12 @@ export function Portfolio() {
                   />
                 ) : open.thumbnailUrl ? (
                   <img
-                    src={open.thumbnailUrl}
+                    src={optimizeSanityImage(open.thumbnailUrl, 1280, 80)}
                     alt={open.title}
+                    width={1280}
+                    height={720}
+                    loading="lazy"
+                    decoding="async"
                     className="h-full w-full max-h-[50dvh] sm:max-h-[55vh] object-cover"
                   />
                 ) : (
