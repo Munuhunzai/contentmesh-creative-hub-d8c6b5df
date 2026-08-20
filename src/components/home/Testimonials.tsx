@@ -20,7 +20,7 @@ const REVIEWS_DATA: Testimonial[] = [
     authorName: "Emily Jeff",
     authorRole: "CEO",
     company: "TheWebagency",
-    avatarUrl: "/reviews/emily.jpg",
+    avatarUrl: "/reviews/emily.webp",
     rating: 5,
     quote:
       "Ten the hastened steepest feelings pleasant few surprise property. An brother he do colonel against.",
@@ -30,7 +30,7 @@ const REVIEWS_DATA: Testimonial[] = [
     authorName: "Hamza Malik",
     authorRole: "Manager",
     company: "TheWekrtech",
-    avatarUrl: "/reviews/hamza.jpg",
+    avatarUrl: "/reviews/hamza.webp",
     rating: 5,
     quote:
       "Can how elinor warmly mrs basket marked. Led raising expense yet demesne weather musical. Me mr what.",
@@ -40,7 +40,7 @@ const REVIEWS_DATA: Testimonial[] = [
     authorName: "Elizabeth Rai",
     authorRole: "Developer",
     company: "I2c Company",
-    avatarUrl: "/reviews/elizabeth.jpg",
+    avatarUrl: "/reviews/elizabeth.webp",
     rating: 5,
     quote:
       "park next busy ever. Elinor her his secure far twenty eat object. Any far saw size want man. Which way you wrong.",
@@ -50,7 +50,7 @@ const REVIEWS_DATA: Testimonial[] = [
     authorName: "Sara Thomas",
     authorRole: "Accountant",
     company: "TheConsturction",
-    avatarUrl: "/reviews/sara.jpg",
+    avatarUrl: "/reviews/sara.webp",
     rating: 5,
     quote:
       "Concerns greatest margaret him absolute entrance nay. Door neat week do find past he. Be no surprise he honoured.",
@@ -92,6 +92,10 @@ export function Testimonials() {
                       <img
                         src={item.avatarUrl}
                         alt={item.authorName}
+                        width={80}
+                        height={80}
+                        loading="lazy"
+                        decoding="async"
                         className="h-full w-full object-cover"
                       />
                     ) : (

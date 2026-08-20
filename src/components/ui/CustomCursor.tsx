@@ -131,10 +131,13 @@ export function CustomCursor() {
         }}
       >
         <img
-          src="/cursor.png"
+          src="/cursor.webp"
           alt=""
+          width={28}
+          height={28}
           className="h-full w-full object-contain pointer-events-none"
           loading="eager"
+          decoding="async"
         />
       </div>
     </motion.div>

@@ -1,10 +1,13 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useState, lazy, Suspense, type ReactNode } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUp } from "lucide-react";
 import { Navbar } from "./Navbar";
 import { Footer } from "./Footer";
 import { AmbientBackground } from "./AmbientBackground";
-import { FloatingChatbot } from "@/components/chat/FloatingChatbot";
+
+const FloatingChatbot = lazy(() =>
+  import("@/components/chat/FloatingChatbot").then((m) => ({ default: m.FloatingChatbot }))
+);
 
 interface SiteLayoutProps {
   children: ReactNode;
@@ -15,10 +18,25 @@ interface SiteLayoutProps {
 
 export function SiteLayout({ children, heroSlot, noTopPadding }: SiteLayoutProps) {
   const [showTop, setShowTop] = useState(false);
+  const [loadChatbot, setLoadChatbot] = useState(false);
+
   useEffect(() => {
     const on = () => setShowTop(window.scrollY > 600);
     window.addEventListener("scroll", on, { passive: true });
     return () => window.removeEventListener("scroll", on);
+  }, []);
+
+  useEffect(() => {
+    // Defer loading chatbot bundle until initial viewport paint & user interaction occurs
+    const enableChatbot = () => setLoadChatbot(true);
+    const timer = setTimeout(enableChatbot, 2000);
+    window.addEventListener("mousemove", enableChatbot, { once: true, passive: true });
+    window.addEventListener("touchstart", enableChatbot, { once: true, passive: true });
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("mousemove", enableChatbot);
+      window.removeEventListener("touchstart", enableChatbot);
+    };
   }, []);
 
   return (
@@ -29,7 +47,11 @@ export function SiteLayout({ children, heroSlot, noTopPadding }: SiteLayoutProps
       {heroSlot}
       <main className={`w-full max-w-full overflow-x-hidden ${heroSlot || noTopPadding ? "pt-16 sm:pt-20" : "pt-28"}`}>{children}</main>
       <Footer />
-      <FloatingChatbot />
+      {loadChatbot && (
+        <Suspense fallback={null}>
+          <FloatingChatbot />
+        </Suspense>
+      )}
       <AnimatePresence>
         {showTop && (
           <motion.button

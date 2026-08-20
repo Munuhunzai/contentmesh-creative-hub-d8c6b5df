@@ -8,10 +8,13 @@ export function Logo({ className = "" }: { className?: string }) {
       aria-label="ContentMesh home"
     >
       <img
-        src="/Content_mesh_AI_video_production_agency.png"
+        src="/Content_mesh_AI_video_production_agency.webp"
         alt="ContentMesh"
+        width={180}
+        height={56}
         className="h-12 w-auto object-contain sm:h-14"
         loading="eager"
+        fetchPriority="high"
         decoding="async"
         style={{ maxWidth: "180px" }}
       />

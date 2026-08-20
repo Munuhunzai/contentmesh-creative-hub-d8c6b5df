@@ -317,6 +317,22 @@ export function Services() {
   const scrollLeftStartRef = useRef(0);
   const hasDraggedRef = useRef(false);
   const resumeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const halfWidthRef = useRef(0);
+
+  // ── Cache halfWidth using ResizeObserver to prevent layout thrashing / forced reflow ──
+  useEffect(() => {
+    const container = scrollRef.current;
+    if (!container) return;
+
+    const updateHalfWidth = () => {
+      halfWidthRef.current = container.scrollWidth / 2;
+    };
+    updateHalfWidth();
+
+    const resizeObs = new ResizeObserver(updateHalfWidth);
+    resizeObs.observe(container);
+    return () => resizeObs.disconnect();
+  }, []);
 
   // ── 1. Mouse Wheel Horizontal Scroll Listener ────────────────────────────────
   useEffect(() => {
@@ -357,7 +373,7 @@ export function Services() {
       if (isVisible && scrollRef.current && !isInteractingRef.current && !isMouseDownRef.current) {
         scrollRef.current.scrollLeft += 0.8; // Smooth auto-slide step
 
-        const halfWidth = scrollRef.current.scrollWidth / 2;
+        const halfWidth = halfWidthRef.current || (scrollRef.current.scrollWidth / 2);
         if (scrollRef.current.scrollLeft >= halfWidth) {
           scrollRef.current.scrollLeft -= halfWidth / 2;
         }
@@ -437,7 +453,7 @@ export function Services() {
         onTouchEnd={handleUserInteractionEnd}
         onScroll={() => {
           if (scrollRef.current) {
-            const halfWidth = scrollRef.current.scrollWidth / 2;
+            const halfWidth = halfWidthRef.current || (scrollRef.current.scrollWidth / 2);
             if (scrollRef.current.scrollLeft >= halfWidth) {
               scrollRef.current.scrollLeft -= halfWidth / 2;
             } else if (scrollRef.current.scrollLeft <= 0) {

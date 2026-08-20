@@ -85,10 +85,11 @@ export function FloatingChatbot() {
           <X className="h-5 w-5 text-[#0E447F]" />
         ) : (
           <img
-            src="/chatbot-avatar.png"
+            src="/chatbot-avatar.webp"
             alt="ContentMesh AI"
             width={56}
             height={56}
+            decoding="async"
             className="h-14 w-14 rounded-full object-contain"
           />
         )}
