@@ -3,12 +3,10 @@ import { StoryboardFormInput } from "@/types/storyboard";
 export function buildDeepSeekStoryboardPrompt(
   input: StoryboardFormInput,
   startScene: number = 1,
-  endScene?: number
+  endScene?: number,
 ) {
   const selectedStyle =
-    input.visualStyle === "Custom" && input.customStyle
-      ? input.customStyle
-      : input.visualStyle;
+    input.visualStyle === "Custom" && input.customStyle ? input.customStyle : input.visualStyle;
 
   const totalTarget = Math.max(1, Math.min(200, input.numberOfScenes || 10));
   const chunkStart = startScene;
@@ -48,7 +46,7 @@ JSON RESPONSE SCHEMA:
     "totalScenes": ${totalTarget},
     "charactersCount": 0,
     "locationsCount": 0,
-    "estimatedRuntime": "${Math.ceil(totalTarget * 5 / 60)}m 00s",
+    "estimatedRuntime": "${Math.ceil((totalTarget * 5) / 60)}m 00s",
     "wordCount": 0,
     "dialogueCount": 0,
     "promptCount": ${totalTarget}

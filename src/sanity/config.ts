@@ -2,7 +2,11 @@ import { defineConfig } from "sanity";
 import { structureTool } from "sanity/structure";
 import { visionTool } from "@sanity/vision";
 import { schemaTypes } from "./schemas";
-import { SANITY_PROJECT_ID, SANITY_DATASET, SANITY_API_VERSION } from "@/integrations/sanity/client";
+import {
+  SANITY_PROJECT_ID,
+  SANITY_DATASET,
+  SANITY_API_VERSION,
+} from "@/integrations/sanity/client";
 
 export default defineConfig({
   name: "contentmesh",

@@ -14,7 +14,13 @@ const FALLBACK_TIERS = [
     isCustomPrice: false,
     description: "For founders and creators shipping their first videos.",
     featured: false,
-    features: ["1 project / month", "AI video up to 60s", "1 voiceover language", "2 revision rounds", "5-day turnaround"],
+    features: [
+      "1 project / month",
+      "AI video up to 60s",
+      "1 voiceover language",
+      "2 revision rounds",
+      "5-day turnaround",
+    ],
     ctaLabel: "Get Quote",
     ctaUrl: "/contact",
   },
@@ -25,7 +31,14 @@ const FALLBACK_TIERS = [
     isCustomPrice: false,
     description: "For growing brands running multi-channel content.",
     featured: true,
-    features: ["4 projects / month", "AI video + animation", "3 voiceover languages", "Unlimited revisions*", "Dedicated PM", "48h priority queue"],
+    features: [
+      "4 projects / month",
+      "AI video + animation",
+      "3 voiceover languages",
+      "Unlimited revisions*",
+      "Dedicated PM",
+      "48h priority queue",
+    ],
     ctaLabel: "Get Quote",
     ctaUrl: "/contact",
   },
@@ -36,7 +49,13 @@ const FALLBACK_TIERS = [
     isCustomPrice: true,
     description: "For teams needing an end-to-end creative partner.",
     featured: false,
-    features: ["Unlimited projects", "In-house production crew", "10+ voiceover languages", "Custom workflows & CMS", "SLA & priority support"],
+    features: [
+      "Unlimited projects",
+      "In-house production crew",
+      "10+ voiceover languages",
+      "Custom workflows & CMS",
+      "SLA & priority support",
+    ],
     ctaLabel: "Get Quote",
     ctaUrl: "/contact",
   },
@@ -60,7 +79,11 @@ export function Pricing() {
 
   return (
     <section className="relative mx-auto max-w-7xl px-6 py-24 sm:py-32" id="pricing">
-      <SectionHeader eyebrow="Pricing" title="Transparent AI Video Production Pricing & Monthly Retainer Plans" desc="Scalable monthly plans tailored for ambitious brands — no hidden fees, no long lock-in contracts." />
+      <SectionHeader
+        eyebrow="Pricing"
+        title="Transparent AI Video Production Pricing & Monthly Retainer Plans"
+        desc="Scalable monthly plans tailored for ambitious brands — no hidden fees, no long lock-in contracts."
+      />
       <div className="mt-16 grid gap-6 lg:grid-cols-3">
         {tiers.map((t, i) => (
           <motion.div
@@ -102,17 +125,25 @@ export function Pricing() {
             )}
             <div className="relative">
               <h3 className="font-display text-xl font-semibold tracking-tight">{t.name}</h3>
-              <p className={`mt-1 text-sm ${t.featured ? "text-white/85" : "text-muted-foreground"}`}>{t.description}</p>
+              <p
+                className={`mt-1 text-sm ${t.featured ? "text-white/85" : "text-muted-foreground"}`}
+              >
+                {t.description}
+              </p>
               <p className="mt-6 font-display text-5xl font-bold tracking-tight">
                 {t.price}
-                <span className={`ml-1 text-base font-medium ${t.featured ? "text-white/70" : "text-muted-foreground"}`}>
+                <span
+                  className={`ml-1 text-base font-medium ${t.featured ? "text-white/70" : "text-muted-foreground"}`}
+                >
                   {!t.isCustomPrice && t.price !== "Custom" ? "/mo" : ""}
                 </span>
               </p>
               <ul className="mt-6 space-y-3 text-sm">
                 {(t.features ?? []).map((f) => (
                   <li key={f} className="flex items-start gap-2">
-                    <Check className={`mt-0.5 h-4 w-4 shrink-0 ${t.featured ? "text-white" : "text-accent"}`} />
+                    <Check
+                      className={`mt-0.5 h-4 w-4 shrink-0 ${t.featured ? "text-white" : "text-accent"}`}
+                    />
                     <span>{f}</span>
                   </li>
                 ))}

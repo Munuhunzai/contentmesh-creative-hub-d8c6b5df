@@ -42,7 +42,8 @@ const SPANS = ["sm:col-span-2 sm:row-span-2", "", "", "sm:col-span-2", "", "", "
 /** Extract Google Drive file ID */
 function getGoogleDriveFileId(url: string): string | null {
   try {
-    const fileIdMatch = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+    const fileIdMatch =
+      url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
     if (fileIdMatch && fileIdMatch[1]) {
       return fileIdMatch[1];
     }
@@ -133,12 +134,18 @@ export function Portfolio() {
   const featuredItems = items.filter((p) => p.featured);
   const list =
     cat === "Featured"
-      ? (featuredItems.length > 0 ? featuredItems : items)
+      ? featuredItems.length > 0
+        ? featuredItems
+        : items
       : items.filter((p) => p.category === cat);
 
   return (
     <section className="mx-auto max-w-7xl px-6 py-24" id="portfolio">
-      <SectionHeader eyebrow="Portfolio" title="Featured AI Video Portfolio: High-Converting Campaigns & Commercials" desc="A curated showcase of recent AI video productions, commercial ads, animations, and spokesperson reels." />
+      <SectionHeader
+        eyebrow="Portfolio"
+        title="Featured AI Video Portfolio: High-Converting Campaigns & Commercials"
+        desc="A curated showcase of recent AI video productions, commercial ads, animations, and spokesperson reels."
+      />
 
       {/* Category filter pills */}
       <div className="mt-8 flex flex-wrap justify-center gap-2">
@@ -158,7 +165,10 @@ export function Portfolio() {
       </div>
 
       {/* Portfolio grid */}
-      <motion.div layout className="mt-10 grid auto-rows-[220px] grid-cols-1 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+      <motion.div
+        layout
+        className="mt-10 grid auto-rows-[220px] grid-cols-1 gap-4 sm:grid-cols-3 lg:grid-cols-4"
+      >
         <AnimatePresence>
           {list.map((p, i) => {
             const gradient = GRADIENTS[i % GRADIENTS.length];
@@ -173,12 +183,20 @@ export function Portfolio() {
                 exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ duration: 0.35 }}
                 className={`group relative overflow-hidden rounded-3xl text-left ${span}`}
-                style={{ background: p.thumbnailUrl ? `url(${optimizeSanityImage(p.thumbnailUrl, 800, 75)}) center/cover` : gradient }}
+                style={{
+                  background: p.thumbnailUrl
+                    ? `url(${optimizeSanityImage(p.thumbnailUrl, 800, 75)}) center/cover`
+                    : gradient,
+                }}
               >
-                {!p.thumbnailUrl && <div className="absolute inset-0 mesh-bg opacity-40 mix-blend-overlay" />}
+                {!p.thumbnailUrl && (
+                  <div className="absolute inset-0 mesh-bg opacity-40 mix-blend-overlay" />
+                )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80" />
                 <div className="absolute inset-x-0 bottom-0 p-5 text-white">
-                  <p className="text-[11px] font-semibold uppercase tracking-widest opacity-80">{p.category}</p>
+                  <p className="text-[11px] font-semibold uppercase tracking-widest opacity-80">
+                    {p.category}
+                  </p>
                   <h3 className="mt-1 font-display text-lg font-semibold">{p.title}</h3>
                 </div>
                 {/* Play icon on hover */}
@@ -211,8 +229,12 @@ export function Portfolio() {
               {/* Header Bar — 100% separate from video controls */}
               <div className="flex items-center justify-between px-4 py-3 border-b border-border/40 bg-card shrink-0 z-30">
                 <div className="min-w-0 pr-3">
-                  <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-widest text-accent">{open.category}</p>
-                  <h3 className="text-base sm:text-lg font-display font-bold text-foreground truncate">{open.title}</h3>
+                  <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-widest text-accent">
+                    {open.category}
+                  </p>
+                  <h3 className="text-base sm:text-lg font-display font-bold text-foreground truncate">
+                    {open.title}
+                  </h3>
                 </div>
                 <button
                   onClick={() => setOpen(null)}
@@ -301,10 +323,13 @@ export function Portfolio() {
               {/* Info Description */}
               <div className="p-4 sm:p-5 overflow-y-auto min-h-0 flex-1 bg-card">
                 {open.client && (
-                  <p className="text-xs sm:text-sm text-muted-foreground font-medium mb-1">Client: {open.client}</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground font-medium mb-1">
+                    Client: {open.client}
+                  </p>
                 )}
                 <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                  {open.description ?? "A cinematic production blending AI generation, live-action plates and premium sound design."}
+                  {open.description ??
+                    "A cinematic production blending AI generation, live-action plates and premium sound design."}
                 </p>
               </div>
             </motion.div>

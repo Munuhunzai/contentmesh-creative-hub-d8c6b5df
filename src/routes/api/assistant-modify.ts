@@ -57,7 +57,7 @@ const cleanPromptText = (text: string) => {
 function localIntelligentAssistant(
   userMsg: string,
   currentForm: StoryboardFormInput,
-  currentOutput: StoryboardOutput
+  currentOutput: StoryboardOutput,
 ): AssistantResponseBody {
   const qLower = userMsg.toLowerCase();
   let actionDesc = "";
@@ -71,11 +71,11 @@ function localIntelligentAssistant(
     /\b(scene|scenes|count|increase|decrease|add|reduce|make|set)\b/i.test(qLower) && numMatch;
 
   const isScriptChange =
-    /change script|rewrite story|new story|script about|story about|change topic|make a script/i.test(qLower);
+    /change script|rewrite story|new story|script about|story about|change topic|make a script/i.test(
+      qLower,
+    );
 
-  const matchedStyle = VISUAL_STYLES.find((st) =>
-    qLower.includes(st.toLowerCase())
-  );
+  const matchedStyle = VISUAL_STYLES.find((st) => qLower.includes(st.toLowerCase()));
 
   const isStyleChange =
     /style|visual|look|aesthetic|render|theme/i.test(qLower) || Boolean(matchedStyle);
@@ -104,7 +104,7 @@ function localIntelligentAssistant(
         const scNum = i + 1;
         const camVar = CAMERA_VARIATIONS[i % CAMERA_VARIATIONS.length];
         const basePrompt = cleanPromptText(
-          newScenes[currentLen - 1]?.generationPrompt || "Cinematic scene action"
+          newScenes[currentLen - 1]?.generationPrompt || "Cinematic scene action",
         );
         const promptText = `Scene ${scNum} [${basePrompt}, continuation sequence ${scNum}, ${camVar}]`;
 
@@ -128,10 +128,19 @@ function localIntelligentAssistant(
       actionDesc = `Decreased scene count from ${currentLen} to ${targetCount} scenes`;
     }
   } else if (isStyleChange) {
-    const extractedStyle = matchedStyle || userMsg.replace(/change visual style (to)?|change style (to)?|make style|set style (to)?|use style|style/gi, "").trim();
+    const extractedStyle =
+      matchedStyle ||
+      userMsg
+        .replace(
+          /change visual style (to)?|change style (to)?|make style|set style (to)?|use style|style/gi,
+          "",
+        )
+        .trim();
 
     if (extractedStyle) {
-      const validStyle = VISUAL_STYLES.find((st) => st.toLowerCase() === extractedStyle.toLowerCase()) || (extractedStyle.charAt(0).toUpperCase() + extractedStyle.slice(1)) as VisualStyleOption;
+      const validStyle =
+        VISUAL_STYLES.find((st) => st.toLowerCase() === extractedStyle.toLowerCase()) ||
+        ((extractedStyle.charAt(0).toUpperCase() + extractedStyle.slice(1)) as VisualStyleOption);
       newVisualStyle = validStyle;
 
       newScenes = newScenes.map((scene) => {
@@ -149,7 +158,10 @@ function localIntelligentAssistant(
     }
   } else if (isScriptChange) {
     const topic = userMsg
-      .replace(/change script (to|about)?|rewrite story (about)?|script about|story about|make a script (about)?/gi, "")
+      .replace(
+        /change script (to|about)?|rewrite story (about)?|script about|story about|make a script (about)?/gi,
+        "",
+      )
       .trim();
 
     if (topic) {
@@ -174,7 +186,9 @@ function localIntelligentAssistant(
       "over-the-shoulder shot, shallow depth of field, soft rim lighting",
     ];
 
-    const isRegenReq = /change|redo|again|regenerate|rewrite|try again|fresh|variation/i.test(qLower);
+    const isRegenReq = /change|redo|again|regenerate|rewrite|try again|fresh|variation/i.test(
+      qLower,
+    );
 
     newScenes = newScenes.map((scene, idx) => {
       let promptText = cleanPromptText(scene.generationPrompt || scene.copyReadyPrompt);
@@ -186,7 +200,11 @@ function localIntelligentAssistant(
       } else if (qLower.includes("dramatic") || qLower.includes("intense")) {
         promptText = `${promptText}, intense dramatic lighting, high contrast cinematic grade`;
         actionDesc = "Applied intense dramatic lighting to all scenes";
-      } else if (qLower.includes("push in") || qLower.includes("zoom") || qLower.includes("camera")) {
+      } else if (
+        qLower.includes("push in") ||
+        qLower.includes("zoom") ||
+        qLower.includes("camera")
+      ) {
         promptText = `${promptText}, 35mm anamorphic camera lens, slow push-in tracking shot`;
         actionDesc = "Added 35mm camera motion and tracking to scenes";
       } else {
@@ -302,7 +320,10 @@ You MUST reply ONLY with a valid JSON object in this exact schema:
 - Scenes Summary: ${currentOutput?.scenes?.map((s) => `Scene ${s.sceneNumber}: ${s.sceneTitle}`).join("; ")}
 
 RECENT CHAT HISTORY:
-${(chatHistory || []).slice(-4).map((h) => `${h.sender.toUpperCase()}: ${h.text}`).join("\n")}
+${(chatHistory || [])
+  .slice(-4)
+  .map((h) => `${h.sender.toUpperCase()}: ${h.text}`)
+  .join("\n")}
 
 USER INSTRUCTION TO APPLY:
 "${userQuery}"
@@ -350,6 +371,9 @@ Modify the storyboard package accordingly. Ensure every scene has a high quality
     return Response.json(parsed);
   } catch (err: any) {
     console.error("Error in assistant API endpoint:", err);
-    return Response.json({ error: err.message || "Failed to process assistant request." }, { status: 500 });
+    return Response.json(
+      { error: err.message || "Failed to process assistant request." },
+      { status: 500 },
+    );
   }
 }

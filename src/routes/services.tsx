@@ -20,10 +20,14 @@ export const Route = createFileRoute("/services")({
         content:
           "ai video production service, ai video advertising services, ai video avatar service, ai video animation company, ai video content agency, ai video editing services",
       },
-      { property: "og:title", content: "AI Video Production Services & AI Animation Agency | ContentMesh" },
+      {
+        property: "og:title",
+        content: "AI Video Production Services & AI Animation Agency | ContentMesh",
+      },
       {
         property: "og:description",
-        content: "Explore full-stack AI video production services, commercial ads, AI animation, and voiceovers.",
+        content:
+          "Explore full-stack AI video production services, commercial ads, AI animation, and voiceovers.",
       },
       { property: "og:url", content: "https://contentmesh.ai/services" },
     ],
@@ -44,10 +48,22 @@ export const Route = createFileRoute("/services")({
             "@type": "OfferCatalog",
             name: "AI Video Services",
             itemListElement: [
-              { "@type": "Offer", itemOffered: { "@type": "Service", name: "AI Commercial Video Production" } },
-              { "@type": "Offer", itemOffered: { "@type": "Service", name: "AI Character & 3D Animation" } },
-              { "@type": "Offer", itemOffered: { "@type": "Service", name: "AI Voiceovers & Language Localization" } },
-              { "@type": "Offer", itemOffered: { "@type": "Service", name: "UGC Video Editing & Motion Graphics" } },
+              {
+                "@type": "Offer",
+                itemOffered: { "@type": "Service", name: "AI Commercial Video Production" },
+              },
+              {
+                "@type": "Offer",
+                itemOffered: { "@type": "Service", name: "AI Character & 3D Animation" },
+              },
+              {
+                "@type": "Offer",
+                itemOffered: { "@type": "Service", name: "AI Voiceovers & Language Localization" },
+              },
+              {
+                "@type": "Offer",
+                itemOffered: { "@type": "Service", name: "UGC Video Editing & Motion Graphics" },
+              },
             ],
           },
         }),

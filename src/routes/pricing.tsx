@@ -19,10 +19,14 @@ export const Route = createFileRoute("/pricing")({
         content:
           "ai video production pricing, ai video agency retainers, ai video production cost, affordable ai video production",
       },
-      { property: "og:title", content: "AI Video Production Pricing & Retainer Plans | ContentMesh" },
+      {
+        property: "og:title",
+        content: "AI Video Production Pricing & Retainer Plans | ContentMesh",
+      },
       {
         property: "og:description",
-        content: "Transparent monthly retainers for AI video production, commercial ads, and animation.",
+        content:
+          "Transparent monthly retainers for AI video production, commercial ads, and animation.",
       },
       { property: "og:url", content: "https://contentmesh.ai/pricing" },
     ],

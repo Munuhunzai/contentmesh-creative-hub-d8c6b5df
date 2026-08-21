@@ -1,11 +1,5 @@
 import { motion } from "framer-motion";
-import {
-  TrendingDown,
-  Zap,
-  Award,
-  ShieldCheck,
-  ArrowRight,
-} from "lucide-react";
+import { TrendingDown, Zap, Award, ShieldCheck, ArrowRight } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 
 const FEATURES = [
@@ -50,7 +44,6 @@ export function WhyUs() {
           />
 
           <div className="relative grid gap-12 lg:grid-cols-12 lg:items-center">
-
             {/* ── Left Column (Title + Subtitle + Featured Team/Studio Image) ── */}
             <div className="lg:col-span-5 flex flex-col justify-between space-y-6">
               <div>
@@ -63,7 +56,8 @@ export function WhyUs() {
                 </h2>
 
                 <p className="mt-4 text-sm sm:text-base leading-relaxed text-muted-foreground">
-                  Built specifically for ambitious brands to scale content velocity, save time, stay ahead of competitors, and drive high-ROI video campaigns with less effort.
+                  Built specifically for ambitious brands to scale content velocity, save time, stay
+                  ahead of competitors, and drive high-ROI video campaigns with less effort.
                 </p>
               </div>
 
@@ -86,13 +80,15 @@ export function WhyUs() {
                   to="/contact"
                   className="inline-flex items-center gap-2 rounded-full bg-[#FF5A1F] px-5 py-2.5 text-xs sm:text-sm font-bold uppercase tracking-wider text-white shadow-md transition-transform hover:scale-105 hover:bg-[#ff6e38] group"
                 >
-                  Book Free Discovery <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  Book Free Discovery{" "}
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Link>
                 <Link
                   to="/portfolio"
                   className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors group px-2 py-2"
                 >
-                  Explore Portfolio <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  Explore Portfolio{" "}
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Link>
               </div>
             </div>
@@ -130,7 +126,6 @@ export function WhyUs() {
                 );
               })}
             </div>
-
           </div>
         </div>
       </div>

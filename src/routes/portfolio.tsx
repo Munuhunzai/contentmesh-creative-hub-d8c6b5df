@@ -18,10 +18,14 @@ export const Route = createFileRoute("/portfolio")({
         content:
           "ai video production portfolio, ai video agency work, ai video samples, ai video examples, ai commercial ads portfolio",
       },
-      { property: "og:title", content: "AI Video Production Portfolio & Examples | ContentMesh Agency" },
+      {
+        property: "og:title",
+        content: "AI Video Production Portfolio & Examples | ContentMesh Agency",
+      },
       {
         property: "og:description",
-        content: "A curated look at recent AI video ads, product videos, animations, corporate stories, and social reels.",
+        content:
+          "A curated look at recent AI video ads, product videos, animations, corporate stories, and social reels.",
       },
       { property: "og:url", content: "https://contentmesh.ai/portfolio" },
     ],

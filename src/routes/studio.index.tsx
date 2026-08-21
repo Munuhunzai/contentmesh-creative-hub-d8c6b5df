@@ -7,10 +7,7 @@ const StudioComponent = lazy(() => import("@/sanity/StudioApp"));
 export const Route = createFileRoute("/studio/")({
   ssr: false,
   head: () => ({
-    meta: [
-      { title: "Studio — ContentMesh" },
-      { name: "robots", content: "noindex,nofollow" },
-    ],
+    meta: [{ title: "Studio — ContentMesh" }, { name: "robots", content: "noindex,nofollow" }],
   }),
   component: StudioRoute,
 });
@@ -29,7 +26,17 @@ function StudioRoute() {
 
 function StudioLoading() {
   return (
-    <div style={{ position: "fixed", inset: 0, display: "grid", placeItems: "center", background: "#0f172a", color: "#fff", fontFamily: "system-ui" }}>
+    <div
+      style={{
+        position: "fixed",
+        inset: 0,
+        display: "grid",
+        placeItems: "center",
+        background: "#0f172a",
+        color: "#fff",
+        fontFamily: "system-ui",
+      }}
+    >
       Loading Sanity Studio…
     </div>
   );

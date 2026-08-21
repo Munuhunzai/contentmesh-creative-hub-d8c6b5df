@@ -6,7 +6,12 @@ export default defineType({
   type: "document",
   fields: [
     defineField({ name: "title", type: "string", validation: (r) => r.required() }),
-    defineField({ name: "slug", type: "slug", options: { source: "title" }, validation: (r) => r.required() }),
+    defineField({
+      name: "slug",
+      type: "slug",
+      options: { source: "title" },
+      validation: (r) => r.required(),
+    }),
     defineField({ name: "excerpt", type: "text", rows: 3 }),
     defineField({ name: "cover", type: "image", options: { hotspot: true } }),
     defineField({
@@ -36,7 +41,12 @@ export default defineType({
       description: "Toggle ON to feature this article at the top of the blog page.",
       initialValue: false,
     }),
-    defineField({ name: "tags", type: "array", of: [{ type: "string" }], options: { layout: "tags" } }),
+    defineField({
+      name: "tags",
+      type: "array",
+      of: [{ type: "string" }],
+      options: { layout: "tags" },
+    }),
   ],
   preview: { select: { title: "title", subtitle: "publishedAt", media: "cover" } },
 });

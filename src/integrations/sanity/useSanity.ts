@@ -33,5 +33,5 @@ export function useSanity<T>(
     (Array.isArray(data) && data.length === 0) ||
     (typeof data === "object" && !Array.isArray(data) && Object.keys(data as object).length === 0);
 
-  return (isEmpty ? fallback : (data as T));
+  return isEmpty ? fallback : (data as T);
 }

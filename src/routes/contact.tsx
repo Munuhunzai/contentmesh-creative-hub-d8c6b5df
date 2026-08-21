@@ -22,10 +22,14 @@ export const Route = createFileRoute("/contact")({
         content:
           "contact ai video production agency, book ai video project, request ai video quote, hire ai video company",
       },
-      { property: "og:title", content: "Contact ContentMesh | Book an AI Video Production Project" },
+      {
+        property: "og:title",
+        content: "Contact ContentMesh | Book an AI Video Production Project",
+      },
       {
         property: "og:description",
-        content: "Book a discovery call or place an order with ContentMesh AI Video Production Studio.",
+        content:
+          "Book a discovery call or place an order with ContentMesh AI Video Production Studio.",
       },
       { property: "og:url", content: "https://contentmesh.ai/contact" },
     ],
@@ -99,34 +103,76 @@ function Contact() {
     }
   };
 
-
   return (
     <SiteLayout>
-      <PageHero eyebrow="Contact" title="Let's build something worth watching" desc="Tell us about your project. We reply within one business day." />
+      <PageHero
+        eyebrow="Contact"
+        title="Let's build something worth watching"
+        desc="Tell us about your project. We reply within one business day."
+      />
 
       <section className="mx-auto max-w-7xl px-6 pb-24">
         <div className="grid gap-8 lg:grid-cols-[1.3fr_1fr]">
           <motion.form
-            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
             onSubmit={onSubmit}
             className="rounded-[2rem] border border-border bg-card p-6 shadow-soft sm:p-10"
           >
             <div className="grid gap-4 sm:grid-cols-2">
               <Field label="Name" name="name" placeholder="Ava Morgan" error={errors.name} />
-              <Field label="Email" name="email" type="email" placeholder="ava@brand.com" error={errors.email} />
-              <Field label="Company" name="company" placeholder="Brand Inc." error={errors.company} />
-              <Select label="Service Needed" name="service" error={errors.service}
-                options={["AI Video Production", "AI Animation", "Voiceovers", "Video Editing", "Motion Graphics", "Full Production"]} />
-              <Select label="Budget" name="budget" error={errors.budget}
-                options={["< $2k", "$2k – $5k", "$5k – $15k", "$15k – $50k", "$50k+"]} />
+              <Field
+                label="Email"
+                name="email"
+                type="email"
+                placeholder="ava@brand.com"
+                error={errors.email}
+              />
+              <Field
+                label="Company"
+                name="company"
+                placeholder="Brand Inc."
+                error={errors.company}
+              />
+              <Select
+                label="Service Needed"
+                name="service"
+                error={errors.service}
+                options={[
+                  "AI Video Production",
+                  "AI Animation",
+                  "Voiceovers",
+                  "Video Editing",
+                  "Motion Graphics",
+                  "Full Production",
+                ]}
+              />
+              <Select
+                label="Budget"
+                name="budget"
+                error={errors.budget}
+                options={["< $2k", "$2k – $5k", "$5k – $15k", "$15k – $50k", "$50k+"]}
+              />
             </div>
             <div className="mt-4">
               <label className="mb-1.5 block text-sm font-medium">Project Details</label>
-              <textarea name="details" rows={5} placeholder="What are you making, for whom, and by when?"
-                className={`w-full rounded-2xl border bg-background px-4 py-3 text-sm outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-accent/40 ${errors.details ? "border-destructive" : "border-input"}`} />
+              <textarea
+                name="details"
+                rows={5}
+                placeholder="What are you making, for whom, and by when?"
+                className={`w-full rounded-2xl border bg-background px-4 py-3 text-sm outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-accent/40 ${errors.details ? "border-destructive" : "border-input"}`}
+              />
               {errors.details && <p className="mt-1 text-xs text-destructive">{errors.details}</p>}
             </div>
-            <input type="text" name="_honey" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden />
+            <input
+              type="text"
+              name="_honey"
+              tabIndex={-1}
+              autoComplete="off"
+              className="hidden"
+              aria-hidden
+            />
 
             <div className="mt-6 flex flex-wrap items-center gap-4">
               <button
@@ -148,18 +194,36 @@ function Contact() {
           </motion.form>
 
           <div className="space-y-4">
-            {c.email && <InfoCard icon={<Mail className="h-4 w-4" />} title="Email" value={c.email} />}
-            {c.phone && <InfoCard icon={<Phone className="h-4 w-4" />} title="Phone" value={c.phone} />}
-            {c.address && <InfoCard icon={<MapPin className="h-4 w-4" />} title="Studio" value={c.address} />}
-            {c.hours && <InfoCard icon={<Clock className="h-4 w-4" />} title="Hours" value={c.hours} />}
+            {c.email && (
+              <InfoCard icon={<Mail className="h-4 w-4" />} title="Email" value={c.email} />
+            )}
+            {c.phone && (
+              <InfoCard icon={<Phone className="h-4 w-4" />} title="Phone" value={c.phone} />
+            )}
+            {c.address && (
+              <InfoCard icon={<MapPin className="h-4 w-4" />} title="Studio" value={c.address} />
+            )}
+            {c.hours && (
+              <InfoCard icon={<Clock className="h-4 w-4" />} title="Hours" value={c.hours} />
+            )}
             <div className="overflow-hidden rounded-3xl border border-border">
               {c.mapEmbedUrl ? (
-                <iframe title="Studio location" src={c.mapEmbedUrl} className="aspect-[4/3] w-full" loading="lazy" />
+                <iframe
+                  title="Studio location"
+                  src={c.mapEmbedUrl}
+                  className="aspect-[4/3] w-full"
+                  loading="lazy"
+                />
               ) : (
-                <div className="relative aspect-[4/3]" style={{ background: "linear-gradient(135deg,#0D4C92,#FF5A1F)" }}>
+                <div
+                  className="relative aspect-[4/3]"
+                  style={{ background: "linear-gradient(135deg,#0D4C92,#FF5A1F)" }}
+                >
                   <div className="absolute inset-0 mesh-bg opacity-50 mix-blend-overlay" />
                   <div className="absolute inset-0 grid place-items-center">
-                    <div className="glass rounded-full px-4 py-2 text-xs font-semibold text-foreground">Map preview</div>
+                    <div className="glass rounded-full px-4 py-2 text-xs font-semibold text-foreground">
+                      Map preview
+                    </div>
                   </div>
                 </div>
               )}
@@ -171,25 +235,60 @@ function Contact() {
   );
 }
 
-function Field({ label, name, type = "text", placeholder, error }: { label: string; name: string; type?: string; placeholder?: string; error?: string }) {
+function Field({
+  label,
+  name,
+  type = "text",
+  placeholder,
+  error,
+}: {
+  label: string;
+  name: string;
+  type?: string;
+  placeholder?: string;
+  error?: string;
+}) {
   return (
     <div>
       <label className="mb-1.5 block text-sm font-medium">{label}</label>
-      <input name={name} type={type} placeholder={placeholder}
-        className={`w-full rounded-2xl border bg-background px-4 py-2.5 text-sm outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-accent/40 ${error ? "border-destructive" : "border-input"}`} />
+      <input
+        name={name}
+        type={type}
+        placeholder={placeholder}
+        className={`w-full rounded-2xl border bg-background px-4 py-2.5 text-sm outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-accent/40 ${error ? "border-destructive" : "border-input"}`}
+      />
       {error && <p className="mt-1 text-xs text-destructive">{error}</p>}
     </div>
   );
 }
 
-function Select({ label, name, options, error }: { label: string; name: string; options: string[]; error?: string }) {
+function Select({
+  label,
+  name,
+  options,
+  error,
+}: {
+  label: string;
+  name: string;
+  options: string[];
+  error?: string;
+}) {
   return (
     <div>
       <label className="mb-1.5 block text-sm font-medium">{label}</label>
-      <select name={name} defaultValue=""
-        className={`w-full rounded-2xl border bg-background px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-accent/40 ${error ? "border-destructive" : "border-input"}`}>
-        <option value="" disabled>Select…</option>
-        {options.map((o) => <option key={o} value={o}>{o}</option>)}
+      <select
+        name={name}
+        defaultValue=""
+        className={`w-full rounded-2xl border bg-background px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-accent/40 ${error ? "border-destructive" : "border-input"}`}
+      >
+        <option value="" disabled>
+          Select…
+        </option>
+        {options.map((o) => (
+          <option key={o} value={o}>
+            {o}
+          </option>
+        ))}
       </select>
       {error && <p className="mt-1 text-xs text-destructive">{error}</p>}
     </div>
@@ -199,9 +298,13 @@ function Select({ label, name, options, error }: { label: string; name: string; 
 function InfoCard({ icon, title, value }: { icon: React.ReactNode; title: string; value: string }) {
   return (
     <div className="flex items-start gap-3 rounded-2xl border border-border bg-card p-5">
-      <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl gradient-brand text-white">{icon}</span>
+      <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl gradient-brand text-white">
+        {icon}
+      </span>
       <div className="min-w-0">
-        <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">{title}</p>
+        <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+          {title}
+        </p>
         <p className="mt-0.5 font-medium">{value}</p>
       </div>
     </div>

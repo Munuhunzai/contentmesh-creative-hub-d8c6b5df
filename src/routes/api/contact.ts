@@ -42,7 +42,10 @@ async function handlePost({ request }: { request: Request }) {
 
     const parsed = schema.safeParse(raw);
     if (!parsed.success) {
-      return Response.json({ error: "Invalid form data.", issues: parsed.error.issues }, { status: 400 });
+      return Response.json(
+        { error: "Invalid form data.", issues: parsed.error.issues },
+        { status: 400 },
+      );
     }
 
     const { name, email, company, service, budget, details, contactEmail } = parsed.data;
@@ -53,9 +56,7 @@ async function handlePost({ request }: { request: Request }) {
         ? contactEmail.trim()
         : process.env.CONTACT_EMAIL || process.env.VITE_CONTACT_EMAIL || DEFAULT_TO;
 
-    const toList = Array.from(
-      new Set([targetContactEmail, DEFAULT_TO].filter(Boolean))
-    );
+    const toList = Array.from(new Set([targetContactEmail, DEFAULT_TO].filter(Boolean)));
 
     const resend = new Resend(apiKey);
 
@@ -156,7 +157,10 @@ async function handlePost({ request }: { request: Request }) {
 
     if (notifyResult.error) {
       console.error("Resend final notify error:", notifyResult.error);
-      return Response.json({ error: "Failed to send email. Please check configuration." }, { status: 500 });
+      return Response.json(
+        { error: "Failed to send email. Please check configuration." },
+        { status: 500 },
+      );
     }
 
     return Response.json({ ok: true });

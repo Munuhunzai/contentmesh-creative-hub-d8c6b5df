@@ -12,7 +12,10 @@ export function safeParseAIJson<T = any>(jsonString: string): T {
 
   // 1. Strip Markdown code block backticks if present
   if (cleaned.startsWith("```")) {
-    cleaned = cleaned.replace(/^```(json)?\n?/, "").replace(/\n?```$/, "").trim();
+    cleaned = cleaned
+      .replace(/^```(json)?\n?/, "")
+      .replace(/\n?```$/, "")
+      .trim();
   }
 
   // 2. Try direct parse first
@@ -53,7 +56,7 @@ export function safeParseAIJson<T = any>(jsonString: string): T {
   } catch (err: any) {
     console.error("Failed to repair JSON output:", err, "Original Length:", jsonString.length);
     throw new Error(
-      "The AI response was truncated due to prompt size limits. Please try again or select fewer scenes."
+      "The AI response was truncated due to prompt size limits. Please try again or select fewer scenes.",
     );
   }
 }

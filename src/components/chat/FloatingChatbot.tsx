@@ -59,11 +59,7 @@ export function FloatingChatbot() {
       {/* Floating avatar button */}
       <motion.button
         initial={{ opacity: 0, scale: 0.8 }}
-        animate={
-          open
-            ? { opacity: 1, scale: 1, y: 0 }
-            : { opacity: 1, scale: 1, y: [0, -10, 0] }
-        }
+        animate={open ? { opacity: 1, scale: 1, y: 0 } : { opacity: 1, scale: 1, y: [0, -10, 0] }}
         transition={
           open
             ? { duration: 0.2 }
@@ -258,7 +254,9 @@ function renderFormattedContent(text: string, role: "user" | "assistant") {
   const paragraphs = text.split("\n\n");
   return paragraphs.map((para, pIdx) => {
     const lines = para.split("\n");
-    const isList = lines.length > 0 && lines.every((line) => line.trim().startsWith("- ") || line.trim().startsWith("* "));
+    const isList =
+      lines.length > 0 &&
+      lines.every((line) => line.trim().startsWith("- ") || line.trim().startsWith("* "));
 
     if (isList) {
       return (
@@ -317,7 +315,10 @@ function parseFormattedText(text: string, role: "user" | "assistant") {
         );
       }
     }
-    if ((part.startsWith("**") && part.endsWith("**")) || (part.startsWith("__") && part.endsWith("__"))) {
+    if (
+      (part.startsWith("**") && part.endsWith("**")) ||
+      (part.startsWith("__") && part.endsWith("__"))
+    ) {
       const content = part.slice(2, -2);
       return (
         <strong
@@ -332,4 +333,3 @@ function parseFormattedText(text: string, role: "user" | "assistant") {
     return part;
   });
 }
-

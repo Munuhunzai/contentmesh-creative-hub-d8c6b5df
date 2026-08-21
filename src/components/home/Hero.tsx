@@ -28,8 +28,8 @@ const FALLBACK_DESCRIPTION =
 
 const FALLBACK_SLIDES: HeroSlide[] = [
   { category: "AI VIDEO PRODUCTION", title: "VISUALS THAT MOVE PEOPLE." },
-  { category: "GENERATIVE ART",      title: "IMAGES BORN FROM IMAGINATION." },
-  { category: "BRAND FILMS",         title: "STORIES WORTH WATCHING." },
+  { category: "GENERATIVE ART", title: "IMAGES BORN FROM IMAGINATION." },
+  { category: "BRAND FILMS", title: "STORIES WORTH WATCHING." },
 ];
 
 // CSS gradient backgrounds shown when no image/video is uploaded
@@ -55,7 +55,9 @@ function extractYouTubeId(url: string): string | null {
       const m = url.match(p);
       if (m?.[1]) return m[1];
     }
-  } catch { /* noop */ }
+  } catch {
+    /* noop */
+  }
   return null;
 }
 
@@ -118,7 +120,6 @@ function YouTubeBackground({ videoId, active }: { videoId: string; active: boole
   );
 }
 
-
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export function Hero() {
@@ -133,10 +134,7 @@ export function Hero() {
 
   // ── Auto-advance ───────────────────────────────────────────────────────────
   useEffect(() => {
-    const t = setTimeout(
-      () => setCurrent((c) => (c + 1) % slides.length),
-      SLIDE_DURATION,
-    );
+    const t = setTimeout(() => setCurrent((c) => (c + 1) % slides.length), SLIDE_DURATION);
     return () => clearTimeout(t);
   }, [current, slides.length]);
 
@@ -155,14 +153,17 @@ export function Hero() {
   // ── Keyboard navigation ────────────────────────────────────────────────────
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "ArrowLeft")  setCurrent((c) => (c - 1 + slides.length) % slides.length);
+      if (e.key === "ArrowLeft") setCurrent((c) => (c - 1 + slides.length) % slides.length);
       if (e.key === "ArrowRight") setCurrent((c) => (c + 1) % slides.length);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [slides.length]);
 
-  const prev = useCallback(() => setCurrent((c) => (c - 1 + slides.length) % slides.length), [slides.length]);
+  const prev = useCallback(
+    () => setCurrent((c) => (c - 1 + slides.length) % slides.length),
+    [slides.length],
+  );
   const next = useCallback(() => setCurrent((c) => (c + 1) % slides.length), [slides.length]);
 
   const slide = slides[current] ?? {};
@@ -195,10 +196,7 @@ export function Hero() {
                 className="h-full w-full object-cover object-center"
               />
             ) : (
-              <div
-                className="h-full w-full"
-                style={{ background: bgGrad }}
-              />
+              <div className="h-full w-full" style={{ background: bgGrad }} />
             )}
           </div>
         );
@@ -228,9 +226,7 @@ export function Hero() {
         if (s.videoFileUrl) return null;
         const id = s.youtubeUrl ? extractYouTubeId(s.youtubeUrl) : null;
         if (!id || i !== current) return null;
-        return (
-          <YouTubeBackground key={`yt-${i}`} videoId={id} active={i === current} />
-        );
+        return <YouTubeBackground key={`yt-${i}`} videoId={id} active={i === current} />;
       })}
 
       {/* ── Dark overlay — heavier on left & bottom for readability ── */}
@@ -242,7 +238,6 @@ export function Hero() {
             "linear-gradient(to top, rgba(0,0,0,0.80) 0%, transparent 60%)",
         }}
       />
-
 
       {/* ── Arrow — prev ──────────────────────────────────────── */}
       <button

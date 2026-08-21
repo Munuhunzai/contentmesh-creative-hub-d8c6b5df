@@ -6,7 +6,7 @@ import { Footer } from "./Footer";
 import { AmbientBackground } from "./AmbientBackground";
 
 const FloatingChatbot = lazy(() =>
-  import("@/components/chat/FloatingChatbot").then((m) => ({ default: m.FloatingChatbot }))
+  import("@/components/chat/FloatingChatbot").then((m) => ({ default: m.FloatingChatbot })),
 );
 
 interface SiteLayoutProps {
@@ -45,7 +45,11 @@ export function SiteLayout({ children, heroSlot, noTopPadding }: SiteLayoutProps
       <Navbar />
       {/* Hero renders here — behind the fixed navbar, no pt-28 */}
       {heroSlot}
-      <main className={`w-full max-w-full overflow-x-hidden ${heroSlot || noTopPadding ? "pt-16 sm:pt-20" : "pt-28"}`}>{children}</main>
+      <main
+        className={`w-full max-w-full overflow-x-hidden ${heroSlot || noTopPadding ? "pt-16 sm:pt-20" : "pt-28"}`}
+      >
+        {children}
+      </main>
       <Footer />
       {loadChatbot && (
         <Suspense fallback={null}>
@@ -55,7 +59,9 @@ export function SiteLayout({ children, heroSlot, noTopPadding }: SiteLayoutProps
       <AnimatePresence>
         {showTop && (
           <motion.button
-            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             aria-label="Back to top"
             className="glass-strong glass-reflect fixed bottom-28 left-6 z-40 grid h-12 w-12 place-items-center rounded-full text-foreground shadow-float transition-transform hover:scale-105"
@@ -67,4 +73,3 @@ export function SiteLayout({ children, heroSlot, noTopPadding }: SiteLayoutProps
     </div>
   );
 }
-

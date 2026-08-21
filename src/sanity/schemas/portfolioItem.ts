@@ -6,12 +6,27 @@ export default defineType({
   type: "document",
   fields: [
     defineField({ name: "title", type: "string", validation: (r) => r.required() }),
-    defineField({ name: "slug", type: "slug", options: { source: "title" }, validation: (r) => r.required() }),
+    defineField({
+      name: "slug",
+      type: "slug",
+      options: { source: "title" },
+      validation: (r) => r.required(),
+    }),
     defineField({
       name: "category",
       type: "string",
       options: {
-        list: ["AI Ads", "Product Videos", "Animations", "Corporate", "Talking Head", "Reels", "Health & Wellness", "Science", "UGC"],
+        list: [
+          "AI Ads",
+          "Product Videos",
+          "Animations",
+          "Corporate",
+          "Talking Head",
+          "Reels",
+          "Health & Wellness",
+          "Science",
+          "UGC",
+        ],
       },
     }),
     defineField({
@@ -19,7 +34,8 @@ export default defineType({
       title: "Featured Portfolio Item",
       type: "boolean",
       initialValue: false,
-      description: "Turn ON to display this item in the default 'Featured' tab on the portfolio grid.",
+      description:
+        "Turn ON to display this item in the default 'Featured' tab on the portfolio grid.",
     }),
     defineField({ name: "client", type: "string" }),
     defineField({ name: "completionDate", type: "date" }),
@@ -29,7 +45,8 @@ export default defineType({
       name: "videoUrl",
       type: "url",
       title: "Video Link — Google Drive / YouTube / Vimeo / MP4 (Recommended)",
-      description: "⭐ Recommended for HD/4K videos: Upload to Google Drive (set access to 'Anyone with the link'), YouTube, or Vimeo, then paste the link here (e.g. https://drive.google.com/file/d/xxxx/view).",
+      description:
+        "⭐ Recommended for HD/4K videos: Upload to Google Drive (set access to 'Anyone with the link'), YouTube, or Vimeo, then paste the link here (e.g. https://drive.google.com/file/d/xxxx/view).",
     }),
     defineField({
       name: "videoFile",
@@ -39,16 +56,19 @@ export default defineType({
         accept: "video/mp4,video/webm,video/quicktime,video/*",
         storeOriginalFilename: true,
       },
-      description: "Direct upload for small video files (<50MB). Note: Requires CORS allowed in sanity.io/manage for embedded studio.",
+      description:
+        "Direct upload for small video files (<50MB). Note: Requires CORS allowed in sanity.io/manage for embedded studio.",
     }),
     defineField({
       name: "gallery",
       type: "array",
-      of: [{
-        type: "image",
-        options: { hotspot: true },
-        fields: [defineField({ name: "alt", type: "string" })],
-      }],
+      of: [
+        {
+          type: "image",
+          options: { hotspot: true },
+          fields: [defineField({ name: "alt", type: "string" })],
+        },
+      ],
     }),
   ],
 });

@@ -9,7 +9,8 @@ export default defineType({
       name: "heroSlides",
       title: "Hero Slides",
       type: "array",
-      description: "Add up to 5 slides. Each slide is a full-screen panel with a background image and optional YouTube video.",
+      description:
+        "Add up to 5 slides. Each slide is a full-screen panel with a background image and optional YouTube video.",
       of: [
         {
           type: "object",
@@ -32,7 +33,8 @@ export default defineType({
               name: "youtubeUrl",
               title: "Video Link — Google Drive / YouTube / Vimeo / MP4 (Recommended)",
               type: "url",
-              description: "⭐ Recommended: Paste a link from Google Drive (set access to 'Anyone with link'), YouTube, Vimeo, or direct MP4 URL.",
+              description:
+                "⭐ Recommended: Paste a link from Google Drive (set access to 'Anyone with link'), YouTube, Vimeo, or direct MP4 URL.",
             }),
             defineField({
               name: "videoFile",
@@ -49,7 +51,8 @@ export default defineType({
               title: "Hero Background GIF / Image (.gif, .png, .jpg, .webp)",
               type: "image",
               options: { hotspot: true },
-              description: "Upload an animated GIF or background image for this slide. Animated GIFs play smoothly in full screen.",
+              description:
+                "Upload an animated GIF or background image for this slide. Animated GIFs play smoothly in full screen.",
             }),
           ],
           preview: {
@@ -63,31 +66,40 @@ export default defineType({
       title: "Company Description",
       type: "text",
       rows: 3,
-      description: "Shown under the heading on every slide. Describe your company in 1–2 sentences.",
+      description:
+        "Shown under the heading on every slide. Describe your company in 1–2 sentences.",
     }),
     defineField({
       name: "stats",
       type: "array",
-      of: [{
-        type: "object",
-        fields: [
-          defineField({ name: "value", type: "number" }),
-          defineField({ name: "suffix", type: "string" }),
-          defineField({ name: "label", type: "string" }),
-        ],
-      }],
+      of: [
+        {
+          type: "object",
+          fields: [
+            defineField({ name: "value", type: "number" }),
+            defineField({ name: "suffix", type: "string" }),
+            defineField({ name: "label", type: "string" }),
+          ],
+        },
+      ],
     }),
     defineField({
       name: "whyUs",
       type: "array",
-      of: [{
-        type: "object",
-        fields: [
-          defineField({ name: "icon", type: "string", description: "Lucide icon name, e.g. Zap, Award" }),
-          defineField({ name: "title", type: "string" }),
-          defineField({ name: "description", type: "text", rows: 2 }),
-        ],
-      }],
+      of: [
+        {
+          type: "object",
+          fields: [
+            defineField({
+              name: "icon",
+              type: "string",
+              description: "Lucide icon name, e.g. Zap, Award",
+            }),
+            defineField({ name: "title", type: "string" }),
+            defineField({ name: "description", type: "text", rows: 2 }),
+          ],
+        },
+      ],
     }),
     defineField({ name: "ctaTitle", type: "string" }),
     defineField({ name: "ctaTitleAccent", type: "string" }),
@@ -95,4 +107,3 @@ export default defineType({
   ],
   preview: { prepare: () => ({ title: "Homepage" }) },
 });
-

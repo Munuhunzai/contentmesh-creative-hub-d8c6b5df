@@ -113,9 +113,7 @@ export function Testimonials() {
                     <p className="mt-0.5 text-xs text-muted-foreground font-medium">
                       {item.authorRole}
                     </p>
-                    <p className="text-xs text-muted-foreground/80 font-normal">
-                      {item.company}
-                    </p>
+                    <p className="text-xs text-muted-foreground/80 font-normal">{item.company}</p>
                   </div>
                 </div>
 
@@ -149,9 +147,7 @@ export function Testimonials() {
                 onClick={() => setActiveIndex(idx)}
                 aria-label={`Go to review slide ${idx + 1}`}
                 className={`h-1.5 rounded-full transition-all duration-300 ${
-                  isActive
-                    ? "w-8 bg-[#FF5A1F]"
-                    : "w-6 bg-[#ffb899] opacity-60 hover:opacity-100"
+                  isActive ? "w-8 bg-[#FF5A1F]" : "w-6 bg-[#ffb899] opacity-60 hover:opacity-100"
                 }`}
               />
             );

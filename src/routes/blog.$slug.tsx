@@ -25,7 +25,8 @@ const FALLBACK_ARTICLES: Record<string, Post> = {
     slug: "state-of-ai-video-2026",
     title: "The 2026 State of AI Video: How Generative Models Changed Commercial Ads Forever",
     tags: ["Insights"],
-    excerpt: "An in-depth analysis of how diffusion models, multi-modal generation, and synthetic actors are redefining brand production workflows.",
+    excerpt:
+      "An in-depth analysis of how diffusion models, multi-modal generation, and synthetic actors are redefining brand production workflows.",
     publishedAt: "2026-07-20",
     author: { name: "ContentMesh Studio", role: "AI Video Agency" },
     contentBlocks: [
@@ -35,7 +36,7 @@ const FALLBACK_ARTICLES: Record<string, Post> = {
       "2. Synthetic Actors & Regional Personalization\nTraditional commercial shoots required flying actors across cities or filming separate localized cuts for international markets. Today, generative AI and high-fidelity voice cloning allow brands to translate a single performance into 40+ languages with automatic lip-sync alignment.",
       "3. Cutting Production Cycles from 6 Weeks to 48 Hours\nWith an AI-first production pipeline, concepting and scripting takes 2 hours, AI scene generation takes 24 hours, and color grading and sound design takes 12 hours — delivering final masters in under 48 hours.",
       "4. Rapid Creative Testing for Performance Marketing\nWinning on platforms like Meta, TikTok, and YouTube Shorts requires continuous creative variation. Instead of betting your entire campaign budget on a single commercial cut, brands now produce 10 to 20 ad variations per week.",
-      "Conclusion: Combining AI Speed with Human Craft\nWhile generative AI models handle frame rendering, human directorial vision, storytelling structure, color grading, and sonic mastering remain essential. The most successful brands of 2026 aren't replacing human agency teams — they are empowering them with AI tools to create cinematic work at unprecedented scale."
+      "Conclusion: Combining AI Speed with Human Craft\nWhile generative AI models handle frame rendering, human directorial vision, storytelling structure, color grading, and sonic mastering remain essential. The most successful brands of 2026 aren't replacing human agency teams — they are empowering them with AI tools to create cinematic work at unprecedented scale.",
     ],
   },
   "ai-avatar-creators-onboarding": {
@@ -43,12 +44,13 @@ const FALLBACK_ARTICLES: Record<string, Post> = {
     slug: "ai-avatar-creators-onboarding",
     title: "Best AI Avatar Creators for Company Onboarding & Corporate Training Videos in 2026",
     tags: ["Playbook"],
-    excerpt: "How enterprise teams build realistic AI avatar videos to streamline internal training, support portals, and employee onboarding.",
+    excerpt:
+      "How enterprise teams build realistic AI avatar videos to streamline internal training, support portals, and employee onboarding.",
     publishedAt: "2026-07-18",
     author: { name: "Strategy Team", role: "ContentMesh Strategy" },
     contentBlocks: [
       "Enterprise communication is undergoing a massive shift towards video-first documentation. Rather than sending static PDFs, leading companies are leveraging custom AI avatars to produce engaging onboarding videos.",
-      "Key Benefits of AI Avatars for Corporate Training:\n- Instant updates without re-shooting\n- Multilingual voice translation in 40+ languages\n- Consistent brand representative across all training modules"
+      "Key Benefits of AI Avatars for Corporate Training:\n- Instant updates without re-shooting\n- Multilingual voice translation in 40+ languages\n- Consistent brand representative across all training modules",
     ],
   },
   "cut-ad-production-time": {
@@ -56,11 +58,12 @@ const FALLBACK_ARTICLES: Record<string, Post> = {
     slug: "cut-ad-production-time",
     title: "How We Cut Commercial Production Cycles by 78% Without Sacrificing Craft",
     tags: ["Case Study"],
-    excerpt: "A breakdown of our hybrid workflow combining AI video production with human motion graphics and professional color grading.",
+    excerpt:
+      "A breakdown of our hybrid workflow combining AI video production with human motion graphics and professional color grading.",
     publishedAt: "2026-07-15",
     author: { name: "Production Team", role: "ContentMesh Post-Production" },
     contentBlocks: [
-      "Speed is the ultimate leverage in modern digital advertising. In this case study, we share how ContentMesh optimized video production workflows to deliver commercial-grade ads in 3 days."
+      "Speed is the ultimate leverage in modern digital advertising. In this case study, we share how ContentMesh optimized video production workflows to deliver commercial-grade ads in 3 days.",
     ],
   },
   "ai-video-translation-localization": {
@@ -68,11 +71,12 @@ const FALLBACK_ARTICLES: Record<string, Post> = {
     slug: "ai-video-translation-localization",
     title: "Enterprise AI Video Translation & Dubbing: Reaching Global Audiences in 40+ Languages",
     tags: ["Enterprise"],
-    excerpt: "How to use AI voice cloning, localized accents, and automated lip-syncing to translate video ad campaigns globally.",
+    excerpt:
+      "How to use AI voice cloning, localized accents, and automated lip-syncing to translate video ad campaigns globally.",
     publishedAt: "2026-07-12",
     author: { name: "Audio Engineering", role: "ContentMesh Sound Lab" },
     contentBlocks: [
-      "Expanding brand campaigns across international markets used to require hiring localization agencies and voice actors. Learn how AI dubbing and lip-syncing simplifies global expansion."
+      "Expanding brand campaigns across international markets used to require hiring localization agencies and voice actors. Learn how AI dubbing and lip-syncing simplifies global expansion.",
     ],
   },
   "directors-guide-runway": {
@@ -80,11 +84,12 @@ const FALLBACK_ARTICLES: Record<string, Post> = {
     slug: "directors-guide-runway",
     title: "The Director's Field Guide to Prompting Runway & Sora-Class Models in 2026",
     tags: ["Craft"],
-    excerpt: "Camera angles, lighting tokens, and movement prompts that yield cinema-grade plates every single time.",
+    excerpt:
+      "Camera angles, lighting tokens, and movement prompts that yield cinema-grade plates every single time.",
     publishedAt: "2026-07-08",
     author: { name: "Creative Director", role: "ContentMesh Studio" },
     contentBlocks: [
-      "Mastering camera syntax and cinematic prompts for video foundation models. Discover the prompt structures used by commercial AI directors."
+      "Mastering camera syntax and cinematic prompts for video foundation models. Discover the prompt structures used by commercial AI directors.",
     ],
   },
   "ai-ugc-video-editing-agencies": {
@@ -92,11 +97,12 @@ const FALLBACK_ARTICLES: Record<string, Post> = {
     slug: "ai-ugc-video-editing-agencies",
     title: "How Performance Marketing Agencies Use AI UGC Video Editors for High ROI Ad Drops",
     tags: ["Marketing"],
-    excerpt: "A playbook for scaling short-form social reels and vertical-native video ads using automated editing pipelines.",
+    excerpt:
+      "A playbook for scaling short-form social reels and vertical-native video ads using automated editing pipelines.",
     publishedAt: "2026-07-01",
     author: { name: "Growth Team", role: "ContentMesh Growth" },
     contentBlocks: [
-      "Short-form social media ads on TikTok and Meta require high-velocity creative testing. Learn how top performance agencies edit UGC videos at scale."
+      "Short-form social media ads on TikTok and Meta require high-velocity creative testing. Learn how top performance agencies edit UGC videos at scale.",
     ],
   },
 };
@@ -104,7 +110,9 @@ const FALLBACK_ARTICLES: Record<string, Post> = {
 export const Route = createFileRoute("/blog/$slug")({
   loader: async ({ params }): Promise<Post | null> => {
     try {
-      const post = await sanityClient.fetch<Post | null>(blogPostBySlugQuery, { slug: params.slug });
+      const post = await sanityClient.fetch<Post | null>(blogPostBySlugQuery, {
+        slug: params.slug,
+      });
       if (post) return post;
     } catch {
       /* fallback */
@@ -113,7 +121,12 @@ export const Route = createFileRoute("/blog/$slug")({
   },
   head: ({ loaderData }) => {
     if (!loaderData) {
-      return { meta: [{ title: "Article not found — ContentMesh" }, { name: "robots", content: "noindex" }] };
+      return {
+        meta: [
+          { title: "Article not found — ContentMesh" },
+          { name: "robots", content: "noindex" },
+        ],
+      };
     }
     return {
       meta: [
@@ -147,14 +160,10 @@ const portableTextComponents = {
       </h3>
     ),
     h4: ({ children }: any) => (
-      <h4 className="mt-6 mb-2 font-display text-lg font-semibold text-foreground">
-        {children}
-      </h4>
+      <h4 className="mt-6 mb-2 font-display text-lg font-semibold text-foreground">{children}</h4>
     ),
     normal: ({ children }: any) => (
-      <p className="mb-6 leading-relaxed text-foreground/90 text-base">
-        {children}
-      </p>
+      <p className="mb-6 leading-relaxed text-foreground/90 text-base">{children}</p>
     ),
     blockquote: ({ children }: any) => (
       <blockquote className="my-6 border-l-4 border-accent pl-4 italic text-muted-foreground">
@@ -164,14 +173,10 @@ const portableTextComponents = {
   },
   list: {
     bullet: ({ children }: any) => (
-      <ul className="mb-6 ml-6 list-disc space-y-2 text-foreground/90">
-        {children}
-      </ul>
+      <ul className="mb-6 ml-6 list-disc space-y-2 text-foreground/90">{children}</ul>
     ),
     number: ({ children }: any) => (
-      <ol className="mb-6 ml-6 list-decimal space-y-2 text-foreground/90">
-        {children}
-      </ol>
+      <ol className="mb-6 ml-6 list-decimal space-y-2 text-foreground/90">{children}</ol>
     ),
   },
   listItem: {
@@ -179,7 +184,9 @@ const portableTextComponents = {
     number: ({ children }: any) => <li>{children}</li>,
   },
   marks: {
-    strong: ({ children }: any) => <strong className="font-semibold text-foreground">{children}</strong>,
+    strong: ({ children }: any) => (
+      <strong className="font-semibold text-foreground">{children}</strong>
+    ),
     em: ({ children }: any) => <em className="italic">{children}</em>,
     code: ({ children }: any) => (
       <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-sm">{children}</code>
@@ -231,8 +238,19 @@ function BlogPost() {
               className="h-8 w-8 rounded-full object-cover"
             />
           )}
-          {post.author?.name && <span className="font-medium text-foreground">{post.author.name}</span>}
-          {post.publishedAt && <span>· {new Date(post.publishedAt).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}</span>}
+          {post.author?.name && (
+            <span className="font-medium text-foreground">{post.author.name}</span>
+          )}
+          {post.publishedAt && (
+            <span>
+              ·{" "}
+              {new Date(post.publishedAt).toLocaleDateString(undefined, {
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+              })}
+            </span>
+          )}
         </div>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           {post.body ? (
@@ -260,7 +278,8 @@ function BlogPost() {
                 Ready to Scale Your Brand with Custom AI Video Production?
               </h2>
               <p className="mt-2 text-xs sm:text-sm text-white/80 leading-relaxed">
-                Let ContentMesh build high-performing AI video ads, product showcases, animations, or custom avatars for your brand.
+                Let ContentMesh build high-performing AI video ads, product showcases, animations,
+                or custom avatars for your brand.
               </p>
             </div>
             <Link
@@ -273,7 +292,10 @@ function BlogPost() {
         </div>
 
         <div className="mt-10 flex items-center justify-between">
-          <Link to="/blog" className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent hover:underline">
+          <Link
+            to="/blog"
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent hover:underline"
+          >
             <ArrowLeft className="h-3.5 w-3.5" /> Back to all articles
           </Link>
         </div>
@@ -285,9 +307,16 @@ function BlogPost() {
 function PostNotFound() {
   return (
     <SiteLayout>
-      <PageHero eyebrow="Not found" title="Article not found" desc="The post you're looking for isn't available." />
+      <PageHero
+        eyebrow="Not found"
+        title="Article not found"
+        desc="The post you're looking for isn't available."
+      />
       <div className="mx-auto max-w-3xl px-6 pb-24">
-        <Link to="/blog" className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent">
+        <Link
+          to="/blog"
+          className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent"
+        >
           <ArrowLeft className="h-3.5 w-3.5" /> Back to blog
         </Link>
       </div>

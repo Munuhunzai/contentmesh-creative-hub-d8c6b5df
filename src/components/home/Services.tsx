@@ -271,12 +271,7 @@ const SERVICES_DATA: ServiceItem[] = [
 ];
 
 // Quadruple items array to ensure infinite smooth seamless looping
-const LOOP_SERVICES = [
-  ...SERVICES_DATA,
-  ...SERVICES_DATA,
-  ...SERVICES_DATA,
-  ...SERVICES_DATA,
-];
+const LOOP_SERVICES = [...SERVICES_DATA, ...SERVICES_DATA, ...SERVICES_DATA, ...SERVICES_DATA];
 
 export function SectionHeader({
   eyebrow,
@@ -290,17 +285,13 @@ export function SectionHeader({
   return (
     <div className="mx-auto max-w-2xl text-center">
       {eyebrow && (
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#FF5A1F]">
-          {eyebrow}
-        </p>
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#FF5A1F]">{eyebrow}</p>
       )}
       <h2 className="mt-4 font-display text-3xl font-black tracking-tight text-foreground sm:text-4xl md:text-5xl">
         {title}
       </h2>
       {desc && (
-        <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
-          {desc}
-        </p>
+        <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">{desc}</p>
       )}
     </div>
   );
@@ -362,7 +353,7 @@ export function Services() {
       (entries) => {
         isVisible = entries[0]?.isIntersecting ?? false;
       },
-      { threshold: 0.1 }
+      { threshold: 0.1 },
     );
 
     if (scrollRef.current) {
@@ -373,7 +364,7 @@ export function Services() {
       if (isVisible && scrollRef.current && !isInteractingRef.current && !isMouseDownRef.current) {
         scrollRef.current.scrollLeft += 0.8; // Smooth auto-slide step
 
-        const halfWidth = halfWidthRef.current || (scrollRef.current.scrollWidth / 2);
+        const halfWidth = halfWidthRef.current || scrollRef.current.scrollWidth / 2;
         if (scrollRef.current.scrollLeft >= halfWidth) {
           scrollRef.current.scrollLeft -= halfWidth / 2;
         }
@@ -453,7 +444,7 @@ export function Services() {
         onTouchEnd={handleUserInteractionEnd}
         onScroll={() => {
           if (scrollRef.current) {
-            const halfWidth = halfWidthRef.current || (scrollRef.current.scrollWidth / 2);
+            const halfWidth = halfWidthRef.current || scrollRef.current.scrollWidth / 2;
             if (scrollRef.current.scrollLeft >= halfWidth) {
               scrollRef.current.scrollLeft -= halfWidth / 2;
             } else if (scrollRef.current.scrollLeft <= 0) {
@@ -585,7 +576,10 @@ export function Services() {
                 </h4>
                 <ul className="mt-3 space-y-2.5">
                   {selectedService.deliverables.map((item, idx) => (
-                    <li key={idx} className="flex items-start gap-2.5 text-xs sm:text-sm text-muted-foreground">
+                    <li
+                      key={idx}
+                      className="flex items-start gap-2.5 text-xs sm:text-sm text-muted-foreground"
+                    >
                       <CheckCircle2 className="h-4 w-4 shrink-0 text-[#FF5A1F]" />
                       <span>{item}</span>
                     </li>

@@ -2,11 +2,7 @@ import { Link } from "@tanstack/react-router";
 
 export function Logo({ className = "" }: { className?: string }) {
   return (
-    <Link
-      to="/"
-      className={`inline-flex items-center ${className}`}
-      aria-label="ContentMesh home"
-    >
+    <Link to="/" className={`inline-flex items-center ${className}`} aria-label="ContentMesh home">
       <img
         src="/Content_mesh_AI_video_production_agency.webp"
         alt="ContentMesh"

@@ -11,9 +11,16 @@ export const Route = createFileRoute("/blog/")({
   head: () => ({
     meta: [
       { title: "Blog & Playbooks — ContentMesh" },
-      { name: "description", content: "Playbooks, AI video experiments, creative strategy, and behind-the-scenes insights from ContentMesh." },
+      {
+        name: "description",
+        content:
+          "Playbooks, AI video experiments, creative strategy, and behind-the-scenes insights from ContentMesh.",
+      },
       { property: "og:title", content: "Blog & Playbooks — ContentMesh" },
-      { property: "og:description", content: "Playbooks, AI experiments, and brand storytelling insights." },
+      {
+        property: "og:description",
+        content: "Playbooks, AI experiments, and brand storytelling insights.",
+      },
       { property: "og:url", content: "/blog" },
     ],
     links: [{ rel: "canonical", href: "/blog" }],
@@ -47,7 +54,8 @@ const FALLBACK: Post[] = [
     slug: "state-of-ai-video-2026",
     title: "The 2026 State of AI Video: How Generative Models Changed Commercial Ads Forever",
     tags: ["Insights"],
-    excerpt: "An in-depth analysis of how diffusion models, multi-modal generation, and synthetic actors are redefining brand production workflows.",
+    excerpt:
+      "An in-depth analysis of how diffusion models, multi-modal generation, and synthetic actors are redefining brand production workflows.",
     publishedAt: "2026-07-20",
     authorName: "ContentMesh Studio",
   },
@@ -56,7 +64,8 @@ const FALLBACK: Post[] = [
     slug: "ai-avatar-creators-onboarding",
     title: "Best AI Avatar Creators for Company Onboarding & Corporate Training Videos in 2026",
     tags: ["Playbook"],
-    excerpt: "How enterprise teams build realistic AI avatar videos to streamline internal training, support portals, and employee onboarding.",
+    excerpt:
+      "How enterprise teams build realistic AI avatar videos to streamline internal training, support portals, and employee onboarding.",
     publishedAt: "2026-07-18",
     authorName: "Strategy Team",
   },
@@ -65,7 +74,8 @@ const FALLBACK: Post[] = [
     slug: "cut-ad-production-time",
     title: "How We Cut Commercial Production Cycles by 78% Without Sacrificing Craft",
     tags: ["Case Study"],
-    excerpt: "A breakdown of our hybrid workflow combining AI video production with human motion graphics and professional color grading.",
+    excerpt:
+      "A breakdown of our hybrid workflow combining AI video production with human motion graphics and professional color grading.",
     publishedAt: "2026-07-15",
     authorName: "Production Team",
   },
@@ -74,7 +84,8 @@ const FALLBACK: Post[] = [
     slug: "ai-video-translation-localization",
     title: "Enterprise AI Video Translation & Dubbing: Reaching Global Audiences in 40+ Languages",
     tags: ["Enterprise"],
-    excerpt: "How to use AI voice cloning, localized accents, and automated lip-syncing to translate video ad campaigns globally.",
+    excerpt:
+      "How to use AI voice cloning, localized accents, and automated lip-syncing to translate video ad campaigns globally.",
     publishedAt: "2026-07-12",
     authorName: "Audio Engineering",
   },
@@ -83,7 +94,8 @@ const FALLBACK: Post[] = [
     slug: "directors-guide-runway",
     title: "The Director's Field Guide to Prompting Runway & Sora-Class Models in 2026",
     tags: ["Craft"],
-    excerpt: "Camera angles, lighting tokens, and movement prompts that yield cinema-grade plates every single time.",
+    excerpt:
+      "Camera angles, lighting tokens, and movement prompts that yield cinema-grade plates every single time.",
     publishedAt: "2026-07-08",
     authorName: "Creative Director",
   },
@@ -92,7 +104,8 @@ const FALLBACK: Post[] = [
     slug: "ai-ugc-video-editing-agencies",
     title: "How Performance Marketing Agencies Use AI UGC Video Editors for High ROI Ad Drops",
     tags: ["Marketing"],
-    excerpt: "A playbook for scaling short-form social reels and vertical-native video ads using automated editing pipelines.",
+    excerpt:
+      "A playbook for scaling short-form social reels and vertical-native video ads using automated editing pipelines.",
     publishedAt: "2026-07-01",
     authorName: "Growth Team",
   },
@@ -240,8 +253,12 @@ function Blog() {
         {/* ── Empty Search Results State ── */}
         {gridPosts.length === 0 && (
           <div className="py-16 text-center">
-            <p className="text-lg font-semibold text-foreground">No articles found matching "{searchQuery}"</p>
-            <p className="mt-1 text-sm text-muted-foreground">Try searching for different keywords or clear filters.</p>
+            <p className="text-lg font-semibold text-foreground">
+              No articles found matching "{searchQuery}"
+            </p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Try searching for different keywords or clear filters.
+            </p>
             <button
               onClick={() => {
                 setSearchQuery("");

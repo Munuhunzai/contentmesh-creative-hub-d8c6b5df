@@ -2,7 +2,11 @@
  * Optimizes image URLs from Sanity CDN, Unsplash, Google Drive, and external hosts
  * by converting high-res uploaded files into lightweight WebP/AVIF images.
  */
-export function optimizeSanityImage(url: string | null | undefined, width = 800, quality = 75): string {
+export function optimizeSanityImage(
+  url: string | null | undefined,
+  width = 800,
+  quality = 75,
+): string {
   if (!url) return "";
 
   // 1. Sanity CDN images

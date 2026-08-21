@@ -25,7 +25,8 @@ export function Stats() {
           {stats.map((s) => (
             <div key={s.label} className="text-center">
               <p className="font-display text-4xl font-bold tracking-tight sm:text-5xl">
-                <Counter to={s.value} />{s.suffix ?? ""}
+                <Counter to={s.value} />
+                {s.suffix ?? ""}
               </p>
               <p className="mt-2 text-sm text-white/85">{s.label}</p>
             </div>
@@ -42,7 +43,9 @@ function Counter({ to }: { to: number }) {
   const [n, setN] = useState(0);
   useEffect(() => {
     if (!inView) return;
-    let raf = 0; const start = performance.now(); const dur = 1400;
+    let raf = 0;
+    const start = performance.now();
+    const dur = 1400;
     const tick = (t: number) => {
       const p = Math.min(1, (t - start) / dur);
       setN(Math.round(to * (1 - Math.pow(1 - p, 3))));

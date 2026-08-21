@@ -13,8 +13,8 @@ export function AdPlaceholder({ type, className = "" }: AdPlaceholderProps) {
         type === "banner-top"
           ? "mx-auto hidden w-full max-w-[728px] min-h-[90px] rounded-2xl border border-dashed border-border/40 bg-secondary/20 lg:block"
           : type === "sidebar-sticky"
-          ? "sticky top-28 hidden w-full max-w-[300px] min-h-[600px] rounded-3xl border border-dashed border-border/40 bg-secondary/20 xl:block"
-          : "mx-auto hidden w-full max-w-[728px] min-h-[90px] rounded-2xl border border-dashed border-border/40 bg-secondary/20 md:block"
+            ? "sticky top-28 hidden w-full max-w-[300px] min-h-[600px] rounded-3xl border border-dashed border-border/40 bg-secondary/20 xl:block"
+            : "mx-auto hidden w-full max-w-[728px] min-h-[90px] rounded-2xl border border-dashed border-border/40 bg-secondary/20 md:block"
       } ${className}`}
     />
   );

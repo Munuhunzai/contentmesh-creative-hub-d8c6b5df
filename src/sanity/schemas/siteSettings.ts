@@ -33,11 +33,15 @@ export default defineType({
       type: "object",
       fields: [
         defineField({ name: "metaTitle", title: "SEO Meta Title", type: "string" }),
-        defineField({ name: "metaDescription", title: "SEO Meta Description", type: "text", rows: 2 }),
+        defineField({
+          name: "metaDescription",
+          title: "SEO Meta Description",
+          type: "text",
+          rows: 2,
+        }),
         defineField({ name: "ogImage", title: "SEO Social Sharing Image", type: "image" }),
       ],
     }),
   ],
   preview: { select: { title: "title" } },
 });
-

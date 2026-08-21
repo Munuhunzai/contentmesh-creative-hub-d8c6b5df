@@ -7,7 +7,7 @@ async function fetchDeepSeekChunk(
   apiKey: string,
   body: StoryboardFormInput,
   startScene: number,
-  endScene: number
+  endScene: number,
 ): Promise<StoryboardOutput> {
   const { systemPrompt, userPrompt } = buildDeepSeekStoryboardPrompt(body, startScene, endScene);
 
@@ -68,7 +68,7 @@ async function handlePost({ request }: { request: Request }) {
     if (!body.script || body.script.trim().length < 10) {
       return Response.json(
         { error: "Please provide a valid script with at least 10 characters." },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -97,7 +97,7 @@ async function handlePost({ request }: { request: Request }) {
         totalScenes: 0,
         charactersCount: 0,
         locationsCount: 0,
-        estimatedRuntime: `${Math.ceil(targetSceneCount * 5 / 60)}m 00s`,
+        estimatedRuntime: `${Math.ceil((targetSceneCount * 5) / 60)}m 00s`,
         wordCount: 0,
         dialogueCount: 0,
         promptCount: 0,
@@ -138,7 +138,7 @@ async function handlePost({ request }: { request: Request }) {
     mergedOutput.characters = Array.from(charMap.values());
     mergedOutput.environments = Array.from(envMap.values());
     mergedOutput.scenes = Array.from(sceneMap.values()).sort(
-      (a, b) => a.sceneNumber - b.sceneNumber
+      (a, b) => a.sceneNumber - b.sceneNumber,
     );
 
     // Build timeline directly from merged scenes array
@@ -158,8 +158,8 @@ async function handlePost({ request }: { request: Request }) {
       totalScenes: mergedOutput.scenes.length,
       charactersCount: mergedOutput.characters.length,
       locationsCount: mergedOutput.environments.length,
-      estimatedRuntime: `${Math.ceil(mergedOutput.scenes.length * 5 / 60)}m ${String(
-        (mergedOutput.scenes.length * 5) % 60
+      estimatedRuntime: `${Math.ceil((mergedOutput.scenes.length * 5) / 60)}m ${String(
+        (mergedOutput.scenes.length * 5) % 60,
       ).padStart(2, "0")}s`,
       wordCount: totalWords,
       dialogueCount,
@@ -171,7 +171,7 @@ async function handlePost({ request }: { request: Request }) {
     console.error("Storyboard API batch endpoint error:", err);
     return Response.json(
       { error: err.message || "An unexpected error occurred during generation." },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -20,7 +20,8 @@ export function TrustedBy() {
               className="flex items-center justify-center"
             >
               <span className="font-display text-xl font-bold text-muted-foreground/70 grayscale transition-all hover:text-foreground hover:grayscale-0">
-                {l}<span className="text-accent">.</span>
+                {l}
+                <span className="text-accent">.</span>
               </span>
             </motion.div>
           ))}

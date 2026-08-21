@@ -52,7 +52,10 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
-            onClick={() => { router.invalidate(); reset(); }}
+            onClick={() => {
+              router.invalidate();
+              reset();
+            }}
             className="inline-flex items-center justify-center rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
           >
             Try again
@@ -75,18 +78,38 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "ContentMesh — AI-Powered Creative Content Studio" },
-      { name: "description", content: "ContentMesh crafts AI videos, animations, voiceovers, and premium marketing content for ambitious brands, creators, and agencies." },
+      {
+        name: "description",
+        content:
+          "ContentMesh crafts AI videos, animations, voiceovers, and premium marketing content for ambitious brands, creators, and agencies.",
+      },
       { name: "author", content: "ContentMesh" },
       { name: "theme-color", content: "#FF5A1F" },
       { property: "og:site_name", content: "ContentMesh" },
       { property: "og:title", content: "ContentMesh — AI-Powered Creative Content Studio" },
-      { property: "og:description", content: "ContentMesh crafts AI videos, animations, voiceovers, and premium marketing content for ambitious brands, creators, and agencies." },
+      {
+        property: "og:description",
+        content:
+          "ContentMesh crafts AI videos, animations, voiceovers, and premium marketing content for ambitious brands, creators, and agencies.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "ContentMesh — AI-Powered Creative Content Studio" },
-      { name: "twitter:description", content: "ContentMesh crafts AI videos, animations, voiceovers, and premium marketing content for ambitious brands, creators, and agencies." },
-      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/ffeef70c-e0bc-41b3-b08a-31faed939538" },
-      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/ffeef70c-e0bc-41b3-b08a-31faed939538" },
+      {
+        name: "twitter:description",
+        content:
+          "ContentMesh crafts AI videos, animations, voiceovers, and premium marketing content for ambitious brands, creators, and agencies.",
+      },
+      {
+        property: "og:image",
+        content:
+          "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/ffeef70c-e0bc-41b3-b08a-31faed939538",
+      },
+      {
+        name: "twitter:image",
+        content:
+          "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/ffeef70c-e0bc-41b3-b08a-31faed939538",
+      },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -96,7 +119,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://cdn.sanity.io", crossOrigin: "anonymous" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap",
+      },
     ],
   }),
   shellComponent: RootShell,

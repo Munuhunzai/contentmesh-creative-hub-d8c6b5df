@@ -58,8 +58,7 @@ export const Route = createFileRoute("/tools/storyboard-generator")({
   head: () => ({
     meta: [
       {
-        title:
-          "AI Storyboard & Scene Prompt Studio | Make AI",
+        title: "AI Storyboard & Scene Prompt Studio | Make AI",
       },
       {
         name: "description",
@@ -199,21 +198,9 @@ const PROMPT_STYLES: PromptStyleOption[] = [
   "General",
 ];
 
-const ASPECT_RATIOS: AspectRatioOption[] = [
-  "16:9",
-  "9:16",
-  "1:1",
-  "4:5",
-  "21:9",
-];
+const ASPECT_RATIOS: AspectRatioOption[] = ["16:9", "9:16", "1:1", "4:5", "21:9"];
 
-const CAMERA_STYLES: CameraStyleOption[] = [
-  "Cinematic",
-  "Static",
-  "Handheld",
-  "Drone",
-  "Mixed",
-];
+const CAMERA_STYLES: CameraStyleOption[] = ["Cinematic", "Static", "Handheld", "Drone", "Mixed"];
 
 const SCENES_PER_PAGE = 10;
 
@@ -271,7 +258,9 @@ export function StoryboardGeneratorPage() {
   const [currentPage, setCurrentPage] = useState(1);
 
   const [assistantInput, setAssistantInput] = useState("");
-  const [assistantLogs, setAssistantLogs] = useState<Array<{ sender: "user" | "ai"; text: string }>>([]);
+  const [assistantLogs, setAssistantLogs] = useState<
+    Array<{ sender: "user" | "ai"; text: string }>
+  >([]);
   const [assistantLoading, setAssistantLoading] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -311,10 +300,7 @@ export function StoryboardGeneratorPage() {
     setCurrentPage(1);
   }, [searchQuery, activeFilter]);
 
-  const handleFormChange = (
-    key: keyof StoryboardFormInput,
-    value: any
-  ) => {
+  const handleFormChange = (key: keyof StoryboardFormInput, value: any) => {
     setForm((prev) => ({ ...prev, [key]: value }));
   };
 
@@ -380,15 +366,11 @@ export function StoryboardGeneratorPage() {
     }));
   };
 
-  const handleUpdateUploadedCharacter = (
-    id: string,
-    field: "name" | "prompt",
-    value: string
-  ) => {
+  const handleUpdateUploadedCharacter = (id: string, field: "name" | "prompt", value: string) => {
     setForm((prev) => ({
       ...prev,
       uploadedCharacters: (prev.uploadedCharacters || []).map((c) =>
-        c.id === id ? { ...c, [field]: value } : c
+        c.id === id ? { ...c, [field]: value } : c,
       ),
     }));
   };
@@ -484,7 +466,7 @@ export function StoryboardGeneratorPage() {
       if (form.uploadedCharacters && form.uploadedCharacters.length > 0 && data.characters) {
         data.characters = data.characters.map((char) => {
           const match = form.uploadedCharacters?.find(
-            (u) => u.name.toLowerCase().trim() === char.name.toLowerCase().trim()
+            (u) => u.name.toLowerCase().trim() === char.name.toLowerCase().trim(),
           );
           return match?.imageUrl ? { ...char, imageUrl: match.imageUrl } : char;
         });
@@ -497,14 +479,22 @@ export function StoryboardGeneratorPage() {
       const newHistoryItem: SavedStoryItem = {
         id: `story-${Date.now()}`,
         title: data.project?.title || form.script.slice(0, 30) + "...",
-        timestamp: new Date().toLocaleString("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }),
+        timestamp: new Date().toLocaleString("en-US", {
+          month: "short",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
         script: form.script,
         visualStyle: form.visualStyle,
         sceneCount: data.scenes?.length || form.numberOfScenes,
         output: data,
       };
 
-      const updatedHistory = [newHistoryItem, ...storyHistory.filter((item) => item.script !== form.script)].slice(0, 15);
+      const updatedHistory = [
+        newHistoryItem,
+        ...storyHistory.filter((item) => item.script !== form.script),
+      ].slice(0, 15);
       setStoryHistory(updatedHistory);
       localStorage.setItem("contentmesh_story_history", JSON.stringify(updatedHistory));
     } catch (err: any) {
@@ -564,16 +554,13 @@ export function StoryboardGeneratorPage() {
                 sceneCount: newOutput.scenes.length,
                 output: newOutput,
               }
-            : item
+            : item,
         );
         setStoryHistory(updatedHistory);
         localStorage.setItem("contentmesh_story_history", JSON.stringify(updatedHistory));
       }
 
-      setAssistantLogs((prev) => [
-        ...prev,
-        { sender: "ai", text: `✨ ${actionDesc}` },
-      ]);
+      setAssistantLogs((prev) => [...prev, { sender: "ai", text: `✨ ${actionDesc}` }]);
     } catch (err: any) {
       setAssistantLogs((prev) => [
         ...prev,
@@ -658,7 +645,8 @@ export function StoryboardGeneratorPage() {
                 What do you want to create today?
               </h1>
               <p className="mx-auto max-w-lg text-xs sm:text-sm text-slate-600 leading-relaxed">
-                Transform screenplays, story ideas, or commercial concepts into production-ready 4K AI storyboards and prompts.
+                Transform screenplays, story ideas, or commercial concepts into production-ready 4K
+                AI storyboards and prompts.
               </p>
             </div>
 
@@ -689,7 +677,9 @@ export function StoryboardGeneratorPage() {
                     className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-100 transition-colors"
                   >
                     <Paperclip className="h-3.5 w-3.5 text-slate-500" />
-                    {form.uploadedCharacters?.length ? `${form.uploadedCharacters.length} Files` : "Attach Media"}
+                    {form.uploadedCharacters?.length
+                      ? `${form.uploadedCharacters.length} Files`
+                      : "Attach Media"}
                   </button>
 
                   <select
@@ -730,7 +720,8 @@ export function StoryboardGeneratorPage() {
               <div className="space-y-4 pt-4 border-t border-slate-200">
                 <div className="flex items-center justify-between">
                   <h3 className="text-xs font-sans uppercase tracking-wider text-slate-500 flex items-center gap-2">
-                    <History className="h-4 w-4 text-slate-500" /> Recent Story Workspaces ({storyHistory.length})
+                    <History className="h-4 w-4 text-slate-500" /> Recent Story Workspaces (
+                    {storyHistory.length})
                   </h3>
                 </div>
 
@@ -853,7 +844,8 @@ export function StoryboardGeneratorPage() {
                     AI Video Storyboard Production Settings & Visual Targets
                   </h2>
                   <p className="text-xs text-slate-600">
-                    Configure visual rendering target, scene density, aspect ratio, and camera direction.
+                    Configure visual rendering target, scene density, aspect ratio, and camera
+                    direction.
                   </p>
                 </div>
                 <Sliders className="h-5 w-5 text-slate-500" />
@@ -1118,7 +1110,10 @@ export function StoryboardGeneratorPage() {
                       <Bot className="h-4 w-4 text-slate-700" /> AI Prompt Assistant
                     </span>
                     <span className="text-[9px] text-emerald-600 font-sans flex items-center gap-1 font-semibold">
-                      {assistantLoading && <Loader2 className="h-3 w-3 animate-spin text-slate-700" />} Ready
+                      {assistantLoading && (
+                        <Loader2 className="h-3 w-3 animate-spin text-slate-700" />
+                      )}{" "}
+                      Ready
                     </span>
                   </div>
 
@@ -1129,7 +1124,8 @@ export function StoryboardGeneratorPage() {
                         <Bot className="h-8 w-8 text-slate-300" />
                         <p className="text-xs font-semibold text-slate-600">AI Prompt Assistant</p>
                         <p className="text-[11px] text-slate-500 leading-relaxed max-w-[220px]">
-                          Ask me to change visual style, add/remove scenes, adjust lighting, or rewrite script topics.
+                          Ask me to change visual style, add/remove scenes, adjust lighting, or
+                          rewrite script topics.
                         </p>
                       </div>
                     ) : (
@@ -1192,7 +1188,8 @@ export function StoryboardGeneratorPage() {
                     >
                       {assistantLoading ? (
                         <>
-                          <Loader2 className="h-3.5 w-3.5 animate-spin text-white" /> Modifying Story...
+                          <Loader2 className="h-3.5 w-3.5 animate-spin text-white" /> Modifying
+                          Story...
                         </>
                       ) : (
                         <>
@@ -1205,7 +1202,10 @@ export function StoryboardGeneratorPage() {
               </aside>
 
               {/* ── SCROLLABLE RIGHT CANVAS ── */}
-              <main ref={rightCanvasRef} className="flex-1 h-full overflow-y-auto pr-1.5 no-scrollbar space-y-4 min-w-0">
+              <main
+                ref={rightCanvasRef}
+                className="flex-1 h-full overflow-y-auto pr-1.5 no-scrollbar space-y-4 min-w-0"
+              >
                 {loading || !output ? (
                   /* ── FULL SCENE CANVAS LOADING SCREEN ── */
                   <div className="flex flex-col items-center justify-center min-h-[480px] h-full space-y-6 text-center p-6 bg-white rounded-3xl border border-slate-200 shadow-sm my-auto">
@@ -1215,16 +1215,22 @@ export function StoryboardGeneratorPage() {
                     </div>
 
                     <div className="space-y-2 max-w-sm">
-                      <h3 className="text-base font-bold text-slate-900">Generating Storyboard Package</h3>
+                      <h3 className="text-base font-bold text-slate-900">
+                        Generating Storyboard Package
+                      </h3>
                       <p className="text-xs text-slate-500 leading-relaxed font-sans">
-                        Creating 4K scene prompts, camera movements, character direction, and lighting specifications...
+                        Creating 4K scene prompts, camera movements, character direction, and
+                        lighting specifications...
                       </p>
                     </div>
 
                     {/* Shimmering Skeleton Cards Preview */}
                     <div className="w-full space-y-3 pt-2 max-w-lg">
                       {[1, 2, 3].map((i) => (
-                        <div key={i} className="rounded-2xl border border-slate-200 bg-slate-50 p-4 space-y-2.5 animate-pulse text-left">
+                        <div
+                          key={i}
+                          className="rounded-2xl border border-slate-200 bg-slate-50 p-4 space-y-2.5 animate-pulse text-left"
+                        >
                           <div className="flex items-center justify-between">
                             <div className="h-4 w-20 bg-slate-200 rounded-md" />
                             <div className="h-4 w-16 bg-slate-200 rounded-md" />
@@ -1244,27 +1250,45 @@ export function StoryboardGeneratorPage() {
                           <Loader2 className="h-4 w-4 animate-spin text-white" />
                           <span>AI Assistant is updating story scenes & visual style...</span>
                         </div>
-                        <span className="text-[10px] font-sans bg-white/20 px-2 py-0.5 rounded-full text-white">Generating</span>
+                        <span className="text-[10px] font-sans bg-white/20 px-2 py-0.5 rounded-full text-white">
+                          Generating
+                        </span>
                       </div>
                     )}
 
                     {/* Summary Bar */}
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 max-w-full">
                       <div className="rounded-xl border border-slate-200 bg-white p-2.5 text-center shadow-sm">
-                        <span className="text-[9px] font-sans uppercase text-slate-500 block">Total Scenes</span>
-                        <p className="font-sans text-base font-bold text-slate-900">{output.scenes?.length || 0}</p>
+                        <span className="text-[9px] font-sans uppercase text-slate-500 block">
+                          Total Scenes
+                        </span>
+                        <p className="font-sans text-base font-bold text-slate-900">
+                          {output.scenes?.length || 0}
+                        </p>
                       </div>
                       <div className="rounded-xl border border-slate-200 bg-white p-2.5 text-center shadow-sm">
-                        <span className="text-[9px] font-sans uppercase text-slate-500 block">Characters</span>
-                        <p className="font-sans text-base font-bold text-slate-900">{output.characters?.length || 0}</p>
+                        <span className="text-[9px] font-sans uppercase text-slate-500 block">
+                          Characters
+                        </span>
+                        <p className="font-sans text-base font-bold text-slate-900">
+                          {output.characters?.length || 0}
+                        </p>
                       </div>
                       <div className="rounded-xl border border-slate-200 bg-white p-2.5 text-center shadow-sm">
-                        <span className="text-[9px] font-sans uppercase text-slate-500 block">Environments</span>
-                        <p className="font-sans text-base font-bold text-slate-900">{output.environments?.length || 0}</p>
+                        <span className="text-[9px] font-sans uppercase text-slate-500 block">
+                          Environments
+                        </span>
+                        <p className="font-sans text-base font-bold text-slate-900">
+                          {output.environments?.length || 0}
+                        </p>
                       </div>
                       <div className="rounded-xl border border-slate-200 bg-white p-2.5 text-center shadow-sm">
-                        <span className="text-[9px] font-sans uppercase text-slate-500 block">Est. Runtime</span>
-                        <p className="font-sans text-base font-bold text-slate-900">{output.analytics?.estimatedRuntime || "1m 30s"}</p>
+                        <span className="text-[9px] font-sans uppercase text-slate-500 block">
+                          Est. Runtime
+                        </span>
+                        <p className="font-sans text-base font-bold text-slate-900">
+                          {output.analytics?.estimatedRuntime || "1m 30s"}
+                        </p>
                       </div>
                     </div>
 
@@ -1273,9 +1297,10 @@ export function StoryboardGeneratorPage() {
                       <div className="rounded-2xl border border-slate-200 bg-white p-3 max-w-full overflow-hidden shadow-sm">
                         <div className="flex items-center justify-between mb-2">
                           <h3 className="text-[11px] font-sans uppercase text-slate-600 flex items-center gap-1.5 font-semibold">
-                            <Film className="h-3.5 w-3.5 text-slate-700" /> Timeline Scrubber ({output.timeline.length} Scenes)
+                            <Film className="h-3.5 w-3.5 text-slate-700" /> Timeline Scrubber (
+                            {output.timeline.length} Scenes)
                           </h3>
-                          
+
                           <div className="flex items-center gap-1">
                             <button
                               onClick={() => scrollTimeline("left")}
@@ -1309,7 +1334,9 @@ export function StoryboardGeneratorPage() {
                                 <span className="rounded bg-slate-200 px-1.5 py-0.5 text-[9px] font-sans font-semibold text-slate-800">
                                   Sc {item.sceneNumber}
                                 </span>
-                                <span className="text-[9px] text-slate-500 font-sans">{item.duration}</span>
+                                <span className="text-[9px] text-slate-500 font-sans">
+                                  {item.duration}
+                                </span>
                               </div>
                               <h4 className="mt-1 text-[11px] font-semibold text-slate-900 line-clamp-1">
                                 {item.sceneTitle}
@@ -1351,7 +1378,11 @@ export function StoryboardGeneratorPage() {
                               Jump to Scene...
                             </option>
                             {output.scenes.map((s) => (
-                              <option key={s.sceneNumber} value={s.sceneNumber} className="bg-white">
+                              <option
+                                key={s.sceneNumber}
+                                value={s.sceneNumber}
+                                className="bg-white"
+                              >
                                 Scene {s.sceneNumber}: {s.sceneTitle}
                               </option>
                             ))}
@@ -1364,7 +1395,7 @@ export function StoryboardGeneratorPage() {
                           onClick={() =>
                             handleCopy(
                               output.scenes.map((s) => getSceneFormattedPrompt(s)).join("\n\n"),
-                              "all-packages"
+                              "all-packages",
                             )
                           }
                           className="inline-flex items-center justify-center gap-1 rounded-xl border border-slate-900 bg-slate-900 px-3 py-1.5 text-[11px] font-sans font-semibold text-white hover:bg-black transition-colors shadow-sm"
@@ -1442,7 +1473,9 @@ export function StoryboardGeneratorPage() {
                     {totalPages > 1 && (
                       <div className="flex flex-col sm:flex-row items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white p-4 max-w-full shadow-sm">
                         <span className="text-xs font-sans text-slate-600 text-center sm:text-left">
-                          Showing {(currentPage - 1) * SCENES_PER_PAGE + 1}–{Math.min(currentPage * SCENES_PER_PAGE, filteredScenes.length)} of {filteredScenes.length} scenes (Page {currentPage} of {totalPages})
+                          Showing {(currentPage - 1) * SCENES_PER_PAGE + 1}–
+                          {Math.min(currentPage * SCENES_PER_PAGE, filteredScenes.length)} of{" "}
+                          {filteredScenes.length} scenes (Page {currentPage} of {totalPages})
                         </span>
 
                         <div className="flex flex-wrap items-center justify-center gap-1 max-w-full">
@@ -1472,7 +1505,10 @@ export function StoryboardGeneratorPage() {
                                     onClick={() => {
                                       setCurrentPage(pg);
                                       if (rightCanvasRef.current) {
-                                        rightCanvasRef.current.scrollTo({ top: 0, behavior: "smooth" });
+                                        rightCanvasRef.current.scrollTo({
+                                          top: 0,
+                                          behavior: "smooth",
+                                        });
                                       }
                                     }}
                                     className={`h-7 w-7 rounded-lg text-xs font-sans transition-all ${
@@ -1532,7 +1568,8 @@ export function StoryboardGeneratorPage() {
                 <span className="font-sans text-xs text-slate-600">Make AI Storyboard Engine</span>
               </div>
               <p className="text-xs text-slate-500 max-w-xl mx-auto font-sans">
-                Designed for directors, filmmakers, animators, and prompt engineers creating multi-scene AI video productions.
+                Designed for directors, filmmakers, animators, and prompt engineers creating
+                multi-scene AI video productions.
               </p>
             </div>
           </footer>

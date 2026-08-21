@@ -17,25 +17,25 @@ function WhatsAppIcon({ size = 20 }: { size?: number }) {
 
 // ─── Nav links (no "Home" — logo serves as home) ─────────────────────────────
 const NAV = [
-  { to: "/portfolio" as const,  label: "Portfolio"  },
-  { to: "/services" as const,   label: "Services"   },
+  { to: "/portfolio" as const, label: "Portfolio" },
+  { to: "/services" as const, label: "Services" },
   { to: "/tools/storyboard-generator" as any, label: "AI Tool" },
-  { to: "/about" as const,      label: "About Us"   },
-  { to: "/pricing" as const,    label: "Pricing"    },
-  { to: "/blog" as const,       label: "Blog"       },
+  { to: "/about" as const, label: "About Us" },
+  { to: "/pricing" as const, label: "Pricing" },
+  { to: "/blog" as const, label: "Blog" },
 ];
 
 type SiteSettings = { whatsappNumber?: string; email?: string };
 
 export function Navbar() {
   const settings = useSanity<SiteSettings>(["sanity", "siteSettings"], siteSettingsQuery, {});
-  const waNumber  = settings?.whatsappNumber ?? "923000000000";
-  const waHref    = `https://wa.me/${waNumber}`;
+  const waNumber = settings?.whatsappNumber ?? "923000000000";
+  const waHref = `https://wa.me/${waNumber}`;
   const siteEmail = settings?.email || "waheed.sul00@gmail.com";
 
   const [scrolled, setScrolled] = useState(false);
-  const [open, setOpen]         = useState(false);
-  const router   = useRouter();
+  const [open, setOpen] = useState(false);
+  const router = useRouter();
   const pathname = router.state.location.pathname;
 
   useEffect(() => {
@@ -49,7 +49,9 @@ export function Navbar() {
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [open]);
 
   const isAiTool = pathname.startsWith("/tools/storyboard-generator");
@@ -92,7 +94,10 @@ export function Navbar() {
             {/* Desktop links — hidden on AI Tool page */}
             {!isAiTool && (
               <LayoutGroup id="navbar-pills">
-                <nav className="ml-8 hidden items-center gap-1.5 lg:flex lg:ml-12" aria-label="Main navigation">
+                <nav
+                  className="ml-8 hidden items-center gap-1.5 lg:flex lg:ml-12"
+                  aria-label="Main navigation"
+                >
                   {NAV.map((n) => {
                     const active = pathname.startsWith(n.to);
                     return (
@@ -110,7 +115,8 @@ export function Navbar() {
                               borderRadius: "36px",
                               borderLeft: "4px solid #FF5A1F",
                               background: "rgba(0,0,0,0.04)",
-                              boxShadow: "-4px 0 12px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.6)",
+                              boxShadow:
+                                "-4px 0 12px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.6)",
                             }}
                             transition={{
                               type: "spring",
@@ -167,32 +173,32 @@ export function Navbar() {
           {/* ── Action Buttons Container: Place Order (Orange) + WhatsApp Contact Us (Green) — hidden on AI Tool page ── */}
           {!isAiTool && (
             <div className="hidden items-center gap-1.5 sm:inline-flex">
-            {/* Place Order Button — Orange */}
-            <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
-              <Link
-                to="/contact"
-                aria-label="Place an Order"
-                className="inline-flex h-[56px] items-center gap-2 rounded-[20px] bg-[#FF5A1F] px-6 text-sm font-bold text-white shadow-none transition-transform"
-              >
-                <Mail className="h-4 w-4 text-white" />
-                Place Order
-              </Link>
-            </motion.div>
+              {/* Place Order Button — Orange */}
+              <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
+                <Link
+                  to="/contact"
+                  aria-label="Place an Order"
+                  className="inline-flex h-[56px] items-center gap-2 rounded-[20px] bg-[#FF5A1F] px-6 text-sm font-bold text-white shadow-none transition-transform"
+                >
+                  <Mail className="h-4 w-4 text-white" />
+                  Place Order
+                </Link>
+              </motion.div>
 
-            {/* WhatsApp Contact Us button — Green */}
-            <motion.a
-              href={waHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Contact us on WhatsApp"
-              whileHover={{ scale: 1.04 }}
-              whileTap={{ scale: 0.97 }}
-              className="inline-flex h-[56px] items-center gap-2.5 rounded-[20px] bg-[#25D366] px-6 text-sm font-bold text-white shadow-none"
-            >
-              <WhatsAppIcon size={19} />
-              Contact Us
-            </motion.a>
-          </div>
+              {/* WhatsApp Contact Us button — Green */}
+              <motion.a
+                href={waHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Contact us on WhatsApp"
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.97 }}
+                className="inline-flex h-[56px] items-center gap-2.5 rounded-[20px] bg-[#25D366] px-6 text-sm font-bold text-white shadow-none"
+              >
+                <WhatsAppIcon size={19} />
+                Contact Us
+              </motion.a>
+            </div>
           )}
         </div>
       </motion.header>
@@ -249,7 +255,11 @@ export function Navbar() {
                 initial={{ opacity: 0, y: 18 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
-                transition={{ delay: (NAV.length + 1) * 0.05 + 0.04, duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+                transition={{
+                  delay: (NAV.length + 1) * 0.05 + 0.04,
+                  duration: 0.32,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
                 className="mt-4 flex w-full max-w-xs flex-col gap-2.5"
               >
                 <Link
@@ -287,4 +297,3 @@ export function Navbar() {
     </>
   );
 }
-
