@@ -8,7 +8,7 @@ export function Logo({ className = "" }: { className?: string }) {
       aria-label="ContentMesh home"
     >
       <img
-        src="/Content_mesh_AI_video_production_agency.webp"
+        src="/logo.svg"
         alt="ContentMesh"
         width={180}
         height={56}
