@@ -221,6 +221,8 @@ export function FloatingChatbot() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Ask about services, ideas, or book a call…"
+                aria-label="Chat message"
+                autoComplete="off"
                 maxLength={1000}
                 className="flex-1 rounded-full border border-black/10 bg-white px-4 py-2.5 text-sm outline-none focus:border-[#0E447F]"
               />

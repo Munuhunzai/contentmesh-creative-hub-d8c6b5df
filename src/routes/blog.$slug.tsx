@@ -190,7 +190,7 @@ const portableTextComponents = {
         <a
           href={value?.href}
           target={target}
-          rel={target === "_blank" ? "noindex nofollow" : undefined}
+          rel={target === "_blank" ? "noopener noreferrer nofollow" : undefined}
           className="font-medium text-accent underline underline-offset-4 hover:opacity-80"
         >
           {children}

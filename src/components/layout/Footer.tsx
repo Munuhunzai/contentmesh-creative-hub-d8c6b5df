@@ -34,7 +34,14 @@ export function Footer() {
             <p className="mt-4 max-w-xs text-sm text-muted-foreground">{s.tagline}</p>
             <div className="mt-6 flex gap-2">
               {socials.map(([Icon, label, href]) => (
-                <a key={label} href={href} aria-label={label} className="grid h-9 w-9 place-items-center rounded-full border border-border bg-background text-muted-foreground transition-all hover:bg-[#0D4C92] hover:border-[#0D4C92] hover:text-white shadow-sm">
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  className="grid h-9 w-9 place-items-center rounded-full border border-border bg-background text-muted-foreground transition-all hover:bg-[#0D4C92] hover:border-[#0D4C92] hover:text-white shadow-sm"
+                >
                   <Icon className="h-4 w-4" />
                 </a>
               ))}
@@ -48,7 +55,14 @@ export function Footer() {
             <h3 className="font-display text-sm font-semibold text-foreground">Get creative drops</h3>
             <p className="mt-2 text-sm text-muted-foreground">Monthly experiments, launches, and behind-the-scenes.</p>
             <form onSubmit={(e) => e.preventDefault()} className="mt-4 flex overflow-hidden rounded-full border border-border bg-background pr-1">
-              <input type="email" required placeholder="you@company.com" className="min-w-0 flex-1 bg-transparent px-4 py-2.5 text-sm outline-none placeholder:text-muted-foreground" />
+              <input
+                type="email"
+                required
+                placeholder="you@company.com"
+                aria-label="Your email address"
+                autoComplete="email"
+                className="min-w-0 flex-1 bg-transparent px-4 py-2.5 text-sm outline-none placeholder:text-muted-foreground"
+              />
               <button className="grid h-9 w-9 shrink-0 place-items-center self-center rounded-full bg-primary text-primary-foreground" aria-label="Subscribe to newsletter"><Send className="h-4 w-4" /></button>
             </form>
           </div>

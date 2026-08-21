@@ -144,6 +144,7 @@ function Blog() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search articles, topics, playbooks..."
+              aria-label="Search articles, topics, playbooks"
               className="w-full rounded-full border border-border/80 bg-background/90 py-3 pl-11 pr-10 text-sm text-foreground placeholder:text-muted-foreground focus:border-[#FF5A1F] focus:outline-none focus:ring-2 focus:ring-[#FF5A1F]/20 backdrop-blur-xl shadow-sm transition-all"
             />
             {searchQuery && (
