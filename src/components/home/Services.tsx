@@ -487,6 +487,8 @@ export function Services() {
                   <img
                     src={item.iconImg}
                     alt={item.title}
+                    width={128}
+                    height={128}
                     className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110 pointer-events-none"
                     loading="lazy"
                     decoding="async"
@@ -550,6 +552,10 @@ export function Services() {
                     <img
                       src={selectedService.iconImg}
                       alt={selectedService.title}
+                      width={80}
+                      height={80}
+                      loading="lazy"
+                      decoding="async"
                       className="h-full w-full object-cover"
                     />
                   ) : (

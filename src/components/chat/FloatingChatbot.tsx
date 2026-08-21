@@ -130,10 +130,11 @@ export function FloatingChatbot() {
               }}
             >
               <img
-                src="/chatbot-avatar.png"
-                alt=""
+                src="/chatbot-avatar.webp"
+                alt="Mesh AI Assistant"
                 width={40}
                 height={40}
+                decoding="async"
                 className="h-10 w-10 rounded-full bg-white/95 object-contain p-1"
               />
               <div className="flex-1">

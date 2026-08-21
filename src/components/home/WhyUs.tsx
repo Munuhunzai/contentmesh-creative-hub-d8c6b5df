@@ -72,6 +72,10 @@ export function WhyUs() {
                 <img
                   src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80"
                   alt="ContentMesh AI Video Directors & Team collaborating"
+                  width={800}
+                  height={533}
+                  loading="lazy"
+                  decoding="async"
                   className="h-52 sm:h-60 w-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
               </div>

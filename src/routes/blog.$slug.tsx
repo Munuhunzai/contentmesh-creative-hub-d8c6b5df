@@ -209,10 +209,28 @@ function BlogPost() {
       <PageHero eyebrow={post.tags?.[0] ?? "Article"} title={post.title} desc={post.excerpt} />
       <article className="mx-auto max-w-3xl px-6 pb-24">
         {post.coverUrl && (
-          <img src={post.coverUrl} alt={post.title} className="mb-10 aspect-[16/9] w-full rounded-3xl object-cover" />
+          <img
+            src={optimizeSanityImage(post.coverUrl, 1200, 80)}
+            alt={post.title}
+            width={1200}
+            height={675}
+            loading="lazy"
+            decoding="async"
+            className="mb-10 aspect-[16/9] w-full rounded-3xl object-cover"
+          />
         )}
         <div className="mb-8 flex items-center gap-3 text-sm text-muted-foreground">
-          {post.author?.photoUrl && <img src={post.author.photoUrl} alt={post.author.name} className="h-8 w-8 rounded-full object-cover" />}
+          {post.author?.photoUrl && (
+            <img
+              src={optimizeSanityImage(post.author.photoUrl, 64, 80)}
+              alt={post.author.name}
+              width={32}
+              height={32}
+              loading="lazy"
+              decoding="async"
+              className="h-8 w-8 rounded-full object-cover"
+            />
+          )}
           {post.author?.name && <span className="font-medium text-foreground">{post.author.name}</span>}
           {post.publishedAt && <span>· {new Date(post.publishedAt).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}</span>}
         </div>

@@ -282,6 +282,10 @@ export function Portfolio() {
                   <img
                     src={open.thumbnailUrl}
                     alt={open.title}
+                    width={800}
+                    height={450}
+                    loading="lazy"
+                    decoding="async"
                     className="h-full w-full max-h-[50dvh] sm:max-h-[55vh] object-cover"
                   />
                 ) : (

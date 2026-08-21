@@ -43,7 +43,7 @@ export const Route = createFileRoute("/")({
           "@type": ["Organization", "ProfessionalService"],
           name: "ContentMesh Studio",
           url: "https://contentmesh.ai",
-          logo: "https://contentmesh.ai/Content_mesh_AI_video_production_agency.png",
+          logo: "https://contentmesh.ai/Content_mesh_AI_video_production_agency.webp",
           description:
             "Leading AI video production agency and AI creation company specializing in commercial ads, AI animation, voiceovers, and marketing video production.",
           sameAs: ["https://wa.me/923000000000"],
