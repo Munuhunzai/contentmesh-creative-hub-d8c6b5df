@@ -65,9 +65,22 @@ function YouTubeBackground({ videoId, active }: { videoId: string; active: boole
   const [shouldLoad, setShouldLoad] = useState(false);
 
   useEffect(() => {
-    // Delay loading the YouTube iframe until initial page paint finishes to preserve LCP/FCP
-    const timer = setTimeout(() => setShouldLoad(true), 1200);
-    return () => clearTimeout(timer);
+    let unmounted = false;
+    const trigger = () => {
+      if (!unmounted) setShouldLoad(true);
+    };
+
+    // Delay iframe load until initial visual page render settles (3s or first interaction)
+    const timer = setTimeout(trigger, 3000);
+    window.addEventListener("scroll", trigger, { once: true, passive: true });
+    window.addEventListener("pointerdown", trigger, { once: true, passive: true });
+
+    return () => {
+      unmounted = true;
+      clearTimeout(timer);
+      window.removeEventListener("scroll", trigger);
+      window.removeEventListener("pointerdown", trigger);
+    };
   }, []);
 
   if (!shouldLoad) return null;
