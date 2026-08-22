@@ -39,7 +39,7 @@ const FALLBACK_GRADIENTS = [
   "linear-gradient(135deg, #000a10 0%, #003344 50%, #0D4C92 100%)",
 ];
 
-const SLIDE_DURATION = 8000; // ms — slightly longer to appreciate the video
+const SLIDE_DURATION = 5000; // ms (5 seconds per slide)
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
