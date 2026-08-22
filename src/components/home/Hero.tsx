@@ -130,25 +130,12 @@ export function Hero() {
   const description: string = data?.heroDescription || FALLBACK_DESCRIPTION;
 
   const [current, setCurrent] = useState(0);
-  const [progress, setProgress] = useState(0);
 
   // ── Auto-advance ───────────────────────────────────────────────────────────
   useEffect(() => {
     const t = setTimeout(() => setCurrent((c) => (c + 1) % slides.length), SLIDE_DURATION);
     return () => clearTimeout(t);
   }, [current, slides.length]);
-
-  // ── Progress bar ───────────────────────────────────────────────────────────
-  useEffect(() => {
-    setProgress(0);
-    const start = Date.now();
-    const iv = setInterval(() => {
-      const p = Math.min(((Date.now() - start) / SLIDE_DURATION) * 100, 100);
-      setProgress(p);
-      if (p >= 100) clearInterval(iv);
-    }, 40);
-    return () => clearInterval(iv);
-  }, [current]);
 
   // ── Keyboard navigation ────────────────────────────────────────────────────
   useEffect(() => {
@@ -260,13 +247,13 @@ export function Hero() {
       {/* ── Content — bottom-left ─────────────────────────────── */}
       <div className="absolute bottom-4 left-4 right-4 z-10 sm:left-14 sm:right-auto sm:bottom-24 sm:max-w-lg lg:max-w-2xl">
         {/* Title — changes per slide */}
-        <AnimatePresence mode="wait">
+        <AnimatePresence>
           <motion.h1
             key={`title-${current}`}
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -12 }}
-            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
             className="font-display font-black uppercase leading-[0.95] tracking-tight text-white"
             style={{ fontSize: "clamp(1.3rem, 3.8vw + 0.4rem, 4.8rem)" }}
           >

@@ -140,7 +140,7 @@ function About() {
               >
                 {!m.photoUrl && (
                   <>
-                    <div className="absolute inset-0 mesh-bg opacity-40 mix-blend-overlay" />
+                    <div className="absolute inset-0 mesh-bg opacity-20" />
                     <p className="absolute bottom-4 left-4 font-display text-4xl font-bold text-white/90">
                       {m.name
                         .split(" ")

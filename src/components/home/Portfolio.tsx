@@ -190,7 +190,7 @@ export function Portfolio() {
                 }}
               >
                 {!p.thumbnailUrl && (
-                  <div className="absolute inset-0 mesh-bg opacity-40 mix-blend-overlay" />
+                  <div className="absolute inset-0 mesh-bg opacity-20" />
                 )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80" />
                 <div className="absolute inset-x-0 bottom-0 p-5 text-white">
@@ -315,7 +315,7 @@ export function Portfolio() {
                     className="h-full w-full max-h-[50dvh] sm:max-h-[55vh]"
                     style={{ background: "linear-gradient(135deg,#0D4C92,#FF5A1F)" }}
                   >
-                    <div className="h-full w-full mesh-bg mix-blend-overlay" />
+                    <div className="h-full w-full mesh-bg opacity-20" />
                   </div>
                 )}
               </div>

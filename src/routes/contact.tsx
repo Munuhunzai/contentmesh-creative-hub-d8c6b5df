@@ -219,7 +219,7 @@ function Contact() {
                   className="relative aspect-[4/3]"
                   style={{ background: "linear-gradient(135deg,#0D4C92,#FF5A1F)" }}
                 >
-                  <div className="absolute inset-0 mesh-bg opacity-50 mix-blend-overlay" />
+                  <div className="absolute inset-0 mesh-bg opacity-20" />
                   <div className="absolute inset-0 grid place-items-center">
                     <div className="glass rounded-full px-4 py-2 text-xs font-semibold text-foreground">
                       Map preview

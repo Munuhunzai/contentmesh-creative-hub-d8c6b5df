@@ -196,7 +196,7 @@ function Blog() {
                 >
                   {!featured.coverUrl && (
                     <div className="absolute inset-0 flex items-center justify-center p-8">
-                      <div className="mesh-bg absolute inset-0 opacity-40 mix-blend-overlay" />
+                      <div className="mesh-bg absolute inset-0 opacity-20" />
                       <Sparkles className="h-20 w-20 text-white/20" />
                     </div>
                   )}
@@ -297,7 +297,7 @@ function Blog() {
                     }
                   >
                     {!p.coverUrl && (
-                      <div className="absolute inset-0 mesh-bg opacity-30 mix-blend-overlay" />
+                      <div className="absolute inset-0 mesh-bg opacity-20" />
                     )}
                     <div className="absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-full bg-white/90 text-gray-900 opacity-0 shadow-md backdrop-blur-sm transition-all group-hover:opacity-100">
                       <ArrowUpRight className="h-4 w-4" />
