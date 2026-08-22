@@ -68,42 +68,24 @@ function extractYouTubeId(url: string): string | null {
 // ─── YouTube background iframe (muted autoplay) ─────────────────────────────
 
 function YouTubeBackground({ videoId, active }: { videoId: string; active: boolean }) {
-  const [shouldLoad, setShouldLoad] = useState(false);
-
-  useEffect(() => {
-    let unmounted = false;
-    const trigger = () => {
-      if (!unmounted) setShouldLoad(true);
-    };
-
-    // Delay iframe load until initial visual page render settles (3s or first interaction)
-    const timer = setTimeout(trigger, 3000);
-    window.addEventListener("scroll", trigger, { once: true, passive: true });
-    window.addEventListener("pointerdown", trigger, { once: true, passive: true });
-
-    return () => {
-      unmounted = true;
-      clearTimeout(timer);
-      window.removeEventListener("scroll", trigger);
-      window.removeEventListener("pointerdown", trigger);
-    };
-  }, []);
-
-  if (!shouldLoad) return null;
+  const [loaded, setLoaded] = useState(false);
 
   return (
     <div
       className="absolute inset-0 overflow-hidden pointer-events-none"
       aria-hidden
-      style={{ opacity: active ? 1 : 0, transition: "opacity 1s ease" }}
+      style={{
+        opacity: active && loaded ? 1 : 0,
+        transition: "opacity 1s ease-in-out",
+      }}
     >
       <div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[max(140vw,calc(140vh*16/9))] h-[max(140vh,calc(140vw*9/16))] scale-[1.15]"
         style={{ transformOrigin: "center center" }}
       >
         <iframe
-          key={videoId}
           title="Background video"
+          onLoad={() => setLoaded(true)}
           src={
             `https://www.youtube-nocookie.com/embed/${videoId}` +
             `?autoplay=1&mute=1&loop=1&playlist=${videoId}` +
@@ -222,12 +204,12 @@ export function Hero() {
         );
       })}
 
-      {/* ── YouTube background video (muted, autoplay, looping - active slide only) ── */}
+      {/* ── YouTube background video (muted, autoplay, looping) ── */}
       {slides.map((s, i) => {
         if (s.videoFileUrl) return null;
         const id = s.youtubeUrl ? extractYouTubeId(s.youtubeUrl) : null;
-        if (!id || i !== current) return null;
-        return <YouTubeBackground key={`yt-${i}`} videoId={id} active={i === current} />;
+        if (!id) return null;
+        return <YouTubeBackground key={`yt-${i}-${id}`} videoId={id} active={i === current} />;
       })}
 
       {/* ── Dark overlay — heavier on left & bottom for readability ── */}
