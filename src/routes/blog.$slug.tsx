@@ -217,7 +217,7 @@ function BlogPost() {
       <article className="mx-auto max-w-3xl px-6 pb-24">
         {post.coverUrl && (
           <img
-            src={optimizeSanityImage(post.coverUrl, 1200, 80)}
+            src={optimizeSanityImage(post.coverUrl, 1200, 75)}
             alt={post.title}
             width={1200}
             height={675}
@@ -229,7 +229,7 @@ function BlogPost() {
         <div className="mb-8 flex items-center gap-3 text-sm text-muted-foreground">
           {post.author?.photoUrl && (
             <img
-              src={optimizeSanityImage(post.author.photoUrl, 64, 80)}
+              src={optimizeSanityImage(post.author.photoUrl, 64, 70)}
               alt={post.author.name}
               width={32}
               height={32}

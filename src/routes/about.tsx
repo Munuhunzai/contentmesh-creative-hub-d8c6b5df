@@ -7,6 +7,7 @@ import { CTA } from "@/components/home/CTA";
 import { Target, Eye, Heart, Building2 } from "lucide-react";
 import { useSanity } from "@/integrations/sanity/useSanity";
 import { teamQuery } from "@/integrations/sanity/queries";
+import { optimizeSanityImage } from "@/lib/sanity-image";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -132,7 +133,7 @@ function About() {
                 className="aspect-[4/5] relative"
                 style={
                   m.photoUrl
-                    ? { background: `url(${m.photoUrl}) center/cover` }
+                    ? { background: `url(${optimizeSanityImage(m.photoUrl, 600, 70)}) center/cover` }
                     : {
                         background: `linear-gradient(135deg, ${ACCENTS[i % ACCENTS.length]}, #0D4C92)`,
                       }

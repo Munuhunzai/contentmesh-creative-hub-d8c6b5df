@@ -185,7 +185,7 @@ export function Portfolio() {
                 className={`group relative overflow-hidden rounded-3xl text-left ${span}`}
                 style={{
                   background: p.thumbnailUrl
-                    ? `url(${optimizeSanityImage(p.thumbnailUrl, 800, 75)}) center/cover`
+                    ? `url(${optimizeSanityImage(p.thumbnailUrl, 600, 70)}) center/cover`
                     : gradient,
                 }}
               >
@@ -302,10 +302,10 @@ export function Portfolio() {
                   />
                 ) : open.thumbnailUrl ? (
                   <img
-                    src={open.thumbnailUrl}
+                    src={optimizeSanityImage(open.thumbnailUrl, 1200, 75)}
                     alt={open.title}
-                    width={800}
-                    height={450}
+                    width={1200}
+                    height={675}
                     loading="lazy"
                     decoding="async"
                     className="h-full w-full max-h-[50dvh] sm:max-h-[55vh] object-cover"

@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { TrendingDown, Zap, Award, ShieldCheck, ArrowRight } from "lucide-react";
 import { Link } from "@tanstack/react-router";
+import { optimizeSanityImage } from "@/lib/sanity-image";
 
 const FEATURES = [
   {
@@ -64,10 +65,10 @@ export function WhyUs() {
               {/* Featured Image Box */}
               <div className="overflow-hidden rounded-2xl border border-border/80 shadow-md group">
                 <img
-                  src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80"
+                  src={optimizeSanityImage("https://images.unsplash.com/photo-1522071820081-009f0129c71c", 1200, 75)}
                   alt="ContentMesh AI Video Directors & Team collaborating"
-                  width={800}
-                  height={533}
+                  width={1200}
+                  height={800}
                   loading="lazy"
                   decoding="async"
                   className="h-52 sm:h-60 w-full object-cover transition-transform duration-500 group-hover:scale-105"

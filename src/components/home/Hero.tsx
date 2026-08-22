@@ -144,7 +144,7 @@ export function Hero() {
     slides.forEach((s) => {
       if (s.backgroundImageUrl) {
         const img = new Image();
-        img.src = optimizeSanityImage(s.backgroundImageUrl, 1600, 80);
+        img.src = optimizeSanityImage(s.backgroundImageUrl, 1200, 75);
       }
     });
   }, [slides]);
@@ -171,7 +171,7 @@ export function Hero() {
           >
             {s.backgroundImageUrl ? (
               <img
-                src={optimizeSanityImage(s.backgroundImageUrl, 1600, 80)}
+                src={optimizeSanityImage(s.backgroundImageUrl, 1200, 75)}
                 alt={s.title || `Hero Slide ${i + 1}`}
                 loading="eager"
                 fetchPriority={i === 0 ? "high" : "auto"}

@@ -6,6 +6,7 @@ import { PageHero } from "@/components/layout/PageHero";
 import { ArrowUpRight, Clock, Sparkles, Search, X, ChevronDown } from "lucide-react";
 import { useSanity } from "@/integrations/sanity/useSanity";
 import { blogListQuery } from "@/integrations/sanity/queries";
+import { optimizeSanityImage } from "@/lib/sanity-image";
 
 export const Route = createFileRoute("/blog/")({
   head: () => ({
@@ -190,7 +191,7 @@ function Blog() {
                   className="relative min-h-[300px] overflow-hidden lg:col-span-7 lg:min-h-[460px]"
                   style={
                     featured.coverUrl
-                      ? { background: `url(${featured.coverUrl}) center/cover` }
+                      ? { background: `url(${optimizeSanityImage(featured.coverUrl, 1200, 75)}) center/cover` }
                       : { background: GRADIENTS[0] }
                   }
                 >
@@ -292,7 +293,7 @@ function Blog() {
                     className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl"
                     style={
                       p.coverUrl
-                        ? { background: `url(${p.coverUrl}) center/cover` }
+                        ? { background: `url(${optimizeSanityImage(p.coverUrl, 600, 70)}) center/cover` }
                         : { background: GRADIENTS[(i + 1) % GRADIENTS.length] }
                     }
                   >

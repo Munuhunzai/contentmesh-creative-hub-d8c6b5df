@@ -5,7 +5,7 @@
 export function optimizeSanityImage(
   url: string | null | undefined,
   width = 800,
-  quality = 75,
+  quality = 70,
 ): string {
   if (!url) return "";
 
