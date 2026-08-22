@@ -59,12 +59,7 @@ export function Navbar() {
   return (
     <>
       {/* ══════════════════════ HEADER ══════════════════════ */}
-      <motion.header
-        initial={{ y: -80, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
-        className="fixed inset-x-0 top-0 z-[100] flex justify-center px-6 py-5 sm:px-10 lg:px-12"
-      >
+      <header className="fixed inset-x-0 top-0 z-[100] flex justify-center px-6 py-5 sm:px-10 lg:px-12">
         <div className="flex w-full max-w-[1720px] items-center justify-between gap-4">
           {/* ── White glass pill: logo + desktop nav ── */}
           <div
@@ -93,45 +88,35 @@ export function Navbar() {
 
             {/* Desktop links — hidden on AI Tool page */}
             {!isAiTool && (
-              <LayoutGroup id="navbar-pills">
-                <nav
-                  className="ml-8 hidden items-center gap-1.5 lg:flex lg:ml-12"
-                  aria-label="Main navigation"
-                >
-                  {NAV.map((n) => {
-                    const active = pathname.startsWith(n.to);
-                    return (
-                      <Link
-                        key={n.to}
-                        to={n.to}
-                        className="relative px-5 py-2 text-sm font-medium transition-colors"
-                        style={{ color: active ? "#111" : "#666" }}
-                      >
-                        {active && (
-                          <motion.span
-                            layoutId="nav-active-pill"
-                            className="absolute inset-0"
-                            style={{
-                              borderRadius: "36px",
-                              borderLeft: "4px solid #FF5A1F",
-                              background: "rgba(0,0,0,0.04)",
-                              boxShadow:
-                                "-4px 0 12px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.6)",
-                            }}
-                            transition={{
-                              type: "spring",
-                              stiffness: 420,
-                              damping: 34,
-                              mass: 0.8,
-                            }}
-                          />
-                        )}
-                        <span className="relative z-10">{n.label}</span>
-                      </Link>
-                    );
-                  })}
-                </nav>
-              </LayoutGroup>
+              <nav
+                className="ml-8 hidden items-center gap-1.5 lg:flex lg:ml-12"
+                aria-label="Main navigation"
+              >
+                {NAV.map((n) => {
+                  const active = pathname.startsWith(n.to);
+                  return (
+                    <Link
+                      key={n.to}
+                      to={n.to}
+                      className="relative px-5 py-2 text-sm font-medium transition-colors"
+                      style={{ color: active ? "#111" : "#666" }}
+                    >
+                      {active && (
+                        <span
+                          className="absolute inset-0 rounded-[36px]"
+                          style={{
+                            borderLeft: "4px solid #FF5A1F",
+                            background: "rgba(0,0,0,0.04)",
+                            boxShadow:
+                              "-4px 0 12px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.6)",
+                          }}
+                        />
+                      )}
+                      <span className="relative z-10">{n.label}</span>
+                    </Link>
+                  );
+                })}
+              </nav>
             )}
 
             {/* Mobile hamburger (inside pill) */}
@@ -201,7 +186,7 @@ export function Navbar() {
             </div>
           )}
         </div>
-      </motion.header>
+      </header>
 
       {/* ══════════════════════ MOBILE MENU ══════════════════════ */}
       <AnimatePresence>

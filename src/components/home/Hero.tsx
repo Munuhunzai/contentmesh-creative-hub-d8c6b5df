@@ -27,7 +27,11 @@ const FALLBACK_DESCRIPTION =
   "AI-powered creative studio delivering video production, generative art and brand content that makes your brand impossible to ignore.";
 
 const FALLBACK_SLIDES: HeroSlide[] = [
-  { category: "AI VIDEO PRODUCTION", title: "VISUALS THAT MOVE PEOPLE." },
+  {
+    category: "AI VIDEO PRODUCTION",
+    title: "VISUALS THAT MOVE PEOPLE.",
+    backgroundImageUrl: "/Content_mesh_AI_video_production_agency.webp",
+  },
   { category: "GENERATIVE ART", title: "IMAGES BORN FROM IMAGINATION." },
   { category: "BRAND FILMS", title: "STORIES WORTH WATCHING." },
 ];
@@ -153,6 +157,16 @@ export function Hero() {
   );
   const next = useCallback(() => setCurrent((c) => (c + 1) % slides.length), [slides.length]);
 
+  // ── Preload background images to prevent slide transition flickering ─────
+  useEffect(() => {
+    slides.forEach((s) => {
+      if (s.backgroundImageUrl) {
+        const img = new Image();
+        img.src = optimizeSanityImage(s.backgroundImageUrl, 1600, 80);
+      }
+    });
+  }, [slides]);
+
   const slide = slides[current] ?? {};
   const ytId = slide.youtubeUrl ? extractYouTubeId(slide.youtubeUrl) : null;
   const bgGradient = FALLBACK_GRADIENTS[current % FALLBACK_GRADIENTS.length];
@@ -177,8 +191,8 @@ export function Hero() {
               <img
                 src={optimizeSanityImage(s.backgroundImageUrl, 1600, 80)}
                 alt={s.title || `Hero Slide ${i + 1}`}
-                loading={i === 0 ? "eager" : "lazy"}
-                fetchPriority={i === 0 ? "high" : "low"}
+                loading="eager"
+                fetchPriority={i === 0 ? "high" : "auto"}
                 decoding="async"
                 className="h-full w-full object-cover object-center"
               />
