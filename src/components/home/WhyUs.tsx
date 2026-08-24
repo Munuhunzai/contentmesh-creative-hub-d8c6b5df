@@ -34,7 +34,7 @@ export function WhyUs() {
         <div className="relative overflow-hidden rounded-[2.5rem] bg-white/75 backdrop-blur-2xl p-8 sm:p-12 lg:p-16 text-foreground border border-white/90 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.06)]">
           {/* Neutral paper texture overlay */}
           <div
-            className="pointer-events-none absolute inset-0 opacity-15 bg-repeat bg-center bg-[length:480px_auto]"
+            className="pointer-events-none absolute inset-0 opacity-25 mix-blend-multiply bg-repeat bg-center bg-[length:480px_auto]"
             style={{ backgroundImage: "url('/paper-monochrome.webp')" }}
           />
 

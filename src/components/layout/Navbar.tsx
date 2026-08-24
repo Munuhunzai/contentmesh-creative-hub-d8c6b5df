@@ -77,7 +77,7 @@ export function Navbar() {
           >
             {/* Neutral monochrome crumpled paper texture overlay */}
             <div
-              className="pointer-events-none absolute inset-0 opacity-15 bg-repeat bg-center bg-[length:480px_auto] z-0"
+              className="pointer-events-none absolute inset-0 opacity-25 mix-blend-multiply bg-repeat bg-center bg-[length:480px_auto] z-0"
               style={{ backgroundImage: "url('/paper-monochrome.webp')" }}
             />
 

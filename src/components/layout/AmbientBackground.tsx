@@ -4,11 +4,11 @@
 export function AmbientBackground() {
   return (
     <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-white">
-      {/* Neutral white crumpled paper texture overlay */}
+      {/* Rich monochrome paper texture overlay */}
       <div
-        className="absolute inset-0 opacity-20 bg-repeat bg-center bg-[length:540px_auto]"
+        className="absolute inset-0 opacity-45 mix-blend-multiply bg-repeat bg-center bg-[length:480px_auto]"
         style={{
-          backgroundImage: "url('/bg-texture.webp')",
+          backgroundImage: "url('/paper-monochrome.webp')",
         }}
       />
 
