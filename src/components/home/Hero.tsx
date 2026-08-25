@@ -30,17 +30,16 @@ const FALLBACK_SLIDES: HeroSlide[] = [
   {
     category: "AI VIDEO PRODUCTION",
     title: "VISUALS THAT MOVE PEOPLE.",
-    backgroundImageUrl: "/Content_mesh_AI_video_production_agency.webp",
   },
   { category: "GENERATIVE ART", title: "IMAGES BORN FROM IMAGINATION." },
   { category: "BRAND FILMS", title: "STORIES WORTH WATCHING." },
 ];
 
-// CSS gradient backgrounds shown when no image/video is uploaded
+// Solid black background shown before video/image loads
 const FALLBACK_GRADIENTS = [
-  "linear-gradient(135deg, #04081a 0%, #0D4C92 55%, #FF5A1F 100%)",
-  "linear-gradient(135deg, #0a0010 0%, #330055 50%, #FF5A1F 100%)",
-  "linear-gradient(135deg, #000a10 0%, #003344 50%, #0D4C92 100%)",
+  "#000000",
+  "#000000",
+  "#000000",
 ];
 
 const SLIDE_DURATION = 5000; // ms (5 seconds per slide)
@@ -155,7 +154,7 @@ export function Hero() {
 
   return (
     <section
-      className="relative w-full overflow-hidden aspect-[16/9] min-h-[340px] max-h-[65vh] sm:aspect-none sm:max-h-none sm:h-[100dvh]"
+      className="relative w-full overflow-hidden bg-black aspect-[16/9] min-h-[340px] max-h-[65vh] sm:aspect-none sm:max-h-none sm:h-[100dvh]"
       aria-label="Hero"
     >
       {/* ── Background Image / Animated GIF layers (Preloaded & Persistent) ── */}
