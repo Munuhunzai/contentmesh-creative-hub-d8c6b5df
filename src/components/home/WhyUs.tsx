@@ -6,8 +6,8 @@ import { optimizeSanityImage } from "@/lib/sanity-image";
 const FEATURES = [
   {
     icon: TrendingDown,
-    title: "Competitive Pricing & 70%+ Savings",
-    desc: "Experience studio-grade commercial quality without traditional video agency markup — flat-rate pricing with zero hidden shoot fees.",
+    title: "Unmatched Value & 70%+ Savings",
+    desc: "Experience studio-grade commercial quality without traditional agency markup — high-ROI video production with zero hidden fees.",
   },
   {
     icon: Zap,

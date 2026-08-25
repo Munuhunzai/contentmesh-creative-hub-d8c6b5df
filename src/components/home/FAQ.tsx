@@ -63,9 +63,9 @@ const FALLBACK: FAQ[] = [
   },
   {
     _id: "8",
-    question: "What pricing options do you offer for AI video production retainers?",
+    question: "How do I get a custom quote or project estimate for AI video production?",
     answer:
-      "We offer transparent monthly retainers starting at $1.5k/mo (Starter Plan) and $2k/mo (Professional Plan with unlimited revisions and 48h priority turnaround), as well as custom Enterprise solutions for high-volume content teams.",
+      "Every project is tailored to your specific creative scope, video length, and delivery requirements. Contact our team for a fast 20-minute discovery call or request a custom quote via our Contact page.",
   },
 ];
 

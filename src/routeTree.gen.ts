@@ -13,7 +13,6 @@ import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as PrivacyRouteImport } from './routes/privacy'
-import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as PortfolioRouteImport } from './routes/portfolio'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AboutRouteImport } from './routes/about'
@@ -46,11 +45,6 @@ const ServicesRoute = ServicesRouteImport.update({
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PricingRoute = PricingRouteImport.update({
-  id: '/pricing',
-  path: '/pricing',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PortfolioRoute = PortfolioRouteImport.update({
@@ -125,7 +119,6 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/portfolio': typeof PortfolioRoute
-  '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -145,7 +138,6 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/portfolio': typeof PortfolioRoute
-  '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -166,7 +158,6 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/portfolio': typeof PortfolioRoute
-  '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -188,7 +179,6 @@ export interface FileRouteTypes {
     | '/about'
     | '/contact'
     | '/portfolio'
-    | '/pricing'
     | '/privacy'
     | '/services'
     | '/sitemap.xml'
@@ -208,7 +198,6 @@ export interface FileRouteTypes {
     | '/about'
     | '/contact'
     | '/portfolio'
-    | '/pricing'
     | '/privacy'
     | '/services'
     | '/sitemap.xml'
@@ -228,7 +217,6 @@ export interface FileRouteTypes {
     | '/about'
     | '/contact'
     | '/portfolio'
-    | '/pricing'
     | '/privacy'
     | '/services'
     | '/sitemap.xml'
@@ -249,7 +237,6 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   ContactRoute: typeof ContactRoute
   PortfolioRoute: typeof PortfolioRoute
-  PricingRoute: typeof PricingRoute
   PrivacyRoute: typeof PrivacyRoute
   ServicesRoute: typeof ServicesRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
@@ -293,13 +280,6 @@ declare module '@tanstack/react-router' {
       path: '/privacy'
       fullPath: '/privacy'
       preLoaderRoute: typeof PrivacyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/pricing': {
-      id: '/pricing'
-      path: '/pricing'
-      fullPath: '/pricing'
-      preLoaderRoute: typeof PricingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/portfolio': {
@@ -401,7 +381,6 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   ContactRoute: ContactRoute,
   PortfolioRoute: PortfolioRoute,
-  PricingRoute: PricingRoute,
   PrivacyRoute: PrivacyRoute,
   ServicesRoute: ServicesRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,

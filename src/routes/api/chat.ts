@@ -16,8 +16,8 @@ Your job:
 2. Recommend the most suitable service based on the client's goals.
 3. Ask smart discovery questions to understand project needs.
 4. Generate creative ideas and content directions when helpful.
-5. Encourage users to book a discovery call or place an order at /contact.
-6. For pricing, mention Starter ($1.5k/mo), Professional ($2k/mo), or Enterprise (custom).
+5. Encourage users to book a discovery call or request a custom quote at /contact.
+6. For pricing or project estimates, explain that every project is custom-quoted based on scope, video length, and complexity, and invite them to get a quick quote at /contact.
 7. Tone: warm, confident, concise. Short paragraphs. Genuinely helpful.`;
 
 function generateFallbackReply(userText: string): string {
@@ -31,7 +31,7 @@ function generateFallbackReply(userText: string): string {
     query.includes("rate") ||
     query.includes("how much")
   ) {
-    return "Our retainer plans are simple and transparent:\n\n- **Starter**: $1.5k/mo — 1 video/mo (AI video up to 60s, 2 revision rounds, 5-day delivery)\n- **Professional**: $2k/mo — 4 videos/mo (AI video + animation, unlimited revisions, 48h priority queue)\n- **Enterprise**: Custom pricing for dedicated studio teams & custom workflows.\n\nYou can explore full plan features on our [Pricing](/pricing) page or request a quote on our [Contact Form](/contact)!";
+    return "Every project at ContentMesh is custom-scoped to fit your exact creative goals, video length, and production complexity.\n\nWhether you need a single commercial ad or an ongoing monthly content pipeline, we provide fast, transparent quotes. Tell us about your vision on our [Contact Form](/contact) or book a 20-minute discovery call with our team!";
   }
 
   if (
@@ -88,7 +88,7 @@ function generateFallbackReply(userText: string): string {
     return "We want your content to be 100% perfect!\n\n- **Starter Plan**: Includes 2 revision rounds\n- **Professional & Enterprise Plans**: Include **unlimited revisions**.";
   }
 
-  return "ContentMesh is an AI-powered creative studio delivering cinematic video production, animations, ads, and brand storytelling.\n\nHow can I help you today? Feel free to ask about our **services**, **pricing**, **portfolio**, or **how to place an order**!";
+  return "ContentMesh is an AI-powered creative studio delivering cinematic video production, animations, ads, and brand storytelling.\n\nHow can I help you today? Feel free to ask about our **services**, **portfolio**, or **how to request a quote**!";
 }
 
 async function handlePost({ request }: { request: Request }) {

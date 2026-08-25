@@ -7,7 +7,6 @@ import { Portfolio } from "@/components/home/Portfolio";
 import { Process } from "@/components/home/Process";
 import { Stats } from "@/components/home/Stats";
 import { Testimonials } from "@/components/home/Testimonials";
-import { Pricing } from "@/components/home/Pricing";
 import { FAQ_ } from "@/components/home/FAQ";
 import { CTA } from "@/components/home/CTA";
 
@@ -72,7 +71,6 @@ function Index() {
       <Process />
       <Stats />
       <Testimonials />
-      <Pricing />
       <FAQ_ />
       <CTA />
     </SiteLayout>

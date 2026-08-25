@@ -21,7 +21,6 @@ const NAV = [
   { to: "/services" as const, label: "Services" },
   { to: "/tools/storyboard-generator" as any, label: "AI Tool" },
   { to: "/about" as const, label: "About Us" },
-  { to: "/pricing" as const, label: "Pricing" },
   { to: "/blog" as const, label: "Blog" },
 ];
 
