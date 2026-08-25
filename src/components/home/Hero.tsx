@@ -42,7 +42,7 @@ const FALLBACK_GRADIENTS = [
   "#000000",
 ];
 
-const SLIDE_DURATION = 10000; // ms (10 seconds per slide — calm, cinematic pace)
+const SLIDE_DURATION = 5000; // ms (5 seconds per slide)
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -154,9 +154,12 @@ export function Hero() {
 
   return (
     <section
-      className="relative w-full overflow-hidden bg-black aspect-[16/9] min-h-[340px] max-h-[65vh] sm:aspect-none sm:max-h-none sm:h-[100dvh]"
+      className="relative w-full overflow-hidden aspect-[16/9] min-h-[340px] max-h-[65vh] sm:aspect-none sm:max-h-none sm:h-[100dvh] isolate"
       aria-label="Hero"
     >
+      {/* ── Permanent black base — always opaque, blocks global white background from bleeding through ── */}
+      <div className="absolute inset-0 -z-10 bg-black" aria-hidden />
+
       {/* ── Background Image / Animated GIF layers (Preloaded & Persistent) ── */}
       {slides.map((s, i) => {
         const bgGrad = FALLBACK_GRADIENTS[i % FALLBACK_GRADIENTS.length];
@@ -164,7 +167,7 @@ export function Hero() {
         return (
           <div
             key={`bg-layer-${i}`}
-            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+            className={`absolute inset-0 transition-opacity duration-[1500ms] ease-in-out ${
               isActive ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
             }`}
           >
@@ -196,7 +199,8 @@ export function Hero() {
             muted
             playsInline
             preload={i === current ? "auto" : "none"}
-            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+            style={{ backgroundColor: "black" }}
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[1500ms] ${
               i === current ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
             }`}
           />
