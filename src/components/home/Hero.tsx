@@ -42,7 +42,7 @@ const FALLBACK_GRADIENTS = [
   "#000000",
 ];
 
-const SLIDE_DURATION = 5000; // ms (5 seconds per slide)
+const SLIDE_DURATION = 10000; // ms (10 seconds per slide — calm, cinematic pace)
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -242,13 +242,13 @@ export function Hero() {
       {/* ── Content — bottom-left ─────────────────────────────── */}
       <div className="absolute bottom-4 left-4 right-4 z-10 sm:left-14 sm:right-auto sm:bottom-24 sm:max-w-lg lg:max-w-2xl">
         {/* Title — changes per slide */}
-        <AnimatePresence>
+        <AnimatePresence mode="wait">
           <motion.h1
             key={`title-${current}`}
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
-            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.6, ease: "easeInOut" }}
             className="font-display font-black uppercase leading-[0.95] tracking-tight text-white"
             style={{ fontSize: "clamp(1.3rem, 3.8vw + 0.4rem, 4.8rem)" }}
           >
