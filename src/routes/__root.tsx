@@ -127,38 +127,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   }),
   shellComponent: RootShell,
   component: RootComponent,
-  pendingComponent: RootPendingComponent,
   notFoundComponent: NotFoundComponent,
   errorComponent: ErrorComponent,
 });
 
-function RootPendingComponent() {
-  return (
-    <div className="min-h-screen w-full bg-slate-50 p-6 space-y-8 animate-pulse">
-      <div className="h-16 w-full bg-white rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between px-6">
-        <div className="h-6 w-36 bg-slate-200 rounded-lg" />
-        <div className="flex gap-4">
-          <div className="h-4 w-20 bg-slate-200 rounded" />
-          <div className="h-4 w-20 bg-slate-200 rounded" />
-          <div className="h-4 w-20 bg-slate-200 rounded" />
-        </div>
-      </div>
-      <div className="max-w-4xl mx-auto text-center space-y-4 pt-8">
-        <div className="h-10 w-3/4 bg-slate-200 rounded-xl mx-auto" />
-        <div className="h-4 w-1/2 bg-slate-200 rounded-lg mx-auto" />
-      </div>
-      <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-6 pt-4">
-        {[1, 2, 3].map((i) => (
-          <div key={i} className="h-64 bg-white rounded-3xl border border-slate-200 p-6 space-y-4">
-            <div className="h-32 bg-slate-100 rounded-2xl" />
-            <div className="h-5 w-2/3 bg-slate-200 rounded-lg" />
-            <div className="h-4 w-full bg-slate-100 rounded" />
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
+
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
