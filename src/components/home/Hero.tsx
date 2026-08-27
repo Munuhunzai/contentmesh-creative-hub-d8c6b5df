@@ -91,7 +91,7 @@ export function Hero() {
 
   return (
     <section
-      className="relative w-full overflow-hidden bg-black aspect-[16/9] min-h-[340px] max-h-[65vh] sm:aspect-none sm:max-h-none sm:h-[100dvh] isolate"
+      className="hero-video-container relative w-full overflow-hidden bg-black aspect-[16/9] min-h-[340px] max-h-[65vh] sm:aspect-none sm:max-h-none sm:h-[100dvh] isolate"
       style={{ backgroundColor: "#000000" }}
       aria-label="Hero"
     >
@@ -104,10 +104,8 @@ export function Hero() {
         const isActive = i === current;
         return (
           <div
-            key={`bg-layer-${i}`}
-            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out bg-black ${
-              isActive ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-            }`}
+            key={s.backgroundImageUrl || `bg-layer-${i}`}
+            className={`hero-video ${isActive ? "active pointer-events-auto" : "pointer-events-none"} bg-black`}
             style={{ backgroundColor: "#000000" }}
           >
             {s.backgroundImageUrl ? (
@@ -132,19 +130,18 @@ export function Hero() {
       {/* ── Direct Video Upload background (muted, autoplay, looping) ── */}
       {slides.map((s, i) => {
         if (!s.videoFileUrl) return null;
+        const isActive = i === current;
         return (
           <video
-            key={`direct-vid-${i}`}
+            key={s.videoFileUrl}
             src={s.videoFileUrl}
             autoPlay
             loop
             muted
             playsInline
-            preload={i === current ? "auto" : "none"}
+            preload="auto"
             style={{ backgroundColor: "#000000" }}
-            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 bg-black ${
-              i === current ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-            }`}
+            className={`hero-video ${isActive ? "active pointer-events-auto" : "pointer-events-none"} bg-black`}
           />
         );
       })}
