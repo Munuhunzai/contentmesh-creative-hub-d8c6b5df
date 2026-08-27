@@ -316,7 +316,7 @@ spline-viewer {
   position: absolute;
   inset: 0;
   opacity: 0;
-  transition: opacity 300ms ease;
+  transition: opacity 500ms ease;
   will-change: opacity;
 }
 

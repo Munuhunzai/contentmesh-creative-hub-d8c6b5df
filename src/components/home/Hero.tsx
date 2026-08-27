@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
 import { Link } from "@tanstack/react-router";
@@ -34,14 +34,10 @@ const FALLBACK_SLIDES: HeroSlide[] = [
   { category: "BRAND FILMS", title: "STORIES WORTH WATCHING." },
 ];
 
-// Solid black background shown before video/image loads
-const FALLBACK_GRADIENTS = [
-  "#000000",
-  "#000000",
-  "#000000",
-];
+const FALLBACK_GRADIENTS = ["#000000", "#000000", "#000000"];
 
 const SLIDE_DURATION = 5000; // ms (5 seconds per slide)
+const CROSSFADE_DURATION = 500; // ms (500ms crossfade)
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
@@ -53,30 +49,80 @@ export function Hero() {
   const description: string = data?.heroDescription || FALLBACK_DESCRIPTION;
 
   const [current, setCurrent] = useState(0);
+  const [prevSlide, setPrevSlide] = useState<number | null>(null);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+
+  const videoRefs = useRef<Map<number, HTMLVideoElement>>(new Map());
+
+  // ── Transition helper ─────────────────────────────────────────────────────
+  const goToSlide = useCallback(
+    (nextIndex: number) => {
+      if (nextIndex === current) return;
+      setPrevSlide(current);
+      setCurrent(nextIndex);
+      setIsTransitioning(true);
+    },
+    [current],
+  );
 
   // ── Auto-advance ───────────────────────────────────────────────────────────
   useEffect(() => {
-    const t = setTimeout(() => setCurrent((c) => (c + 1) % slides.length), SLIDE_DURATION);
+    const t = setTimeout(() => {
+      goToSlide((current + 1) % slides.length);
+    }, SLIDE_DURATION);
     return () => clearTimeout(t);
-  }, [current, slides.length]);
+  }, [current, slides.length, goToSlide]);
+
+  // ── End transition timer ───────────────────────────────────────────────────
+  useEffect(() => {
+    if (!isTransitioning) return;
+    const timer = setTimeout(() => {
+      setIsTransitioning(false);
+      setPrevSlide(null);
+    }, CROSSFADE_DURATION);
+    return () => clearTimeout(timer);
+  }, [isTransitioning]);
+
+  // ── Selective Video Play / Pause control ──────────────────────────────────
+  // Only active (or outgoing during crossfade) video plays. Inactive videos are paused to save GPU resources.
+  useEffect(() => {
+    slides.forEach((s, i) => {
+      if (!s.videoFileUrl) return;
+      const v = videoRefs.current.get(i);
+      if (!v) return;
+
+      const isCurrentActive = i === current;
+      const isOutgoingActive = isTransitioning && i === prevSlide;
+
+      if (isCurrentActive) {
+        const p = v.play();
+        if (p !== undefined) p.catch(() => {});
+      } else if (!isOutgoingActive) {
+        v.pause();
+      }
+    });
+  }, [current, isTransitioning, prevSlide, slides]);
 
   // ── Keyboard navigation ────────────────────────────────────────────────────
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "ArrowLeft") setCurrent((c) => (c - 1 + slides.length) % slides.length);
-      if (e.key === "ArrowRight") setCurrent((c) => (c + 1) % slides.length);
+      if (e.key === "ArrowLeft") goToSlide((current - 1 + slides.length) % slides.length);
+      if (e.key === "ArrowRight") goToSlide((current + 1) % slides.length);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [slides.length]);
+  }, [current, slides.length, goToSlide]);
 
   const prev = useCallback(
-    () => setCurrent((c) => (c - 1 + slides.length) % slides.length),
-    [slides.length],
+    () => goToSlide((current - 1 + slides.length) % slides.length),
+    [current, slides.length, goToSlide],
   );
-  const next = useCallback(() => setCurrent((c) => (c + 1) % slides.length), [slides.length]);
+  const next = useCallback(
+    () => goToSlide((current + 1) % slides.length),
+    [current, slides.length, goToSlide],
+  );
 
-  // ── Preload background images to prevent slide transition flickering ─────
+  // ── Preload background images into browser cache ──────────────────────────
   useEffect(() => {
     slides.forEach((s) => {
       if (s.backgroundImageUrl) {
@@ -87,7 +133,6 @@ export function Hero() {
   }, [slides]);
 
   const slide = slides[current] ?? {};
-  const bgGradient = FALLBACK_GRADIENTS[current % FALLBACK_GRADIENTS.length];
 
   return (
     <section
@@ -95,17 +140,19 @@ export function Hero() {
       style={{ backgroundColor: "#000000" }}
       aria-label="Hero"
     >
-      {/* ── Permanent black base — always opaque, blocks global white background from bleeding through ── */}
+      {/* ── Permanent black base — always opaque ── */}
       <div className="absolute inset-0 bg-black" style={{ backgroundColor: "#000000" }} aria-hidden />
 
-      {/* ── Background Image / Animated GIF layers (Preloaded & Persistent) ── */}
+      {/* ── Background Image / Fallback layers ── */}
       {slides.map((s, i) => {
         const bgGrad = FALLBACK_GRADIENTS[i % FALLBACK_GRADIENTS.length];
-        const isActive = i === current;
+        const isActive = i === current || (isTransitioning && i === prevSlide);
+        if (!isActive && s.videoFileUrl) return null;
+
         return (
           <div
             key={s.backgroundImageUrl || `bg-layer-${i}`}
-            className={`hero-video ${isActive ? "active pointer-events-auto" : "pointer-events-none"} bg-black`}
+            className={`hero-video ${i === current ? "active pointer-events-auto" : "pointer-events-none"} bg-black`}
             style={{ backgroundColor: "#000000" }}
           >
             {s.backgroundImageUrl ? (
@@ -127,30 +174,41 @@ export function Hero() {
         );
       })}
 
-      {/* ── Direct Video Upload background (muted, autoplay, looping) ── */}
+      {/* ── Direct Video Upload background (selective playback, GPU friendly) ── */}
       {slides.map((s, i) => {
         if (!s.videoFileUrl) return null;
-        const isActive = i === current;
+        const isCurrentActive = i === current;
+
         return (
           <video
+            ref={(el) => {
+              if (el) videoRefs.current.set(i, el);
+              else videoRefs.current.delete(i);
+            }}
             key={s.videoFileUrl}
             src={s.videoFileUrl}
-            autoPlay
             loop
             muted
             playsInline
             preload="auto"
-            style={{ backgroundColor: "#000000" }}
-            className={`hero-video ${isActive ? "active pointer-events-auto" : "pointer-events-none"} bg-black`}
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              transform: "translate3d(0, 0, 0)",
+              WebkitTransform: "translate3d(0, 0, 0)",
+              backfaceVisibility: "hidden",
+              WebkitBackfaceVisibility: "hidden",
+              backgroundColor: "#000000",
+            }}
+            className={`hero-video ${isCurrentActive ? "active pointer-events-auto" : "pointer-events-none"} bg-black`}
           />
         );
       })}
 
-
-
       {/* ── Dark overlay — heavier on left & bottom for readability ── */}
       <div
-        className="absolute inset-0 pointer-events-none"
+        className="absolute inset-0 pointer-events-none z-10"
         style={{
           background:
             "linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.45) 55%, rgba(0,0,0,0.15) 100%), " +
@@ -177,7 +235,7 @@ export function Hero() {
       </button>
 
       {/* ── Content — bottom-left ─────────────────────────────── */}
-      <div className="absolute bottom-4 left-4 right-4 z-10 sm:left-14 sm:right-auto sm:bottom-24 sm:max-w-lg lg:max-w-2xl">
+      <div className="absolute bottom-4 left-4 right-4 z-20 sm:left-14 sm:right-auto sm:bottom-24 sm:max-w-lg lg:max-w-2xl">
         {/* Title — changes per slide */}
         <AnimatePresence mode="wait">
           <motion.h1
