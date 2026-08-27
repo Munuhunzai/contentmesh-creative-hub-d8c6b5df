@@ -7,7 +7,6 @@ import teamMember from "./teamMember";
 import faq from "./faq";
 import blogPost from "./blogPost";
 import contactInfo from "./contactInfo";
-import pricingPlan from "./pricingPlan";
 
 export const schemaTypes = [
   siteSettings,
@@ -19,5 +18,4 @@ export const schemaTypes = [
   faq,
   blogPost,
   contactInfo,
-  pricingPlan,
 ];

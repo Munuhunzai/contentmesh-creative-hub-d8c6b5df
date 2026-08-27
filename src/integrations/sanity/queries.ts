@@ -57,7 +57,3 @@ export const blogPostBySlugQuery = /* groq */ `*[_type == "blogPost" && slug.cur
 export const contactQuery = /* groq */ `*[_type == "contactInfo"][0]{
   email, phone, address, hours, mapEmbedUrl, formRecipient
 }`;
-
-export const pricingQuery = /* groq */ `*[_type == "pricingPlan"] | order(order asc){
-  _id, name, price, isCustomPrice, description, featured, features, ctaLabel, ctaUrl
-}`;
