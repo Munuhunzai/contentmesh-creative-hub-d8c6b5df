@@ -33,8 +33,11 @@ export function Footer() {
     [Instagram, "Instagram", s.socials?.instagram ?? "#"],
     [Linkedin, "LinkedIn", s.socials?.linkedin ?? "#"],
     [Facebook, "Facebook", s.socials?.facebook ?? s.socials?.twitter ?? "#"],
-    [Youtube, "YouTube", s.socials?.youtube ?? "#"],
   ];
+
+  if (s.socials?.youtube && s.socials.youtube !== "#") {
+    socials.push([Youtube, "YouTube", s.socials.youtube]);
+  }
 
   return (
     <footer className="relative mt-24 border-t border-border/60 bg-secondary/40">

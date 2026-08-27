@@ -11,7 +11,6 @@ import { optimizeSanityImage } from "@/lib/sanity-image";
 type HeroSlide = {
   category?: string;
   title?: string;
-  youtubeUrl?: string;
   videoFileUrl?: string;
   backgroundImageUrl?: string;
 };
@@ -43,82 +42,6 @@ const FALLBACK_GRADIENTS = [
 ];
 
 const SLIDE_DURATION = 5000; // ms (5 seconds per slide)
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function extractYouTubeId(url: string): string | null {
-  try {
-    const patterns = [
-      /[?&]v=([^&\n?#]+)/,
-      /youtu\.be\/([^&\n?#]+)/,
-      /youtube\.com\/embed\/([^&\n?#]+)/,
-      /youtube\.com\/shorts\/([^&\n?#]+)/,
-    ];
-    for (const p of patterns) {
-      const m = url.match(p);
-      if (m?.[1]) return m[1];
-    }
-  } catch {
-    /* noop */
-  }
-  return null;
-}
-
-// ─── YouTube background iframe (muted autoplay) ─────────────────────────────
-
-function YouTubeBackground({ videoId, active }: { videoId: string; active: boolean }) {
-  const [loaded, setLoaded] = useState(false);
-
-  useEffect(() => {
-    if (!active) {
-      setLoaded(false);
-    }
-  }, [active]);
-
-  const handleLoad = () => {
-    // Delay fade-in by 1200ms after iframe load so YouTube player initializes in background
-    setTimeout(() => {
-      setLoaded(true);
-    }, 1200);
-  };
-
-  return (
-    <div
-      className="absolute inset-0 overflow-hidden pointer-events-none bg-black"
-      aria-hidden
-      style={{
-        opacity: active && loaded ? 1 : 0,
-        transition: "opacity 1s ease-in-out",
-        backgroundColor: "#000000",
-      }}
-    >
-      <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[max(140vw,calc(140vh*16/9))] h-[max(140vh,calc(140vw*9/16))] scale-[1.15] bg-black"
-        style={{ transformOrigin: "center center", backgroundColor: "#000000" }}
-      >
-        <iframe
-          title="Background video"
-          onLoad={handleLoad}
-          src={
-            `https://www.youtube-nocookie.com/embed/${videoId}` +
-            `?autoplay=1&mute=1&loop=1&playlist=${videoId}` +
-            `&controls=0&showinfo=0&rel=0&modestbranding=1` +
-            `&iv_load_policy=3&disablekb=1&fs=0&playsinline=1`
-          }
-          allow="autoplay; encrypted-media"
-          allowFullScreen={false}
-          style={{
-            width: "100%",
-            height: "100%",
-            border: "none",
-            display: "block",
-            backgroundColor: "#000000",
-          }}
-        />
-      </div>
-    </div>
-  );
-}
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
@@ -164,7 +87,6 @@ export function Hero() {
   }, [slides]);
 
   const slide = slides[current] ?? {};
-  const ytId = slide.youtubeUrl ? extractYouTubeId(slide.youtubeUrl) : null;
   const bgGradient = FALLBACK_GRADIENTS[current % FALLBACK_GRADIENTS.length];
 
   return (
@@ -227,13 +149,7 @@ export function Hero() {
         );
       })}
 
-      {/* ── YouTube background video (muted, autoplay, looping) ── */}
-      {slides.map((s, i) => {
-        if (s.videoFileUrl) return null;
-        const id = s.youtubeUrl ? extractYouTubeId(s.youtubeUrl) : null;
-        if (!id) return null;
-        return <YouTubeBackground key={`yt-${i}-${id}`} videoId={id} active={i === current} />;
-      })}
+
 
       {/* ── Dark overlay — heavier on left & bottom for readability ── */}
       <div
