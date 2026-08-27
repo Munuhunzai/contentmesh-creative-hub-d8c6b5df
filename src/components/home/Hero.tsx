@@ -71,16 +71,17 @@ function YouTubeBackground({ videoId, active }: { videoId: string; active: boole
 
   return (
     <div
-      className="absolute inset-0 overflow-hidden pointer-events-none"
+      className="absolute inset-0 overflow-hidden pointer-events-none bg-black"
       aria-hidden
       style={{
         opacity: active && loaded ? 1 : 0,
         transition: "opacity 1s ease-in-out",
+        backgroundColor: "black",
       }}
     >
       <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[max(140vw,calc(140vh*16/9))] h-[max(140vh,calc(140vw*9/16))] scale-[1.15]"
-        style={{ transformOrigin: "center center" }}
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[max(140vw,calc(140vh*16/9))] h-[max(140vh,calc(140vw*9/16))] scale-[1.15] bg-black"
+        style={{ transformOrigin: "center center", backgroundColor: "black" }}
       >
         <iframe
           title="Background video"
@@ -98,6 +99,7 @@ function YouTubeBackground({ videoId, active }: { videoId: string; active: boole
             height: "100%",
             border: "none",
             display: "block",
+            backgroundColor: "black",
           }}
         />
       </div>
@@ -154,11 +156,12 @@ export function Hero() {
 
   return (
     <section
-      className="relative w-full overflow-hidden aspect-[16/9] min-h-[340px] max-h-[65vh] sm:aspect-none sm:max-h-none sm:h-[100dvh] isolate"
+      className="bg-black relative w-full overflow-hidden aspect-[16/9] min-h-[340px] max-h-[65vh] sm:aspect-none sm:max-h-none sm:h-[100dvh] isolate"
+      style={{ backgroundColor: "black" }}
       aria-label="Hero"
     >
       {/* ── Permanent black base — always opaque, blocks global white background from bleeding through ── */}
-      <div className="absolute inset-0 -z-10 bg-black" aria-hidden />
+      <div className="absolute inset-0 z-0 bg-black" style={{ backgroundColor: "black" }} aria-hidden />
 
       {/* ── Background Image / Animated GIF layers (Preloaded & Persistent) ── */}
       {slides.map((s, i) => {
@@ -167,9 +170,10 @@ export function Hero() {
         return (
           <div
             key={`bg-layer-${i}`}
-            className={`absolute inset-0 transition-opacity duration-[1500ms] ease-in-out ${
+            className={`absolute inset-0 transition-opacity duration-[1500ms] ease-in-out bg-black ${
               isActive ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
             }`}
+            style={{ backgroundColor: "black" }}
           >
             {s.backgroundImageUrl ? (
               <img
@@ -178,10 +182,11 @@ export function Hero() {
                 loading="eager"
                 fetchPriority={i === 0 ? "high" : "auto"}
                 decoding="async"
-                className="h-full w-full object-cover object-center"
+                style={{ backgroundColor: "black" }}
+                className="h-full w-full object-cover object-center bg-black"
               />
             ) : (
-              <div className="h-full w-full" style={{ background: bgGrad }} />
+              <div className="h-full w-full bg-black" style={{ background: bgGrad, backgroundColor: "black" }} />
             )}
           </div>
         );
@@ -200,7 +205,7 @@ export function Hero() {
             playsInline
             preload={i === current ? "auto" : "none"}
             style={{ backgroundColor: "black" }}
-            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[1500ms] ${
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[1500ms] bg-black ${
               i === current ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
             }`}
           />
