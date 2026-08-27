@@ -122,14 +122,17 @@ export function Hero() {
     [current, slides.length, goToSlide],
   );
 
-  // ── Preload background images into browser cache ──────────────────────────
+  // ── Preload background images into browser cache after initial paint ───────
   useEffect(() => {
-    slides.forEach((s) => {
-      if (s.backgroundImageUrl) {
-        const img = new Image();
-        img.src = optimizeSanityImage(s.backgroundImageUrl, 1200, 75);
-      }
-    });
+    const timer = setTimeout(() => {
+      slides.slice(1).forEach((s) => {
+        if (s.backgroundImageUrl) {
+          const img = new Image();
+          img.src = optimizeSanityImage(s.backgroundImageUrl, 1200, 75);
+        }
+      });
+    }, 1500);
+    return () => clearTimeout(timer);
   }, [slides]);
 
   const slide = slides[current] ?? {};
@@ -190,7 +193,7 @@ export function Hero() {
             loop
             muted
             playsInline
-            preload="auto"
+            preload={isCurrentActive ? "auto" : "none"}
             style={{
               width: "100%",
               height: "100%",
@@ -236,14 +239,14 @@ export function Hero() {
 
       {/* ── Content — bottom-left ─────────────────────────────── */}
       <div className="absolute bottom-4 left-4 right-4 z-20 sm:left-14 sm:right-auto sm:bottom-24 sm:max-w-lg lg:max-w-2xl">
-        {/* Title — changes per slide */}
-        <AnimatePresence mode="wait">
+        {/* Title — immediate paint for LCP, animated on slide switch */}
+        <AnimatePresence mode="wait" initial={false}>
           <motion.h1
             key={`title-${current}`}
-            initial={{ opacity: 0 }}
+            initial={{ opacity: 0.3 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.6, ease: "easeInOut" }}
+            transition={{ duration: 0.35, ease: "easeOut" }}
             className="font-display font-black uppercase leading-[0.95] tracking-tight text-white"
             style={{ fontSize: "clamp(1.3rem, 3.8vw + 0.4rem, 4.8rem)" }}
           >

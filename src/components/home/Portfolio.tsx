@@ -185,7 +185,7 @@ export function Portfolio() {
                 className={`group relative overflow-hidden rounded-3xl text-left ${span}`}
                 style={{
                   background: p.thumbnailUrl
-                    ? `url(${optimizeSanityImage(p.thumbnailUrl, 600, 70)}) center/cover`
+                    ? `url(${optimizeSanityImage(p.thumbnailUrl, 480, 65)}) center/cover`
                     : gradient,
                 }}
               >
