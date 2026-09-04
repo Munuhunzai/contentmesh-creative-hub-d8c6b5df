@@ -48,7 +48,7 @@ export function WhyUs() {
             {/* ── Left Column (Title + Subtitle + Featured Team/Studio Image) ── */}
             <div className="lg:col-span-5 flex flex-col justify-between space-y-6">
               <div>
-                <span className="text-xs font-bold uppercase tracking-widest text-[#FF5A1F]">
+                <span className="text-xs font-bold uppercase tracking-widest text-[#C23800]">
                   / Why ContentMesh?
                 </span>
 
@@ -65,10 +65,10 @@ export function WhyUs() {
               {/* Featured Image Box */}
               <div className="overflow-hidden rounded-2xl border border-border/80 shadow-md group">
                 <img
-                  src={optimizeSanityImage("https://images.unsplash.com/photo-1522071820081-009f0129c71c", 1200, 75)}
+                  src={optimizeSanityImage("https://images.unsplash.com/photo-1522071820081-009f0129c71c", 640, 60)}
                   alt="ContentMesh AI Video Directors & Team collaborating"
-                  width={1200}
-                  height={800}
+                  width={640}
+                  height={360}
                   loading="lazy"
                   decoding="async"
                   className="h-52 sm:h-60 w-full object-cover transition-transform duration-500 group-hover:scale-105"
@@ -79,7 +79,7 @@ export function WhyUs() {
               <div className="flex flex-wrap items-center gap-5 pt-1 text-sm font-bold">
                 <Link
                   to="/contact"
-                  className="inline-flex items-center gap-2 rounded-full bg-[#FF5A1F] px-5 py-2.5 text-xs sm:text-sm font-bold uppercase tracking-wider text-white shadow-md transition-transform hover:scale-105 hover:bg-[#ff6e38] group"
+                  className="inline-flex items-center gap-2 rounded-full bg-[#C23800] hover:bg-[#A83000] px-5 py-2.5 text-xs sm:text-sm font-bold uppercase tracking-wider text-white shadow-md transition-transform hover:scale-105 group"
                 >
                   Book Free Discovery{" "}
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />

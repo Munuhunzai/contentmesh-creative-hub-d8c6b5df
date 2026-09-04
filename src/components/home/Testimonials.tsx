@@ -89,15 +89,30 @@ export function Testimonials() {
                   {/* Square Avatar Portrait */}
                   <div className="h-20 w-20 shrink-0 overflow-hidden rounded-2xl border border-border/40 shadow-sm">
                     {item.avatarUrl ? (
-                      <img
-                        src={item.avatarUrl}
-                        alt={item.authorName}
-                        width={80}
-                        height={80}
-                        loading="lazy"
-                        decoding="async"
-                        className="h-full w-full object-cover"
-                      />
+                      item.avatarUrl.startsWith("/reviews/") ? (
+                        <picture>
+                          <source srcSet={item.avatarUrl.replace(/\.webp$/, ".avif")} type="image/avif" />
+                          <img
+                            src={item.avatarUrl}
+                            alt={item.authorName}
+                            width={80}
+                            height={80}
+                            loading="lazy"
+                            decoding="async"
+                            className="h-full w-full object-cover"
+                          />
+                        </picture>
+                      ) : (
+                        <img
+                          src={optimizeSanityImage(item.avatarUrl, 160, 60)}
+                          alt={item.authorName}
+                          width={80}
+                          height={80}
+                          loading="lazy"
+                          decoding="async"
+                          className="h-full w-full object-cover"
+                        />
+                      )
                     ) : (
                       <div className="flex h-full w-full items-center justify-center bg-primary/10 font-bold text-primary text-xl">
                         {item.authorName[0]}

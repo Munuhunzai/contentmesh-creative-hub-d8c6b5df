@@ -80,14 +80,17 @@ export function FloatingChatbot() {
         {open ? (
           <X className="h-5 w-5 text-[#0E447F]" />
         ) : (
-          <img
-            src="/chatbot-avatar.webp"
-            alt="ContentMesh AI"
-            width={56}
-            height={56}
-            decoding="async"
-            className="h-14 w-14 rounded-full object-contain"
-          />
+          <picture>
+            <source srcSet="/chatbot-avatar.avif" type="image/avif" />
+            <img
+              src="/chatbot-avatar.webp"
+              alt="ContentMesh AI"
+              width={56}
+              height={56}
+              decoding="async"
+              className="h-14 w-14 rounded-full object-contain"
+            />
+          </picture>
         )}
         {!open && (
           <span
@@ -125,14 +128,17 @@ export function FloatingChatbot() {
                 color: "#fff",
               }}
             >
-              <img
-                src="/chatbot-avatar.webp"
-                alt="Mesh AI Assistant"
-                width={40}
-                height={40}
-                decoding="async"
-                className="h-10 w-10 rounded-full bg-white/95 object-contain p-1"
-              />
+              <picture>
+                <source srcSet="/chatbot-avatar.avif" type="image/avif" />
+                <img
+                  src="/chatbot-avatar.webp"
+                  alt="Mesh AI Assistant"
+                  width={40}
+                  height={40}
+                  decoding="async"
+                  className="h-10 w-10 rounded-full bg-white/95 object-contain p-1"
+                />
+              </picture>
               <div className="flex-1">
                 <div className="text-sm font-semibold leading-tight">Mesh · ContentMesh</div>
                 <div className="flex items-center gap-1.5 text-xs opacity-90">

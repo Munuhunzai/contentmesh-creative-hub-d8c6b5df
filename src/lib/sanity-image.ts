@@ -4,15 +4,16 @@
  */
 export function optimizeSanityImage(
   url: string | null | undefined,
-  width = 800,
-  quality = 70,
+  width = 768,
+  quality = 60,
+  fit: "max" | "crop" | "fill" | "scale" = "max",
 ): string {
   if (!url) return "";
 
   // 1. Sanity CDN images
   if (url.includes("cdn.sanity.io")) {
-    const separator = url.includes("?") ? "&" : "?";
-    return `${url}${separator}auto=format&w=${width}&q=${quality}`;
+    const cleanUrl = url.split("?")[0];
+    return `${cleanUrl}?auto=format&fit=${fit}&w=${width}&q=${quality}`;
   }
 
   // 2. Unsplash images
@@ -34,4 +35,22 @@ export function optimizeSanityImage(
   }
 
   return url;
+}
+
+/**
+ * Generates a responsive srcset string for Sanity CDN images.
+ */
+export function getSanitySrcSet(
+  url: string | null | undefined,
+  widths: number[] = [412, 768, 1024, 1440],
+  quality = 60,
+  fit: "max" | "crop" | "fill" | "scale" = "max",
+): string {
+  if (!url || !url.includes("cdn.sanity.io")) {
+    return "";
+  }
+  const cleanUrl = url.split("?")[0];
+  return widths
+    .map((w) => `${cleanUrl}?auto=format&fit=${fit}&w=${w}&q=${quality} ${w}w`)
+    .join(", ");
 }

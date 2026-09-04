@@ -4,18 +4,18 @@ import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { useSanity } from "@/integrations/sanity/useSanity";
 import { homepageQuery } from "@/integrations/sanity/queries";
-import { optimizeSanityImage } from "@/lib/sanity-image";
+import { optimizeSanityImage, getSanitySrcSet } from "@/lib/sanity-image";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-type HeroSlide = {
+export type HeroSlide = {
   category?: string;
   title?: string;
   videoFileUrl?: string;
   backgroundImageUrl?: string;
 };
 
-type HomepageData = {
+export type HomepageData = {
   heroDescription?: string;
   heroSlides?: HeroSlide[];
 };
@@ -41,12 +41,25 @@ const CROSSFADE_DURATION = 500; // ms (500ms crossfade)
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-export function Hero() {
-  const data = useSanity<HomepageData>(["sanity", "homepage"], homepageQuery, {});
+interface HeroProps {
+  initialData?: HomepageData | null;
+}
 
-  const slides: HeroSlide[] =
-    data?.heroSlides && data.heroSlides.length > 0 ? data.heroSlides : FALLBACK_SLIDES;
-  const description: string = data?.heroDescription || FALLBACK_DESCRIPTION;
+export function Hero({ initialData }: HeroProps = {}) {
+  const data = useSanity<HomepageData>(
+    ["sanity", "homepage"],
+    homepageQuery,
+    initialData || {},
+  );
+
+  const activeData = (data?.heroSlides && data.heroSlides.length > 0)
+    ? data
+    : (initialData?.heroSlides && initialData.heroSlides.length > 0)
+    ? initialData
+    : null;
+
+  const slides: HeroSlide[] = activeData?.heroSlides || FALLBACK_SLIDES;
+  const description: string = activeData?.heroDescription || FALLBACK_DESCRIPTION;
 
   const [current, setCurrent] = useState(0);
   const [prevSlide, setPrevSlide] = useState<number | null>(null);
@@ -84,7 +97,6 @@ export function Hero() {
   }, [isTransitioning]);
 
   // ── Selective Video Play / Pause control ──────────────────────────────────
-  // Only active (or outgoing during crossfade) video plays. Inactive videos are paused to save GPU resources.
   useEffect(() => {
     slides.forEach((s, i) => {
       if (!s.videoFileUrl) return;
@@ -122,18 +134,15 @@ export function Hero() {
     [current, slides.length, goToSlide],
   );
 
-  // ── Preload background images into browser cache after initial paint ───────
+  // ── Preload ONLY next slide image just-in-time ──────────────────────────────
   useEffect(() => {
-    const timer = setTimeout(() => {
-      slides.slice(1).forEach((s) => {
-        if (s.backgroundImageUrl) {
-          const img = new Image();
-          img.src = optimizeSanityImage(s.backgroundImageUrl, 1200, 75);
-        }
-      });
-    }, 1500);
-    return () => clearTimeout(timer);
-  }, [slides]);
+    const nextIdx = (current + 1) % slides.length;
+    const nextSlide = slides[nextIdx];
+    if (nextSlide?.backgroundImageUrl) {
+      const img = new Image();
+      img.src = optimizeSanityImage(nextSlide.backgroundImageUrl, 768, 60);
+    }
+  }, [current, slides]);
 
   const slide = slides[current] ?? {};
 
@@ -149,23 +158,30 @@ export function Hero() {
       {/* ── Background Image / Fallback layers ── */}
       {slides.map((s, i) => {
         const bgGrad = FALLBACK_GRADIENTS[i % FALLBACK_GRADIENTS.length];
-        const isActive = i === current || (isTransitioning && i === prevSlide);
-        if (!isActive && s.videoFileUrl) return null;
+        const isCurrentActive = i === current;
+        const isOutgoingActive = isTransitioning && i === prevSlide;
+        const isVisible = isCurrentActive || isOutgoingActive;
+
+        if (s.videoFileUrl && !isVisible) return null;
 
         return (
           <div
             key={s.backgroundImageUrl || `bg-layer-${i}`}
-            className={`hero-video ${i === current ? "active pointer-events-auto" : "pointer-events-none"} bg-black`}
+            className={`hero-video ${isCurrentActive ? "active pointer-events-auto" : "pointer-events-none"} bg-black`}
             style={{ backgroundColor: "#000000" }}
           >
             {s.backgroundImageUrl ? (
               <div className="relative h-full w-full bg-black" style={{ backgroundColor: "#000000" }}>
                 <img
-                  src={optimizeSanityImage(s.backgroundImageUrl, 1200, 75)}
+                  src={optimizeSanityImage(s.backgroundImageUrl, 768, 60)}
+                  srcSet={getSanitySrcSet(s.backgroundImageUrl, [412, 768, 1024, 1440], 60)}
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 100vw"
                   alt={s.title || `Hero Slide ${i + 1}`}
-                  loading="eager"
-                  fetchPriority={i === 0 ? "high" : "auto"}
-                  decoding="async"
+                  loading={i === 0 ? "eager" : "lazy"}
+                  fetchPriority={i === 0 ? "high" : "low"}
+                  decoding={i === 0 ? "sync" : "async"}
+                  width={1440}
+                  height={810}
                   style={{ backgroundColor: "#000000" }}
                   className="h-full w-full object-cover object-center bg-black"
                 />
@@ -181,6 +197,8 @@ export function Hero() {
       {slides.map((s, i) => {
         if (!s.videoFileUrl) return null;
         const isCurrentActive = i === current;
+        const isOutgoingActive = isTransitioning && i === prevSlide;
+        if (!isCurrentActive && !isOutgoingActive) return null;
 
         return (
           <video
@@ -193,7 +211,7 @@ export function Hero() {
             loop
             muted
             playsInline
-            preload={isCurrentActive ? "auto" : "none"}
+            preload={isCurrentActive ? "metadata" : "none"}
             style={{
               width: "100%",
               height: "100%",
@@ -259,19 +277,19 @@ export function Hero() {
           {description}
         </p>
 
-        {/* CTAs — compact buttons on mobile */}
+        {/* CTAs — accessible high-contrast buttons */}
         <div className="mt-3 sm:mt-7 flex flex-row items-center gap-2 w-full sm:w-auto">
           <Link
             to="/portfolio"
-            className="group flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 rounded-full border border-white/30 bg-white/10 px-3.5 py-2 sm:px-5 sm:py-3 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.12em] text-white backdrop-blur-sm transition hover:bg-white/20 text-center"
+            className="group flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 rounded-full border border-white/40 bg-white/10 px-3.5 py-2 sm:px-5 sm:py-3 text-[11px] sm:text-xs font-bold uppercase tracking-[0.12em] text-white backdrop-blur-sm transition hover:bg-white/20 text-center"
           >
             View Portfolio{" "}
             <ArrowRight className="h-3 w-3 sm:h-3.5 sm:w-3.5 transition-transform group-hover:translate-x-0.5" />
           </Link>
           <Link
             to="/contact"
-            className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 rounded-full bg-orange-500 px-3.5 py-2 sm:px-5 sm:py-3 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.12em] text-white transition hover:bg-orange-600 text-center"
-            style={{ boxShadow: "0 0 20px rgba(255,90,31,0.45)" }}
+            className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 rounded-full bg-[#C23800] hover:bg-[#A83000] px-3.5 py-2 sm:px-5 sm:py-3 text-[11px] sm:text-xs font-bold uppercase tracking-[0.12em] text-white transition text-center shadow-lg"
+            style={{ boxShadow: "0 0 20px rgba(194,56,0,0.5)" }}
           >
             Book an Order
           </Link>

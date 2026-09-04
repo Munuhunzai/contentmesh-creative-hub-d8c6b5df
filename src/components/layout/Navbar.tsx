@@ -38,10 +38,19 @@ export function Navbar() {
   const pathname = router.state.location.pathname;
 
   useEffect(() => {
-    const on = () => setScrolled(window.scrollY > 20);
-    on();
-    window.addEventListener("scroll", on, { passive: true });
-    return () => window.removeEventListener("scroll", on);
+    let ticking = false;
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setScrolled(window.scrollY > 20);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   useEffect(() => setOpen(false), [pathname]);

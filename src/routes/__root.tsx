@@ -124,12 +124,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         rel: "preload",
         as: "image",
-        href: "/Content_mesh_AI_video_production_agency.webp",
-        type: "image/webp",
+        href: "/Content_mesh_AI_video_production_agency.avif",
+        type: "image/avif",
       },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Inter:wght@400;500;600&display=swap",
       },
     ],
   }),

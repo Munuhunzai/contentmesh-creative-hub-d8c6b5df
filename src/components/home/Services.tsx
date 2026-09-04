@@ -285,7 +285,7 @@ export function SectionHeader({
   return (
     <div className="mx-auto max-w-2xl text-center">
       {eyebrow && (
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#FF5A1F]">{eyebrow}</p>
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#C23800]">{eyebrow}</p>
       )}
       <h2 className="mt-4 font-display text-3xl font-black tracking-tight text-foreground sm:text-4xl md:text-5xl">
         {title}

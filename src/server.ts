@@ -46,7 +46,7 @@ function isH3SwallowedErrorBody(body: string): boolean {
 
 const SECURITY_HEADERS: Record<string, string> = {
   "Content-Security-Policy":
-    "default-src 'self' https: data: blob:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https: blob:; style-src 'self' 'unsafe-inline' https:; font-src 'self' https: data:; img-src 'self' data: blob: https:; media-src 'self' https: blob:; connect-src 'self' https: wss: blob:; frame-src 'self' https:; frame-ancestors 'self' https://*.sanity.io https://*.sanity.studio;",
+    "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.sanity.io https://*.sanity.io https://*.sanity.studio; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://cdn.sanity.io https://*.sanity.io https://images.unsplash.com https://lh3.googleusercontent.com https://storage.googleapis.com; media-src 'self' data: blob: https://cdn.sanity.io https://*.sanity.io https://storage.googleapis.com; connect-src 'self' https://*.sanity.io https://api.sanity.io https://cdn.sanity.io https://api.deepseek.com https://fonts.googleapis.com https://fonts.gstatic.com wss://*.sanity.io; frame-src 'self' https://www.youtube.com https://player.vimeo.com https://drive.google.com https://maps.google.com; frame-ancestors 'self' https://*.sanity.io https://*.sanity.studio; base-uri 'self'; form-action 'self';",
   "Strict-Transport-Security": "max-age=31536000; includeSubDomains; preload",
   "X-Frame-Options": "SAMEORIGIN",
   "X-Content-Type-Options": "nosniff",

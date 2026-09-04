@@ -133,7 +133,7 @@ function About() {
                 className="aspect-[4/5] relative"
                 style={
                   m.photoUrl
-                    ? { background: `url(${optimizeSanityImage(m.photoUrl, 600, 70)}) center/cover` }
+                    ? { background: `url(${optimizeSanityImage(m.photoUrl, 400, 60)}) center/cover` }
                     : {
                         background: `linear-gradient(135deg, ${ACCENTS[i % ACCENTS.length]}, #0D4C92)`,
                       }
