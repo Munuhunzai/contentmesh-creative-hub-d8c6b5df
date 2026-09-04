@@ -6,15 +6,15 @@ export function Logo({ className = "" }: { className?: string }) {
       <picture className="flex items-center justify-start">
         <source srcSet="/Content_mesh_AI_video_production_agency.avif" type="image/avif" />
         <img
-          src="/Content_mesh_AI_video_production_agency.webp"
+          src="/Content_mesh_AI_video_production_agency.png"
           alt="ContentMesh"
-          width={180}
-          height={56}
+          width={160}
+          height={126}
           className="h-12 w-auto object-contain object-left sm:h-14"
           loading="eager"
           fetchPriority="high"
           decoding="sync"
-          style={{ maxWidth: "180px", aspectRatio: "180/56" }}
+          style={{ maxWidth: "160px", aspectRatio: "400/315" }}
         />
       </picture>
     </Link>
