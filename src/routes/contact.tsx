@@ -217,7 +217,7 @@ function Contact() {
               ) : (
                 <div
                   className="relative aspect-[4/3]"
-                  style={{ background: "linear-gradient(135deg,#0D4C92,#FF5A1F)" }}
+                  style={{ background: "linear-gradient(135deg,#0D4C92,#082F59)" }}
                 >
                   <div className="absolute inset-0 mesh-bg opacity-20" />
                   <div className="absolute inset-0 grid place-items-center">
