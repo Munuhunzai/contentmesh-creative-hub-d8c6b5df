@@ -71,7 +71,7 @@ export function Navbar() {
         <div className="flex w-full max-w-[1720px] items-center justify-between gap-4">
           {/* ── White glass pill: logo + desktop nav ── */}
           <div
-            className="relative overflow-hidden flex h-[56px] items-center gap-1 rounded-[24px] px-4 py-1.5"
+            className="relative overflow-hidden flex h-[56px] items-center justify-start gap-1 rounded-[24px] pl-3 sm:pl-4 pr-4 py-1.5"
             style={{
               background: "rgba(255,255,255,0.72)",
               backdropFilter: "blur(24px) saturate(180%)",
@@ -89,15 +89,15 @@ export function Navbar() {
               style={{ backgroundImage: "url('/paper-monochrome.webp')" }}
             />
 
-            {/* Logo */}
-            <div className="relative z-10 flex items-center">
+            {/* Logo — aligned flush left */}
+            <div className="relative z-10 flex items-center justify-start text-left shrink-0">
               <Logo />
             </div>
 
             {/* Desktop links — hidden on AI Tool page */}
             {!isAiTool && (
               <nav
-                className="ml-8 hidden items-center gap-1.5 lg:flex lg:ml-12"
+                className="ml-6 hidden items-center gap-1 lg:flex lg:ml-10"
                 aria-label="Main navigation"
               >
                 {NAV.map((n) => {
@@ -113,7 +113,7 @@ export function Navbar() {
                         <span
                           className="absolute inset-0 rounded-[36px]"
                           style={{
-                            borderLeft: "4px solid #FF5A1F",
+                            borderLeft: "4px solid #C23800",
                             background: "rgba(0,0,0,0.04)",
                             boxShadow:
                               "-4px 0 12px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.6)",
@@ -165,20 +165,20 @@ export function Navbar() {
 
           {/* ── Action Buttons Container: Place Order (Orange) + WhatsApp Contact Us (Green) — hidden on AI Tool page ── */}
           {!isAiTool && (
-            <div className="hidden items-center gap-1.5 sm:inline-flex">
-              {/* Place Order Button — Orange */}
+            <div className="hidden items-center gap-2 sm:inline-flex">
+              {/* Place Order Button — High-Contrast Vibrant Brand Orange */}
               <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
                 <Link
                   to="/contact"
                   aria-label="Place an Order"
-                  className="inline-flex h-[56px] items-center gap-2 rounded-[20px] bg-[#FF5A1F] px-6 text-sm font-bold text-white shadow-none transition-transform"
+                  className="inline-flex h-[56px] items-center gap-2 rounded-[20px] bg-[#C23800] hover:bg-[#A83000] px-6 text-sm font-bold text-white border border-white/20 shadow-[0_4px_16px_rgba(194,56,0,0.35)] transition-all"
                 >
                   <Mail className="h-4 w-4 text-white" />
                   Place Order
                 </Link>
               </motion.div>
 
-              {/* WhatsApp Contact Us button — Green */}
+              {/* WhatsApp Contact Us button — High-Contrast Deep WhatsApp Green */}
               <motion.a
                 href={waHref}
                 target="_blank"
@@ -186,7 +186,7 @@ export function Navbar() {
                 aria-label="Contact us on WhatsApp"
                 whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.97 }}
-                className="inline-flex h-[56px] items-center gap-2.5 rounded-[20px] bg-[#25D366] px-6 text-sm font-bold text-white shadow-none"
+                className="inline-flex h-[56px] items-center gap-2.5 rounded-[20px] bg-[#0E7A3E] hover:bg-[#0A6332] px-6 text-sm font-bold text-white border border-white/20 shadow-[0_4px_16px_rgba(14,122,62,0.35)] transition-all"
               >
                 <WhatsAppIcon size={19} />
                 Contact Us
@@ -211,7 +211,7 @@ export function Navbar() {
             {/* Glow accent */}
             <div
               className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 h-56 w-56 rounded-full opacity-20"
-              style={{ background: "radial-gradient(circle, #FF5A1F 0%, transparent 70%)" }}
+              style={{ background: "radial-gradient(circle, #C23800 0%, transparent 70%)" }}
             />
 
             <nav className="flex flex-1 flex-col items-center justify-center gap-1 px-6">
@@ -229,14 +229,18 @@ export function Navbar() {
                   >
                     <Link
                       to={n.to}
-                      className="flex w-full items-center justify-between rounded-2xl px-6 py-4 transition-colors"
+                      className="flex items-center justify-between rounded-2xl px-5 py-3.5 text-lg font-medium transition-colors"
                       style={{
-                        background: active ? "rgba(255,90,31,0.12)" : "transparent",
-                        border: `1px solid ${active ? "rgba(255,90,31,0.25)" : "transparent"}`,
-                        color: active ? "#FF7A3F" : "rgba(255,255,255,0.65)",
+                        color: active ? "#fff" : "rgba(255,255,255,0.65)",
+                        background: active ? "rgba(255,255,255,0.08)" : "transparent",
                       }}
                     >
-                      <span className="text-lg font-semibold tracking-tight">{n.label}</span>
+                      <span className="flex items-center gap-3">
+                        {active && (
+                          <span className="h-2 w-2 rounded-full" style={{ background: "#C23800" }} />
+                        )}
+                        {n.label}
+                      </span>
                       <ArrowUpRight className="h-4 w-4 opacity-40" />
                     </Link>
                   </motion.div>
@@ -257,7 +261,7 @@ export function Navbar() {
               >
                 <Link
                   to="/contact"
-                  className="flex w-full items-center justify-center gap-2 rounded-2xl bg-[#FF5A1F] py-3.5 text-base font-bold text-white shadow-none"
+                  className="flex w-full items-center justify-center gap-2 rounded-2xl bg-[#C23800] hover:bg-[#A83000] py-3.5 text-base font-bold text-white shadow-lg border border-white/20"
                 >
                   <Mail className="h-5 w-5 text-white" />
                   Place Order
@@ -268,7 +272,7 @@ export function Navbar() {
                   href={waHref}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex w-full items-center justify-center gap-2.5 rounded-2xl bg-[#25D366] py-3.5 text-base font-bold text-white shadow-none"
+                  className="flex w-full items-center justify-center gap-2.5 rounded-2xl bg-[#0E7A3E] hover:bg-[#0A6332] py-3.5 text-base font-bold text-white shadow-lg border border-white/20"
                 >
                   <WhatsAppIcon size={20} />
                   Contact Us on WhatsApp
