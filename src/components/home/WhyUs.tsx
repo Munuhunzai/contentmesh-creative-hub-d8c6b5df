@@ -8,21 +8,25 @@ const FEATURES = [
     icon: TrendingDown,
     title: "Unmatched Value & 70%+ Savings",
     desc: "Experience studio-grade commercial quality without traditional agency markup — high-ROI video production with zero hidden fees.",
+    accent: "blue",
   },
   {
     icon: Zap,
     title: "3–5 Day Lightning Turnaround",
     desc: "Don't let 6-week production schedules stall your marketing — ship high-converting video ads, reels, and product explainers in 72 hours.",
+    accent: "orange",
   },
   {
     icon: Award,
     title: "Certified AI Directors & Editors",
     desc: "Our team combines cutting-edge AI generation models with senior filmmakers, motion designers, and sound engineers for flawless execution.",
+    accent: "blue",
   },
   {
     icon: ShieldCheck,
     title: "100% Quality & Revisions Guarantee",
     desc: "Prioritize creative excellence with guaranteed brand safety, licensed commercial usage rights, and multi-round revision passes on every campaign.",
+    accent: "orange",
   },
 ];
 
@@ -98,6 +102,7 @@ export function WhyUs() {
             <div className="lg:col-span-7 space-y-4">
               {FEATURES.map((item, idx) => {
                 const Icon = item.icon;
+                const isBlue = item.accent === "blue";
                 return (
                   <motion.div
                     key={item.title}
@@ -105,11 +110,25 @@ export function WhyUs() {
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: idx * 0.08, duration: 0.5 }}
-                    className="group relative overflow-hidden rounded-2xl bg-white/80 p-6 sm:p-7 border border-slate-200/70 shadow-sm backdrop-blur-md transition-all hover:bg-white hover:border-[#FF5A1F]/30 hover:shadow-md"
+                    className={`group relative overflow-hidden rounded-2xl p-6 sm:p-7 border shadow-sm backdrop-blur-md transition-all hover:-translate-y-0.5 hover:shadow-md ${
+                      isBlue
+                        ? "bg-[#0E447F]/[0.035] border-[#0E447F]/15 hover:border-[#0E447F]/35"
+                        : "bg-[#FF5A1F]/[0.035] border-[#FF5A1F]/15 hover:border-[#FF5A1F]/35"
+                    }`}
                   >
+                    <div
+                      aria-hidden
+                      className={`absolute inset-y-0 left-0 w-1 ${isBlue ? "bg-[#0E447F]" : "bg-[#FF5A1F]"}`}
+                    />
                     <div className="flex items-start gap-4">
                       {/* Icon Badge */}
-                      <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#FF5A1F]/10 text-[#FF5A1F] group-hover:bg-[#FF5A1F] group-hover:text-white transition-colors">
+                      <div
+                        className={`grid h-10 w-10 shrink-0 place-items-center rounded-xl transition-colors ${
+                          isBlue
+                            ? "bg-[#0E447F]/10 text-[#0E447F] group-hover:bg-[#0E447F] group-hover:text-white"
+                            : "bg-[#FF5A1F]/10 text-[#C23800] group-hover:bg-[#C23800] group-hover:text-white"
+                        }`}
+                      >
                         <Icon className="h-5 w-5" />
                       </div>
 
