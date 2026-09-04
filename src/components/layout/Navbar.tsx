@@ -163,7 +163,7 @@ export function Navbar() {
             </button>
           </div>
 
-          {/* ── Action Buttons Container: Place Order (Orange) + WhatsApp Contact Us (Green) — hidden on AI Tool page ── */}
+          {/* ── Action Buttons Container: Place Order (Orange) + WhatsApp Contact Us (Brand Blue) — hidden on AI Tool page ── */}
           {!isAiTool && (
             <div className="hidden items-center gap-2 sm:inline-flex">
               {/* Place Order Button — High-Contrast Vibrant Brand Orange */}
@@ -178,7 +178,7 @@ export function Navbar() {
                 </Link>
               </motion.div>
 
-              {/* WhatsApp Contact Us button — High-Contrast Deep WhatsApp Green */}
+              {/* WhatsApp Contact Us button — High-Contrast Logo Blue */}
               <motion.a
                 href={waHref}
                 target="_blank"
@@ -186,7 +186,7 @@ export function Navbar() {
                 aria-label="Contact us on WhatsApp"
                 whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.97 }}
-                className="inline-flex h-[56px] items-center gap-2.5 rounded-[20px] bg-[#0E7A3E] hover:bg-[#0A6332] px-6 text-sm font-bold text-white border border-white/20 shadow-[0_4px_16px_rgba(14,122,62,0.35)] transition-all"
+                className="inline-flex h-[56px] items-center gap-2.5 rounded-[20px] bg-[#0E447F] hover:bg-[#082F59] px-6 text-sm font-bold text-white border border-white/20 shadow-[0_4px_16px_rgba(14,68,127,0.38)] transition-all"
               >
                 <WhatsAppIcon size={19} />
                 Contact Us
@@ -267,12 +267,12 @@ export function Navbar() {
                   Place Order
                 </Link>
 
-                {/* WhatsApp Contact Us (Green) CTA */}
+                {/* WhatsApp Contact Us (Brand Blue) CTA */}
                 <a
                   href={waHref}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex w-full items-center justify-center gap-2.5 rounded-2xl bg-[#0E7A3E] hover:bg-[#0A6332] py-3.5 text-base font-bold text-white shadow-lg border border-white/20"
+                  className="flex w-full items-center justify-center gap-2.5 rounded-2xl bg-[#0E447F] hover:bg-[#082F59] py-3.5 text-base font-bold text-white shadow-[0_8px_24px_rgba(14,68,127,0.38)] border border-white/20 transition-colors"
                 >
                   <WhatsAppIcon size={20} />
                   Contact Us on WhatsApp
