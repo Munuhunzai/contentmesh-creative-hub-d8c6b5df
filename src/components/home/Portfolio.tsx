@@ -30,7 +30,7 @@ const FALLBACK_ITEMS: Item[] = [
 ];
 
 const GRADIENTS = [
-  "linear-gradient(135deg,#FF5A1F,#0D4C92)",
+  "linear-gradient(135deg,#FF5A1F,#C23800)",
   "linear-gradient(135deg,#0D4C92,#0a2450)",
   "linear-gradient(135deg,#F6C244,#FF5A1F)",
   "linear-gradient(135deg,#0D4C92,#5a7fbf)",
@@ -313,7 +313,7 @@ export function Portfolio() {
                 ) : (
                   <div
                     className="h-full w-full max-h-[50dvh] sm:max-h-[55vh]"
-                    style={{ background: "linear-gradient(135deg,#0D4C92,#FF5A1F)" }}
+                    style={{ background: "linear-gradient(135deg,#0D4C92,#082F59)" }}
                   >
                     <div className="h-full w-full mesh-bg opacity-20" />
                   </div>
