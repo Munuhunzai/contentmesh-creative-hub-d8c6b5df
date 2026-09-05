@@ -285,10 +285,10 @@ export function SectionHeader({
   return (
     <div className="mx-auto max-w-2xl text-center">
       {eyebrow && (
-        <p className="paper-tag text-xs font-bold uppercase tracking-[0.2em]">{eyebrow}</p>
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#C23800]">{eyebrow}</p>
       )}
-      <h2 className="mt-5 font-display text-3xl font-black tracking-tight text-foreground sm:text-4xl md:text-5xl">
-        <span className="folded-heading">{title}</span>
+      <h2 className="mt-4 font-display text-3xl font-black tracking-tight text-foreground sm:text-4xl md:text-5xl">
+        {title}
       </h2>
       {desc && (
         <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">{desc}</p>
@@ -423,7 +423,7 @@ export function Services() {
   };
 
   return (
-    <section className="paper-section relative py-24 sm:py-32 overflow-hidden" id="services">
+    <section className="relative py-24 sm:py-32 overflow-hidden" id="services">
       <div className="mx-auto max-w-7xl px-6">
         {/* ── Centered Section Header ─────────────────────────────────────────── */}
         <SectionHeader
@@ -467,7 +467,7 @@ export function Services() {
             >
               {/* Vibrant Circular Card Badge */}
               <div
-                className="paper-cut relative flex h-32 w-32 items-center justify-center shadow-lg transition-all duration-300 group-hover:shadow-2xl overflow-hidden"
+                className="relative flex h-32 w-32 items-center justify-center rounded-full shadow-lg transition-all duration-300 group-hover:shadow-2xl overflow-hidden"
                 style={{
                   backgroundColor: item.color,
                   boxShadow: `0 16px 32px -8px ${item.color}88`,
@@ -491,7 +491,7 @@ export function Services() {
                 )}
 
                 {/* Hover ring pulse */}
-                <div className="absolute inset-1 border border-white/60 opacity-0 transition-opacity group-hover:opacity-100 [clip-path:inherit]" />
+                <div className="absolute inset-0 rounded-full border-2 border-white/50 opacity-0 transition-opacity group-hover:opacity-100" />
               </div>
 
               {/* Service Category Title */}
