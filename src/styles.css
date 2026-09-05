@@ -208,6 +208,79 @@
   box-shadow: 0 14px 30px rgba(0, 0, 0, 0.1);
 }
 
+/* -------- Navbar micro-interactions -------- */
+.nav-link-hover {
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 36px;
+}
+.nav-link-hover::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  z-index: 0;
+  border-radius: inherit;
+  background: linear-gradient(105deg, transparent 25%, rgba(14, 68, 127, 0.08) 50%, transparent 75%);
+  transform: translateX(-115%);
+  transition: transform 650ms cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+.nav-link-hover::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 4px;
+  width: 4px;
+  height: 2px;
+  border-radius: 999px;
+  background: #0e447f;
+  opacity: 0;
+  transform: translateX(-50%);
+  transition: width 350ms cubic-bezier(0.16, 1, 0.3, 1), opacity 200ms;
+}
+.nav-link-hover:hover::before {
+  transform: translateX(115%);
+}
+.nav-link-hover:hover::after {
+  width: 22px;
+  opacity: 1;
+}
+
+.nav-cta-glint {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+.nav-cta-glint::before {
+  content: "";
+  position: absolute;
+  top: -60%;
+  bottom: -60%;
+  left: -45%;
+  width: 32%;
+  z-index: 1;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.38), transparent);
+  transform: rotate(14deg) translateX(0);
+  transition: transform 720ms cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+.nav-cta-glint::after {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  z-index: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28);
+  pointer-events: none;
+}
+.nav-cta-glint:hover::before {
+  transform: rotate(14deg) translateX(520%);
+}
+.nav-cta-glint:hover {
+  transform: translateY(-2px);
+  filter: saturate(1.08) brightness(1.04);
+}
+
 @utility mesh-bg {
   background-image:
     radial-gradient(
@@ -281,6 +354,10 @@
   .orb-b,
   .orb-c {
     animation: none;
+  }
+  .nav-link-hover::before,
+  .nav-cta-glint::before {
+    transition: none;
   }
 }
 
