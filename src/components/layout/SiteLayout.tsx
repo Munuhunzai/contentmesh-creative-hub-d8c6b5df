@@ -40,7 +40,7 @@ export function SiteLayout({ children, heroSlot, noTopPadding }: SiteLayoutProps
   }, []);
 
   return (
-    <div className="folded-paper-site relative min-h-dvh w-full max-w-full overflow-x-hidden">
+    <div className="relative min-h-dvh w-full max-w-full overflow-x-hidden">
       <AmbientBackground />
       <Navbar />
       {/* Hero renders here — behind the fixed navbar, no pt-28 */}
