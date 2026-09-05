@@ -96,39 +96,48 @@ export function Navbar() {
 
             {/* Desktop links — hidden on AI Tool page */}
             {!isAiTool && (
-              <nav
-                className="ml-6 hidden items-center gap-1 lg:flex lg:ml-10"
-                aria-label="Main navigation"
-              >
-                {NAV.map((n) => {
-                  const active = pathname.startsWith(n.to);
-                  return (
-                    <Link
-                      key={n.to}
-                      to={n.to}
-                      className={
-                        active
-                          ? "relative px-5 py-2 text-sm font-medium transition-colors"
-                          : "nav-link-hover relative px-5 py-2 text-sm font-medium transition-colors duration-300 hover:text-[#0E447F]"
-                      }
-                      style={{ color: active ? "#111" : "#666" }}
-                    >
-                      {active && (
-                        <span
-                          className="absolute inset-0 rounded-[36px]"
-                          style={{
-                            borderLeft: "4px solid #C23800",
-                            background: "rgba(0,0,0,0.04)",
-                            boxShadow:
-                              "-4px 0 12px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.6)",
-                          }}
-                        />
-                      )}
-                      <span className="relative z-10">{n.label}</span>
-                    </Link>
-                  );
-                })}
-              </nav>
+              <LayoutGroup id="desktop-navbar">
+                <nav
+                  className="ml-6 hidden items-center gap-1 lg:flex lg:ml-10"
+                  aria-label="Main navigation"
+                >
+                  {NAV.map((n) => {
+                    const active = pathname.startsWith(n.to);
+                    return (
+                      <Link
+                        key={n.to}
+                        to={n.to}
+                        className={
+                          active
+                            ? "relative px-5 py-2 text-sm font-medium transition-colors"
+                            : "nav-link-hover relative px-5 py-2 text-sm font-medium transition-colors duration-300 hover:text-[#0E447F]"
+                        }
+                        style={{ color: active ? "#111" : "#666" }}
+                      >
+                        {active && (
+                          <motion.span
+                            layoutId="navbar-active-pill"
+                            transition={{
+                              type: "spring",
+                              stiffness: 420,
+                              damping: 34,
+                              mass: 0.8,
+                            }}
+                            className="absolute inset-0 rounded-[36px]"
+                            style={{
+                              borderLeft: "4px solid #C23800",
+                              background: "rgba(0,0,0,0.04)",
+                              boxShadow:
+                                "-4px 0 12px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.6)",
+                            }}
+                          />
+                        )}
+                        <span className="relative z-10">{n.label}</span>
+                      </Link>
+                    );
+                  })}
+                </nav>
+              </LayoutGroup>
             )}
 
             {/* Mobile hamburger (inside pill) */}
