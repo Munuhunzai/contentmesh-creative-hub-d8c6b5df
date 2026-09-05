@@ -64,7 +64,7 @@ export function Testimonials() {
   const [activeIndex, setActiveIndex] = useState(1);
 
   return (
-    <section className="paper-section relative py-20 sm:py-28" id="testimonials">
+    <section className="relative py-20 sm:py-28" id="testimonials">
       <div className="mx-auto max-w-7xl px-6">
         {/* ── Section Title ─────────────────────────────────────────────────── */}
         <div className="text-center">
@@ -82,10 +82,10 @@ export function Testimonials() {
                 key={item._id || idx}
                 whileHover={{ y: -6 }}
                 onClick={() => setActiveIndex(idx)}
-                className="paper-card group relative flex flex-col justify-between cursor-pointer"
+                className="group relative flex flex-col justify-between overflow-hidden rounded-[1.75rem] border border-border/50 bg-card shadow-sm transition-all duration-300 hover:shadow-xl cursor-pointer"
               >
                 {/* ── Top Half: Gray Container with Avatar & Author Info ───── */}
-                <div className="flex items-center gap-4 bg-[#0E447F]/[0.055] p-6 pt-7">
+                <div className="flex items-center gap-4 bg-secondary/50 p-6 pt-7 rounded-t-[1.75rem]">
                   {/* Square Avatar Portrait */}
                   <div className="h-20 w-20 shrink-0 overflow-hidden rounded-2xl border border-border/40 shadow-sm">
                     {item.avatarUrl ? (
@@ -142,7 +142,7 @@ export function Testimonials() {
                 </div>
 
                 {/* ── Bottom Half: White Quote Container ──────────────────── */}
-                <div className="flex flex-1 flex-col justify-center bg-transparent p-6 pt-5 text-center">
+                <div className="flex flex-1 flex-col justify-center bg-card p-6 pt-5 text-center rounded-b-[1.75rem]">
                   <p className="text-xs leading-relaxed text-muted-foreground sm:text-sm">
                     {item.quote}
                   </p>

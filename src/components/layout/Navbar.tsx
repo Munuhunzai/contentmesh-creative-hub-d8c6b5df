@@ -71,15 +71,15 @@ export function Navbar() {
         <div className="flex w-full max-w-[1720px] items-center justify-between gap-4">
           {/* ── White glass pill: logo + desktop nav ── */}
           <div
-            className="paper-surface paper-cut relative overflow-hidden flex h-[60px] items-center justify-start gap-1 pl-3 sm:pl-4 pr-4 py-1.5"
+            className="relative overflow-hidden flex h-[56px] items-center justify-start gap-1 rounded-[24px] pl-3 sm:pl-4 pr-4 py-1.5"
             style={{
-              background: "rgba(255,253,248,0.90)",
+              background: "rgba(255,255,255,0.72)",
               backdropFilter: "blur(24px) saturate(180%)",
               WebkitBackdropFilter: "blur(24px) saturate(180%)",
               boxShadow: scrolled
                 ? "0 8px 32px rgba(0,0,0,0.18), 0 1px 0 rgba(255,255,255,0.9) inset"
                 : "0 4px 20px rgba(0,0,0,0.12), 0 1px 0 rgba(255,255,255,0.9) inset",
-              border: "1px solid rgba(49,42,34,0.12)",
+              border: "1px solid rgba(255,255,255,0.85)",
               transition: "box-shadow 0.4s",
             }}
           >

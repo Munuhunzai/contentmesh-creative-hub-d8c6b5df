@@ -20,7 +20,7 @@ export function Stats() {
   const stats = data.stats && data.stats.length ? data.stats : FALLBACK.stats!;
   return (
     <section className="mx-auto max-w-7xl px-6 py-16">
-      <div className="paper-cut relative overflow-hidden gradient-brand-blue p-8 shadow-ink sm:p-12">
+      <div className="relative overflow-hidden rounded-[2rem] gradient-brand-blue p-8 shadow-ink sm:p-12">
         <div className="pointer-events-none absolute -right-12 -top-20 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-24 left-1/4 h-56 w-56 rounded-full bg-[#3D7FBE]/30 blur-3xl" />
         <div className="relative grid grid-cols-2 gap-8 text-white sm:grid-cols-4">

@@ -65,7 +65,7 @@ function StepCard({ step, index }: { step: (typeof STEPS)[0]; index: number }) {
 
       {/* Card body */}
       <div
-        className="paper-card relative mt-4 flex-1 p-6 group-hover:-translate-y-2"
+        className="relative mt-4 flex-1 overflow-hidden rounded-[1.75rem] p-6 transition-transform duration-500 group-hover:-translate-y-2"
         style={{
           background: "rgba(255,255,255,0.80)",
           border: "1px solid rgba(0,0,0,0.07)",
@@ -96,9 +96,9 @@ function StepCard({ step, index }: { step: (typeof STEPS)[0]; index: number }) {
 export function Process() {
   return (
     <section
-      className="paper-section relative overflow-hidden py-28 sm:py-36"
+      className="relative overflow-hidden py-28 sm:py-36"
       id="process"
-      style={{ background: "linear-gradient(160deg, #f3eee5 0%, #fffdf8 50%, #efe9df 100%)" }}
+      style={{ background: "linear-gradient(160deg, #f8f7f4 0%, #ffffff 50%, #f4f3ef 100%)" }}
     >
       {/* ── Radial glow blobs ── */}
       <div
