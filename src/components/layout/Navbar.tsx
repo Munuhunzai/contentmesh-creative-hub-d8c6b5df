@@ -106,7 +106,7 @@ export function Navbar() {
                     <Link
                       key={n.to}
                       to={n.to}
-                      className="relative px-5 py-2 text-sm font-medium transition-colors"
+                      className="nav-link-hover relative px-5 py-2 text-sm font-medium transition-colors duration-300 hover:text-[#0E447F]"
                       style={{ color: active ? "#111" : "#666" }}
                     >
                       {active && (
@@ -171,7 +171,7 @@ export function Navbar() {
                 <Link
                   to="/contact"
                   aria-label="Place an Order"
-                  className="inline-flex h-[56px] items-center gap-2 rounded-[20px] bg-[#C23800] hover:bg-[#A83000] px-6 text-sm font-bold text-white border border-white/20 shadow-[0_4px_16px_rgba(194,56,0,0.35)] transition-all"
+                  className="nav-cta-glint inline-flex h-[56px] items-center gap-2 rounded-[20px] bg-[#C23800] hover:bg-[#A83000] px-6 text-sm font-bold text-white border border-white/20 shadow-[0_4px_16px_rgba(194,56,0,0.35)] hover:shadow-[0_10px_28px_rgba(194,56,0,0.42)] transition-all duration-300"
                 >
                   <Mail className="h-4 w-4 text-white" />
                   Place Order
@@ -186,7 +186,7 @@ export function Navbar() {
                 aria-label="Contact us on WhatsApp"
                 whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.97 }}
-                className="inline-flex h-[56px] items-center gap-2.5 rounded-[20px] bg-[#0E447F] hover:bg-[#082F59] px-6 text-sm font-bold text-white border border-white/20 shadow-[0_4px_16px_rgba(14,68,127,0.38)] transition-all"
+                className="nav-cta-glint inline-flex h-[56px] items-center gap-2.5 rounded-[20px] bg-[#0E447F] hover:bg-[#082F59] px-6 text-sm font-bold text-white border border-white/20 shadow-[0_4px_16px_rgba(14,68,127,0.38)] hover:shadow-[0_10px_28px_rgba(14,68,127,0.48)] transition-all duration-300"
               >
                 <WhatsAppIcon size={19} />
                 Contact Us
@@ -261,7 +261,7 @@ export function Navbar() {
               >
                 <Link
                   to="/contact"
-                  className="flex w-full items-center justify-center gap-2 rounded-2xl bg-[#C23800] hover:bg-[#A83000] py-3.5 text-base font-bold text-white shadow-lg border border-white/20"
+                  className="nav-cta-glint flex w-full items-center justify-center gap-2 rounded-2xl bg-[#C23800] hover:bg-[#A83000] py-3.5 text-base font-bold text-white shadow-lg border border-white/20 transition-all duration-300"
                 >
                   <Mail className="h-5 w-5 text-white" />
                   Place Order
@@ -272,7 +272,7 @@ export function Navbar() {
                   href={waHref}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex w-full items-center justify-center gap-2.5 rounded-2xl bg-[#0E447F] hover:bg-[#082F59] py-3.5 text-base font-bold text-white shadow-[0_8px_24px_rgba(14,68,127,0.38)] border border-white/20 transition-colors"
+                  className="nav-cta-glint flex w-full items-center justify-center gap-2.5 rounded-2xl bg-[#0E447F] hover:bg-[#082F59] py-3.5 text-base font-bold text-white shadow-[0_8px_24px_rgba(14,68,127,0.38)] border border-white/20 transition-all duration-300"
                 >
                   <WhatsAppIcon size={20} />
                   Contact Us on WhatsApp
