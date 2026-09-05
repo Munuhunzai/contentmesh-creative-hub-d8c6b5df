@@ -267,7 +267,7 @@ function BlogPost() {
         </div>
 
         {/* ── End of Blog CTA Banner ── */}
-        <div className="paper-cut mt-14 relative overflow-hidden bg-gradient-to-br from-[#040816] via-[#0E447F] to-[#082F59] p-6 sm:p-8 text-white shadow-2xl">
+        <div className="mt-14 relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#040816] via-[#0E447F] to-[#082F59] p-6 sm:p-8 text-white shadow-2xl">
           <div className="absolute inset-0 mesh-bg opacity-20 pointer-events-none" />
           <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
             <div className="max-w-xl">
