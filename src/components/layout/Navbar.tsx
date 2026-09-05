@@ -106,7 +106,11 @@ export function Navbar() {
                     <Link
                       key={n.to}
                       to={n.to}
-                      className="nav-link-hover relative px-5 py-2 text-sm font-medium transition-colors duration-300 hover:text-[#0E447F]"
+                      className={
+                        active
+                          ? "relative px-5 py-2 text-sm font-medium transition-colors"
+                          : "nav-link-hover relative px-5 py-2 text-sm font-medium transition-colors duration-300 hover:text-[#0E447F]"
+                      }
                       style={{ color: active ? "#111" : "#666" }}
                     >
                       {active && (
