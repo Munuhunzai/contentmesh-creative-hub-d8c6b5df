@@ -74,7 +74,7 @@ export function FAQ_() {
   const items = faqs && faqs.length > 0 ? faqs : FALLBACK;
 
   return (
-    <section className="paper-section mx-auto max-w-4xl px-6 py-24 sm:py-32" id="faq">
+    <section className="mx-auto max-w-4xl px-6 py-24 sm:py-32" id="faq">
       <SectionHeader
         eyebrow="FAQ & Insights"
         title="Frequently Asked Questions About AI Video Production Services"
@@ -85,7 +85,7 @@ export function FAQ_() {
           <AccordionItem
             key={f._id}
             value={f._id}
-            className="paper-card px-6"
+            className="glass glass-reflect overflow-hidden rounded-2xl border border-border/60 px-6 shadow-glass"
           >
             <AccordionTrigger className="py-5 text-left font-display text-base font-semibold hover:no-underline sm:text-lg">
               {f.question}
