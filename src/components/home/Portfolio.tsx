@@ -140,7 +140,7 @@ export function Portfolio() {
       : items.filter((p) => p.category === cat);
 
   return (
-    <section className="mx-auto max-w-7xl px-6 py-24" id="portfolio">
+    <section className="paper-section mx-auto max-w-7xl px-6 py-24" id="portfolio">
       <SectionHeader
         eyebrow="Portfolio"
         title="Featured AI Video Portfolio: High-Converting Campaigns & Commercials"
@@ -182,7 +182,7 @@ export function Portfolio() {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ duration: 0.35 }}
-                className={`group relative overflow-hidden rounded-3xl text-left ${span}`}
+                className={`paper-cut group relative overflow-hidden text-left shadow-[0_16px_34px_-22px_rgba(32,25,18,.7)] ${span}`}
                 style={{
                   background: p.thumbnailUrl
                     ? `url(${optimizeSanityImage(p.thumbnailUrl, 480, 65)}) center/cover`

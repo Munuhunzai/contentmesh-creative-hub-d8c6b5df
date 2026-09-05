@@ -183,7 +183,7 @@ function Blog() {
             <Link
               to="/blog/$slug"
               params={{ slug: featured.slug || "state-of-ai-video-2026" }}
-              className="group mb-14 block overflow-hidden rounded-[2.5rem] border border-border/80 bg-card shadow-xl transition-all hover:shadow-2xl hover:border-primary/40 cursor-pointer"
+              className="paper-surface paper-fold-corner group mb-14 block overflow-hidden rounded-[3px_38px_4px_28px] transition-all cursor-pointer"
             >
               <div className="grid gap-0 lg:grid-cols-12">
                 {/* Media preview */}
@@ -286,7 +286,7 @@ function Blog() {
                 <Link
                   to="/blog/$slug"
                   params={{ slug: p.slug || "state-of-ai-video-2026" }}
-                  className="group relative flex flex-col h-full overflow-hidden rounded-[2rem] border border-border/70 bg-card p-6 shadow-sm transition-all hover:-translate-y-1.5 hover:border-primary/30 hover:shadow-xl cursor-pointer"
+                  className="paper-card group relative flex flex-col h-full p-6 cursor-pointer"
                 >
                   {/* Image / Gradient preview */}
                   <div

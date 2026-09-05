@@ -148,7 +148,7 @@ export function Hero({ initialData }: HeroProps = {}) {
 
   return (
     <section
-      className="hero-video-container relative w-full overflow-hidden bg-black aspect-[16/9] min-h-[340px] max-h-[65vh] sm:aspect-none sm:max-h-none sm:h-[100dvh] isolate"
+      className="hero-folded-edge hero-video-container relative w-full overflow-hidden bg-black aspect-[16/9] min-h-[340px] max-h-[65vh] sm:aspect-none sm:max-h-none sm:h-[100dvh] isolate"
       style={{ backgroundColor: "#000000" }}
       aria-label="Hero"
     >
@@ -281,14 +281,14 @@ export function Hero({ initialData }: HeroProps = {}) {
         <div className="mt-3 sm:mt-7 flex flex-row items-center gap-2 w-full sm:w-auto">
           <Link
             to="/portfolio"
-            className="group flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 rounded-full border border-white/40 bg-white/10 px-3.5 py-2 sm:px-5 sm:py-3 text-[11px] sm:text-xs font-bold uppercase tracking-[0.12em] text-white backdrop-blur-sm transition hover:bg-white/20 text-center"
+            className="paper-button group flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 border border-white/40 bg-white/10 px-3.5 py-2 sm:px-5 sm:py-3 text-[11px] sm:text-xs font-bold uppercase tracking-[0.12em] text-white backdrop-blur-sm transition hover:bg-white/20 text-center"
           >
             View Portfolio{" "}
             <ArrowRight className="h-3 w-3 sm:h-3.5 sm:w-3.5 transition-transform group-hover:translate-x-0.5" />
           </Link>
           <Link
             to="/contact"
-            className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 rounded-full bg-[#C23800] hover:bg-[#A83000] px-3.5 py-2 sm:px-5 sm:py-3 text-[11px] sm:text-xs font-bold uppercase tracking-[0.12em] text-white transition text-center shadow-lg"
+            className="paper-button flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 bg-[#C23800] hover:bg-[#A83000] px-3.5 py-2 sm:px-5 sm:py-3 text-[11px] sm:text-xs font-bold uppercase tracking-[0.12em] text-white transition text-center shadow-lg"
             style={{ boxShadow: "0 0 20px rgba(194,56,0,0.5)" }}
           >
             Book an Order

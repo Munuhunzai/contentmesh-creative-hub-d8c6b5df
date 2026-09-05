@@ -76,10 +76,10 @@ function About() {
       />
 
       <section className="mx-auto max-w-5xl px-6">
-        <div className="rounded-[2rem] border border-border bg-card p-8 sm:p-12">
+        <div className="paper-surface paper-fold-corner rounded-[3px_34px_4px_26px] p-8 sm:p-12">
           <p className="font-display text-2xl leading-snug tracking-tight sm:text-3xl">
             ContentMesh started as a bet:{" "}
-            <span className="gradient-text">
+            <span className="folded-heading text-[#0E447F]">
               that AI + real craft would beat traditional agency pipelines
             </span>{" "}
             — in speed, in quality, and in cost. Two years later, we produce work for hundreds of
@@ -97,7 +97,7 @@ function About() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.06 }}
-              className="rounded-3xl border border-border bg-card p-6"
+              className="paper-card p-6"
             >
               <div className="grid h-10 w-10 place-items-center rounded-xl gradient-brand text-white">
                 <p.icon className="h-5 w-5" />
@@ -127,7 +127,7 @@ function About() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.06 }}
-              className="group overflow-hidden rounded-3xl border border-border bg-card"
+              className="paper-card group"
             >
               <div
                 className="aspect-[4/5] relative"

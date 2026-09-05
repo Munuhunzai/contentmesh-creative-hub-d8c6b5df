@@ -118,7 +118,7 @@ function Contact() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             onSubmit={onSubmit}
-            className="rounded-[2rem] border border-border bg-card p-6 shadow-soft sm:p-10"
+            className="paper-surface paper-fold-corner rounded-[3px_34px_4px_26px] p-6 sm:p-10"
           >
             <div className="grid gap-4 sm:grid-cols-2">
               <Field label="Name" name="name" placeholder="Ava Morgan" error={errors.name} />
@@ -206,7 +206,7 @@ function Contact() {
             {c.hours && (
               <InfoCard icon={<Clock className="h-4 w-4" />} title="Hours" value={c.hours} />
             )}
-            <div className="overflow-hidden rounded-3xl border border-border">
+            <div className="paper-cut overflow-hidden border border-border shadow-lg">
               {c.mapEmbedUrl ? (
                 <iframe
                   title="Studio location"
@@ -297,7 +297,7 @@ function Select({
 
 function InfoCard({ icon, title, value }: { icon: React.ReactNode; title: string; value: string }) {
   return (
-    <div className="flex items-start gap-3 rounded-2xl border border-border bg-card p-5">
+    <div className="paper-card flex items-start gap-3 p-5">
       <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl gradient-brand text-white">
         {icon}
       </span>

@@ -58,6 +58,11 @@
   --ink: oklch(0.17 0 0);
   --cream: oklch(0.985 0.003 90);
   --mesh: oklch(0.97 0.003 260);
+  --paper: #fffdf8;
+  --paper-warm: #f6f0e6;
+  --paper-line: rgba(49, 42, 34, 0.13);
+  --paper-blue: #0e447f;
+  --paper-orange: #c23800;
 
   --background: oklch(0.99 0.002 90);
   --foreground: oklch(0.17 0 0);
@@ -106,6 +111,127 @@
 
 @utility gradient-brand-blue {
   background-image: linear-gradient(135deg, #0e447f 0%, #082f59 100%);
+}
+
+/* -------- Folded paper art direction -------- */
+@utility paper-surface {
+  position: relative;
+  isolation: isolate;
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(118deg, rgba(255,255,255,.88), transparent 42%),
+    url('/paper-monochrome.webp');
+  background-size: auto, 480px auto;
+  border: 1px solid var(--paper-line);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.95) inset,
+    0 18px 45px -28px rgba(47,37,25,.38),
+    7px 9px 0 -5px rgba(14,68,127,.10),
+    -7px 14px 0 -7px rgba(194,56,0,.10);
+}
+
+@utility paper-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    linear-gradient(145deg, rgba(255,255,255,.96), rgba(250,246,238,.96)),
+    url('/paper-monochrome.webp');
+  background-size: auto, 480px auto;
+  border: 1px solid var(--paper-line);
+  box-shadow: 0 14px 34px -25px rgba(41,31,20,.55), 3px 4px 0 rgba(14,68,127,.06);
+  transition: transform 350ms cubic-bezier(.16,1,.3,1), box-shadow 350ms cubic-bezier(.16,1,.3,1);
+}
+.paper-card::after {
+  content: "";
+  position: absolute;
+  right: -1px;
+  top: -1px;
+  width: 34px;
+  height: 34px;
+  z-index: 4;
+  clip-path: polygon(0 0, 100% 100%, 100% 0);
+  background: linear-gradient(135deg, #e9e2d7 0 48%, rgba(75,60,43,.17) 49% 52%, #fffdf8 53%);
+  filter: drop-shadow(-2px 3px 2px rgba(47,37,25,.12));
+  pointer-events: none;
+}
+.paper-card:hover {
+  transform: translateY(-5px) rotate(-.18deg);
+  box-shadow: 0 24px 45px -27px rgba(41,31,20,.58), 5px 7px 0 rgba(14,68,127,.09);
+}
+
+@utility paper-cut {
+  clip-path: polygon(0 10px, 10px 0, calc(100% - 28px) 0, 100% 28px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 18px 100%, 0 calc(100% - 18px));
+}
+
+@utility folded-heading {
+  display: inline;
+  background: linear-gradient(transparent 68%, rgba(14,68,127,.13) 68% 93%, transparent 93%);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.paper-section {
+  position: relative;
+}
+.paper-section::before {
+  content: "";
+  position: absolute;
+  top: 18%;
+  left: max(18px, calc((100vw - 1280px)/2));
+  width: 52px;
+  height: 86px;
+  background: #0e447f;
+  clip-path: polygon(0 0,100% 16%,72% 100%,12% 86%);
+  opacity: .07;
+  transform: rotate(-8deg);
+  pointer-events: none;
+}
+
+.paper-tag {
+  display: inline-flex;
+  padding: .5rem .85rem;
+  color: #0e447f;
+  background: #edf3f8;
+  border: 1px solid rgba(14,68,127,.16);
+  clip-path: polygon(5px 0,100% 0,calc(100% - 5px) 100%,0 100%);
+  box-shadow: 2px 3px 0 rgba(14,68,127,.09);
+}
+
+.paper-fold-corner {
+  position: relative;
+  overflow: hidden;
+}
+.paper-fold-corner::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 64px;
+  height: 64px;
+  background: linear-gradient(135deg, rgba(14,68,127,.12) 0 48%, rgba(14,68,127,.28) 49% 51%, #f8f3ea 52%);
+  clip-path: polygon(0 0,100% 100%,100% 0);
+  filter: drop-shadow(-3px 5px 3px rgba(39,31,24,.14));
+  pointer-events: none;
+}
+
+.hero-folded-edge::after {
+  content: "";
+  position: absolute;
+  z-index: 30;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 26px;
+  background: #f7f3ec;
+  clip-path: polygon(0 62%, 7% 38%, 15% 68%, 24% 30%, 34% 66%, 44% 42%, 55% 72%, 66% 34%, 77% 64%, 88% 36%, 100% 58%, 100% 100%, 0 100%);
+  filter: drop-shadow(0 -4px 4px rgba(0,0,0,.16));
+  pointer-events: none;
+}
+
+.paper-button {
+  border-radius: 2px 12px 3px 10px !important;
+  clip-path: polygon(0 5px,5px 0,calc(100% - 9px) 0,100% 9px,100% 100%,7px 100%,0 calc(100% - 7px));
 }
 
 @utility gradient-text {
@@ -425,6 +551,7 @@ spline-viewer {
     overflow-x: hidden;
     max-width: 100vw;
     width: 100%;
+    background: #f7f3ec;
   }
   h1,
   h2,

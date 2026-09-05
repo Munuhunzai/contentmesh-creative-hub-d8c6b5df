@@ -40,7 +40,7 @@ export function Footer() {
   }
 
   return (
-    <footer className="relative mt-24 border-t border-border/60 bg-secondary/40">
+    <footer className="paper-surface relative mt-24 border-x-0 border-b-0 bg-[#f0eadf]">
       <div className="mx-auto max-w-7xl px-6 py-16">
         <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
           <div>

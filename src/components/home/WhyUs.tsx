@@ -32,10 +32,10 @@ const FEATURES = [
 
 export function WhyUs() {
   return (
-    <section className="relative py-16 sm:py-24" id="why-us">
+    <section className="paper-section relative py-16 sm:py-24" id="why-us">
       <div className="mx-auto max-w-7xl px-6">
         {/* ── White Transparent Glass Section Container ── */}
-        <div className="relative overflow-hidden rounded-[2.5rem] bg-white/75 backdrop-blur-2xl p-8 sm:p-12 lg:p-16 text-foreground border border-white/90 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.06)]">
+        <div className="paper-surface paper-fold-corner relative overflow-hidden rounded-[4px_42px_5px_34px] p-8 sm:p-12 lg:p-16 text-foreground">
           {/* Neutral paper texture overlay */}
           <div
             className="pointer-events-none absolute inset-0 opacity-25 mix-blend-multiply bg-repeat bg-center bg-[length:480px_auto]"
@@ -67,7 +67,7 @@ export function WhyUs() {
               </div>
 
               {/* Featured Image Box */}
-              <div className="overflow-hidden rounded-2xl border border-border/80 shadow-md group">
+              <div className="paper-cut overflow-hidden border border-border/80 shadow-md group">
                 <img
                   src={optimizeSanityImage("https://images.unsplash.com/photo-1522071820081-009f0129c71c", 640, 60)}
                   alt="ContentMesh AI Video Directors & Team collaborating"
@@ -110,10 +110,10 @@ export function WhyUs() {
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: idx * 0.08, duration: 0.5 }}
-                    className={`group relative overflow-hidden rounded-2xl p-6 sm:p-7 border shadow-sm backdrop-blur-md transition-all hover:-translate-y-0.5 hover:shadow-md ${
+                    className={`paper-card group relative p-6 sm:p-7 transition-all ${
                       isBlue
-                        ? "bg-[#0E447F]/[0.035] border-[#0E447F]/15 hover:border-[#0E447F]/35"
-                        : "bg-[#FF5A1F]/[0.035] border-[#FF5A1F]/15 hover:border-[#FF5A1F]/35"
+                        ? "border-[#0E447F]/20 hover:border-[#0E447F]/40"
+                        : "border-[#FF5A1F]/20 hover:border-[#FF5A1F]/40"
                     }`}
                   >
                     <div
