@@ -26,14 +26,14 @@ export function CTA() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
-        className="paper-surface paper-fold-corner relative overflow-hidden rounded-[3px_40px_4px_30px] p-10 sm:p-16"
+        className="relative overflow-hidden rounded-[2.5rem] border border-border bg-card p-10 sm:p-16"
       >
         <div className="mesh-bg absolute inset-0 opacity-70" />
         <div className="relative grid gap-8 lg:grid-cols-[1.4fr_1fr] lg:items-center">
           <div>
             <h2 className="font-display text-3xl font-bold tracking-tight sm:text-5xl">
               {data.ctaTitle ?? FALLBACK.ctaTitle}{" "}
-              <span className="folded-heading text-[#0E447F]">
+              <span className="gradient-text">
                 {data.ctaTitleAccent ?? FALLBACK.ctaTitleAccent}
               </span>
             </h2>
