@@ -256,7 +256,7 @@ export function Portfolio({ featuredOnly = false }: { featuredOnly?: boolean }) 
             onClick={() => setVisibleCount((count) => count + 12)}
           >
             Load more projects{" "}
-            <span className="text-xs opacity-70">{filteredList.length - list.length} more</span>
+            <span className="text-xs">{filteredList.length - list.length} more</span>
           </button>
         </div>
       )}

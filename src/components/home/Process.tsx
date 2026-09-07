@@ -35,7 +35,7 @@ export function Process() {
         {STAGES.map((stage, i) => (
           <li key={stage.title} className="border-t border-brand-blue/25 pt-6">
             <span
-              className="font-display text-5xl font-medium tracking-tighter text-brand-blue/35"
+              className="font-display text-5xl font-medium tracking-tighter text-brand-blue"
               aria-hidden="true"
             >
               0{i + 1}

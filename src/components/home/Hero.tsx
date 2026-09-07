@@ -20,7 +20,8 @@ export function Hero({ initialData }: { initialData?: HomepageData | null } = {}
     ? data.heroSlides
     : [{ category: "AI-powered. Human-directed." }];
   const [current, setCurrent] = useState(0);
-  const [paused, setPaused] = useState(false);
+  const [started, setStarted] = useState(false);
+  const [paused, setPaused] = useState(true);
   const [visible, setVisible] = useState(true);
   const reducedMotion = useReducedMotion();
   const sectionRef = useRef<HTMLElement>(null);
@@ -112,7 +113,7 @@ export function Hero({ initialData }: { initialData?: HomepageData | null } = {}
                 className="absolute inset-0 h-full w-full object-cover"
               />
             )}
-            {slide.videoFileUrl && !reducedMotion && (
+            {slide.videoFileUrl && started && !reducedMotion && (
               <video
                 ref={videoRef}
                 key={slide.videoFileUrl}
@@ -130,7 +131,7 @@ export function Hero({ initialData }: { initialData?: HomepageData | null } = {}
                 className="absolute inset-0 h-full w-full object-cover"
               />
             )}
-            {!slide.backgroundImageUrl && (!slide.videoFileUrl || reducedMotion) && (
+            {!slide.backgroundImageUrl && (!slide.videoFileUrl || reducedMotion || !started) && (
               <div className="studio-showcase-fallback" aria-hidden="true">
                 <span>
                   CM<span className="text-[#ff9a6c]">.</span>
@@ -179,7 +180,10 @@ export function Hero({ initialData }: { initialData?: HomepageData | null } = {}
               {!reducedMotion && (slides.length > 1 || slide.videoFileUrl) && (
                 <button
                   type="button"
-                  onClick={() => setPaused((value) => !value)}
+                  onClick={() => {
+                    setStarted(true);
+                    setPaused((value) => !value);
+                  }}
                   aria-label={paused ? "Play showcase" : "Pause showcase"}
                   className="hero-control"
                 >
