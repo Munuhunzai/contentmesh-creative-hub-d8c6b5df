@@ -42,12 +42,17 @@ export function SiteLayout({ children, heroSlot, noTopPadding }: SiteLayoutProps
   return (
     <div className="relative min-h-dvh w-full max-w-full overflow-x-hidden">
       <AmbientBackground />
+      <a href="#main-content" className="skip-link">
+        Skip to content
+      </a>
       <Navbar />
       {/* Hero renders here — behind the fixed navbar, no pt-28 */}
-      {heroSlot}
       <main
-        className={`w-full max-w-full overflow-x-hidden ${heroSlot || noTopPadding ? "pt-16 sm:pt-20" : "pt-28"}`}
+        id="main-content"
+        tabIndex={-1}
+        className={`w-full max-w-full overflow-x-hidden ${heroSlot || noTopPadding ? "" : "pt-24"}`}
       >
+        {heroSlot}
         {children}
       </main>
       <Footer />

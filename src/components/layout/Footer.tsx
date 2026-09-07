@@ -47,18 +47,20 @@ export function Footer() {
             <Logo />
             <p className="mt-4 max-w-xs text-sm text-muted-foreground">{s.tagline}</p>
             <div className="mt-6 flex gap-2">
-              {socials.map(([Icon, label, href]) => (
-                <a
-                  key={label}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={label}
-                  className="grid h-9 w-9 place-items-center rounded-full border border-border bg-background text-muted-foreground transition-all hover:bg-[#0D4C92] hover:border-[#0D4C92] hover:text-white shadow-sm"
-                >
-                  <Icon className="h-4 w-4" />
-                </a>
-              ))}
+              {socials
+                .filter(([, , href]) => /^https?:\/\//.test(href))
+                .map(([Icon, label, href]) => (
+                  <a
+                    key={label}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={label}
+                    className="grid h-9 w-9 place-items-center rounded-full border border-border bg-background text-muted-foreground transition-all hover:bg-[#0D4C92] hover:border-[#0D4C92] hover:text-white shadow-sm"
+                  >
+                    <Icon className="h-4 w-4" />
+                  </a>
+                ))}
             </div>
           </div>
 
@@ -78,35 +80,24 @@ export function Footer() {
               ["AI Animation", "/services"],
               ["AI Voiceovers", "/services"],
               ["Motion Graphics", "/services"],
+              ["Free Storyboard Tool", "/tools/storyboard-generator"],
             ]}
           />
 
           <div>
-            <h3 className="font-display text-sm font-semibold text-foreground">
-              Get creative drops
+            <p className="eyebrow">Have a project in mind?</p>
+            <h3 className="mt-3 font-display text-2xl font-bold tracking-tight">
+              Let's make it happen.
             </h3>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Monthly experiments, launches, and behind-the-scenes.
+            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+              A clear brief is the start of a great film. Tell us your idea, audience and deadline.
             </p>
-            <form
-              onSubmit={(e) => e.preventDefault()}
-              className="mt-4 flex overflow-hidden rounded-full border border-border bg-background pr-1"
+            <Link
+              to="/contact"
+              className="mt-5 inline-flex min-h-12 items-center gap-3 rounded-full bg-brand-blue px-5 py-3 text-sm font-semibold text-white"
             >
-              <input
-                type="email"
-                required
-                placeholder="you@company.com"
-                aria-label="Your email address"
-                autoComplete="email"
-                className="min-w-0 flex-1 bg-transparent px-4 py-2.5 text-sm outline-none placeholder:text-muted-foreground"
-              />
-              <button
-                className="grid h-9 w-9 shrink-0 place-items-center self-center rounded-full bg-primary text-primary-foreground"
-                aria-label="Subscribe to newsletter"
-              >
-                <Send className="h-4 w-4" />
-              </button>
-            </form>
+              Start a conversation <Send className="h-4 w-4" />
+            </Link>
           </div>
         </div>
 

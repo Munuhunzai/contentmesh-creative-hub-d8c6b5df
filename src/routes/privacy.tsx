@@ -1,16 +1,15 @@
+import { seoHead } from "@/lib/site";
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { PageHero } from "@/components/layout/PageHero";
 
 export const Route = createFileRoute("/privacy")({
-  head: () => ({
-    meta: [
-      { title: "Privacy Policy — ContentMesh" },
-      { name: "description", content: "How ContentMesh collects, uses, and protects your data." },
-      { property: "og:url", content: "/privacy" },
-    ],
-    links: [{ rel: "canonical", href: "/privacy" }],
-  }),
+  head: () =>
+    seoHead(
+      "Privacy Policy | ContentMesh Studios",
+      "How ContentMesh handles information you share through our website and project enquiry form.",
+      "/privacy",
+    ),
   component: () => (
     <SiteLayout>
       <PageHero
@@ -41,7 +40,7 @@ export const Route = createFileRoute("/privacy")({
           <h2 className="font-display text-xl font-semibold text-foreground">Your choices</h2>
           <p>
             You can request access to, correction of, or deletion of your personal information at
-            any time by emailing hello@contentmesh.studio.
+            any time by emailing waheed.sul00@gmail.com.
           </p>
           <p className="text-xs">Last updated: {new Date().toLocaleDateString()}.</p>
         </div>

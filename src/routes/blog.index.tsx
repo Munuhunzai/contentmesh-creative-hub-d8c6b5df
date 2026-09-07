@@ -1,3 +1,4 @@
+import { seoHead } from "@/lib/site";
 import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
@@ -9,23 +10,12 @@ import { blogListQuery } from "@/integrations/sanity/queries";
 import { optimizeSanityImage } from "@/lib/sanity-image";
 
 export const Route = createFileRoute("/blog/")({
-  head: () => ({
-    meta: [
-      { title: "Blog & Playbooks — ContentMesh" },
-      {
-        name: "description",
-        content:
-          "Playbooks, AI video experiments, creative strategy, and behind-the-scenes insights from ContentMesh.",
-      },
-      { property: "og:title", content: "Blog & Playbooks — ContentMesh" },
-      {
-        property: "og:description",
-        content: "Playbooks, AI experiments, and brand storytelling insights.",
-      },
-      { property: "og:url", content: "/blog" },
-    ],
-    links: [{ rel: "canonical", href: "/blog" }],
-  }),
+  head: () =>
+    seoHead(
+      "AI Video Insights & Production Guides | ContentMesh",
+      "Practical guides to AI video production, creative briefs, editing and brand storytelling from ContentMesh Studios.",
+      "/blog",
+    ),
   component: Blog,
 });
 
@@ -49,68 +39,7 @@ const GRADIENTS = [
   "linear-gradient(135deg, #08101a 0%, #0D4C92 50%, #00b4d8 100%)",
 ];
 
-const FALLBACK: Post[] = [
-  {
-    _id: "1",
-    slug: "state-of-ai-video-2026",
-    title: "The 2026 State of AI Video: How Generative Models Changed Commercial Ads Forever",
-    tags: ["Insights"],
-    excerpt:
-      "An in-depth analysis of how diffusion models, multi-modal generation, and synthetic actors are redefining brand production workflows.",
-    publishedAt: "2026-07-20",
-    authorName: "ContentMesh Studio",
-  },
-  {
-    _id: "2",
-    slug: "ai-avatar-creators-onboarding",
-    title: "Best AI Avatar Creators for Company Onboarding & Corporate Training Videos in 2026",
-    tags: ["Playbook"],
-    excerpt:
-      "How enterprise teams build realistic AI avatar videos to streamline internal training, support portals, and employee onboarding.",
-    publishedAt: "2026-07-18",
-    authorName: "Strategy Team",
-  },
-  {
-    _id: "3",
-    slug: "cut-ad-production-time",
-    title: "How We Cut Commercial Production Cycles by 78% Without Sacrificing Craft",
-    tags: ["Case Study"],
-    excerpt:
-      "A breakdown of our hybrid workflow combining AI video production with human motion graphics and professional color grading.",
-    publishedAt: "2026-07-15",
-    authorName: "Production Team",
-  },
-  {
-    _id: "4",
-    slug: "ai-video-translation-localization",
-    title: "Enterprise AI Video Translation & Dubbing: Reaching Global Audiences in 40+ Languages",
-    tags: ["Enterprise"],
-    excerpt:
-      "How to use AI voice cloning, localized accents, and automated lip-syncing to translate video ad campaigns globally.",
-    publishedAt: "2026-07-12",
-    authorName: "Audio Engineering",
-  },
-  {
-    _id: "5",
-    slug: "directors-guide-runway",
-    title: "The Director's Field Guide to Prompting Runway & Sora-Class Models in 2026",
-    tags: ["Craft"],
-    excerpt:
-      "Camera angles, lighting tokens, and movement prompts that yield cinema-grade plates every single time.",
-    publishedAt: "2026-07-08",
-    authorName: "Creative Director",
-  },
-  {
-    _id: "6",
-    slug: "ai-ugc-video-editing-agencies",
-    title: "How Performance Marketing Agencies Use AI UGC Video Editors for High ROI Ad Drops",
-    tags: ["Marketing"],
-    excerpt:
-      "A playbook for scaling short-form social reels and vertical-native video ads using automated editing pipelines.",
-    publishedAt: "2026-07-01",
-    authorName: "Growth Team",
-  },
-];
+const FALLBACK: Post[] = [];
 
 function Blog() {
   const posts = useSanity<Post[]>(["sanity", "blog", "list"], blogListQuery, FALLBACK);
@@ -191,7 +120,9 @@ function Blog() {
                   className="relative min-h-[300px] overflow-hidden lg:col-span-7 lg:min-h-[460px]"
                   style={
                     featured.coverUrl
-                      ? { background: `url(${optimizeSanityImage(featured.coverUrl, 1200, 75)}) center/cover` }
+                      ? {
+                          background: `url(${optimizeSanityImage(featured.coverUrl, 1200, 75)}) center/cover`,
+                        }
                       : { background: GRADIENTS[0] }
                   }
                 >
@@ -215,7 +146,8 @@ function Blog() {
                       {featured.publishedAt && (
                         <span className="flex items-center gap-1">
                           <Clock className="h-3.5 w-3.5" />
-                          {new Date(featured.publishedAt).toLocaleDateString(undefined, {
+                          {new Date(featured.publishedAt).toLocaleDateString("en-US", {
+                            timeZone: "UTC",
                             month: "short",
                             day: "numeric",
                             year: "numeric",
@@ -252,13 +184,17 @@ function Blog() {
         )}
 
         {/* ── Empty Search Results State ── */}
-        {gridPosts.length === 0 && (
+        {filteredPosts.length === 0 && (
           <div className="py-16 text-center">
             <p className="text-lg font-semibold text-foreground">
-              No articles found matching "{searchQuery}"
+              {isFiltering
+                ? `No articles found for “${searchQuery || selectedTag}”`
+                : "New production insights are on the way"}
             </p>
             <p className="mt-1 text-sm text-muted-foreground">
-              Try searching for different keywords or clear filters.
+              {isFiltering
+                ? "Try a different search or clear the filters."
+                : "Explore our services or share your project brief with the studio."}
             </p>
             <button
               onClick={() => {
@@ -293,13 +229,13 @@ function Blog() {
                     className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl"
                     style={
                       p.coverUrl
-                        ? { background: `url(${optimizeSanityImage(p.coverUrl, 600, 70)}) center/cover` }
+                        ? {
+                            background: `url(${optimizeSanityImage(p.coverUrl, 600, 70)}) center/cover`,
+                          }
                         : { background: GRADIENTS[(i + 1) % GRADIENTS.length] }
                     }
                   >
-                    {!p.coverUrl && (
-                      <div className="absolute inset-0 mesh-bg opacity-20" />
-                    )}
+                    {!p.coverUrl && <div className="absolute inset-0 mesh-bg opacity-20" />}
                     <div className="absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-full bg-white/90 text-gray-900 opacity-0 shadow-md backdrop-blur-sm transition-all group-hover:opacity-100">
                       <ArrowUpRight className="h-4 w-4" />
                     </div>
@@ -316,7 +252,8 @@ function Blog() {
                         )}
                         <span className="text-muted-foreground text-[11px]">
                           {p.publishedAt
-                            ? new Date(p.publishedAt).toLocaleDateString(undefined, {
+                            ? new Date(p.publishedAt).toLocaleDateString("en-US", {
+                                timeZone: "UTC",
                                 month: "short",
                                 day: "numeric",
                                 year: "numeric",

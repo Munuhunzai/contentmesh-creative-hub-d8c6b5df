@@ -39,7 +39,7 @@ export function FloatingChatbot() {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: next }),
+        body: JSON.stringify({ messages: next.slice(-20) }),
       });
       const data = (await res.json()) as { reply?: string; error?: string };
       if (!res.ok || !data.reply) {
@@ -59,7 +59,7 @@ export function FloatingChatbot() {
       {/* Floating avatar button */}
       <motion.button
         initial={{ opacity: 0, scale: 0.8 }}
-        animate={open ? { opacity: 1, scale: 1, y: 0 } : { opacity: 1, scale: 1, y: [0, -10, 0] }}
+        animate={open ? { opacity: 1, scale: 1, y: 0 } : { opacity: 1, scale: 1, y: 0 }}
         transition={
           open
             ? { duration: 0.2 }
@@ -69,8 +69,9 @@ export function FloatingChatbot() {
               }
         }
         onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
         aria-label={open ? "Close chat" : "Open chat"}
-        className="fixed bottom-10 right-6 z-[9998] grid h-16 w-16 place-items-center rounded-full transition-transform hover:scale-110 sm:bottom-12"
+        className="fixed bottom-6 right-4 z-40 grid h-16 w-16 place-items-center rounded-full transition-transform hover:scale-110 sm:bottom-6"
         style={{
           background: "#FFFFFF",
           border: "1px solid rgba(14,68,127,0.15)",
@@ -108,7 +109,7 @@ export function FloatingChatbot() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 24, scale: 0.96 }}
             transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed bottom-24 left-4 right-4 z-[9999] flex w-auto flex-col overflow-hidden sm:left-auto sm:right-6 sm:bottom-28 sm:w-[380px] max-w-[calc(100vw-2rem)]"
+            className="fixed bottom-24 left-4 right-4 z-40 flex w-auto flex-col overflow-hidden sm:left-auto sm:right-6 sm:bottom-28 sm:w-[380px] max-w-[calc(100vw-2rem)]"
             style={{
               height: "min(520px, calc(100dvh - 7.5rem))",
               maxHeight: "calc(100dvh - 7rem)",

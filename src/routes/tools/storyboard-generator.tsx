@@ -1,3 +1,4 @@
+import { seoHead } from "@/lib/site";
 import { useState, useEffect, useMemo, useRef } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion, AnimatePresence } from "framer-motion";
@@ -56,37 +57,11 @@ import {
 
 export const Route = createFileRoute("/tools/storyboard-generator")({
   head: () => ({
-    meta: [
-      {
-        title: "AI Storyboard & Scene Prompt Studio | Make AI",
-      },
-      {
-        name: "description",
-        content:
-          "Turn any script into a complete AI production package: storyboards, 4K scene prompts, character actions, camera directions, SFX, and image prompts for Midjourney, Flux, Veo, and Google Flow.",
-      },
-      {
-        property: "og:title",
-        content: "AI Storyboard & Scene Prompt Studio | Make AI",
-      },
-      {
-        property: "og:description",
-        content:
-          "Turn scripts into production-ready AI storyboards, scene prompts, and character guidelines in seconds.",
-      },
-      {
-        property: "og:url",
-        content: "https://contentmesh.ai/tools/storyboard-generator",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-    links: [
-      {
-        rel: "canonical",
-        href: "https://contentmesh.ai/tools/storyboard-generator",
-      },
-    ],
+    ...seoHead(
+      "AI Storyboard & Scene Prompt Studio | ContentMesh",
+      "Turn your script into an AI storyboard with scene prompts, character actions, camera directions and sound notes. Plan your next video with ContentMesh.",
+      "/tools/storyboard-generator",
+    ),
     scripts: [
       {
         type: "application/ld+json",
@@ -94,7 +69,7 @@ export const Route = createFileRoute("/tools/storyboard-generator")({
           "@context": "https://schema.org",
           "@type": "WebApplication",
           name: "Make AI Storyboard & Prompt Studio",
-          url: "https://contentmesh.ai/tools/storyboard-generator",
+          url: "https://contentmeshstudios.com/tools/storyboard-generator",
           description:
             "Free AI tool to generate complete storyboards, scene prompts, character actions, and camera direction from scripts.",
           applicationCategory: "MultimediaApplication",
@@ -300,7 +275,10 @@ export function StoryboardGeneratorPage() {
     setCurrentPage(1);
   }, [searchQuery, activeFilter]);
 
-  const handleFormChange = (key: keyof StoryboardFormInput, value: any) => {
+  const handleFormChange = (
+    key: keyof StoryboardFormInput,
+    value: StoryboardFormInput[keyof StoryboardFormInput],
+  ) => {
     setForm((prev) => ({ ...prev, [key]: value }));
   };
 
@@ -497,8 +475,8 @@ export function StoryboardGeneratorPage() {
       ].slice(0, 15);
       setStoryHistory(updatedHistory);
       localStorage.setItem("contentmesh_story_history", JSON.stringify(updatedHistory));
-    } catch (err: any) {
-      setError(err.message || "An error occurred during generation.");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "An error occurred during generation.");
       setStep("config");
     } finally {
       setLoading(false);
@@ -561,10 +539,13 @@ export function StoryboardGeneratorPage() {
       }
 
       setAssistantLogs((prev) => [...prev, { sender: "ai", text: `✨ ${actionDesc}` }]);
-    } catch (err: any) {
+    } catch (err: unknown) {
       setAssistantLogs((prev) => [
         ...prev,
-        { sender: "ai", text: `⚠️ ${err.message || "Request failed. Please try again."}` },
+        {
+          sender: "ai",
+          text: `⚠️ ${err instanceof Error ? err.message : "Request failed. Please try again."}`,
+        },
       ]);
     } finally {
       setAssistantLoading(false);
@@ -603,7 +584,7 @@ export function StoryboardGeneratorPage() {
     if (!output) return;
     let content = "";
     let mimeType = "text/plain";
-    let extension = type;
+    const extension = type;
 
     if (type === "json") {
       content = JSON.stringify(output, null, 2);

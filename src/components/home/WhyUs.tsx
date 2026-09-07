@@ -6,26 +6,26 @@ import { optimizeSanityImage } from "@/lib/sanity-image";
 const FEATURES = [
   {
     icon: TrendingDown,
-    title: "Unmatched Value & 70%+ Savings",
-    desc: "Experience studio-grade commercial quality without traditional agency markup — high-ROI video production with zero hidden fees.",
+    title: "Scope you can plan around",
+    desc: "Clear deliverables, production stages and a project estimate agreed before work begins.",
     accent: "blue",
   },
   {
     icon: Zap,
-    title: "3–5 Day Lightning Turnaround",
-    desc: "Don't let 6-week production schedules stall your marketing — ship high-converting video ads, reels, and product explainers in 72 hours.",
+    title: "A process that keeps moving",
+    desc: "A practical schedule with review points for your script, visual direction and final edit.",
     accent: "orange",
   },
   {
     icon: Award,
-    title: "Certified AI Directors & Editors",
-    desc: "Our team combines cutting-edge AI generation models with senior filmmakers, motion designers, and sound engineers for flawless execution.",
+    title: "Human direction at every stage",
+    desc: "AI generation guided by storytelling, visual continuity, editing and sound design.",
     accent: "blue",
   },
   {
     icon: ShieldCheck,
-    title: "100% Quality & Revisions Guarantee",
-    desc: "Prioritize creative excellence with guaranteed brand safety, licensed commercial usage rights, and multi-round revision passes on every campaign.",
+    title: "Your brand, carefully considered",
+    desc: "References, tone and feedback guide the work. Usage rights and revision rounds are agreed in your project scope.",
     accent: "orange",
   },
 ];
@@ -57,19 +57,23 @@ export function WhyUs() {
                 </span>
 
                 <h2 className="mt-3 font-display text-3xl font-black tracking-tight text-foreground sm:text-4xl lg:text-5xl leading-tight">
-                  Why choose us ?
+                  Creative care, from start to finish.
                 </h2>
 
                 <p className="mt-4 text-sm sm:text-base leading-relaxed text-muted-foreground">
-                  Built specifically for ambitious brands to scale content velocity, save time, stay
-                  ahead of competitors, and drive high-ROI video campaigns with less effort.
+                  A production partner for brands that care about the story, the details and the
+                  finished result.
                 </p>
               </div>
 
               {/* Featured Image Box */}
               <div className="overflow-hidden rounded-2xl border border-border/80 shadow-md group">
                 <img
-                  src={optimizeSanityImage("https://images.unsplash.com/photo-1522071820081-009f0129c71c", 640, 60)}
+                  src={optimizeSanityImage(
+                    "https://images.unsplash.com/photo-1522071820081-009f0129c71c",
+                    640,
+                    60,
+                  )}
                   alt="ContentMesh AI Video Directors & Team collaborating"
                   width={640}
                   height={360}

@@ -1,3 +1,4 @@
+import { guardRequest, readJson, requestErrorResponse } from "@/lib/request-guard";
 import { createFileRoute } from "@tanstack/react-router";
 import { StoryboardFormInput, StoryboardOutput, StoryboardScene } from "@/types/storyboard";
 import { buildDeepSeekStoryboardPrompt } from "@/lib/storyboard-prompt-builder";
@@ -13,6 +14,7 @@ async function fetchDeepSeekChunk(
 
   const response = await fetch("https://api.deepseek.com/chat/completions", {
     method: "POST",
+    signal: AbortSignal.timeout(90_000),
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${apiKey}`,
@@ -45,43 +47,53 @@ async function fetchDeepSeekChunk(
   return safeParseAIJson<StoryboardOutput>(content);
 }
 
-const getFallbackKey = () => {
-  try {
-    return atob("c2stMzQ4MzA3OThmYjQwNGNmZjhiNGNmMDMwZTgzZjNmYTc=");
-  } catch {
-    return "";
-  }
-};
-
 async function handlePost({ request }: { request: Request }) {
   try {
-    const apiKey =
-      process.env.DEEPSEEK_API_KEY ||
-      process.env.VITE_DEEPSEEK_API_KEY ||
-      (import.meta as any).env?.DEEPSEEK_API_KEY ||
-      (import.meta as any).env?.VITE_DEEPSEEK_API_KEY ||
-      (request as any)?.env?.DEEPSEEK_API_KEY ||
-      getFallbackKey();
+    guardRequest(request, 6);
+    const apiKey = process.env.DEEPSEEK_API_KEY;
 
-    const body = (await request.json()) as StoryboardFormInput;
+    const body = (await readJson(request, 512_000)) as StoryboardFormInput;
 
-    if (!body.script || body.script.trim().length < 10) {
+    if (
+      !body ||
+      typeof body.script !== "string" ||
+      body.script.trim().length < 10 ||
+      body.script.length > 80_000 ||
+      !Number.isInteger(body.numberOfScenes) ||
+      body.numberOfScenes < 1 ||
+      body.numberOfScenes > 150
+    ) {
       return Response.json(
         { error: "Please provide a valid script with at least 10 characters." },
         { status: 400 },
       );
     }
 
+    if (!apiKey)
+      return Response.json(
+        { error: "Storyboard generation is temporarily unavailable. Please try again later." },
+        { status: 503 },
+      );
+
     const targetSceneCount = Math.max(1, Math.min(150, body.numberOfScenes || 10));
     const CHUNK_SIZE = 10;
-    const chunkPromises: Array<Promise<StoryboardOutput>> = [];
+    const ranges: Array<[number, number]> = [];
 
     for (let start = 1; start <= targetSceneCount; start += CHUNK_SIZE) {
       const end = Math.min(start + CHUNK_SIZE - 1, targetSceneCount);
-      chunkPromises.push(fetchDeepSeekChunk(apiKey, body, start, end));
+      ranges.push([start, end]);
     }
 
-    const chunkResults = await Promise.all(chunkPromises);
+    const chunkResults: StoryboardOutput[] = [];
+    for (let i = 0; i < ranges.length; i += 3) {
+      chunkResults.push(
+        ...(await Promise.all(
+          ranges
+            .slice(i, i + 3)
+            .map(([start, end]) => fetchDeepSeekChunk(apiKey, body, start, end)),
+        )),
+      );
+    }
 
     // Merge chunk outputs into a unified StoryboardOutput
     const mergedOutput: StoryboardOutput = {
@@ -109,8 +121,8 @@ async function handlePost({ request }: { request: Request }) {
     };
 
     const sceneMap = new Map<number, StoryboardScene>();
-    const charMap = new Map<string, any>();
-    const envMap = new Map<string, any>();
+    const charMap = new Map<string, StoryboardOutput["characters"][number]>();
+    const envMap = new Map<string, StoryboardOutput["environments"][number]>();
 
     chunkResults.forEach((chunk) => {
       // Collect Characters
@@ -158,7 +170,7 @@ async function handlePost({ request }: { request: Request }) {
       totalScenes: mergedOutput.scenes.length,
       charactersCount: mergedOutput.characters.length,
       locationsCount: mergedOutput.environments.length,
-      estimatedRuntime: `${Math.ceil((mergedOutput.scenes.length * 5) / 60)}m ${String(
+      estimatedRuntime: `${Math.floor((mergedOutput.scenes.length * 5) / 60)}m ${String(
         (mergedOutput.scenes.length * 5) % 60,
       ).padStart(2, "0")}s`,
       wordCount: totalWords,
@@ -167,10 +179,15 @@ async function handlePost({ request }: { request: Request }) {
     };
 
     return Response.json(mergedOutput);
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const failure = requestErrorResponse(err);
+    if (failure) return failure;
     console.error("Storyboard API batch endpoint error:", err);
     return Response.json(
-      { error: err.message || "An unexpected error occurred during generation." },
+      {
+        error:
+          "Generation could not complete. Please try again with a shorter script or fewer scenes.",
+      },
       { status: 500 },
     );
   }

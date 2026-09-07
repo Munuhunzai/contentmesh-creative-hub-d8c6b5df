@@ -1,3 +1,4 @@
+import { optimizeSanityImage } from "@/lib/sanity-image";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Star } from "lucide-react";
@@ -14,54 +15,13 @@ export type Testimonial = {
   rating?: number;
 };
 
-const REVIEWS_DATA: Testimonial[] = [
-  {
-    _id: "1",
-    authorName: "Emily Jeff",
-    authorRole: "CEO",
-    company: "TheWebagency",
-    avatarUrl: "/reviews/emily.webp",
-    rating: 5,
-    quote:
-      "Ten the hastened steepest feelings pleasant few surprise property. An brother he do colonel against.",
-  },
-  {
-    _id: "2",
-    authorName: "Hamza Malik",
-    authorRole: "Manager",
-    company: "TheWekrtech",
-    avatarUrl: "/reviews/hamza.webp",
-    rating: 5,
-    quote:
-      "Can how elinor warmly mrs basket marked. Led raising expense yet demesne weather musical. Me mr what.",
-  },
-  {
-    _id: "3",
-    authorName: "Elizabeth Rai",
-    authorRole: "Developer",
-    company: "I2c Company",
-    avatarUrl: "/reviews/elizabeth.webp",
-    rating: 5,
-    quote:
-      "park next busy ever. Elinor her his secure far twenty eat object. Any far saw size want man. Which way you wrong.",
-  },
-  {
-    _id: "4",
-    authorName: "Sara Thomas",
-    authorRole: "Accountant",
-    company: "TheConsturction",
-    avatarUrl: "/reviews/sara.webp",
-    rating: 5,
-    quote:
-      "Concerns greatest margaret him absolute entrance nay. Door neat week do find past he. Be no surprise he honoured.",
-  },
-];
-
 export function Testimonials() {
   const sanityList = useSanity<Testimonial[]>(["sanity", "testimonials"], testimonialsQuery, []);
-  const list = sanityList && sanityList.length > 0 ? sanityList : REVIEWS_DATA;
+  const list = sanityList.filter((item) => item.quote?.trim() && item.authorName?.trim());
 
   const [activeIndex, setActiveIndex] = useState(1);
+
+  if (!list.length) return null;
 
   return (
     <section className="relative py-20 sm:py-28" id="testimonials">
@@ -69,7 +29,7 @@ export function Testimonials() {
         {/* ── Section Title ─────────────────────────────────────────────────── */}
         <div className="text-center">
           <h2 className="font-display text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-            Client Success: High-ROI Commercials & AI Campaigns
+            In our clients’ words
           </h2>
         </div>
 
@@ -91,7 +51,10 @@ export function Testimonials() {
                     {item.avatarUrl ? (
                       item.avatarUrl.startsWith("/reviews/") ? (
                         <picture>
-                          <source srcSet={item.avatarUrl.replace(/\.webp$/, ".avif")} type="image/avif" />
+                          <source
+                            srcSet={item.avatarUrl.replace(/\.webp$/, ".avif")}
+                            type="image/avif"
+                          />
                           <img
                             src={item.avatarUrl}
                             alt={item.authorName}

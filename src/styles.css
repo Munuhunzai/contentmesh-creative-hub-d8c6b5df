@@ -74,7 +74,7 @@
 
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.38 0 0);
-  --accent: oklch(0.52 0.20 38);
+  --accent: oklch(0.52 0.2 38);
   --accent-foreground: oklch(0.99 0 0);
 
   --destructive: oklch(0.577 0.245 27.325);
@@ -82,7 +82,7 @@
 
   --border: oklch(0 0 0 / 8%);
   --input: oklch(0 0 0 / 10%);
-  --ring: oklch(0.52 0.20 38);
+  --ring: oklch(0.52 0.2 38);
 
   --chart-1: oklch(0.68 0.19 42);
   --chart-2: oklch(0.36 0.13 260);
@@ -220,7 +220,12 @@
   inset: 1px;
   z-index: 0;
   border-radius: inherit;
-  background: linear-gradient(105deg, transparent 25%, rgba(14, 68, 127, 0.08) 50%, transparent 75%);
+  background: linear-gradient(
+    105deg,
+    transparent 25%,
+    rgba(14, 68, 127, 0.08) 50%,
+    transparent 75%
+  );
   transform: translateX(-115%);
   transition: transform 650ms cubic-bezier(0.16, 1, 0.3, 1);
   pointer-events: none;
@@ -236,7 +241,9 @@
   background: #0e447f;
   opacity: 0;
   transform: translateX(-50%);
-  transition: width 350ms cubic-bezier(0.16, 1, 0.3, 1), opacity 200ms;
+  transition:
+    width 350ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 200ms;
 }
 .nav-link-hover:hover::before {
   transform: translateX(115%);
@@ -438,5 +445,85 @@ spline-viewer {
   ::selection {
     background: color-mix(in oklab, var(--brand) 35%, transparent);
     color: var(--foreground);
+  }
+}
+
+/* Shared interaction and typography foundations. */
+html {
+  scroll-padding-top: 7rem;
+}
+:focus-visible {
+  outline: 3px solid #0e447f;
+  outline-offset: 4px;
+}
+button,
+a,
+input,
+textarea,
+select {
+  -webkit-tap-highlight-color: transparent;
+}
+button:not(:disabled),
+[role="button"] {
+  cursor: pointer;
+}
+button:disabled {
+  cursor: wait;
+}
+.eyebrow {
+  color: #b63508;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.section-title {
+  font-size: clamp(2rem, 3.6vw, 3.4rem);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.045em;
+  font-family: var(--font-display);
+}
+.hero-control {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border: 1px solid #ffffff40;
+  border-radius: 50%;
+  transition: background 0.2s;
+}
+.hero-control:hover {
+  background: #ffffff20;
+}
+.studio-hero :focus-visible {
+  outline-color: #ffb28c;
+}
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 10000;
+  padding: 12px 20px;
+  border-radius: 12px;
+  background: #0e447f;
+  color: white;
+  transform: translateY(-160%);
+}
+.skip-link:focus {
+  transform: translateY(0);
+}
+.studio-modal::backdrop {
+  background: rgb(5 15 25 / 0.78);
+  backdrop-filter: blur(6px);
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

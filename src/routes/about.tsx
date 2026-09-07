@@ -1,3 +1,4 @@
+import { seoHead } from "@/lib/site";
 import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { SiteLayout } from "@/components/layout/SiteLayout";
@@ -10,29 +11,12 @@ import { teamQuery } from "@/integrations/sanity/queries";
 import { optimizeSanityImage } from "@/lib/sanity-image";
 
 export const Route = createFileRoute("/about")({
-  head: () => ({
-    meta: [
-      { title: "About ContentMesh | Leading AI Video Production Company" },
-      {
-        name: "description",
-        content:
-          "Learn about ContentMesh — a premier AI video creation company blending generative AI models with senior post-production craft for commercial ads, animation, and brand storytelling.",
-      },
-      {
-        name: "keywords",
-        content:
-          "ai video production company, ai video creation company, ai video company, ai video animation company, about contentmesh",
-      },
-      { property: "og:title", content: "About ContentMesh | Leading AI Video Production Company" },
-      {
-        property: "og:description",
-        content:
-          "The team, mission and studio behind ContentMesh — pioneering the future of AI video production.",
-      },
-      { property: "og:url", content: "https://contentmesh.ai/about" },
-    ],
-    links: [{ rel: "canonical", href: "https://contentmesh.ai/about" }],
-  }),
+  head: () =>
+    seoHead(
+      "About ContentMesh | AI Video Production Studio",
+      "Meet ContentMesh, an AI content studio combining creative direction, video generation, editing and sound design for brands and creators.",
+      "/about",
+    ),
   component: About,
 });
 
@@ -43,7 +27,7 @@ const PILLARS = [
   {
     icon: Building2,
     t: "Studio",
-    d: "In-house production stage, edit bays, and a dedicated VO booth.",
+    d: "AI production, editing and sound workflows shaped around each project.",
   },
 ];
 
@@ -56,10 +40,12 @@ type TeamMember = {
 };
 
 const TEAM_FALLBACK: TeamMember[] = [
-  { _id: "t1", name: "Ava Morgan", role: "Creative Director" },
-  { _id: "t2", name: "Leo Park", role: "Head of AI Production" },
-  { _id: "t3", name: "Sara Bello", role: "Executive Producer" },
-  { _id: "t4", name: "Ethan Cole", role: "Lead Motion Designer" },
+  {
+    _id: "founder",
+    name: "Ejaz Uddin",
+    role: "Founder & CEO",
+    bio: "AI video creator and founder of ContentMesh Studios.",
+  },
 ];
 
 const ACCENTS = ["#FF5A1F", "#0D4C92", "#F6C244", "#111"];
@@ -82,8 +68,8 @@ function About() {
             <span className="gradient-text">
               that AI + real craft would beat traditional agency pipelines
             </span>{" "}
-            — in speed, in quality, and in cost. Two years later, we produce work for hundreds of
-            brands across four continents.
+            — with thoughtful creative direction, consistent visuals and a careful final edit. We
+            help brands and creators turn ideas into stories people want to watch.
           </p>
         </div>
       </section>
@@ -133,7 +119,9 @@ function About() {
                 className="aspect-[4/5] relative"
                 style={
                   m.photoUrl
-                    ? { background: `url(${optimizeSanityImage(m.photoUrl, 400, 60)}) center/cover` }
+                    ? {
+                        background: `url(${optimizeSanityImage(m.photoUrl, 400, 60)}) center/cover`,
+                      }
                     : {
                         background: `linear-gradient(135deg, ${ACCENTS[i % ACCENTS.length]}, #0D4C92)`,
                       }

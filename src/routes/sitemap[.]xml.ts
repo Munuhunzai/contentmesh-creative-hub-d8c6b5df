@@ -1,30 +1,50 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
-
-const BASE_URL = "https://contentmesh.ai";
+import { sanityClient } from "@/integrations/sanity/client";
+import { absoluteUrl } from "@/lib/site";
+import { buildSitemap } from "@/lib/sitemap";
 
 export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
       GET: async () => {
-        const entries = [
-          { path: "/", priority: "1.0", changefreq: "weekly" as const },
-          { path: "/services", priority: "0.9", changefreq: "monthly" as const },
-          { path: "/portfolio", priority: "0.9", changefreq: "weekly" as const },
-          { path: "/about", priority: "0.7", changefreq: "monthly" as const },
-          { path: "/blog", priority: "0.7", changefreq: "weekly" as const },
-          { path: "/contact", priority: "0.8", changefreq: "monthly" as const },
-          { path: "/privacy", priority: "0.3", changefreq: "yearly" as const },
-          { path: "/terms", priority: "0.3", changefreq: "yearly" as const },
-        ];
-        const urls = entries.map(
-          (e) =>
-            `  <url>\n    <loc>${BASE_URL}${e.path}</loc>\n    <changefreq>${e.changefreq}</changefreq>\n    <priority>${e.priority}</priority>\n  </url>`,
-        );
-        const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join("\n")}\n</urlset>`;
-        return new Response(xml, {
-          headers: { "Content-Type": "application/xml", "Cache-Control": "public, max-age=3600" },
-        });
+        try {
+          const posts = await sanityClient.fetch<Array<{ slug: string; updatedAt?: string }>>(
+            `*[_type == "blogPost" && defined(slug.current) && (!defined(publishedAt) || publishedAt <= now())]{"slug": slug.current, "updatedAt": _updatedAt}`,
+          );
+          const pages = [
+            "/",
+            "/services",
+            "/portfolio",
+            "/about",
+            "/blog",
+            "/contact",
+            "/privacy",
+            "/terms",
+            "/tools/storyboard-generator",
+          ].map((path) => ({ url: absoluteUrl(path) }));
+          return new Response(
+            buildSitemap([
+              ...pages,
+              ...(posts || []).map((p) => ({
+                url: absoluteUrl(`/blog/${encodeURIComponent(p.slug)}`),
+                updatedAt: p.updatedAt,
+              })),
+            ]),
+            {
+              headers: {
+                "Content-Type": "application/xml; charset=utf-8",
+                "Cache-Control": "public, max-age=3600, stale-if-error=86400",
+              },
+            },
+          );
+        } catch {
+          // Do not cache an incomplete sitemap that silently drops every CMS article.
+          return new Response("Sitemap temporarily unavailable", {
+            status: 503,
+            headers: { "Retry-After": "300", "Cache-Control": "no-store" },
+          });
+        }
       },
     },
   },
