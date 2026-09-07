@@ -88,7 +88,7 @@ function About() {
               <div className="grid h-10 w-10 place-items-center rounded-xl gradient-brand text-white">
                 <p.icon className="h-5 w-5" />
               </div>
-              <h3 className="mt-4 font-display font-semibold">{p.t}</h3>
+              <h2 className="mt-4 font-display font-semibold">{p.t}</h2>
               <p className="mt-1.5 text-sm text-muted-foreground">{p.d}</p>
             </motion.div>
           ))}

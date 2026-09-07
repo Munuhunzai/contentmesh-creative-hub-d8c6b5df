@@ -664,6 +664,7 @@ export function StoryboardGeneratorPage() {
                   </button>
 
                   <select
+                    aria-label="Visual render style"
                     value={form.visualStyle}
                     onChange={(e) => handleFormChange("visualStyle", e.target.value)}
                     className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-sans text-slate-700 outline-none hover:bg-slate-100 transition-colors"
@@ -700,10 +701,10 @@ export function StoryboardGeneratorPage() {
             {storyHistory.length > 0 && (
               <div className="space-y-4 pt-4 border-t border-slate-200">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-xs font-sans uppercase tracking-wider text-slate-500 flex items-center gap-2">
+                  <h2 className="text-xs font-sans uppercase tracking-wider text-slate-500 flex items-center gap-2">
                     <History className="h-4 w-4 text-slate-500" /> Recent Story Workspaces (
                     {storyHistory.length})
-                  </h3>
+                  </h2>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
@@ -755,9 +756,9 @@ export function StoryboardGeneratorPage() {
             {/* Example Scripts Section */}
             <div className="space-y-4 pt-2">
               <div className="flex items-center justify-between">
-                <h3 className="text-xs font-sans uppercase tracking-wider text-slate-500 flex items-center gap-2">
+                <h2 className="text-xs font-sans uppercase tracking-wider text-slate-500 flex items-center gap-2">
                   <BookOpen className="h-4 w-4 text-slate-500" /> Start from example templates
-                </h3>
+                </h2>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
@@ -930,6 +931,7 @@ export function StoryboardGeneratorPage() {
                       Visual Render Style
                     </label>
                     <select
+                      aria-label="Visual render style"
                       value={form.visualStyle}
                       onChange={(e) => handleFormChange("visualStyle", e.target.value)}
                       className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs font-sans text-slate-900 outline-none focus:ring-1 focus:ring-slate-400"
@@ -947,6 +949,7 @@ export function StoryboardGeneratorPage() {
                       AI Model Target
                     </label>
                     <select
+                      aria-label="AI model target"
                       value={form.promptStyle}
                       onChange={(e) => handleFormChange("promptStyle", e.target.value)}
                       className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs font-sans text-slate-900 outline-none focus:ring-1 focus:ring-slate-400"
@@ -964,6 +967,7 @@ export function StoryboardGeneratorPage() {
                       Aspect Ratio
                     </label>
                     <select
+                      aria-label="Aspect ratio"
                       value={form.aspectRatio}
                       onChange={(e) => handleFormChange("aspectRatio", e.target.value)}
                       className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs font-sans text-slate-900 outline-none focus:ring-1 focus:ring-slate-400"
@@ -981,6 +985,7 @@ export function StoryboardGeneratorPage() {
                       Camera Motion
                     </label>
                     <select
+                      aria-label="Camera motion"
                       value={form.cameraStyle}
                       onChange={(e) => handleFormChange("cameraStyle", e.target.value)}
                       className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs font-sans text-slate-900 outline-none focus:ring-1 focus:ring-slate-400"

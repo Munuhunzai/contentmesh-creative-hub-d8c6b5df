@@ -39,6 +39,7 @@ function Contact() {
   const { reference } = Route.useSearch();
   const info = useSanity<ContactInfo>(["sanity", "contact"], contactQuery, CONTACT_FALLBACK);
   const c = { ...CONTACT_FALLBACK, ...info };
+  const [showMap, setShowMap] = useState(false);
   const [status, setStatus] = useState<"idle" | "sending" | "ok" | "error">("idle");
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -250,14 +251,24 @@ function Contact() {
                 </a>
               </p>
             </div>
-            {c.mapEmbedUrl && /^https:\/\/(www\.)?google\.com\/maps\/embed/.test(c.mapEmbedUrl) && (
-              <iframe
-                title="Studio location"
-                src={c.mapEmbedUrl}
-                loading="lazy"
-                className="aspect-[4/3] w-full rounded-3xl border border-border"
-              />
-            )}
+            {c.mapEmbedUrl &&
+              /^https:\/\/(www\.)?google\.com\/maps\/embed/.test(c.mapEmbedUrl) &&
+              (showMap ? (
+                <iframe
+                  title="Studio location"
+                  src={c.mapEmbedUrl}
+                  loading="lazy"
+                  className="aspect-[4/3] w-full rounded-3xl border border-border"
+                />
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setShowMap(true)}
+                  className="aspect-[4/3] w-full rounded-3xl border border-border bg-muted text-brand-blue font-semibold"
+                >
+                  View studio location on map
+                </button>
+              ))}
           </div>
         </div>
       </section>
