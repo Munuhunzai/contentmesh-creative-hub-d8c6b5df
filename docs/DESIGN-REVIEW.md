@@ -6,7 +6,11 @@ Reviewed 7 September 2026. This is a refinement of the production-ready source m
 
 The Cloudflare site at `https://contentmesh-creative-hub.waheed-sul00.workers.dev/` still serves the older design. Browser inspection of its homepage and portfolio showed the repeated service carousel, old hero/navigation labels, default Featured portfolio filter, and legacy footer. It does not serve the source merged in PR #3. Vercel's successful deployment status does not establish that Cloudflare updated.
 
-The existing Vercel branch preview redirects this browser to Vercel sign-in. The working local server starts on loopback, but is not reachable by the cloud browser; binding the advertised preview hostname is unavailable in this execution environment. Therefore no updated-page mobile, desktop, keyboard or media-playback browser pass is claimed.
+The owner completed sign-in to the protected Vercel branch preview. The updated homepage, portfolio, service details and contact journey were then inspected in the browser. A temporary same-origin frame harness allowed responsive layout checks at 360, 390, 768 and 1024 pixels, alongside the full desktop browser. These are desktop-browser responsive checks, not physical-device tests. The temporary harness was removed after review.
+
+Observed checks: showcase pause changed to play; project dialogs opened; Escape restored focus to the originating project; project and service references appeared in an editable contact brief; invalid enquiries focused the first missing field without sending mail; mobile navigation opened and routed correctly; portfolio pagination changed 12 of 67 entries to 24 of 67; filtering to Reels produced two entries. Inspected layouts did not show horizontal overflow. Google Drive fallback rendered its player; full playback across every third-party video is not certified.
+
+The review found and fixed rich-text service descriptions being treated as strings, unfinished short service copy, an excessively long initial portfolio listing, and floating controls overlapping the mobile enquiry form. The contact page now omits those floating overlays.
 
 ## Refinements in this change
 
@@ -26,10 +30,10 @@ The automated suite includes the existing API, SEO and server-rendering checks p
 
 ## Finish before calling this launch-ready
 
-1. Open the updated branch preview with an authorised Vercel session, or deploy the candidate to the connected Cloudflare environment. Confirm the visible hero reads “Your story. Worth watching.” to distinguish it from the older live version.
-2. Check widths of 360, 390, 768, 1024 and 1440 pixels. Review long CMS titles/descriptions and both populated and empty states. Confirm no horizontal overflow or clipped controls.
-3. With keyboard and touch, check the navigation menu, selected-state slide, portfolio filters, project dialog, Escape/focus return, FAQ, media controls and reduced-motion preference.
-4. Open a project, choose “Create something like this”, and confirm the reference reaches the contact form and remains editable. Verify that closing the project releases scroll locking.
+1. Deploy the verified candidate to the intended production host. Confirm the visible hero reads “Your story. Worth watching.” to distinguish it from the older Cloudflare version.
+2. Supplement the completed responsive checks with physical iOS/Android testing and a production browser smoke test.
+3. Check third-party media on production, including blocked/unavailable files and browser autoplay restrictions; verify reduced motion on a physical device.
+4. Test real contact and AI delivery after replacement provider credentials are configured. Form validation and reference handoff were checked without sending messages.
 5. Review published CMS content. Mark concept studies accurately, add a concise real brief and creative approach to priority projects, and publish only results and testimonials that can be substantiated.
 6. Resolve the Cloudflare deployment gap, configure replacement provider credentials, and connect the intended custom domain. The launch requirements in `docs/RELEASE.md` still apply.
 7. Measure the deployed production site with Lighthouse/PageSpeed and test real delivery only with the correct provider configuration. No updated Lighthouse score or conversion uplift is asserted here.

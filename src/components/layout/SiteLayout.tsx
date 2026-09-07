@@ -1,3 +1,4 @@
+import { useRouterState } from "@tanstack/react-router";
 import { useEffect, useState, lazy, Suspense, type ReactNode } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUp } from "lucide-react";
@@ -16,6 +17,7 @@ interface SiteLayoutProps {
 }
 
 export function SiteLayout({ children, heroSlot, noTopPadding }: SiteLayoutProps) {
+  const isContact = useRouterState({ select: (state) => state.location.pathname === "/contact" });
   const [showTop, setShowTop] = useState(false);
   const [loadChatbot, setLoadChatbot] = useState(false);
 
@@ -54,13 +56,13 @@ export function SiteLayout({ children, heroSlot, noTopPadding }: SiteLayoutProps
         {children}
       </main>
       <Footer />
-      {loadChatbot && (
+      {loadChatbot && !isContact && (
         <Suspense fallback={null}>
           <FloatingChatbot />
         </Suspense>
       )}
       <AnimatePresence>
-        {showTop && (
+        {showTop && !isContact && (
           <motion.button
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

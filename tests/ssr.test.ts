@@ -143,3 +143,9 @@ test("large portfolio collections render an initial page with access to more pro
   assert.equal((html.match(/View project:/g) || []).length, 12);
   assert.ok(html.includes("Load more projects"));
 });
+
+test("unfinished CMS service descriptions use a useful enquiry fallback", () => {
+  const html = renderToString(React.createElement(ServiceDescription, { value: "epwnofpewoco" }));
+  assert.ok(!html.includes("epwnofpewoco"));
+  assert.ok(html.includes("Discuss the creative direction"));
+});

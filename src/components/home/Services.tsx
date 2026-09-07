@@ -421,6 +421,19 @@ export function Services({ compact = false }: { compact?: boolean }) {
 }
 
 export function ServiceDescription({ value }: { value: string | PortableTextBlock[] }) {
+  const plainText =
+    typeof value === "string"
+      ? value
+      : value
+          .flatMap((block) => block.children || [])
+          .map((span) => (typeof span.text === "string" ? span.text : ""))
+          .join(" ");
+  if (plainText.trim().length < 15)
+    return (
+      <p className="text-base leading-relaxed text-muted-foreground">
+        Discuss the creative direction and deliverables for your project with our team.
+      </p>
+    );
   return (
     <div className="space-y-4 text-base leading-relaxed text-muted-foreground [&_p]:mb-4 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5">
       {typeof value === "string" ? value : <PortableText value={value} />}
