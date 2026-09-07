@@ -10,8 +10,6 @@ import { Stats } from "@/components/home/Stats";
 import { Testimonials } from "@/components/home/Testimonials";
 import { FAQ_ } from "@/components/home/FAQ";
 import { CTA } from "@/components/home/CTA";
-import { sanityClient } from "@/integrations/sanity/client";
-import { homepageQuery } from "@/integrations/sanity/queries";
 import { optimizeSanityImage, getSanitySrcSet } from "@/lib/sanity-image";
 
 export const Route = createFileRoute("/")({
@@ -38,7 +36,7 @@ export const Route = createFileRoute("/")({
                 as: "image",
                 href: optimizeSanityImage(firstImage, 1440, 75),
                 imageSrcSet: getSanitySrcSet(firstImage, [640, 960, 1440, 1920], 75),
-                imageSizes: "(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 100vw",
+                imageSizes: "(min-width: 1024px) 52vw, 100vw",
                 fetchPriority: "high" as const,
               },
             ]
@@ -68,9 +66,9 @@ function Index() {
 
   return (
     <SiteLayout heroSlot={<Hero initialData={loaderData} />}>
-      <Services />
+      <Portfolio featuredOnly />
+      <Services compact />
       <WhyUs />
-      <Portfolio />
       <Process />
       <Stats />
       <Testimonials />

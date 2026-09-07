@@ -7,7 +7,8 @@ import {
 import { PortableText, type PortableTextBlock } from "@portabletext/react";
 import { useSanity } from "@/integrations/sanity/useSanity";
 import { faqQuery } from "@/integrations/sanity/queries";
-import { SectionHeader } from "./Services";
+import { Link } from "@tanstack/react-router";
+import { ArrowUpRight } from "lucide-react";
 
 type FAQ = {
   _id: string;
@@ -18,54 +19,40 @@ type FAQ = {
 
 const FALLBACK: FAQ[] = [
   {
-    _id: "1",
-    question:
-      "What makes an AI video production agency different from traditional video production companies?",
+    _id: "brief",
+    question: "What do you need to get started?",
     answer:
-      "As a specialized AI video production agency and creation company, ContentMesh combines generative AI video models (Runway Gen-3, Sora-class, Kling, Luma) with senior human post-production. This cuts production timelines by up to 78% and reduces budget requirements while delivering studio-grade commercial ads, animations, and social reels.",
+      "Share your idea, audience and intended channel. Product images, brand guidelines, scripts or visual references are helpful if you have them. We can develop the brief with you.",
   },
   {
-    _id: "2",
-    question: "What AI video production services do you provide?",
+    _id: "cost",
+    question: "How do you price a project?",
     answer:
-      "Our full-stack AI video production services include: AI commercial video ads, 2D & 3D AI animation, custom AI avatar creation for company onboarding and training, AI video dubbing & translation in 40+ languages, UGC video editing for performance marketing, image-to-video conversion, and motion graphics.",
+      "We scope the creative direction, film length, production complexity and number of versions together. You receive a proposed timeline and quote before production begins. If you don’t have a budget yet, choose ‘Help me estimate’ on the enquiry form.",
   },
   {
-    _id: "3",
-    question:
-      "Can your AI video creation company build custom avatars for company onboarding and product explainers?",
+    _id: "time",
+    question: "How long will production take?",
     answer:
-      "Yes! We specialize in custom AI avatar creation services for corporate onboarding, sales presentations, self-service helpdesk portals, and multi-format training videos. Our avatars feature hyper-realistic lip-syncing and natural voiceover synthesis.",
+      "Timing depends on the length, visual complexity and feedback rounds. We agree a schedule after reviewing your brief. Tell us about any launch date at the start so we can assess what is practical.",
   },
   {
-    _id: "4",
-    question: "How do your AI video dubbing, voiceover, and translation services work?",
+    _id: "review",
+    question: "Will I get to review the work?",
     answer:
-      "Our AI video translation and dubbing services clone voices with emotional nuance, localized accents, and automatic lip-sync alignment across 40+ languages (including Spanish, French, German, Japanese, and Brazilian Portuguese) — perfect for international brand campaigns.",
+      "Yes. We agree review points for the concept, production and final edit. Deliverables and revision rounds are set out in the project scope so everyone knows what is included.",
   },
   {
-    _id: "5",
-    question: "How fast is your turnaround for AI video editing and commercial ad campaigns?",
+    _id: "assets",
+    question: "Can you work with my existing images or footage?",
     answer:
-      "Standard projects ship in 3–5 business days. Our Professional and Enterprise retainer members receive 48-hour priority queue turnaround for commercial ads, social reels, and UGC video edits.",
+      "Yes. We can assess your product photography, footage, script and brand assets, then recommend how to combine them with AI visuals and editing. Share a reference when you enquire.",
   },
   {
-    _id: "6",
-    question: "Can you transform raw footage, photos, or text scripts into polished AI videos?",
+    _id: "formats",
+    question: "Can you create versions for different channels?",
     answer:
-      "Yes. Whether you have text scripts, product photos, raw UGC footage, or audio recordings, our AI-powered photo-to-video and script-to-screen pipeline handles full assembly, color grading, kinetic motion graphics, and audio mastering.",
-  },
-  {
-    _id: "7",
-    question: "Is your AI video production pipeline brand-safe and copyright-compliant?",
-    answer:
-      "100%. We operate under enterprise NDAs, use licensed commercial AI models, and build isolated asset pipelines. All delivered master files include full commercial usage rights for Meta, YouTube, CTV, TikTok, and web distribution.",
-  },
-  {
-    _id: "8",
-    question: "How do I get a custom quote or project estimate for AI video production?",
-    answer:
-      "Every project is tailored to your specific creative scope, video length, and delivery requirements. Contact our team for a fast 20-minute discovery call or request a custom quote via our Contact page.",
+      "We can plan landscape, vertical and square versions, along with captions and shorter edits. Tell us where the content will appear so those deliverables can be included in the brief.",
   },
 ];
 
@@ -74,28 +61,35 @@ export function FAQ_() {
   const items = faqs && faqs.length > 0 ? faqs : FALLBACK;
 
   return (
-    <section className="mx-auto max-w-4xl px-6 py-24 sm:py-32" id="faq">
-      <SectionHeader
-        eyebrow="FAQ & Insights"
-        title="Frequently Asked Questions About AI Video Production Services"
-        desc="Everything you need to know about working with an AI video production agency, our workflows, turnarounds, and capabilities."
-      />
-      <Accordion type="single" collapsible className="mt-14 w-full space-y-4">
-        {items.map((f) => (
-          <AccordionItem
-            key={f._id}
-            value={f._id}
-            className="glass glass-reflect overflow-hidden rounded-2xl border border-border/60 px-6 shadow-glass"
-          >
-            <AccordionTrigger className="py-5 text-left font-display text-base font-semibold hover:no-underline sm:text-lg">
-              {f.question}
-            </AccordionTrigger>
-            <AccordionContent className="pb-5 text-sm sm:text-base leading-relaxed text-muted-foreground">
-              {typeof f.answer === "string" ? f.answer : <PortableText value={f.answer} />}
-            </AccordionContent>
-          </AccordionItem>
-        ))}
-      </Accordion>
+    <section className="studio-section border-t border-border" id="faq">
+      <div className="grid gap-10 lg:grid-cols-[0.85fr_1.3fr] lg:gap-20">
+        <div>
+          <p className="eyebrow">Before we begin</p>
+          <h2 className="section-title mt-4">
+            Good questions.
+            <br />
+            Clear answers.
+          </h2>
+          <p className="mt-5 max-w-sm text-sm leading-relaxed text-muted-foreground">
+            A little clarity on the brief, the process and what happens next.
+          </p>
+          <Link to="/contact" className="studio-text-link mt-6">
+            Ask about your project <ArrowUpRight className="h-4 w-4" />
+          </Link>
+        </div>
+        <Accordion type="single" collapsible className="w-full border-t border-border">
+          {items.map((f) => (
+            <AccordionItem key={f._id} value={f._id} className="border-b border-border px-1">
+              <AccordionTrigger className="py-5 text-left font-display text-base font-semibold hover:no-underline sm:text-lg">
+                {f.question}
+              </AccordionTrigger>
+              <AccordionContent className="pb-5 text-sm sm:text-base leading-relaxed text-muted-foreground">
+                {typeof f.answer === "string" ? f.answer : <PortableText value={f.answer} />}
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      </div>
     </section>
   );
 }

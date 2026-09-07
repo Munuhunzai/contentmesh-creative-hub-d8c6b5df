@@ -12,10 +12,11 @@ import {
 import { SanitySnapshot } from "../src/integrations/sanity/snapshot";
 import { Hero } from "../src/components/home/Hero";
 import { Services } from "../src/components/home/Services";
+import { Portfolio } from "../src/components/home/Portfolio";
 import { Stats } from "../src/components/home/Stats";
 import { Testimonials } from "../src/components/home/Testimonials";
 
-async function render(data: Record<string, unknown>) {
+async function render(data: Record<string, unknown>, compact = false) {
   const client = new QueryClient();
   const route = createRootRoute({
     component: () =>
@@ -23,7 +24,8 @@ async function render(data: Record<string, unknown>) {
         React.Fragment,
         null,
         React.createElement(Hero),
-        React.createElement(Services),
+        React.createElement(Services, { compact }),
+        React.createElement(Portfolio, { featuredOnly: compact }),
         React.createElement(Stats),
         React.createElement(Testimonials),
       ),
@@ -80,4 +82,37 @@ test("empty CMS state contains no invented client proof or duplicate service cop
   for (const text of ["Emily Jeff", "TheWebagency", "Client Satisfaction", "250+"])
     assert.ok(!html.includes(text), text);
   assert.equal((html.match(/Explore service/g) || []).length, 12);
+});
+
+test("the full portfolio shows non-featured projects and never invents review ratings", async () => {
+  const html = await render({
+    portfolio: [
+      { _id: "a", title: "Featured film", featured: true, category: "Films" },
+      { _id: "b", title: "A second real project", featured: false, category: "Reels" },
+    ],
+    testimonials: [
+      { _id: "r", authorName: "Actual reviewer", quote: "Real feedback without a rating" },
+    ],
+  });
+  assert.ok(html.includes("Featured film"));
+  assert.ok(html.includes("A second real project"));
+  assert.ok(html.includes("All work"));
+  assert.ok(!html.includes("Rated 5"));
+  assert.ok(!html.includes("Go to review slide"));
+});
+
+test("homepage curation limits the work and service catalogue without dropping full-page content", async () => {
+  const data = {
+    portfolio: Array.from({ length: 6 }, (_, i) => ({
+      _id: `p${i}`,
+      title: `Published film ${i}`,
+      featured: true,
+    })),
+  };
+  const compact = await render(data, true);
+  const full = await render(data);
+  assert.equal((compact.match(/View project:/g) || []).length, 4);
+  assert.equal((full.match(/View project:/g) || []).length, 6);
+  assert.equal((compact.match(/Explore service/g) || []).length, 3);
+  assert.equal((full.match(/Explore service/g) || []).length, 12);
 });

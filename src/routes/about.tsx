@@ -22,7 +22,7 @@ export const Route = createFileRoute("/about")({
 
 const PILLARS = [
   { icon: Target, t: "Mission", d: "Give every brand a world-class creative team on demand." },
-  { icon: Eye, t: "Vision", d: "A future where AI and taste ship stories at the speed of ideas." },
+  { icon: Eye, t: "Vision", d: "More room for original stories through thoughtful use of AI." },
   { icon: Heart, t: "Values", d: "Craft, honesty, speed, and relentless usefulness for clients." },
   {
     icon: Building2,
@@ -51,25 +51,25 @@ const TEAM_FALLBACK: TeamMember[] = [
 const ACCENTS = ["#FF5A1F", "#0D4C92", "#F6C244", "#111"];
 
 function About() {
-  const team = useSanity<TeamMember[]>(["sanity", "team"], teamQuery, TEAM_FALLBACK);
+  const publishedTeam = useSanity<TeamMember[]>(["sanity", "team"], teamQuery, TEAM_FALLBACK);
+  const team = publishedTeam.length ? publishedTeam : TEAM_FALLBACK;
 
   return (
     <SiteLayout>
       <PageHero
         eyebrow="About"
-        title="A modern studio for the AI era"
-        desc="We're a small, senior team of directors, editors, and technologists building the future of branded content."
+        title="Human judgement. New possibilities."
+        desc="ContentMesh Studios brings creative direction, AI video production and post-production together for brands and creators."
       />
 
-      <section className="mx-auto max-w-5xl px-6">
+      <section className="studio-section !pb-0">
         <div className="rounded-[2rem] border border-border bg-card p-8 sm:p-12">
           <p className="font-display text-2xl leading-snug tracking-tight sm:text-3xl">
-            ContentMesh started as a bet:{" "}
-            <span className="gradient-text">
-              that AI + real craft would beat traditional agency pipelines
+            A powerful tool is only the beginning.{" "}
+            <span className="text-brand-blue">
+              The story, the visual decisions and the care in the edit
             </span>{" "}
-            — with thoughtful creative direction, consistent visuals and a careful final edit. We
-            help brands and creators turn ideas into stories people want to watch.
+            turn an idea into something worth watching. That is the work we focus on at ContentMesh.
           </p>
         </div>
       </section>
@@ -79,7 +79,7 @@ function About() {
           {PILLARS.map((p, i) => (
             <motion.div
               key={p.t}
-              initial={{ opacity: 0, y: 20 }}
+              initial={false}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.06 }}
@@ -99,17 +99,19 @@ function About() {
 
       <section className="mx-auto max-w-7xl px-6 py-16">
         <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
-          Meet the AI Video Directors & Engineers Behind ContentMesh
+          The people behind the work.
         </h2>
         <p className="mt-2 text-muted-foreground">
-          Senior filmmakers, prompt engineers, and motion designers deeply hands-on with every
-          production.
+          Creative direction starts with a conversation. Get to know the people shaping your
+          project.
         </p>
-        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div
+          className={`mt-10 grid gap-6 ${team.length > 1 ? "sm:grid-cols-2 lg:grid-cols-3" : "max-w-xl"}`}
+        >
           {team.map((m, i) => (
             <motion.div
               key={m._id}
-              initial={{ opacity: 0, y: 20 }}
+              initial={false}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.06 }}

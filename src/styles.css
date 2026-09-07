@@ -527,3 +527,207 @@ button:disabled {
     scroll-behavior: auto !important;
   }
 }
+
+/* Editorial studio system: readable type, real work, restrained brand accents. */
+.studio-section {
+  width: 100%;
+  max-width: 1280px;
+  margin-inline: auto;
+  padding: clamp(4rem, 7vw, 6.5rem) 1.5rem;
+}
+.studio-section-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-bottom: 2.75rem;
+}
+.studio-intro {
+  background: #f5f6f8;
+  padding: 8.5rem 1.5rem 3.5rem;
+}
+.studio-intro-grid {
+  max-width: 1400px;
+  margin: auto;
+  display: grid;
+  gap: 3rem;
+  align-items: center;
+}
+.studio-intro-copy {
+  padding-block: 1rem;
+}
+.studio-headline {
+  margin-top: 1.5rem;
+  font-size: clamp(3.25rem, 6.5vw, 6.75rem);
+  font-weight: 800;
+  line-height: 0.98;
+  letter-spacing: -0.065em;
+}
+.studio-headline-last {
+  white-space: nowrap;
+}
+.studio-showcase {
+  min-width: 0;
+  overflow: hidden;
+  border-radius: 2px 2px 20px 2px;
+  box-shadow: 0 24px 48px -32px #0b264580;
+}
+.studio-showcase-media {
+  position: relative;
+  isolation: isolate;
+  min-height: 360px;
+  aspect-ratio: 4/3;
+  background: #0e447f;
+  overflow: hidden;
+}
+.studio-frame-corner {
+  position: absolute;
+  top: 1.5rem;
+  left: 1.5rem;
+  width: 2rem;
+  height: 2rem;
+  border-left: 2px solid #ffffffaa;
+  border-top: 2px solid #ffffffaa;
+}
+.studio-showcase-fallback {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  background: linear-gradient(140deg, #0e447f, #0a2340);
+}
+.studio-showcase-fallback > span {
+  font-size: clamp(5rem, 13vw, 10rem);
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.07em;
+}
+.studio-showcase-fallback > p {
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.studio-button {
+  display: inline-flex;
+  min-height: 52px;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  padding: 0.875rem 1.5rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  transition:
+    background 0.2s,
+    transform 0.2s;
+}
+.studio-button:hover {
+  transform: translateY(-2px);
+}
+.studio-button-blue {
+  background: #0e447f;
+  color: white;
+}
+.studio-button-blue:hover {
+  background: #082f59;
+}
+.studio-button-orange {
+  background: #c23800;
+  color: white;
+}
+.studio-button-orange:hover {
+  background: #a83000;
+}
+.studio-button-outline {
+  border-color: #0e447f40;
+  color: #0e447f;
+}
+.studio-button-outline:hover {
+  background: #0e447f08;
+}
+.studio-text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  min-height: 44px;
+  border-bottom: 1px solid #0e447f55;
+  color: #0e447f;
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+.studio-text-link:hover {
+  border-color: #c23800;
+}
+.project-card-media {
+  position: relative;
+  aspect-ratio: 8/5;
+  overflow: hidden;
+  border-radius: 3px;
+}
+.project-card:focus-visible {
+  border-radius: 3px;
+}
+.project-placeholder {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 2rem 2rem 5rem;
+  color: white;
+}
+.project-placeholder > span:first-child {
+  font-size: 6rem;
+  font-weight: 800;
+  line-height: 1;
+  opacity: 0.3;
+}
+.studio-principles {
+  background: #0b2645;
+  color: white;
+}
+.studio-principles :focus-visible,
+.studio-showcase :focus-visible {
+  outline-color: #ffb18a;
+}
+.studio-intro-copy :focus-visible {
+  outline-color: #0e447f;
+}
+.studio-cta-panel {
+  padding: clamp(2rem, 5vw, 4rem);
+  border-top: 3px solid #c23800;
+  background: #f0f3f7;
+}
+@media (min-width: 1024px) {
+  .studio-intro {
+    padding-inline: 2.5rem;
+  }
+  .studio-intro-grid {
+    grid-template-columns: 1fr 1.1fr;
+    gap: 2.5rem;
+  }
+  .studio-showcase-media {
+    aspect-ratio: 1/1;
+    min-height: 0;
+  }
+}
+@media (max-width: 767px) {
+  .studio-section-heading {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .studio-intro {
+    padding-top: 7rem;
+    padding-bottom: 2rem;
+  }
+  .studio-headline {
+    font-size: clamp(3rem, 12vw, 5.5rem);
+  }
+  .studio-showcase-media {
+    min-height: 300px;
+  }
+}

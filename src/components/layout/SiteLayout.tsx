@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUp } from "lucide-react";
 import { Navbar } from "./Navbar";
 import { Footer } from "./Footer";
-import { AmbientBackground } from "./AmbientBackground";
 
 const FloatingChatbot = lazy(() =>
   import("@/components/chat/FloatingChatbot").then((m) => ({ default: m.FloatingChatbot })),
@@ -41,7 +40,6 @@ export function SiteLayout({ children, heroSlot, noTopPadding }: SiteLayoutProps
 
   return (
     <div className="relative min-h-dvh w-full max-w-full overflow-x-hidden">
-      <AmbientBackground />
       <a href="#main-content" className="skip-link">
         Skip to content
       </a>

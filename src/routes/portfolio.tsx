@@ -16,8 +16,8 @@ export const Route = createFileRoute("/portfolio")({
     <SiteLayout>
       <PageHero
         eyebrow="AI Video Portfolio"
-        title="Selected AI Video Production Work & Examples"
-        desc="A curated showcase of recent commercial ads, AI animations, explainers, and social reels created for global clients."
+        title="The work speaks first."
+        desc="Commercials, product films and visual stories. Explore the collection and find a starting point for your next idea."
       />
       <Portfolio />
       <CTA />
