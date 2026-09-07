@@ -1,3 +1,4 @@
+import { PortableText, type PortableTextBlock } from "@portabletext/react";
 import { Modal } from "@/components/layout/Modal";
 import { useState } from "react";
 import {
@@ -27,7 +28,7 @@ export type ServiceItem = {
   fullTitle: string;
   category: string;
   shortDescription: string;
-  fullDescription: string;
+  fullDescription: string | PortableTextBlock[];
   deliverables: string[];
   color: string;
   iconImg?: string;
@@ -44,15 +45,15 @@ const SERVICES_DATA: ServiceItem[] = [
     iconImg: "/services/ai-video.webp",
     iconComponent: Video,
     shortDescription:
-      "Full-stack AI video creation, generative visuals, and script-to-screen commercial production.",
+      "AI video creation, generative visuals, and script-to-screen commercial production.",
     fullDescription:
-      "We combine state-of-the-art generative AI models (Runway Gen-3, Luma, Sora-class) with senior human post-production to craft cinema-grade commercial ads and visual stories.",
+      "We combine state-of-the-art generative AI models (selected for your visual direction) with senior human post-production to craft cinema-grade commercial ads and visual stories.",
     deliverables: [
       "Custom Scriptwriting & Storyboarding",
       "Generative 4K Video Renderings",
       "Professional Sound Design & Mix",
       "Multi-cut Aspect Ratio Variations (16:9, 9:16, 1:1)",
-      "Full Commercial Distribution License",
+      "Usage rights agreed for your distribution channels",
     ],
   },
   {
@@ -83,14 +84,13 @@ const SERVICES_DATA: ServiceItem[] = [
     color: "#fed766", // Bright Yellow
     iconImg: "/services/voiceovers.webp",
     iconComponent: Mic,
-    shortDescription:
-      "Studio-grade AI voice cloning, lip-syncing, and audio translation in 40+ global languages.",
+    shortDescription: "AI voiceovers, lip-syncing and audio localisation for your chosen audience.",
     fullDescription:
       "Scale your brand internationally with emotion-tuned AI voiceovers, voice cloning, automatic lip-sync alignment, and native accent localization.",
     deliverables: [
       "Voice Cloning & Persona Calibration",
       "Translation & Subtitle Alignment",
-      "40+ Languages & Dialect Variations",
+      "Language & Pronunciation Review",
       "Mastered 24-bit Audio Tracks",
       "Noise Reduction & Room Polish",
     ],
@@ -195,15 +195,15 @@ const SERVICES_DATA: ServiceItem[] = [
   {
     _id: "9",
     title: "Studio Stages",
-    fullTitle: "In-House Studio Stage & Hybrid Production",
+    fullTitle: "Virtual Stages & Hybrid Production",
     category: "Production",
     color: "#a7f3d0", // Mint Green
     iconImg: "/services/studio-stages.webp",
     iconComponent: Building2,
     shortDescription:
-      "In-house lighting stage, camera crew, edit bays, and AI hybrid production workflows.",
+      "AI environments and hybrid production planned around the assets your project needs.",
     fullDescription:
-      "Combine live camera production with AI background extensions, visual effects, and post-production polish in our dedicated studio space.",
+      "Combine live camera production with AI background extensions, visual effects, and post-production polish through a project-specific production plan.",
     deliverables: [
       "Live Filming & Studio Lighting Setup",
       "4K Camera Crew & Direction",
@@ -270,8 +270,6 @@ const SERVICES_DATA: ServiceItem[] = [
   },
 ];
 
-// Quadruple items array to ensure infinite smooth seamless looping
-
 export function SectionHeader({
   eyebrow,
   title,
@@ -300,11 +298,11 @@ type CmsService = {
   _id: string;
   title: string;
   shortDescription?: string;
-  longDescription?: string;
+  longDescription?: string | PortableTextBlock[];
   features?: string[];
 };
 
-export function Services() {
+export function Services({ compact = false }: { compact?: boolean }) {
   const cms = useSanity<CmsService[]>(["sanity", "services"], servicesQuery, []);
   const [selected, setSelected] = useState<ServiceItem | null>(null);
   const items = cms.length
@@ -313,19 +311,28 @@ export function Services() {
         _id: item._id,
         title: item.title,
         fullTitle: item.title,
-        shortDescription: item.shortDescription || "Creative production shaped around your brief.",
+        shortDescription:
+          item.shortDescription && item.shortDescription.trim().length >= 15
+            ? item.shortDescription
+            : "Creative production shaped around your brief.",
         fullDescription:
-          item.longDescription ||
-          item.shortDescription ||
+          (Array.isArray(item.longDescription)
+            ? item.longDescription.length
+              ? item.longDescription
+              : undefined
+            : item.longDescription) ||
+          (item.shortDescription && item.shortDescription.trim().length >= 15
+            ? item.shortDescription
+            : undefined) ||
           "Discuss the right deliverables for your project with our team.",
         deliverables: item.features || [],
       }))
     : SERVICES_DATA;
   return (
-    <section className="mx-auto max-w-7xl px-6 py-16 sm:py-24" id="services">
+    <section className="studio-section border-t border-border" id="services">
       <div className="mb-10 flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
         <div className="max-w-2xl">
-          <p className="eyebrow">Our capabilities</p>
+          <p className="eyebrow">{compact ? "02 / Capabilities" : "Our capabilities"}</p>
           <h2 className="section-title mt-3">
             Your idea. Our craft.
             <br />
@@ -337,25 +344,21 @@ export function Services() {
           your brief.
         </p>
       </div>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {items.map((item, index) => (
+      <div
+        className={`grid gap-4 ${items.length > 1 ? "sm:grid-cols-2" : ""} ${items.length > 2 ? "lg:grid-cols-3" : ""}`}
+      >
+        {(compact ? items.slice(0, 3) : items).map((item, index) => (
           <button
             type="button"
             key={item._id}
             onClick={() => setSelected(item)}
-            className="service-card group rounded-3xl border border-border bg-card p-6 text-left transition duration-300 hover:-translate-y-1 hover:border-brand-blue/30 hover:shadow-lg"
+            className="service-card group border border-border bg-white p-7 text-left transition duration-300 hover:-translate-y-1 hover:border-brand-blue/40 hover:shadow-soft"
             aria-haspopup="dialog"
           >
             <div className="mb-6 flex items-center justify-between">
-              <img
-                src={item.iconImg}
-                alt=""
-                width={64}
-                height={64}
-                loading="lazy"
-                decoding="async"
-                className="h-16 w-16 rounded-2xl object-cover"
-              />
+              <span className="grid h-12 w-12 place-items-center rounded-full bg-brand-blue/5 text-brand-blue">
+                <item.iconComponent className="h-6 w-6" />
+              </span>
               <span className="text-xs font-semibold tabular-nums text-muted-foreground">
                 {String(index + 1).padStart(2, "0")}
               </span>
@@ -371,6 +374,16 @@ export function Services() {
           </button>
         ))}
       </div>
+      {compact && (
+        <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-b border-border pb-7">
+          <p className="text-sm text-muted-foreground">
+            One film, an ongoing series, or the whole production.
+          </p>
+          <Link to="/services" className="studio-text-link">
+            Explore all capabilities <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+      )}
       <Modal
         open={!!selected}
         onClose={() => setSelected(null)}
@@ -378,9 +391,7 @@ export function Services() {
       >
         {selected && (
           <div className="p-6 sm:p-8">
-            <p className="text-base leading-relaxed text-muted-foreground">
-              {selected.fullDescription}
-            </p>
+            <ServiceDescription value={selected.fullDescription} />
             {selected.deliverables.length > 0 && (
               <>
                 <h3 className="mt-6 font-semibold">Deliverables to discuss</h3>
@@ -396,6 +407,8 @@ export function Services() {
             )}
             <Link
               to="/contact"
+              search={{ reference: `Service: ${selected.title}` }}
+              onClick={() => setSelected(null)}
               className="mt-8 inline-flex min-h-12 items-center gap-3 rounded-full bg-accent px-6 py-3 text-sm font-semibold text-white"
             >
               Request a quote <ArrowRight className="h-4 w-4" />
@@ -404,5 +417,26 @@ export function Services() {
         )}
       </Modal>
     </section>
+  );
+}
+
+export function ServiceDescription({ value }: { value: string | PortableTextBlock[] }) {
+  const plainText =
+    typeof value === "string"
+      ? value
+      : value
+          .flatMap((block) => block.children || [])
+          .map((span) => (typeof span.text === "string" ? span.text : ""))
+          .join(" ");
+  if (plainText.trim().length < 15)
+    return (
+      <p className="text-base leading-relaxed text-muted-foreground">
+        Discuss the creative direction and deliverables for your project with our team.
+      </p>
+    );
+  return (
+    <div className="space-y-4 text-base leading-relaxed text-muted-foreground [&_p]:mb-4 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5">
+      {typeof value === "string" ? value : <PortableText value={value} />}
+    </div>
   );
 }

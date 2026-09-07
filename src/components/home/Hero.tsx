@@ -62,113 +62,131 @@ export function Hero({ initialData }: { initialData?: HomepageData | null } = {}
     <section
       ref={sectionRef}
       aria-label="ContentMesh creative studio"
-      className="studio-hero relative isolate overflow-hidden bg-[#081b2c] text-white"
+      className="studio-hero studio-intro"
     >
-      <div className="absolute inset-0 -z-20" aria-hidden="true">
-        {slide.backgroundImageUrl && (
-          <img
-            key={slide.backgroundImageUrl}
-            src={optimizeSanityImage(slide.backgroundImageUrl, 1440, 75)}
-            srcSet={getSanitySrcSet(slide.backgroundImageUrl, [640, 960, 1440, 1920], 75)}
-            sizes="100vw"
-            alt=""
-            width={1920}
-            height={1080}
-            fetchPriority="high"
-            loading="eager"
-            className="h-full w-full object-cover"
-          />
-        )}
-        {slide.videoFileUrl && !reducedMotion && (
-          <video
-            ref={videoRef}
-            key={slide.videoFileUrl}
-            src={slide.videoFileUrl}
-            poster={
-              slide.backgroundImageUrl
-                ? optimizeSanityImage(slide.backgroundImageUrl, 1440, 75)
-                : undefined
-            }
-            muted
-            loop
-            playsInline
-            preload="none"
-            className="absolute inset-0 h-full w-full object-cover"
-          />
-        )}
-      </div>
-      <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(5,20,33,0.95)_0%,rgba(5,20,33,0.77)_50%,rgba(5,20,33,0.3)_100%)]" />
-      <div className="mx-auto flex min-h-[720px] max-w-7xl flex-col justify-end px-6 pb-10 pt-36 sm:min-h-[760px] sm:pb-12 lg:min-h-[min(850px,100svh)] lg:pt-44">
-        <p className="mb-6 flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.18em] text-white/85">
-          <span className="h-2 w-2 rounded-full bg-[#ff8b58]" />
-          Independent AI production studio
-        </p>
-        <h1 className="max-w-4xl font-display text-[clamp(2.8rem,6.4vw,6rem)] font-extrabold leading-[1.03] tracking-[-0.055em]">
-          AI-powered.
-          <br />
-          Human <span className="text-[#ff9a6c]">by design.</span>
-        </h1>
-        <p className="mt-6 max-w-xl text-base leading-relaxed text-white/85 sm:text-lg">
-          {data.heroDescription ||
-            "Cinematic AI videos, commercials and brand stories. Creative direction, production and the final edit — made for your audience."}
-        </p>
-        <div className="mt-8 flex flex-col gap-3 min-[400px]:flex-row">
-          <Link
-            to="/contact"
-            className="inline-flex min-h-14 items-center justify-center gap-4 rounded-full bg-accent px-7 text-sm font-bold text-white shadow-lg transition hover:bg-[#a83000]"
-          >
-            Start your project <ArrowUpRight className="h-5 w-5" />
-          </Link>
-          <Link
-            to="/portfolio"
-            className="inline-flex min-h-14 items-center justify-center gap-4 rounded-full border border-white/40 bg-white/5 px-7 text-sm font-semibold text-white transition hover:bg-white/15"
-          >
-            Explore our work <Play className="h-4 w-4" />
-          </Link>
-        </div>
-        <div className="mt-14 flex flex-wrap items-center justify-between gap-5 border-t border-white/20 pt-6">
-          <p className="text-xs uppercase tracking-[0.14em] text-white/75">
-            Strategy <span className="mx-2 text-[#ff9a6c]">/</span> Story{" "}
-            <span className="mx-2 text-[#ff9a6c]">/</span> Production{" "}
-            <span className="mx-2 text-[#ff9a6c]">/</span> Post
+      <div className="studio-intro-grid">
+        <div className="studio-intro-copy">
+          <p className="eyebrow flex items-center gap-3">
+            <span className="h-2 w-2 bg-accent" /> ContentMesh / Independent AI studio
           </p>
-          <div className="flex items-center gap-2">
-            <span className="mr-3 max-w-40 truncate text-xs text-white/80">
-              {slide.category || "Selected work"}
+          <h1 className="studio-headline">
+            Your story.
+            <br />
+            <span className="text-brand-blue">Worth</span>
+            <br />
+            <span className="studio-headline-last">
+              watching<span className="text-accent">.</span>
             </span>
-            {slides.length > 1 && (
-              <>
-                <button
-                  type="button"
-                  onClick={() => move(-1)}
-                  aria-label="Previous showcase"
-                  className="hero-control"
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                </button>
-                <span className="min-w-10 text-center text-xs tabular-nums">
-                  {(current % slides.length) + 1} / {slides.length}
+          </h1>
+          <p className="mt-7 max-w-lg text-base leading-relaxed text-muted-foreground sm:text-lg">
+            {data.heroDescription ||
+              "Cinematic AI commercials, product films and brand stories. Human creative direction, from the first idea to the final edit."}
+          </p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link to="/portfolio" className="studio-button studio-button-blue">
+              Explore our work <ArrowUpRight className="h-4 w-4" />
+            </Link>
+            <Link to="/contact" className="studio-button studio-button-outline">
+              Start your project <ArrowUpRight className="h-4 w-4" />
+            </Link>
+          </div>
+          <p className="mt-10 flex flex-wrap gap-x-5 gap-y-2 text-[11px] font-semibold uppercase tracking-[0.15em] text-muted-foreground">
+            <span>Creative direction</span>
+            <span>AI production</span>
+            <span>Post-production</span>
+          </p>
+        </div>
+        <div className="studio-showcase">
+          <div className="studio-showcase-media">
+            {slide.backgroundImageUrl && (
+              <img
+                key={slide.backgroundImageUrl}
+                src={optimizeSanityImage(slide.backgroundImageUrl, 1440, 75)}
+                srcSet={getSanitySrcSet(slide.backgroundImageUrl, [640, 960, 1440, 1920], 75)}
+                sizes="(min-width: 1024px) 52vw, 100vw"
+                alt=""
+                width={1440}
+                height={1080}
+                fetchPriority="high"
+                loading="eager"
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+            )}
+            {slide.videoFileUrl && !reducedMotion && (
+              <video
+                ref={videoRef}
+                key={slide.videoFileUrl}
+                src={slide.videoFileUrl}
+                poster={
+                  slide.backgroundImageUrl
+                    ? optimizeSanityImage(slide.backgroundImageUrl, 1440, 75)
+                    : undefined
+                }
+                muted
+                loop
+                playsInline
+                preload="none"
+                aria-hidden="true"
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+            )}
+            {!slide.backgroundImageUrl && (!slide.videoFileUrl || reducedMotion) && (
+              <div className="studio-showcase-fallback" aria-hidden="true">
+                <span>
+                  CM<span className="text-[#ff9a6c]">.</span>
                 </span>
+                <p>Ideas into motion</p>
+              </div>
+            )}
+            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-6 pt-20 text-white sm:p-8 sm:pt-24">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/75">
+                Inside the frame
+              </p>
+              <p className="mt-2 max-w-sm font-display text-xl font-semibold sm:text-2xl">
+                {slide.title || slide.category || "AI-powered. Human-directed."}
+              </p>
+            </div>
+            <span aria-hidden="true" className="studio-frame-corner" />
+          </div>
+          <div className="flex min-h-20 flex-wrap items-center justify-between gap-3 bg-[#0b2645] px-5 py-4 text-white sm:px-7">
+            <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-white/75">
+              Studio showcase{" "}
+              <span className="ml-3 text-[#ff9a6c]">
+                / {String((current % slides.length) + 1).padStart(2, "0")}
+              </span>
+            </p>
+            <div className="flex items-center gap-2">
+              {slides.length > 1 && (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => move(-1)}
+                    aria-label="Previous showcase"
+                    className="hero-control"
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => move(1)}
+                    aria-label="Next showcase"
+                    className="hero-control"
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </button>
+                </>
+              )}
+              {!reducedMotion && (slides.length > 1 || slide.videoFileUrl) && (
                 <button
                   type="button"
-                  onClick={() => move(1)}
-                  aria-label="Next showcase"
+                  onClick={() => setPaused((value) => !value)}
+                  aria-label={paused ? "Play showcase" : "Pause showcase"}
                   className="hero-control"
                 >
-                  <ChevronRight className="h-4 w-4" />
+                  {paused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
                 </button>
-              </>
-            )}
-            {!reducedMotion && (slides.length > 1 || slide.videoFileUrl) && (
-              <button
-                type="button"
-                onClick={() => setPaused((value) => !value)}
-                aria-label={paused ? "Play showcase" : "Pause showcase"}
-                className="hero-control"
-              >
-                {paused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
-              </button>
-            )}
+              )}
+            </div>
           </div>
         </div>
       </div>

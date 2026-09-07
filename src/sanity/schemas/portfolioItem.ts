@@ -35,10 +35,47 @@ export default defineType({
       type: "boolean",
       initialValue: false,
       description:
-        "Turn ON to display this item in the default 'Featured' tab on the portfolio grid.",
+        "Prioritise this item in the four-project homepage selection. The portfolio page still shows all work.",
     }),
     defineField({ name: "client", type: "string" }),
     defineField({ name: "completionDate", type: "date" }),
+    defineField({
+      name: "projectType",
+      title: "Project type",
+      type: "string",
+      options: { list: ["Client project", "Concept study", "Personal project"] },
+      description:
+        "Choose the actual relationship. A concept study is not presented as commissioned client work.",
+    }),
+    defineField({
+      name: "brief",
+      title: "The brief",
+      type: "text",
+      rows: 3,
+      validation: (r) => r.max(1200),
+    }),
+    defineField({
+      name: "approach",
+      title: "Creative approach",
+      type: "text",
+      rows: 3,
+      validation: (r) => r.max(1800),
+    }),
+    defineField({
+      name: "deliverables",
+      type: "array",
+      of: [{ type: "string" }],
+      validation: (r) => r.max(12),
+    }),
+    defineField({
+      name: "outcome",
+      title: "Result",
+      type: "text",
+      rows: 3,
+      description:
+        "Include only outcomes you can verify and have permission to publish. Leave blank if unavailable.",
+      validation: (r) => r.max(1200),
+    }),
     defineField({ name: "description", type: "text", rows: 4 }),
     defineField({ name: "thumbnail", type: "image", options: { hotspot: true } }),
     defineField({

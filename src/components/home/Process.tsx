@@ -1,175 +1,55 @@
-import { motion } from "framer-motion";
-import { SectionHeader } from "./Services";
-
-const STEPS = [
+const STAGES = [
   {
-    num: "01",
-    title: "Discovery",
-    desc: "Kickoff call, goals, target audience, tone of voice — we get inside your brand before touching a single frame.",
-    accent: "#FF5A1F",
+    title: "Find the direction",
+    desc: "We work through your audience, references and message, then shape the concept, script and visual approach.",
+    review: "You review the idea and storyboard",
   },
   {
-    num: "02",
-    title: "Strategy",
-    desc: "Concept, narrative arc, platform plan, deliverables list. A creative blueprint you sign off on before production starts.",
-    accent: "#F6C244",
+    title: "Build the world",
+    desc: "Generation and production bring the agreed direction to life. Editing, voice and sound give the film its rhythm.",
+    review: "You review the work in progress",
   },
   {
-    num: "03",
-    title: "Script",
-    desc: "Tight copywriting, storyboard panels and a mood board so you can see the film before it's made.",
-    accent: "#0D4C92",
-  },
-  {
-    num: "04",
-    title: "Production",
-    desc: "AI generation, studio shoots, voiceover sessions — all orchestrated by a dedicated producer.",
-    accent: "#FF5A1F",
-  },
-  {
-    num: "05",
-    title: "Editing",
-    desc: "Assembly cut, colour grade, sound design, motion graphics and subtitle pass. Revision rounds agreed in your project scope.",
-    accent: "#F6C244",
-  },
-  {
-    num: "06",
-    title: "Delivery",
-    desc: "Master files, platform cutdowns, compressed social exports and launch-day support — done and ready to publish.",
-    accent: "#0D4C92",
+    title: "Make it ready",
+    desc: "We refine the details and prepare the agreed versions for your channels. Scope, formats and revision rounds are settled together.",
+    review: "You approve the final delivery",
   },
 ];
-
-function StepCard({ step, index }: { step: (typeof STEPS)[0]; index: number }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 48 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.7, delay: index * 0.07, ease: [0.16, 1, 0.3, 1] }}
-      className="group relative flex flex-col"
-    >
-      {/* Giant ghost number — decorative */}
-      <div
-        className="pointer-events-none select-none font-display font-black leading-none tracking-tighter"
-        style={{
-          fontSize: "clamp(5rem, 10vw, 9rem)",
-          color: "transparent",
-          WebkitTextStroke: `1px ${step.accent}30`,
-          lineHeight: 1,
-          transition: "WebkitTextStrokeColor 0.4s",
-        }}
-      >
-        {step.num}
-      </div>
-
-      {/* Card body */}
-      <div
-        className="relative mt-4 flex-1 overflow-hidden rounded-[1.75rem] p-6 transition-transform duration-500 group-hover:-translate-y-2"
-        style={{
-          background: "rgba(255,255,255,0.80)",
-          border: "1px solid rgba(0,0,0,0.07)",
-          backdropFilter: "blur(12px)",
-        }}
-      >
-        {/* Hover glow top-left */}
-        <div
-          className="pointer-events-none absolute -left-6 -top-6 h-28 w-28 rounded-full blur-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-          style={{ background: `radial-gradient(circle, ${step.accent}55 0%, transparent 70%)` }}
-        />
-
-        {/* Accent pill */}
-        <div
-          className="mb-4 inline-flex h-1.5 w-8 rounded-full"
-          style={{ background: step.accent }}
-        />
-
-        <h3 className="font-display text-xl font-bold tracking-tight text-gray-900">
-          {step.title}
-        </h3>
-        <p className="mt-3 text-sm leading-relaxed text-gray-500">{step.desc}</p>
-      </div>
-    </motion.div>
-  );
-}
-
 export function Process() {
   return (
-    <section
-      className="relative overflow-hidden py-28 sm:py-36"
-      id="process"
-      style={{ background: "linear-gradient(160deg, #f8f7f4 0%, #ffffff 50%, #f4f3ef 100%)" }}
-    >
-      {/* ── Radial glow blobs ── */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute left-1/4 top-1/3 h-[400px] w-[400px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[120px] opacity-20"
-        style={{
-          background: "radial-gradient(circle, #FF5A1F 0%, transparent 70%)",
-          opacity: 0.08,
-        }}
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute right-1/4 bottom-1/3 h-[300px] w-[300px] translate-x-1/2 translate-y-1/2 rounded-full blur-[100px] opacity-15"
-        style={{
-          background: "radial-gradient(circle, #0D4C92 0%, transparent 70%)",
-          opacity: 0.07,
-        }}
-      />
-
-      {/* ── Content ── */}
-      <div className="relative mx-auto max-w-7xl px-6">
-        <SectionHeader
-          eyebrow="Process"
-          title="From first idea to final frame"
-          desc="Six clear stages, with review points that keep you involved throughout production."
-        />
-
-        {/* ── Horizontal connector line (desktop) ── */}
-        <div className="relative mt-20">
-          {/* The line runs behind the cards */}
-          <div
-            aria-hidden
-            className="absolute left-0 right-0 hidden lg:block"
-            style={{
-              top: "clamp(5rem, 10vw, 9rem)",
-              height: "1px",
-              background:
-                "linear-gradient(to right, transparent, rgba(0,0,0,0.10) 15%, rgba(0,0,0,0.10) 85%, transparent)",
-            }}
-          />
-
-          {/* Step dots on the line */}
-          <div
-            aria-hidden
-            className="absolute left-0 right-0 hidden lg:flex justify-between"
-            style={{ top: "clamp(5rem, 10vw, 9rem)", transform: "translateY(-50%)" }}
-          >
-            {STEPS.map((s, i) => (
-              <motion.div
-                key={i}
-                initial={{ scale: 0 }}
-                whileInView={{ scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.08 + 0.3, type: "spring", stiffness: 400, damping: 20 }}
-                className="h-2.5 w-2.5 rounded-full"
-                style={{
-                  background: s.accent,
-                  boxShadow: `0 0 12px 2px ${s.accent}88`,
-                }}
-              />
-            ))}
-          </div>
-
-          {/* Cards grid */}
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-            {STEPS.map((s, i) => (
-              <StepCard key={s.num} step={s} index={i} />
-            ))}
-          </div>
+    <section className="studio-section" id="process" aria-labelledby="process-heading">
+      <div className="studio-section-heading">
+        <div>
+          <p className="eyebrow">04 / Working together</p>
+          <h2 id="process-heading" className="section-title mt-4">
+            A clear path.
+            <br />
+            Room for your input.
+          </h2>
         </div>
+        <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">
+          You know what we’re making, what comes next and where your feedback fits.
+        </p>
       </div>
+      <ol className="grid gap-8 md:grid-cols-3">
+        {STAGES.map((stage, i) => (
+          <li key={stage.title} className="border-t border-brand-blue/25 pt-6">
+            <span
+              className="font-display text-5xl font-medium tracking-tighter text-brand-blue/35"
+              aria-hidden="true"
+            >
+              0{i + 1}
+              <span className="text-accent">.</span>
+            </span>
+            <h3 className="mt-7 font-display text-2xl font-bold">{stage.title}</h3>
+            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{stage.desc}</p>
+            <p className="mt-7 flex items-start gap-3 text-xs font-semibold text-brand-blue">
+              <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
+              {stage.review}
+            </p>
+          </li>
+        ))}
+      </ol>
     </section>
   );
 }

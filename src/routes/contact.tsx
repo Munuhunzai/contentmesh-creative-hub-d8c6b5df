@@ -12,6 +12,10 @@ import { useSanity } from "@/integrations/sanity/useSanity";
 import { contactQuery } from "@/integrations/sanity/queries";
 
 export const Route = createFileRoute("/contact")({
+  validateSearch: (search: Record<string, unknown>): { reference?: string } =>
+    typeof search.reference === "string" && search.reference.trim()
+      ? { reference: search.reference.trim().slice(0, 160) }
+      : {},
   head: () =>
     seoHead(
       "Request an AI Video Quote | ContentMesh Studios",
@@ -32,6 +36,7 @@ type ContactInfo = {
 const CONTACT_FALLBACK: ContactInfo = { email: CONTACT_EMAIL };
 
 function Contact() {
+  const { reference } = Route.useSearch();
   const info = useSanity<ContactInfo>(["sanity", "contact"], contactQuery, CONTACT_FALLBACK);
   const c = { ...CONTACT_FALLBACK, ...info };
   const [status, setStatus] = useState<"idle" | "sending" | "ok" | "error">("idle");
@@ -82,7 +87,7 @@ function Contact() {
       <PageHero
         eyebrow="Contact"
         title="Let's build something worth watching"
-        desc="Tell us about your project. We reply within one business day."
+        desc="A first idea is enough. Tell us what you have in mind and we’ll work through the scope together."
       />
 
       <section className="mx-auto max-w-7xl px-6 py-12 sm:py-16">
@@ -103,6 +108,11 @@ function Contact() {
             <p className="mt-3 mb-8 text-sm text-muted-foreground">
               Fields marked * are required. An estimate request carries no commitment.
             </p>
+            {reference && (
+              <p className="mb-6 rounded-xl bg-brand-blue/5 px-4 py-3 text-sm text-brand-blue">
+                Project reference: <strong>{reference}</strong>
+              </p>
+            )}
             <div className="grid gap-5 sm:grid-cols-2">
               <Field label="Name" name="name" placeholder="Your name" error={errors.name} />
               <Field
@@ -138,6 +148,12 @@ function Contact() {
               <textarea
                 id="details"
                 name="details"
+                key={reference || "new-brief"}
+                defaultValue={
+                  reference
+                    ? `I’m interested in a project inspired by: ${reference}.\n\nMy audience, idea and deadline: `
+                    : ""
+                }
                 required
                 minLength={10}
                 maxLength={2000}

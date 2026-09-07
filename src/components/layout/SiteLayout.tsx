@@ -1,9 +1,9 @@
+import { useRouterState } from "@tanstack/react-router";
 import { useEffect, useState, lazy, Suspense, type ReactNode } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUp } from "lucide-react";
 import { Navbar } from "./Navbar";
 import { Footer } from "./Footer";
-import { AmbientBackground } from "./AmbientBackground";
 
 const FloatingChatbot = lazy(() =>
   import("@/components/chat/FloatingChatbot").then((m) => ({ default: m.FloatingChatbot })),
@@ -17,6 +17,7 @@ interface SiteLayoutProps {
 }
 
 export function SiteLayout({ children, heroSlot, noTopPadding }: SiteLayoutProps) {
+  const isContact = useRouterState({ select: (state) => state.location.pathname === "/contact" });
   const [showTop, setShowTop] = useState(false);
   const [loadChatbot, setLoadChatbot] = useState(false);
 
@@ -41,7 +42,6 @@ export function SiteLayout({ children, heroSlot, noTopPadding }: SiteLayoutProps
 
   return (
     <div className="relative min-h-dvh w-full max-w-full overflow-x-hidden">
-      <AmbientBackground />
       <a href="#main-content" className="skip-link">
         Skip to content
       </a>
@@ -56,13 +56,13 @@ export function SiteLayout({ children, heroSlot, noTopPadding }: SiteLayoutProps
         {children}
       </main>
       <Footer />
-      {loadChatbot && (
+      {loadChatbot && !isContact && (
         <Suspense fallback={null}>
           <FloatingChatbot />
         </Suspense>
       )}
       <AnimatePresence>
-        {showTop && (
+        {showTop && !isContact && (
           <motion.button
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

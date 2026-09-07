@@ -45,7 +45,9 @@ export function Footer() {
         <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
           <div>
             <Logo />
-            <p className="mt-4 max-w-xs text-sm text-muted-foreground">{s.tagline}</p>
+            <p className="mt-4 max-w-xs text-sm text-muted-foreground">
+              {s.tagline?.replace(/\beffeciency\b/gi, "efficiency")}
+            </p>
             <div className="mt-6 flex gap-2">
               {socials
                 .filter(([, , href]) => /^https?:\/\//.test(href))
