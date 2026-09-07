@@ -1,3 +1,4 @@
+import { PortableText, type PortableTextBlock } from "@portabletext/react";
 import { Modal } from "@/components/layout/Modal";
 import { useState } from "react";
 import {
@@ -27,7 +28,7 @@ export type ServiceItem = {
   fullTitle: string;
   category: string;
   shortDescription: string;
-  fullDescription: string;
+  fullDescription: string | PortableTextBlock[];
   deliverables: string[];
   color: string;
   iconImg?: string;
@@ -297,7 +298,7 @@ type CmsService = {
   _id: string;
   title: string;
   shortDescription?: string;
-  longDescription?: string;
+  longDescription?: string | PortableTextBlock[];
   features?: string[];
 };
 
@@ -310,10 +311,19 @@ export function Services({ compact = false }: { compact?: boolean }) {
         _id: item._id,
         title: item.title,
         fullTitle: item.title,
-        shortDescription: item.shortDescription || "Creative production shaped around your brief.",
+        shortDescription:
+          item.shortDescription && item.shortDescription.trim().length >= 15
+            ? item.shortDescription
+            : "Creative production shaped around your brief.",
         fullDescription:
-          item.longDescription ||
-          item.shortDescription ||
+          (Array.isArray(item.longDescription)
+            ? item.longDescription.length
+              ? item.longDescription
+              : undefined
+            : item.longDescription) ||
+          (item.shortDescription && item.shortDescription.trim().length >= 15
+            ? item.shortDescription
+            : undefined) ||
           "Discuss the right deliverables for your project with our team.",
         deliverables: item.features || [],
       }))
@@ -334,7 +344,9 @@ export function Services({ compact = false }: { compact?: boolean }) {
           your brief.
         </p>
       </div>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div
+        className={`grid gap-4 ${items.length > 1 ? "sm:grid-cols-2" : ""} ${items.length > 2 ? "lg:grid-cols-3" : ""}`}
+      >
         {(compact ? items.slice(0, 3) : items).map((item, index) => (
           <button
             type="button"
@@ -379,9 +391,7 @@ export function Services({ compact = false }: { compact?: boolean }) {
       >
         {selected && (
           <div className="p-6 sm:p-8">
-            <p className="text-base leading-relaxed text-muted-foreground">
-              {selected.fullDescription}
-            </p>
+            <ServiceDescription value={selected.fullDescription} />
             {selected.deliverables.length > 0 && (
               <>
                 <h3 className="mt-6 font-semibold">Deliverables to discuss</h3>
@@ -407,5 +417,13 @@ export function Services({ compact = false }: { compact?: boolean }) {
         )}
       </Modal>
     </section>
+  );
+}
+
+export function ServiceDescription({ value }: { value: string | PortableTextBlock[] }) {
+  return (
+    <div className="space-y-4 text-base leading-relaxed text-muted-foreground [&_p]:mb-4 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5">
+      {typeof value === "string" ? value : <PortableText value={value} />}
+    </div>
   );
 }

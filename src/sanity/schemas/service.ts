@@ -17,7 +17,13 @@ export default defineType({
       type: "string",
       description: "Lucide icon name, e.g. Video, Wand2, Mic",
     }),
-    defineField({ name: "shortDescription", type: "text", rows: 2 }),
+    defineField({
+      name: "shortDescription",
+      type: "text",
+      rows: 2,
+      description: "A useful summary of the service, written for prospective clients.",
+      validation: (r) => r.min(15).max(300),
+    }),
     defineField({
       name: "longDescription",
       type: "array",

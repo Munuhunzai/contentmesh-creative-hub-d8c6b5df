@@ -11,7 +11,7 @@ import {
 } from "@tanstack/react-router";
 import { SanitySnapshot } from "../src/integrations/sanity/snapshot";
 import { Hero } from "../src/components/home/Hero";
-import { Services } from "../src/components/home/Services";
+import { Services, ServiceDescription } from "../src/components/home/Services";
 import { Portfolio } from "../src/components/home/Portfolio";
 import { Stats } from "../src/components/home/Stats";
 import { Testimonials } from "../src/components/home/Testimonials";
@@ -115,4 +115,31 @@ test("homepage curation limits the work and service catalogue without dropping f
   assert.equal((full.match(/View project:/g) || []).length, 6);
   assert.equal((compact.match(/Explore service/g) || []).length, 3);
   assert.equal((full.match(/Explore service/g) || []).length, 12);
+});
+
+test("service descriptions render Sanity blocks instead of invalid React children", () => {
+  const html = renderToString(
+    React.createElement(ServiceDescription, {
+      value: [
+        {
+          _type: "block",
+          _key: "b",
+          style: "normal",
+          markDefs: [],
+          children: [
+            { _type: "span", _key: "s", text: "A detailed production approach", marks: [] },
+          ],
+        },
+      ],
+    }),
+  );
+  assert.ok(html.includes("A detailed production approach"));
+});
+
+test("large portfolio collections render an initial page with access to more projects", async () => {
+  const html = await render({
+    portfolio: Array.from({ length: 30 }, (_, i) => ({ _id: `large${i}`, title: `Film ${i}` })),
+  });
+  assert.equal((html.match(/View project:/g) || []).length, 12);
+  assert.ok(html.includes("Load more projects"));
 });

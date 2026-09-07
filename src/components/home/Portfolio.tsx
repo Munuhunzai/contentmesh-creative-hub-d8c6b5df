@@ -116,14 +116,16 @@ export function Portfolio({ featuredOnly = false }: { featuredOnly?: boolean }) 
   const cats = ["All work", ...categories.filter((c) => c !== "All work")];
   const [cat, setCat] = useState<string>("All work");
   const [open, setOpen] = useState<Item | null>(null);
+  const [visibleCount, setVisibleCount] = useState(12);
 
   const featured = items.filter((p) => p.featured);
-  const list = featuredOnly
+  const filteredList = featuredOnly
     ? (featured.length ? featured : items).slice(0, 4)
     : cat === "All work"
       ? items
       : items.filter((p) => p.category === cat);
 
+  const list = featuredOnly ? filteredList : filteredList.slice(0, visibleCount);
   return (
     <section className="studio-section" id="portfolio" aria-labelledby="portfolio-heading">
       <div className="studio-section-heading">
@@ -154,7 +156,10 @@ export function Portfolio({ featuredOnly = false }: { featuredOnly?: boolean }) 
               key={c}
               type="button"
               aria-pressed={cat === c}
-              onClick={() => setCat(c)}
+              onClick={() => {
+                setCat(c);
+                setVisibleCount(12);
+              }}
               className={`min-h-11 rounded-full border px-5 py-2 text-sm font-medium transition-colors ${cat === c ? "border-brand-blue bg-brand-blue text-white" : "border-border bg-white hover:border-brand-blue"}`}
             >
               {c}
@@ -167,7 +172,7 @@ export function Portfolio({ featuredOnly = false }: { featuredOnly?: boolean }) 
       )}
       {items.length > 0 && (
         <p className="sr-only" role="status">
-          Showing {list.length} projects{featuredOnly ? "" : ` in ${cat}`}
+          Showing {list.length} of {filteredList.length} projects{featuredOnly ? "" : ` in ${cat}`}
         </p>
       )}
       <div className="grid gap-x-7 gap-y-10 md:grid-cols-2">
@@ -243,6 +248,18 @@ export function Portfolio({ featuredOnly = false }: { featuredOnly?: boolean }) 
           </article>
         ))}
       </div>
+      {!featuredOnly && list.length < filteredList.length && (
+        <div className="mt-10 text-center">
+          <button
+            type="button"
+            className="studio-button studio-button-outline"
+            onClick={() => setVisibleCount((count) => count + 12)}
+          >
+            Load more projects{" "}
+            <span className="text-xs opacity-70">{filteredList.length - list.length} more</span>
+          </button>
+        </div>
+      )}
       {items.length === 0 && (
         <div className="border-y border-border bg-secondary/40 px-6 py-12 sm:p-12">
           <p className="eyebrow">A reference for your idea</p>
