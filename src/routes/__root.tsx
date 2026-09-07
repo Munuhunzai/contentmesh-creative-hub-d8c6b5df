@@ -15,7 +15,7 @@ import { useEffect, type ReactNode } from "react";
 
 import interFont from "@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url";
 import manropeFont from "@fontsource-variable/manrope/files/manrope-latin-wght-normal.woff2?url";
-import appCss from "../styles.css?url";
+import "../styles.css";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { ThemeProvider } from "@/components/theme-provider";
 
@@ -125,7 +125,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
     ],
     links: [
-      { rel: "stylesheet", href: appCss },
       { rel: "icon", type: "image/png", href: "/favicon.png" },
       { rel: "apple-touch-icon", href: "/favicon.png" },
       { rel: "dns-prefetch", href: "https://cdn.sanity.io" },

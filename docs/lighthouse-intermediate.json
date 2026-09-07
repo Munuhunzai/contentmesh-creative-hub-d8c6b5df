@@ -1,0 +1,381 @@
+{
+  "note": "Intermediate audits; main pages after PR5, article audits span the PR5 deployment. Not final acceptance scores.",
+  "records": [
+    {
+      "path": "/",
+      "report": "https://pagespeed.web.dev/analysis/https-contentmesh-creative-hub-d8c6b5df-vercel-app/k80hudkuue?form_factor=mobile",
+      "scores": [
+        "link \"91 Performance\"",
+        "link \"100 Accessibility\"",
+        "link \"100 Best Practices\"",
+        "link \"100 SEO\""
+      ],
+      "error": null
+    },
+    {
+      "path": "/contact",
+      "report": "https://pagespeed.web.dev/analysis/https-contentmesh-creative-hub-d8c6b5df-vercel-app-contact/4n38dgn48x?form_factor=mobile",
+      "scores": [
+        "link \"94 Performance\"",
+        "link \"100 Accessibility\"",
+        "link \"100 Best Practices\"",
+        "link \"100 SEO\""
+      ],
+      "error": null
+    },
+    {
+      "path": "/portfolio",
+      "report": "https://pagespeed.web.dev/analysis/https-contentmesh-creative-hub-d8c6b5df-vercel-app-portfolio/vuxxxmgyol?form_factor=mobile",
+      "scores": null,
+      "error": null
+    },
+    {
+      "path": "/services",
+      "report": "https://pagespeed.web.dev/analysis/https-contentmesh-creative-hub-d8c6b5df-vercel-app-services/grdx4200cz?form_factor=mobile",
+      "scores": [
+        "link \"89 Performance\"",
+        "link \"100 Accessibility\"",
+        "link \"100 Best Practices\"",
+        "link \"100 SEO\""
+      ],
+      "error": null
+    },
+    {
+      "path": "/about",
+      "report": "https://pagespeed.web.dev/analysis/https-contentmesh-creative-hub-d8c6b5df-vercel-app-about/rm2263f21l?form_factor=mobile",
+      "scores": [
+        "link \"93 Performance\"",
+        "link \"100 Accessibility\"",
+        "link \"100 Best Practices\"",
+        "link \"100 SEO\""
+      ],
+      "error": null
+    },
+    {
+      "path": "/blog",
+      "report": "https://pagespeed.web.dev/analysis/https-contentmesh-creative-hub-d8c6b5df-vercel-app-blog/iizh71pacw?form_factor=mobile",
+      "scores": [
+        "link \"79 Performance\"",
+        "link \"100 Accessibility\"",
+        "link \"100 Best Practices\"",
+        "link \"100 SEO\""
+      ],
+      "error": null
+    },
+    {
+      "path": "/tools/storyboard-generator",
+      "report": "https://pagespeed.web.dev/analysis/https-contentmesh-creative-hub-d8c6b5df-vercel-app-tools-storyboard-generator/o0ro2o0tlv?form_factor=mobile",
+      "scores": [
+        "link \"90 Performance\"",
+        "link \"98 Accessibility\"",
+        "link \"100 Best Practices\"",
+        "link \"100 SEO\""
+      ],
+      "error": null
+    },
+    {
+      "path": "/privacy",
+      "report": "https://pagespeed.web.dev/analysis/https-contentmesh-creative-hub-d8c6b5df-vercel-app-privacy/lr3c4p871y?form_factor=mobile",
+      "scores": [
+        "link \"90 Performance\"",
+        "link \"100 Accessibility\"",
+        "link \"100 Best Practices\"",
+        "link \"100 SEO\""
+      ],
+      "error": null
+    },
+    {
+      "path": "/terms",
+      "report": "https://pagespeed.web.dev/analysis/https-contentmesh-creative-hub-d8c6b5df-vercel-app-terms/ijug6pz4o2?form_factor=mobile",
+      "scores": [
+        "link \"89 Performance\"",
+        "link \"100 Accessibility\"",
+        "link \"100 Best Practices\"",
+        "link \"100 SEO\""
+      ],
+      "error": null
+    },
+    {
+      "path": "/blog/ai-video-editing-tools-vs-full-service-ai-video-production-which-do-you-need",
+      "report": "https://pagespeed.web.dev/analysis/https-contentmesh-creative-hub-d8c6b5df-vercel-app-blog-ai-video-editing-tools-vs-full-service-ai-video-production-which-do-you-need/8igsn1jzn5?form_factor=mobile",
+      "scores": [
+        "link \"77 Performance\"",
+        "link \"94 Accessibility\"",
+        "link \"100 Best Practices\"",
+        "link \"100 SEO\""
+      ],
+      "error": null
+    },
+    {
+      "path": "/blog/best-ai-avatar-creators-for-company-onboarding-videos-realistic",
+      "report": "https://pagespeed.web.dev/analysis/https-contentmesh-creative-hub-d8c6b5df-vercel-app-blog-best-ai-avatar-creators-for-company-onboarding-videos-realistic/7fa2bpg7xv?form_factor=mobile",
+      "scores": [
+        "link \"77 Performance\"",
+        "link \"94 Accessibility\"",
+        "link \"100 Best Practices\"",
+        "link \"100 SEO\""
+      ],
+      "error": null
+    },
+    {
+      "path": "/blog/where-to-find-ai-avatar-services-for-multi-format-video-content",
+      "report": "https://pagespeed.web.dev/analysis/https-contentmesh-creative-hub-d8c6b5df-vercel-app-blog-where-to-find-ai-avatar-services-for-multi-format-video-content/9t6nuje7ph?form_factor=mobile",
+      "scores": [
+        "link \"77 Performance\"",
+        "link \"94 Accessibility\"",
+        "link \"100 Best Practices\"",
+        "link \"100 SEO\""
+      ],
+      "error": null
+    },
+    {
+      "path": "/blog/ai-video-advertising-services-how-brands-are-scaling-ad-creative-with-ai-animation-realistic",
+      "report": "https://pagespeed.web.dev/analysis/https-contentmesh-creative-hub-d8c6b5df-vercel-app-blog-ai-video-advertising-services-how-brands-are-scaling-ad-creative-with-ai-animation-realistic/5pyg35ctev?form_factor=mobile",
+      "scores": [
+        "link \"77 Performance\"",
+        "link \"94 Accessibility\"",
+        "link \"100 Best Practices\"",
+        "link \"100 SEO\""
+      ],
+      "error": null
+    },
+    {
+      "path": "/blog/the-2026-state-of-ai-video-how-generative-models-changed-commercial-ads-forever",
+      "report": "https://pagespeed.web.dev/analysis/https-contentmesh-creative-hub-d8c6b5df-vercel-app-blog-the-2026-state-of-ai-video-how-generative-models-changed-commercial-ads-forever/5mmx7bnswn?form_factor=mobile",
+      "scores": [
+        "link \"79 Performance\"",
+        "link \"96 Accessibility\"",
+        "link \"100 Best Practices\"",
+        "link \"100 SEO\""
+      ],
+      "error": null
+    },
+    {
+      "path": "/blog/how-ai-is-changing-product-explainer-video-production",
+      "report": "https://pagespeed.web.dev/analysis/https-contentmesh-creative-hub-d8c6b5df-vercel-app-blog-how-ai-is-changing-product-explainer-video-production/3p1bfqryua?form_factor=mobile",
+      "scores": [
+        "link \"77 Performance\"",
+        "link \"94 Accessibility\"",
+        "link \"100 Best Practices\"",
+        "link \"100 SEO\""
+      ],
+      "error": null
+    },
+    {
+      "path": "/blog/ai-video-production-companies-in-house-team-vs-outsourced-partner",
+      "report": "https://pagespeed.web.dev/analysis/https-contentmesh-creative-hub-d8c6b5df-vercel-app-blog-ai-video-production-companies-in-house-team-vs-outsourced-partner/cd3zfvf8sd?form_factor=mobile",
+      "scores": [
+        "link \"79 Performance\"",
+        "link \"94 Accessibility\"",
+        "link \"100 Best Practices\"",
+        "link \"100 SEO\""
+      ],
+      "error": null
+    },
+    {
+      "path": "/blog/what-makes-a-leading-ai-video-creation-company-and-how-to-choose-one",
+      "report": "https://pagespeed.web.dev/analysis/https-contentmesh-creative-hub-d8c6b5df-vercel-app-blog-what-makes-a-leading-ai-video-creation-company-and-how-to-choose-one/8m83sr4z21?form_factor=mobile",
+      "scores": [
+        "link \"79 Performance\"",
+        "link \"94 Accessibility\"",
+        "link \"100 Best Practices\"",
+        "link \"100 SEO\""
+      ],
+      "error": null
+    },
+    {
+      "path": "/blog/ai-video-dubbing-and-translation-services-going-global-without-the-studio-cost-realistic",
+      "report": "https://pagespeed.web.dev/analysis/https-contentmesh-creative-hub-d8c6b5df-vercel-app-blog-ai-video-dubbing-and-translation-services-going-global-without-the-studio-cost-realistic/9ff2vym3l2?form_factor=mobile",
+      "scores": [
+        "link \"86 Performance\"",
+        "link \"94 Accessibility\"",
+        "link \"100 Best Practices\"",
+        "link \"100 SEO\""
+      ],
+      "error": null
+    },
+    {
+      "path": "/blog/ai-voice-cloning-for-video-ads-what-brands-need-to-know",
+      "report": "https://pagespeed.web.dev/analysis/https-contentmesh-creative-hub-d8c6b5df-vercel-app-blog-ai-voice-cloning-for-video-ads-what-brands-need-to-know/46i8unl0he?form_factor=mobile",
+      "scores": [
+        "link \"88 Performance\"",
+        "link \"96 Accessibility\"",
+        "link \"100 Best Practices\"",
+        "link \"100 SEO\""
+      ],
+      "error": null
+    },
+    {
+      "path": "/blog/reviews-of-ai-based-ugc-video-creation-services-what-to-actually-look-for",
+      "report": "https://pagespeed.web.dev/analysis/https-contentmesh-creative-hub-d8c6b5df-vercel-app-blog-reviews-of-ai-based-ugc-video-creation-services-what-to-actually-look-for/paaq8khkgt?form_factor=mobile",
+      "scores": [
+        "link \"87 Performance\"",
+        "link \"94 Accessibility\"",
+        "link \"100 Best Practices\"",
+        "link \"100 SEO\""
+      ],
+      "error": null
+    },
+    {
+      "path": "/blog/the-perfect-ugc-video-formula-for-tiktok-reels-and-youtube-shorts",
+      "report": "https://pagespeed.web.dev/analysis/https-contentmesh-creative-hub-d8c6b5df-vercel-app-blog-the-perfect-ugc-video-formula-for-tiktok-reels-and-youtube-shorts/l5edgyxbmh?form_factor=mobile",
+      "scores": [
+        "link \"88 Performance\"",
+        "link \"96 Accessibility\"",
+        "link \"100 Best Practices\"",
+        "link \"100 SEO\""
+      ],
+      "error": null
+    },
+    {
+      "path": "/blog/5-ways-ai-animation-is-changing-brand-storytelling",
+      "report": "https://pagespeed.web.dev/analysis/https-contentmesh-creative-hub-d8c6b5df-vercel-app-blog-5-ways-ai-animation-is-changing-brand-storytelling/elg4m8bzbs?form_factor=mobile",
+      "scores": null,
+      "error": null
+    },
+    {
+      "path": "/blog/the-real-cost-of-ai-video-vs-hiring-a-film-crew-in-2025",
+      "report": "https://pagespeed.web.dev/analysis/https-contentmesh-creative-hub-d8c6b5df-vercel-app-blog-the-real-cost-of-ai-video-vs-hiring-a-film-crew-in-2025/1pvw7hg8gs?form_factor=mobile",
+      "scores": null,
+      "error": null
+    },
+    {
+      "path": "/blog/what-to-look-for-in-an-ai-video-agency-complete-guide-realistic-animation",
+      "report": "https://pagespeed.web.dev/analysis/https-contentmesh-creative-hub-d8c6b5df-vercel-app-blog-what-to-look-for-in-an-ai-video-agency-complete-guide-realistic-animation/4oxeapnd8g?form_factor=mobile",
+      "scores": [
+        "link \"87 Performance\"",
+        "link \"94 Accessibility\"",
+        "link \"100 Best Practices\"",
+        "link \"100 SEO\""
+      ],
+      "error": null
+    },
+    {
+      "path": "/blog/from-production-to-platform-how-ai-video-companies-are-changing-their-business-model",
+      "report": "https://pagespeed.web.dev/analysis/https-contentmesh-creative-hub-d8c6b5df-vercel-app-blog-from-production-to-platform-how-ai-video-companies-are-changing-their-business-model/m2cqx1zhb8?form_factor=mobile",
+      "scores": null,
+      "error": null
+    },
+    {
+      "path": "/blog/why-talking-head-videos-are-the-highest-roi-content-format",
+      "report": "https://pagespeed.web.dev/analysis/https-contentmesh-creative-hub-d8c6b5df-vercel-app-blog-why-talking-head-videos-are-the-highest-roi-content-format/4qcimc63v9?form_factor=mobile",
+      "scores": [
+        "link \"87 Performance\"",
+        "link \"96 Accessibility\"",
+        "link \"100 Best Practices\"",
+        "link \"100 SEO\""
+      ],
+      "error": null
+    },
+    {
+      "path": "/blog/how-ai-avatar-videos-are-replacing-traditional-spokespersons",
+      "report": "https://pagespeed.web.dev/analysis/https-contentmesh-creative-hub-d8c6b5df-vercel-app-blog-how-ai-avatar-videos-are-replacing-traditional-spokespersons/kxq9sgdky5?form_factor=mobile",
+      "scores": [
+        "link \"88 Performance\"",
+        "link \"96 Accessibility\"",
+        "link \"100 Best Practices\"",
+        "link \"100 SEO\""
+      ],
+      "error": null
+    },
+    {
+      "path": "/blog/from-script-to-screen-in-24-hours-our-ai-video-workflow",
+      "report": "https://pagespeed.web.dev/analysis/https-contentmesh-creative-hub-d8c6b5df-vercel-app-blog-from-script-to-screen-in-24-hours-our-ai-video-workflow/m8e29eschw?form_factor=mobile",
+      "scores": [
+        "link \"87 Performance\"",
+        "link \"96 Accessibility\"",
+        "link \"100 Best Practices\"",
+        "link \"100 SEO\""
+      ],
+      "error": null
+    },
+    {
+      "path": "/blog/best-ai-ugc-video-editors-for-marketing-agencies-2026-guide-realistic-animation",
+      "report": "https://pagespeed.web.dev/analysis/https-contentmesh-creative-hub-d8c6b5df-vercel-app-blog-best-ai-ugc-video-editors-for-marketing-agencies-2026-guide-realistic-animation/l6jb7fwjmu?form_factor=mobile",
+      "scores": [
+        "link \"87 Performance\"",
+        "link \"94 Accessibility\"",
+        "link \"100 Best Practices\"",
+        "link \"100 SEO\""
+      ],
+      "error": null
+    },
+    {
+      "path": "/blog/ai-video-production-services-vs-traditional-studios-what-s-the-real-difference",
+      "report": "https://pagespeed.web.dev/analysis/https-contentmesh-creative-hub-d8c6b5df-vercel-app-blog-ai-video-production-services-vs-traditional-studios-what-s-the-real-difference/yh0m4cjd56?form_factor=mobile",
+      "scores": [
+        "link \"86 Performance\"",
+        "link \"94 Accessibility\"",
+        "link \"100 Best Practices\"",
+        "link \"100 SEO\""
+      ],
+      "error": null
+    },
+    {
+      "path": "/blog/how-much-does-ai-video-production-cost-a-realistic-pricing-breakdown",
+      "report": "https://pagespeed.web.dev/analysis/https-contentmesh-creative-hub-d8c6b5df-vercel-app-blog-how-much-does-ai-video-production-cost-a-realistic-pricing-breakdown/drvk2nsp46?form_factor=mobile",
+      "scores": [
+        "link \"87 Performance\"",
+        "link \"94 Accessibility\"",
+        "link \"100 Best Practices\"",
+        "link \"100 SEO\""
+      ],
+      "error": null
+    },
+    {
+      "path": "/blog/best-ai-video-avatar-services-what-real-reviews-and-use-cases-actually-show",
+      "report": "https://pagespeed.web.dev/analysis/https-contentmesh-creative-hub-d8c6b5df-vercel-app-blog-best-ai-video-avatar-services-what-real-reviews-and-use-cases-actually-show/dbkljg25vw?form_factor=mobile",
+      "scores": [
+        "link \"88 Performance\"",
+        "link \"94 Accessibility\"",
+        "link \"100 Best Practices\"",
+        "link \"100 SEO\""
+      ],
+      "error": null
+    },
+    {
+      "path": "/blog/ai-video-content-calendars-planning-a-sustainable-production-workflow",
+      "report": "https://pagespeed.web.dev/analysis/https-contentmesh-creative-hub-d8c6b5df-vercel-app-blog-ai-video-content-calendars-planning-a-sustainable-production-workflow/u8g8908328?form_factor=mobile",
+      "scores": [
+        "link \"88 Performance\"",
+        "link \"94 Accessibility\"",
+        "link \"100 Best Practices\"",
+        "link \"100 SEO\""
+      ],
+      "error": null
+    },
+    {
+      "path": "/blog/ai-animation-and-motion-graphics-when-to-use-them-over-live-action-video",
+      "report": "https://pagespeed.web.dev/analysis/https-contentmesh-creative-hub-d8c6b5df-vercel-app-blog-ai-animation-and-motion-graphics-when-to-use-them-over-live-action-video/kvn98i7paf?form_factor=mobile",
+      "scores": [
+        "link \"87 Performance\"",
+        "link \"94 Accessibility\"",
+        "link \"100 Best Practices\"",
+        "link \"100 SEO\""
+      ],
+      "error": null
+    },
+    {
+      "path": "/blog/ai-video-quality-control-how-to-make-sure-generated-content-stays-on-brand",
+      "report": "https://pagespeed.web.dev/analysis/https-contentmesh-creative-hub-d8c6b5df-vercel-app-blog-ai-video-quality-control-how-to-make-sure-generated-content-stays-on-brand/wvfrlfzk1s?form_factor=mobile",
+      "scores": [
+        "link \"86 Performance\"",
+        "link \"94 Accessibility\"",
+        "link \"100 Best Practices\"",
+        "link \"100 SEO\""
+      ],
+      "error": null
+    },
+    {
+      "path": "/blog/ai-video-for-social-media-what-actually-performs-in-2026",
+      "report": "https://pagespeed.web.dev/analysis/https-contentmesh-creative-hub-d8c6b5df-vercel-app-blog-ai-video-for-social-media-what-actually-performs-in-2026/v0410q821u?form_factor=mobile",
+      "scores": [
+        "link \"86 Performance\"",
+        "link \"94 Accessibility\"",
+        "link \"100 Best Practices\"",
+        "link \"100 SEO\""
+      ],
+      "error": null
+    }
+  ]
+}

@@ -76,6 +76,16 @@ export const Route = createFileRoute("/blog/$slug")({
   notFoundComponent: PostNotFound,
 });
 
+function normalizeArticleHeadings(blocks: PortableTextBlock[]): PortableTextBlock[] {
+  let previousLevel = 1;
+  return blocks.map((block) => {
+    if (block._type !== "block" || !/^h[1-6]$/.test(block.style || "")) return block;
+    const level = Math.min(Math.max(2, Number(block.style!.slice(1))), previousLevel + 1);
+    previousLevel = level;
+    return { ...block, style: `h${level}` };
+  });
+}
+
 const portableTextComponents: PortableTextComponents = {
   block: {
     h1: ({ children }) => (
@@ -189,7 +199,10 @@ function BlogPost() {
         </div>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           {post.body ? (
-            <PortableText value={post.body} components={portableTextComponents} />
+            <PortableText
+              value={normalizeArticleHeadings(post.body)}
+              components={portableTextComponents}
+            />
           ) : post.contentBlocks ? (
             <div className="space-y-6 text-foreground/90 leading-relaxed whitespace-pre-line">
               {post.contentBlocks.map((block, idx) => (
@@ -219,7 +232,7 @@ function BlogPost() {
             </div>
             <Link
               to="/contact"
-              className="inline-flex shrink-0 items-center gap-2 rounded-full bg-[#FF5A1F] px-6 py-3.5 text-xs sm:text-sm font-bold uppercase tracking-wider text-white shadow-lg shadow-[#FF5A1F]/30 transition-transform hover:scale-105 hover:bg-[#ff6e38]"
+              className="inline-flex shrink-0 items-center gap-2 rounded-full bg-[#b83c0c] px-6 py-3.5 text-xs sm:text-sm font-bold uppercase tracking-wider text-white shadow-lg shadow-[#FF5A1F]/30 transition-transform hover:scale-105 hover:bg-[#94310b]"
             >
               Get Our Services <ArrowRight className="h-4 w-4" />
             </Link>

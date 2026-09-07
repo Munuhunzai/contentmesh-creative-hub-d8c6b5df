@@ -730,9 +730,9 @@ export function StoryboardGeneratorPage() {
                           </button>
                         </div>
 
-                        <h4 className="text-sm font-semibold text-slate-900 group-hover:text-slate-900 transition-colors line-clamp-1">
+                        <h3 className="text-sm font-semibold text-slate-900 group-hover:text-slate-900 transition-colors line-clamp-1">
                           {item.title}
-                        </h4>
+                        </h3>
 
                         <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed font-sans">
                           {item.script}
@@ -774,9 +774,9 @@ export function StoryboardGeneratorPage() {
                     <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[9px] font-sans text-slate-600 border border-slate-200">
                       {ex.category}
                     </span>
-                    <h4 className="text-sm font-semibold text-slate-800 group-hover:text-slate-950 transition-colors">
+                    <h3 className="text-sm font-semibold text-slate-800 group-hover:text-slate-950 transition-colors">
                       {ex.title}
-                    </h4>
+                    </h3>
                     <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">
                       {ex.description}
                     </p>
