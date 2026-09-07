@@ -1,3 +1,7 @@
+import { MotionConfig } from "framer-motion";
+import { sanityClient } from "@/integrations/sanity/client";
+import { SanitySnapshot, snapshotQuery, type Snapshot } from "@/integrations/sanity/snapshot";
+import { SOCIAL_IMAGE } from "@/lib/site";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   Outlet,
@@ -73,6 +77,15 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
+  loader: async ({ location }): Promise<Snapshot> => {
+    if (location.pathname.startsWith("/studio") || location.pathname.startsWith("/api/")) return {};
+    try {
+      return await sanityClient.fetch<Snapshot>(snapshotQuery);
+    } catch {
+      return {};
+    }
+  },
+  staleTime: 60_000,
   head: () => ({
     meta: [
       { charSet: "utf-8" },
@@ -102,13 +115,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       {
         property: "og:image",
-        content:
-          "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/ffeef70c-e0bc-41b3-b08a-31faed939538",
+        content: SOCIAL_IMAGE,
       },
       {
         name: "twitter:image",
-        content:
-          "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/ffeef70c-e0bc-41b3-b08a-31faed939538",
+        content: SOCIAL_IMAGE,
       },
     ],
     links: [
@@ -122,12 +133,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       { rel: "preconnect", href: "https://cdn.sanity.io", crossOrigin: "anonymous" },
       {
-        rel: "preload",
-        as: "image",
-        href: "/Content_mesh_AI_video_production_agency.avif",
-        type: "image/avif",
-      },
-      {
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Inter:wght@400;500;600&display=swap",
       },
@@ -138,8 +143,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   notFoundComponent: NotFoundComponent,
   errorComponent: ErrorComponent,
 });
-
-
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
@@ -157,12 +160,17 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const snapshot = Route.useLoaderData();
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <Outlet />
-      </ThemeProvider>
+      <SanitySnapshot data={snapshot}>
+        <MotionConfig reducedMotion="user">
+          <ThemeProvider>
+            <Outlet />
+          </ThemeProvider>
+        </MotionConfig>
+      </SanitySnapshot>
     </QueryClientProvider>
   );
 }

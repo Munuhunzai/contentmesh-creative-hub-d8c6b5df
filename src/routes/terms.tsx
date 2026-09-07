@@ -1,19 +1,15 @@
+import { seoHead } from "@/lib/site";
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { PageHero } from "@/components/layout/PageHero";
 
 export const Route = createFileRoute("/terms")({
-  head: () => ({
-    meta: [
-      { title: "Terms & Conditions — ContentMesh" },
-      {
-        name: "description",
-        content: "The terms that govern your use of the ContentMesh website and services.",
-      },
-      { property: "og:url", content: "/terms" },
-    ],
-    links: [{ rel: "canonical", href: "/terms" }],
-  }),
+  head: () =>
+    seoHead(
+      "Terms of Service | ContentMesh Studios",
+      "Terms for using the ContentMesh website and commissioning creative production services.",
+      "/terms",
+    ),
   component: () => (
     <SiteLayout>
       <PageHero

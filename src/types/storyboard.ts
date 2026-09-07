@@ -17,22 +17,10 @@ export type VisualStyleOption =
   | "Custom";
 
 export type PromptStyleOption =
-  | "Google Flow"
-  | "Veo"
-  | "Midjourney"
-  | "Flux"
-  | "Leonardo"
-  | "Stable Diffusion"
-  | "General";
+  "Google Flow" | "Veo" | "Midjourney" | "Flux" | "Leonardo" | "Stable Diffusion" | "General";
 
 export type OutputLanguageOption =
-  | "English"
-  | "Urdu"
-  | "Arabic"
-  | "Spanish"
-  | "French"
-  | "German"
-  | "Hindi";
+  "English" | "Urdu" | "Arabic" | "Spanish" | "French" | "German" | "Hindi";
 
 export type AspectRatioOption = "16:9" | "9:16" | "1:1" | "4:5" | "21:9";
 

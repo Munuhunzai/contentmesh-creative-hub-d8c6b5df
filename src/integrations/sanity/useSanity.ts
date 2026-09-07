@@ -1,3 +1,4 @@
+import { useSnapshotValue } from "./snapshot";
 import { useQuery } from "@tanstack/react-query";
 import { sanityClient } from "./client";
 
@@ -12,14 +13,16 @@ export function useSanity<T>(
   fallback: T,
   params?: Record<string, unknown>,
 ): T {
+  const initialData = useSnapshotValue<T>(query);
   const { data } = useQuery<T>({
-    queryKey,
+    initialData: initialData ?? undefined,
+    queryKey: ["sanity", query, params ?? {}],
     queryFn: async () => {
       try {
         const result = await sanityClient.fetch<T>(query, params ?? {});
         return result;
       } catch {
-        return fallback;
+        throw new Error("Studio content is temporarily unavailable.");
       }
     },
     staleTime: 60_000,

@@ -29,7 +29,7 @@ const STEPS = [
   {
     num: "05",
     title: "Editing",
-    desc: "Assembly cut, colour grade, sound design, motion graphics and subtitle pass. Unlimited revisions on Pro+.",
+    desc: "Assembly cut, colour grade, sound design, motion graphics and subtitle pass. Revision rounds agreed in your project scope.",
     accent: "#F6C244",
   },
   {
@@ -122,8 +122,8 @@ export function Process() {
       <div className="relative mx-auto max-w-7xl px-6">
         <SectionHeader
           eyebrow="Process"
-          title="Our Proven 6-Step AI Video Production Process"
-          desc="From initial creative brief to final 4K master export — six transparent steps to high-performing video campaigns."
+          title="From first idea to final frame"
+          desc="Six clear stages, with review points that keep you involved throughout production."
         />
 
         {/* ── Horizontal connector line (desktop) ── */}

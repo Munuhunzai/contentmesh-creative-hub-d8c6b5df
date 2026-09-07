@@ -1,5 +1,5 @@
-import { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { Modal } from "@/components/layout/Modal";
+import { useState } from "react";
 import {
   X,
   CheckCircle2,
@@ -271,7 +271,6 @@ const SERVICES_DATA: ServiceItem[] = [
 ];
 
 // Quadruple items array to ensure infinite smooth seamless looping
-const LOOP_SERVICES = [...SERVICES_DATA, ...SERVICES_DATA, ...SERVICES_DATA, ...SERVICES_DATA];
 
 export function SectionHeader({
   eyebrow,
@@ -297,316 +296,113 @@ export function SectionHeader({
   );
 }
 
+type CmsService = {
+  _id: string;
+  title: string;
+  shortDescription?: string;
+  longDescription?: string;
+  features?: string[];
+};
+
 export function Services() {
-  const sanityServices = useSanity<any[]>(["sanity", "services"], servicesQuery, []);
-  const [selectedService, setSelectedService] = useState<ServiceItem | null>(null);
-
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const isInteractingRef = useRef(false);
-  const isMouseDownRef = useRef(false);
-  const startXRef = useRef(0);
-  const scrollLeftStartRef = useRef(0);
-  const hasDraggedRef = useRef(false);
-  const resumeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const halfWidthRef = useRef(0);
-
-  // ── Cache halfWidth using ResizeObserver to prevent layout thrashing / forced reflow ──
-  useEffect(() => {
-    const container = scrollRef.current;
-    if (!container) return;
-
-    const updateHalfWidth = () => {
-      halfWidthRef.current = container.scrollWidth / 2;
-    };
-    updateHalfWidth();
-
-    const resizeObs = new ResizeObserver(updateHalfWidth);
-    resizeObs.observe(container);
-    return () => resizeObs.disconnect();
-  }, []);
-
-  // ── 1. Mouse Wheel Horizontal Scroll Listener ────────────────────────────────
-  useEffect(() => {
-    const container = scrollRef.current;
-    if (!container) return;
-
-    const handleWheel = (e: WheelEvent) => {
-      // Convert vertical scroll wheel movement into horizontal scrolling
-      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
-        e.preventDefault();
-        container.scrollLeft += e.deltaY * 1.2;
-        handleUserInteractionStart();
-        handleUserInteractionEnd();
-      }
-    };
-
-    container.addEventListener("wheel", handleWheel, { passive: false });
-    return () => container.removeEventListener("wheel", handleWheel);
-  }, []);
-
-  // ── 2. Auto-Loop Animation + Wrap-Around Handler ────────────────────────────
-  useEffect(() => {
-    let animId: number;
-    let isVisible = false;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        isVisible = entries[0]?.isIntersecting ?? false;
-      },
-      { threshold: 0.1 },
-    );
-
-    if (scrollRef.current) {
-      observer.observe(scrollRef.current);
-    }
-
-    const autoScroll = () => {
-      if (isVisible && scrollRef.current && !isInteractingRef.current && !isMouseDownRef.current) {
-        scrollRef.current.scrollLeft += 0.8; // Smooth auto-slide step
-
-        const halfWidth = halfWidthRef.current || scrollRef.current.scrollWidth / 2;
-        if (scrollRef.current.scrollLeft >= halfWidth) {
-          scrollRef.current.scrollLeft -= halfWidth / 2;
-        }
-      }
-      animId = requestAnimationFrame(autoScroll);
-    };
-
-    animId = requestAnimationFrame(autoScroll);
-    return () => {
-      cancelAnimationFrame(animId);
-      observer.disconnect();
-    };
-  }, []);
-
-  const handleUserInteractionStart = () => {
-    isInteractingRef.current = true;
-    if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
-  };
-
-  const handleUserInteractionEnd = () => {
-    if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
-    resumeTimeoutRef.current = setTimeout(() => {
-      isInteractingRef.current = false;
-    }, 2500);
-  };
-
-  // ── 3. Mouse Drag-to-Scroll Handlers ────────────────────────────────────────
-  const handleMouseDown = (e: React.MouseEvent) => {
-    if (!scrollRef.current) return;
-    isMouseDownRef.current = true;
-    hasDraggedRef.current = false;
-    handleUserInteractionStart();
-    startXRef.current = e.pageX - scrollRef.current.offsetLeft;
-    scrollLeftStartRef.current = scrollRef.current.scrollLeft;
-  };
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isMouseDownRef.current || !scrollRef.current) return;
-    const x = e.pageX - scrollRef.current.offsetLeft;
-    const walk = (x - startXRef.current) * 1.8;
-    if (Math.abs(walk) > 5) {
-      hasDraggedRef.current = true;
-    }
-    scrollRef.current.scrollLeft = scrollLeftStartRef.current - walk;
-  };
-
-  const handleMouseUpOrLeave = () => {
-    isMouseDownRef.current = false;
-    handleUserInteractionEnd();
-  };
-
-  const handleCardClick = (item: ServiceItem) => {
-    if (!hasDraggedRef.current) {
-      setSelectedService(item);
-    }
-  };
-
+  const cms = useSanity<CmsService[]>(["sanity", "services"], servicesQuery, []);
+  const [selected, setSelected] = useState<ServiceItem | null>(null);
+  const items = cms.length
+    ? cms.map((item, i) => ({
+        ...SERVICES_DATA[i % SERVICES_DATA.length],
+        _id: item._id,
+        title: item.title,
+        fullTitle: item.title,
+        shortDescription: item.shortDescription || "Creative production shaped around your brief.",
+        fullDescription:
+          item.longDescription ||
+          item.shortDescription ||
+          "Discuss the right deliverables for your project with our team.",
+        deliverables: item.features || [],
+      }))
+    : SERVICES_DATA;
   return (
-    <section className="relative py-24 sm:py-32 overflow-hidden" id="services">
-      <div className="mx-auto max-w-7xl px-6">
-        {/* ── Centered Section Header ─────────────────────────────────────────── */}
-        <SectionHeader
-          eyebrow="Service Categories"
-          title="Next-Gen AI Video Production Services Built to Scale Your Brand"
-          desc="Slide through our core AI video production services below. Click any category to inspect deliverables and request a quote."
-        />
+    <section className="mx-auto max-w-7xl px-6 py-16 sm:py-24" id="services">
+      <div className="mb-10 flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
+        <div className="max-w-2xl">
+          <p className="eyebrow">Our capabilities</p>
+          <h2 className="section-title mt-3">
+            Your idea. Our craft.
+            <br />
+            <span className="text-brand-blue">Built for the screen.</span>
+          </h2>
+        </div>
+        <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">
+          From a single product film to an ongoing content series. Find the right starting point for
+          your brief.
+        </p>
       </div>
-
-      {/* ── Mouse Scrollable + Drag-to-Scroll + Auto-Looping Circular Slider ─ */}
-      <div
-        ref={scrollRef}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUpOrLeave}
-        onMouseLeave={handleMouseUpOrLeave}
-        onTouchStart={handleUserInteractionStart}
-        onTouchEnd={handleUserInteractionEnd}
-        onScroll={() => {
-          if (scrollRef.current) {
-            const halfWidth = halfWidthRef.current || scrollRef.current.scrollWidth / 2;
-            if (scrollRef.current.scrollLeft >= halfWidth) {
-              scrollRef.current.scrollLeft -= halfWidth / 2;
-            } else if (scrollRef.current.scrollLeft <= 0) {
-              scrollRef.current.scrollLeft += halfWidth / 2;
-            }
-          }
-        }}
-        className="no-scrollbar mt-14 flex items-center gap-8 overflow-x-auto py-6 px-4 select-none cursor-grab active:cursor-grabbing w-full"
-      >
-        {LOOP_SERVICES.map((item, idx) => {
-          const Icon = item.iconComponent;
-          return (
-            <motion.div
-              key={`${item._id}-${idx}`}
-              whileHover={{ scale: 1.08, y: -6 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => handleCardClick(item)}
-              className="group flex flex-col items-center shrink-0 cursor-pointer text-center"
-              style={{ width: "140px" }}
-            >
-              {/* Vibrant Circular Card Badge */}
-              <div
-                className="relative flex h-32 w-32 items-center justify-center rounded-full shadow-lg transition-all duration-300 group-hover:shadow-2xl overflow-hidden"
-                style={{
-                  backgroundColor: item.color,
-                  boxShadow: `0 16px 32px -8px ${item.color}88`,
-                }}
-              >
-                {/* Custom 3D Icon Image or Fallback Icon */}
-                {item.iconImg ? (
-                  <img
-                    src={item.iconImg}
-                    alt={item.title}
-                    width={128}
-                    height={128}
-                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110 pointer-events-none"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                ) : (
-                  <div className="flex h-full w-full items-center justify-center bg-black/10 text-black pointer-events-none">
-                    <Icon className="h-12 w-12 drop-shadow-md" />
-                  </div>
-                )}
-
-                {/* Hover ring pulse */}
-                <div className="absolute inset-0 rounded-full border-2 border-white/50 opacity-0 transition-opacity group-hover:opacity-100" />
-              </div>
-
-              {/* Service Category Title */}
-              <span className="mt-4 font-display text-sm font-bold tracking-tight text-foreground transition-colors group-hover:text-[#FF5A1F] pointer-events-none">
-                {item.title}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {items.map((item, index) => (
+          <button
+            type="button"
+            key={item._id}
+            onClick={() => setSelected(item)}
+            className="service-card group rounded-3xl border border-border bg-card p-6 text-left transition duration-300 hover:-translate-y-1 hover:border-brand-blue/30 hover:shadow-lg"
+            aria-haspopup="dialog"
+          >
+            <div className="mb-6 flex items-center justify-between">
+              <img
+                src={item.iconImg}
+                alt=""
+                width={64}
+                height={64}
+                loading="lazy"
+                decoding="async"
+                className="h-16 w-16 rounded-2xl object-cover"
+              />
+              <span className="text-xs font-semibold tabular-nums text-muted-foreground">
+                {String(index + 1).padStart(2, "0")}
               </span>
-            </motion.div>
-          );
-        })}
+            </div>
+            <h3 className="font-display text-xl font-bold">{item.title}</h3>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              {item.shortDescription}
+            </p>
+            <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-brand-blue">
+              Explore service{" "}
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </span>
+          </button>
+        ))}
       </div>
-
-      {/* ── On-Click Service Details Modal / Drawer ─────────────────────────── */}
-      <AnimatePresence>
-        {selectedService && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
-            {/* Backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setSelectedService(null)}
-              className="absolute inset-0 bg-black/70 backdrop-blur-md"
-            />
-
-            {/* Modal Body */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              transition={{ type: "spring", stiffness: 350, damping: 28 }}
-              className="relative z-10 w-full max-w-xl overflow-hidden rounded-[2.5rem] border border-border/80 bg-background p-7 sm:p-10 shadow-2xl"
-            >
-              {/* Close Button */}
-              <button
-                onClick={() => setSelectedService(null)}
-                aria-label="Close modal"
-                className="absolute right-6 top-6 grid h-10 w-10 place-items-center rounded-full border border-border/60 bg-secondary/80 text-foreground transition-transform hover:scale-110 active:scale-95"
-              >
-                <X className="h-5 w-5" />
-              </button>
-
-              {/* Top Service Badge Header */}
-              <div className="flex items-center gap-4">
-                <div
-                  className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full shadow-md overflow-hidden"
-                  style={{ backgroundColor: selectedService.color }}
-                >
-                  {selectedService.iconImg ? (
-                    <img
-                      src={selectedService.iconImg}
-                      alt={selectedService.title}
-                      width={80}
-                      height={80}
-                      loading="lazy"
-                      decoding="async"
-                      className="h-full w-full object-cover"
-                    />
-                  ) : (
-                    <selectedService.iconComponent className="h-9 w-9 text-black" />
-                  )}
-                </div>
-
-                <div>
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-[#FF5A1F]">
-                    {selectedService.category}
-                  </span>
-                  <h3 className="mt-1 font-display text-xl font-bold tracking-tight text-foreground sm:text-2xl">
-                    {selectedService.fullTitle}
-                  </h3>
-                </div>
-              </div>
-
-              {/* Description */}
-              <p className="mt-6 text-sm leading-relaxed text-muted-foreground sm:text-base">
-                {selectedService.fullDescription}
-              </p>
-
-              {/* Key Deliverables List */}
-              <div className="mt-6">
-                <h4 className="text-xs font-bold uppercase tracking-widest text-foreground">
-                  What's Included & Deliverables:
-                </h4>
-                <ul className="mt-3 space-y-2.5">
-                  {selectedService.deliverables.map((item, idx) => (
-                    <li
-                      key={idx}
-                      className="flex items-start gap-2.5 text-xs sm:text-sm text-muted-foreground"
-                    >
-                      <CheckCircle2 className="h-4 w-4 shrink-0 text-[#FF5A1F]" />
-                      <span>{item}</span>
+      <Modal
+        open={!!selected}
+        onClose={() => setSelected(null)}
+        title={selected?.fullTitle || "Service details"}
+      >
+        {selected && (
+          <div className="p-6 sm:p-8">
+            <p className="text-base leading-relaxed text-muted-foreground">
+              {selected.fullDescription}
+            </p>
+            {selected.deliverables.length > 0 && (
+              <>
+                <h3 className="mt-6 font-semibold">Deliverables to discuss</h3>
+                <ul className="mt-4 space-y-3">
+                  {selected.deliverables.map((item) => (
+                    <li key={item} className="flex gap-3 text-sm">
+                      <CheckCircle2 className="h-5 w-5 shrink-0 text-brand-blue" />
+                      {item}
                     </li>
                   ))}
                 </ul>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="mt-8 flex flex-col sm:flex-row items-center gap-3">
-                <Link
-                  to="/contact"
-                  onClick={() => setSelectedService(null)}
-                  className="inline-flex w-full sm:flex-1 items-center justify-center gap-2 rounded-full bg-[#FF5A1F] px-6 py-3.5 text-xs font-bold uppercase tracking-widest text-white shadow-lg shadow-[#FF5A1F]/30 transition-transform hover:scale-102"
-                >
-                  Book This Service <ArrowRight className="h-4 w-4" />
-                </Link>
-                <button
-                  onClick={() => setSelectedService(null)}
-                  className="w-full sm:w-auto rounded-full border border-border/80 px-6 py-3.5 text-xs font-bold uppercase tracking-wider text-muted-foreground hover:bg-secondary hover:text-foreground"
-                >
-                  Close
-                </button>
-              </div>
-            </motion.div>
+              </>
+            )}
+            <Link
+              to="/contact"
+              className="mt-8 inline-flex min-h-12 items-center gap-3 rounded-full bg-accent px-6 py-3 text-sm font-semibold text-white"
+            >
+              Request a quote <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
         )}
-      </AnimatePresence>
+      </Modal>
     </section>
   );
 }

@@ -46,7 +46,7 @@ function isH3SwallowedErrorBody(body: string): boolean {
 
 const SECURITY_HEADERS: Record<string, string> = {
   "Content-Security-Policy":
-    "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.sanity.io https://*.sanity.io https://*.sanity.studio; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://cdn.sanity.io https://*.sanity.io https://images.unsplash.com https://lh3.googleusercontent.com https://storage.googleapis.com; media-src 'self' data: blob: https://cdn.sanity.io https://*.sanity.io https://storage.googleapis.com; connect-src 'self' https://*.sanity.io https://api.sanity.io https://cdn.sanity.io https://api.deepseek.com https://fonts.googleapis.com https://fonts.gstatic.com wss://*.sanity.io; frame-src 'self' https://www.youtube.com https://player.vimeo.com https://drive.google.com https://maps.google.com; frame-ancestors 'self' https://*.sanity.io https://*.sanity.studio; base-uri 'self'; form-action 'self';",
+    "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.sanity.io https://*.sanity.io https://*.sanity.studio; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://cdn.sanity.io https://*.sanity.io https://images.unsplash.com https://lh3.googleusercontent.com https://storage.googleapis.com; media-src 'self' data: blob: https://lh3.googleusercontent.com https://cdn.sanity.io https://*.sanity.io https://storage.googleapis.com; connect-src 'self' https://*.sanity.io https://api.sanity.io https://cdn.sanity.io https://api.deepseek.com https://fonts.googleapis.com https://fonts.gstatic.com wss://*.sanity.io; frame-src 'self' https://www.youtube-nocookie.com https://www.youtube.com https://player.vimeo.com https://drive.google.com https://maps.google.com https://www.google.com; frame-ancestors 'self' https://*.sanity.io https://*.sanity.studio; base-uri 'self'; form-action 'self';",
   "Strict-Transport-Security": "max-age=31536000; includeSubDomains; preload",
   "X-Frame-Options": "SAMEORIGIN",
   "X-Content-Type-Options": "nosniff",
@@ -71,9 +71,28 @@ function attachSecurityHeaders(response: Response): Response {
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
+      const url = new URL(request.url);
+      if (url.hostname === "www.contentmeshstudios.com") {
+        url.hostname = "contentmeshstudios.com";
+        url.protocol = "https:";
+        return Response.redirect(url.href, 308);
+      }
       const handler = await getServerEntry();
       const rawResponse = await handler.fetch(request, env, ctx);
       const normalized = await normalizeCatastrophicSsrResponse(rawResponse);
+      const pathname = new URL(request.url).pathname;
+      if (
+        pathname.startsWith("/api/") ||
+        pathname === "/studio" ||
+        pathname.startsWith("/studio/")
+      ) {
+        const headers = new Headers(normalized.headers);
+        headers.set("X-Robots-Tag", "noindex, nofollow");
+        headers.set("Cache-Control", "no-store");
+        return attachSecurityHeaders(
+          new Response(normalized.body, { status: normalized.status, headers }),
+        );
+      }
       return attachSecurityHeaders(normalized);
     } catch (error) {
       console.error(error);

@@ -3,7 +3,7 @@
  * Handles unescaped newlines, control characters, unescaped quotes,
  * and recovers complete scenes even if the AI output was cut off mid-sentence.
  */
-export function safeParseAIJson<T = any>(jsonString: string): T {
+export function safeParseAIJson<T = unknown>(jsonString: string): T {
   if (!jsonString || typeof jsonString !== "string") {
     throw new Error("Empty AI response received.");
   }
@@ -51,9 +51,11 @@ export function safeParseAIJson<T = any>(jsonString: string): T {
 
   // 6. Final attempt: Strip control chars & parse
   try {
+    // Control characters are deliberately removed from malformed provider JSON.
+    // eslint-disable-next-line no-control-regex
     const finalCleaned = autoCloseJson(cleaned.replace(/[\u0000-\u001F]+/g, " "));
     return JSON.parse(finalCleaned);
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error("Failed to repair JSON output:", err, "Original Length:", jsonString.length);
     throw new Error(
       "The AI response was truncated due to prompt size limits. Please try again or select fewer scenes.",

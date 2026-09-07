@@ -42,18 +42,18 @@ export const faqQuery = /* groq */ `*[_type == "faq"] | order(order asc){
   _id, question, answer, category
 }`;
 
-export const blogListQuery = /* groq */ `*[_type == "blogPost"] | order(isFeatured desc, coalesce(publishedAt, _createdAt) desc){
+export const blogListQuery = /* groq */ `*[_type == "blogPost" && defined(slug.current) && (!defined(publishedAt) || publishedAt <= now())] | order(isFeatured desc, coalesce(publishedAt, _createdAt) desc){
   _id, title, "slug": slug.current, excerpt,
   "coverUrl": cover.asset->url, publishedAt, tags, isFeatured,
   "authorName": author->name
 }`;
 
-export const blogPostBySlugQuery = /* groq */ `*[_type == "blogPost" && slug.current == $slug][0]{
+export const blogPostBySlugQuery = /* groq */ `*[_type == "blogPost" && slug.current == $slug && (!defined(publishedAt) || publishedAt <= now())][0]{
   _id, title, "slug": slug.current, excerpt,
-  "coverUrl": cover.asset->url, body, publishedAt, tags,
+  "coverUrl": cover.asset->url, body, publishedAt, _updatedAt, tags,
   "author": author->{ name, role, "photoUrl": photo.asset->url }
 }`;
 
 export const contactQuery = /* groq */ `*[_type == "contactInfo"][0]{
-  email, phone, address, hours, mapEmbedUrl, formRecipient
+  email, phone, address, hours, mapEmbedUrl
 }`;

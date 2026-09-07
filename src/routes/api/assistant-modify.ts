@@ -1,3 +1,4 @@
+import { guardRequest, readJson, requestErrorResponse } from "@/lib/request-guard";
 import { createFileRoute } from "@tanstack/react-router";
 import { StoryboardFormInput, StoryboardOutput, VisualStyleOption } from "@/types/storyboard";
 import { safeParseAIJson } from "@/lib/json-repair";
@@ -116,7 +117,13 @@ function localIntelligentAssistant(
           characters: newScenes[currentLen - 1]?.characters || [],
           dialogue: `Dialogue line for scene ${scNum}`,
           sfx: "Ambient atmosphere",
-          cameraDirection: camVar,
+          camera: { angle: camVar, movement: "Static", lens: "35mm" },
+          visualStyle: currentForm.visualStyle,
+          lighting: "Natural",
+          mood: "Cinematic",
+          composition: "Balanced",
+          actions: "Continuation of the previous scene",
+          backgroundMusic: "None",
           generationPrompt: promptText,
           copyReadyPrompt: promptText,
         });
@@ -249,25 +256,26 @@ function localIntelligentAssistant(
   };
 }
 
-const getFallbackKey = () => {
-  try {
-    return atob("c2stMzQ4MzA3OThmYjQwNGNmZjhiNGNmMDMwZTgzZjNmYTc=");
-  } catch {
-    return "";
-  }
-};
-
 async function handleAssistantPost({ request }: { request: Request }) {
   try {
-    const apiKey =
-      process.env.DEEPSEEK_API_KEY ||
-      process.env.VITE_DEEPSEEK_API_KEY ||
-      (import.meta as any).env?.DEEPSEEK_API_KEY ||
-      (import.meta as any).env?.VITE_DEEPSEEK_API_KEY ||
-      (request as any)?.env?.DEEPSEEK_API_KEY ||
-      getFallbackKey();
+    guardRequest(request, 6);
+    const apiKey = process.env.DEEPSEEK_API_KEY;
 
-    const body = (await request.json()) as AssistantRequestBody;
+    const body = (await readJson(request, 512_000)) as AssistantRequestBody;
+    if (
+      !body ||
+      typeof body.userQuery !== "string" ||
+      body.userQuery.length > 8000 ||
+      !body.currentForm ||
+      typeof body.currentForm.script !== "string" ||
+      (body.currentOutput && !Array.isArray(body.currentOutput.scenes)) ||
+      (body.chatHistory && !Array.isArray(body.chatHistory))
+    ) {
+      return Response.json(
+        { error: "Please provide a valid storyboard and instruction." },
+        { status: 400 },
+      );
+    }
     const { userQuery, currentForm, currentOutput, chatHistory } = body;
 
     if (!userQuery || !userQuery.trim()) {
@@ -332,6 +340,7 @@ Modify the storyboard package accordingly. Ensure every scene has a high quality
 
     const response = await fetch("https://api.deepseek.com/chat/completions", {
       method: "POST",
+      signal: AbortSignal.timeout(90_000),
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${apiKey}`,
@@ -369,10 +378,12 @@ Modify the storyboard package accordingly. Ensure every scene has a high quality
     }
 
     return Response.json(parsed);
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const failure = requestErrorResponse(err);
+    if (failure) return failure;
     console.error("Error in assistant API endpoint:", err);
     return Response.json(
-      { error: err.message || "Failed to process assistant request." },
+      { error: "The storyboard assistant could not complete this request. Please try again." },
       { status: 500 },
     );
   }
