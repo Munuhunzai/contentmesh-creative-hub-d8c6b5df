@@ -7,7 +7,7 @@ import { PageHero } from "@/components/layout/PageHero";
 import { ArrowUpRight, Clock, Sparkles, Search, X, ChevronDown } from "lucide-react";
 import { useSanity } from "@/integrations/sanity/useSanity";
 import { blogListQuery } from "@/integrations/sanity/queries";
-import { optimizeSanityImage } from "@/lib/sanity-image";
+import { optimizeSanityImage, getSanitySrcSet } from "@/lib/sanity-image";
 
 export const Route = createFileRoute("/blog/")({
   head: () =>
@@ -118,14 +118,21 @@ function Blog() {
                 {/* Media preview */}
                 <div
                   className="relative min-h-[300px] overflow-hidden lg:col-span-7 lg:min-h-[460px]"
-                  style={
-                    featured.coverUrl
-                      ? {
-                          background: `url(${optimizeSanityImage(featured.coverUrl, 1200, 75)}) center/cover`,
-                        }
-                      : { background: GRADIENTS[0] }
-                  }
+                  style={featured.coverUrl ? undefined : { background: GRADIENTS[0] }}
                 >
+                  {featured.coverUrl && (
+                    <img
+                      src={optimizeSanityImage(featured.coverUrl, 1200, 65)}
+                      srcSet={getSanitySrcSet(featured.coverUrl, [480, 768, 1200], 65)}
+                      sizes="(min-width: 1024px) 58vw, calc(100vw - 48px)"
+                      alt=""
+                      width={1200}
+                      height={675}
+                      loading="eager"
+                      fetchPriority="high"
+                      className="absolute inset-0 h-full w-full object-cover"
+                    />
+                  )}
                   {!featured.coverUrl && (
                     <div className="absolute inset-0 flex items-center justify-center p-8">
                       <div className="mesh-bg absolute inset-0 opacity-20" />

@@ -1,4 +1,4 @@
-import { optimizeSanityImage } from "@/lib/sanity-image";
+import { optimizeSanityImage, getSanitySrcSet } from "@/lib/sanity-image";
 import { seoHead, jsonLd, absoluteUrl, SOCIAL_IMAGE } from "@/lib/site";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import {
@@ -50,6 +50,21 @@ export const Route = createFileRoute("/blog/$slug")({
     );
     return {
       ...head,
+      links: [
+        ...(head.links || []),
+        ...(loaderData.coverUrl
+          ? [
+              {
+                rel: "preload",
+                as: "image",
+                href: optimizeSanityImage(loaderData.coverUrl, 1200, 65),
+                imageSrcSet: getSanitySrcSet(loaderData.coverUrl, [480, 768, 1200], 65),
+                imageSizes: "(min-width: 768px) 720px, calc(100vw - 48px)",
+                fetchPriority: "high" as const,
+              },
+            ]
+          : []),
+      ],
       scripts: [
         {
           type: "application/ld+json",
@@ -161,11 +176,14 @@ function BlogPost() {
       <article className="mx-auto max-w-3xl px-6 pb-24">
         {post.coverUrl && (
           <img
-            src={optimizeSanityImage(post.coverUrl, 1200, 75)}
+            src={optimizeSanityImage(post.coverUrl, 1200, 65)}
+            srcSet={getSanitySrcSet(post.coverUrl, [480, 768, 1200], 65)}
+            sizes="(min-width: 768px) 720px, calc(100vw - 48px)"
+            fetchPriority="high"
             alt={post.title}
             width={1200}
             height={675}
-            loading="lazy"
+            loading="eager"
             decoding="async"
             className="mb-10 aspect-[16/9] w-full rounded-3xl object-cover"
           />
