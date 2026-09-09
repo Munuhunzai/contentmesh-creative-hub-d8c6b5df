@@ -14,6 +14,7 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as PortfolioRouteImport } from './routes/portfolio'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as TermsRouteImport } from './routes/terms'
@@ -23,6 +24,7 @@ import { Route as ApiContactRouteImport } from './routes/api/contact'
 import { Route as ApiGenerateStoryboardRouteImport } from './routes/api/generate-storyboard'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
+import { Route as ServicesSlugRouteImport } from './routes/services_.$slug'
 import { Route as StudioIndexRouteImport } from './routes/studio.index'
 import { Route as StudioSplatRouteImport } from './routes/studio.$'
 import { Route as ToolsStoryboardGeneratorRouteImport } from './routes/tools/storyboard-generator'
@@ -50,6 +52,11 @@ const PortfolioRoute = PortfolioRouteImport.update({
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
+  id: '/robots.txt',
+  path: '/robots.txt',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ServicesRoute = ServicesRouteImport.update({
@@ -97,6 +104,11 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
   path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ServicesSlugRoute = ServicesSlugRouteImport.update({
+  id: '/services_/$slug',
+  path: '/services/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const StudioIndexRoute = StudioIndexRouteImport.update({
   id: '/studio/',
   path: '/studio/',
@@ -120,6 +132,7 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/portfolio': typeof PortfolioRoute
   '/privacy': typeof PrivacyRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
@@ -128,6 +141,7 @@ export interface FileRoutesByFullPath {
   '/api/contact': typeof ApiContactRoute
   '/api/generate-storyboard': typeof ApiGenerateStoryboardRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/services/$slug': typeof ServicesSlugRoute
   '/studio/$': typeof StudioSplatRoute
   '/tools/storyboard-generator': typeof ToolsStoryboardGeneratorRoute
   '/blog/': typeof BlogIndexRoute
@@ -139,6 +153,7 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/portfolio': typeof PortfolioRoute
   '/privacy': typeof PrivacyRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
@@ -147,6 +162,7 @@ export interface FileRoutesByTo {
   '/api/contact': typeof ApiContactRoute
   '/api/generate-storyboard': typeof ApiGenerateStoryboardRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/services/$slug': typeof ServicesSlugRoute
   '/studio/$': typeof StudioSplatRoute
   '/tools/storyboard-generator': typeof ToolsStoryboardGeneratorRoute
   '/blog': typeof BlogIndexRoute
@@ -159,6 +175,7 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/portfolio': typeof PortfolioRoute
   '/privacy': typeof PrivacyRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
@@ -167,6 +184,7 @@ export interface FileRoutesById {
   '/api/contact': typeof ApiContactRoute
   '/api/generate-storyboard': typeof ApiGenerateStoryboardRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/services_/$slug': typeof ServicesSlugRoute
   '/studio/$': typeof StudioSplatRoute
   '/tools/storyboard-generator': typeof ToolsStoryboardGeneratorRoute
   '/blog/': typeof BlogIndexRoute
@@ -180,6 +198,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/portfolio'
     | '/privacy'
+    | '/robots.txt'
     | '/services'
     | '/sitemap.xml'
     | '/terms'
@@ -188,6 +207,7 @@ export interface FileRouteTypes {
     | '/api/contact'
     | '/api/generate-storyboard'
     | '/blog/$slug'
+    | '/services/$slug'
     | '/studio/$'
     | '/tools/storyboard-generator'
     | '/blog/'
@@ -199,6 +219,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/portfolio'
     | '/privacy'
+    | '/robots.txt'
     | '/services'
     | '/sitemap.xml'
     | '/terms'
@@ -207,6 +228,7 @@ export interface FileRouteTypes {
     | '/api/contact'
     | '/api/generate-storyboard'
     | '/blog/$slug'
+    | '/services/$slug'
     | '/studio/$'
     | '/tools/storyboard-generator'
     | '/blog'
@@ -218,6 +240,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/portfolio'
     | '/privacy'
+    | '/robots.txt'
     | '/services'
     | '/sitemap.xml'
     | '/terms'
@@ -226,6 +249,7 @@ export interface FileRouteTypes {
     | '/api/contact'
     | '/api/generate-storyboard'
     | '/blog/$slug'
+    | '/services_/$slug'
     | '/studio/$'
     | '/tools/storyboard-generator'
     | '/blog/'
@@ -238,6 +262,7 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   PortfolioRoute: typeof PortfolioRoute
   PrivacyRoute: typeof PrivacyRoute
+  RobotsDottxtRoute: typeof RobotsDottxtRoute
   ServicesRoute: typeof ServicesRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TermsRoute: typeof TermsRoute
@@ -246,6 +271,7 @@ export interface RootRouteChildren {
   ApiContactRoute: typeof ApiContactRoute
   ApiGenerateStoryboardRoute: typeof ApiGenerateStoryboardRoute
   BlogSlugRoute: typeof BlogSlugRoute
+  ServicesSlugRoute: typeof ServicesSlugRoute
   StudioSplatRoute: typeof StudioSplatRoute
   ToolsStoryboardGeneratorRoute: typeof ToolsStoryboardGeneratorRoute
   BlogIndexRoute: typeof BlogIndexRoute
@@ -287,6 +313,13 @@ declare module '@tanstack/react-router' {
       path: '/privacy'
       fullPath: '/privacy'
       preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/robots.txt': {
+      id: '/robots.txt'
+      path: '/robots.txt'
+      fullPath: '/robots.txt'
+      preLoaderRoute: typeof RobotsDottxtRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/services': {
@@ -352,6 +385,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/services_/$slug': {
+      id: '/services_/$slug'
+      path: '/services/$slug'
+      fullPath: '/services/$slug'
+      preLoaderRoute: typeof ServicesSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/studio/': {
       id: '/studio/'
       path: '/studio'
@@ -382,6 +422,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   PortfolioRoute: PortfolioRoute,
   PrivacyRoute: PrivacyRoute,
+  RobotsDottxtRoute: RobotsDottxtRoute,
   ServicesRoute: ServicesRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TermsRoute: TermsRoute,
@@ -390,6 +431,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiContactRoute: ApiContactRoute,
   ApiGenerateStoryboardRoute: ApiGenerateStoryboardRoute,
   BlogSlugRoute: BlogSlugRoute,
+  ServicesSlugRoute: ServicesSlugRoute,
   StudioSplatRoute: StudioSplatRoute,
   ToolsStoryboardGeneratorRoute: ToolsStoryboardGeneratorRoute,
   BlogIndexRoute: BlogIndexRoute,

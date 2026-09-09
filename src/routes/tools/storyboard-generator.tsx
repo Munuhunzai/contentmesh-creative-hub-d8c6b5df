@@ -1,4 +1,4 @@
-import { seoHead } from "@/lib/site";
+import { seoHead, absoluteUrl } from "@/lib/site";
 import { useState, useEffect, useMemo, useRef } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion, AnimatePresence } from "framer-motion";
@@ -69,7 +69,7 @@ export const Route = createFileRoute("/tools/storyboard-generator")({
           "@context": "https://schema.org",
           "@type": "WebApplication",
           name: "Make AI Storyboard & Prompt Studio",
-          url: "https://contentmeshstudios.com/tools/storyboard-generator",
+          url: absoluteUrl("/tools/storyboard-generator"),
           description:
             "Free AI tool to generate complete storyboards, scene prompts, character actions, and camera direction from scripts.",
           applicationCategory: "MultimediaApplication",

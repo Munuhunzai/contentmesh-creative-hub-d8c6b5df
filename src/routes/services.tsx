@@ -6,6 +6,7 @@ import { WhyUs } from "@/components/home/WhyUs";
 import { Process } from "@/components/home/Process";
 import { CTA } from "@/components/home/CTA";
 import { PageHero } from "@/components/layout/PageHero";
+import { ServiceLinks } from "@/components/layout/ServiceLinks";
 
 export const Route = createFileRoute("/services")({
   head: () =>
@@ -25,6 +26,7 @@ function ServicesPage() {
         title="Full-Stack AI Video Production & Animation Services"
         desc="From AI video ads and avatar creation to commercial editing and motion graphics, we provide end-to-end creative video production services."
       />
+      <ServiceLinks />
       <Services />
       <WhyUs />
       <Process />

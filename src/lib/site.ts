@@ -1,4 +1,8 @@
-export const SITE_URL = "https://contentmeshstudios.com";
+// Use the connected production origin until the custom domain is live.
+// Set VITE_SITE_URL and rebuild when migrating; never derive canonicals from a preview host.
+export const SITE_URL = new URL(
+  import.meta.env?.VITE_SITE_URL || "https://contentmesh-creative-hub-d8c6b5df.vercel.app",
+).origin;
 export const SITE_NAME = "ContentMesh Studios";
 export const CONTACT_EMAIL = "waheed.sul00@gmail.com";
 export const SOCIAL_IMAGE =
@@ -20,6 +24,7 @@ export function seoHead(
     meta: [
       { title },
       { name: "description", content: description },
+      { name: "robots", content: "index, follow, max-image-preview:large" },
       { property: "og:title", content: title },
       { property: "og:description", content: description },
       { property: "og:url", content: url },
@@ -31,6 +36,19 @@ export function seoHead(
       { name: "twitter:image", content: image },
     ],
     links: [{ rel: "canonical", href: url }],
+  };
+}
+
+export function breadcrumbs(items: Array<{ name: string; path: string }>) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      item: absoluteUrl(item.path),
+    })),
   };
 }
 

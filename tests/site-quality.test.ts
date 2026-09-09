@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { contactSchema, escapeHtml } from "../src/lib/contact-schema";
 import { buildSitemap } from "../src/lib/sitemap";
-import { seoHead, jsonLd, whatsappUrl } from "../src/lib/site";
+import { seoHead, jsonLd, whatsappUrl, SITE_URL } from "../src/lib/site";
 import { guardRequest, readJson, RequestError } from "../src/lib/request-guard";
 const valid = {
   name: "Sample Client",
@@ -39,7 +39,7 @@ test("untrusted text cannot break out of email HTML or JSON-LD", () => {
 });
 test("canonical and social metadata agree on the confirmed domain", () => {
   const head = seoHead("Production", "Description", "/services");
-  assert.equal(head.links[0].href, "https://contentmeshstudios.com/services");
+  assert.equal(head.links[0].href, `${SITE_URL}/services`);
   assert.equal(head.meta.find((m) => m.property === "og:url")?.content, head.links[0].href);
   assert.equal(head.meta.find((m) => m.name === "twitter:title")?.content, "Production");
 });

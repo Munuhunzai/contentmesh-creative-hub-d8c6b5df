@@ -1,4 +1,4 @@
-import { seoHead, jsonLd } from "@/lib/site";
+import { seoHead, jsonLd, absoluteUrl, SITE_NAME } from "@/lib/site";
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { Hero, type HomepageData } from "@/components/home/Hero";
@@ -11,6 +11,7 @@ import { Testimonials } from "@/components/home/Testimonials";
 import { FAQ_ } from "@/components/home/FAQ";
 import { CTA } from "@/components/home/CTA";
 import { optimizeSanityImage, getSanitySrcSet } from "@/lib/sanity-image";
+import { ServiceLinks } from "@/components/layout/ServiceLinks";
 
 export const Route = createFileRoute("/")({
   loader: async ({ parentMatchPromise }): Promise<HomepageData | null> => {
@@ -28,7 +29,7 @@ export const Route = createFileRoute("/")({
         "/",
       ),
       links: [
-        { rel: "canonical", href: "https://contentmeshstudios.com/" },
+        { rel: "canonical", href: absoluteUrl() },
         ...(firstImage
           ? [
               {
@@ -47,12 +48,25 @@ export const Route = createFileRoute("/")({
           type: "application/ld+json",
           children: jsonLd({
             "@context": "https://schema.org",
-            "@type": "Organization",
-            name: "ContentMesh Studio",
-            url: "https://contentmeshstudios.com",
-            logo: "https://contentmeshstudios.com/Content_mesh_AI_video_production_agency.png",
-            description:
-              "AI video production, animation, voiceovers and branded content guided by human creative direction.",
+            "@graph": [
+              {
+                "@type": "Organization",
+                "@id": absoluteUrl("/#organization"),
+                name: SITE_NAME,
+                url: absoluteUrl(),
+                logo: absoluteUrl("/Content_mesh_AI_video_production_agency.png"),
+                description:
+                  "AI video production, animation, voiceovers and branded content guided by human creative direction.",
+              },
+              {
+                "@type": "WebSite",
+                "@id": absoluteUrl("/#website"),
+                name: SITE_NAME,
+                url: absoluteUrl(),
+                publisher: { "@id": absoluteUrl("/#organization") },
+                inLanguage: "en",
+              },
+            ],
           }),
         },
       ],
@@ -68,6 +82,7 @@ function Index() {
     <SiteLayout heroSlot={<Hero initialData={loaderData} />}>
       <Portfolio featuredOnly />
       <Services compact />
+      <ServiceLinks />
       <WhyUs />
       <Process />
       <Stats />
