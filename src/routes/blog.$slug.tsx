@@ -1,5 +1,6 @@
 import { optimizeSanityImage, getSanitySrcSet } from "@/lib/sanity-image";
-import { seoHead, jsonLd, absoluteUrl, SOCIAL_IMAGE } from "@/lib/site";
+import { seoHead, jsonLd, absoluteUrl, SOCIAL_IMAGE, breadcrumbs } from "@/lib/site";
+import { ServiceLinks } from "@/components/layout/ServiceLinks";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import {
   PortableText,
@@ -68,6 +69,16 @@ export const Route = createFileRoute("/blog/$slug")({
       scripts: [
         {
           type: "application/ld+json",
+          children: jsonLd(
+            breadcrumbs([
+              { name: "Home", path: "/" },
+              { name: "Blog", path: "/blog" },
+              { name: loaderData.title, path: `/blog/${encodeURIComponent(loaderData.slug)}` },
+            ]),
+          ),
+        },
+        {
+          type: "application/ld+json",
           children: jsonLd({
             "@context": "https://schema.org",
             "@type": "BlogPosting",
@@ -81,7 +92,12 @@ export const Route = createFileRoute("/blog/$slug")({
               "@type": loaderData.author?.name ? "Person" : "Organization",
               name: loaderData.author?.name || "ContentMesh Studios",
             },
-            publisher: { "@type": "Organization", name: "ContentMesh Studios", url: absoluteUrl() },
+            publisher: {
+              "@type": "Organization",
+              "@id": absoluteUrl("/#organization"),
+              name: "ContentMesh Studios",
+              url: absoluteUrl(),
+            },
           }),
         },
       ],
@@ -172,6 +188,20 @@ function BlogPost() {
 
   return (
     <SiteLayout>
+      <nav
+        aria-label="Breadcrumb"
+        className="mx-auto max-w-7xl px-6 py-4 text-sm text-muted-foreground"
+      >
+        <Link to="/" className="underline underline-offset-4">
+          Home
+        </Link>
+        <span aria-hidden="true"> / </span>
+        <Link to="/blog" className="underline underline-offset-4">
+          Blog
+        </Link>
+        <span aria-hidden="true"> / </span>
+        <span aria-current="page">{post.title}</span>
+      </nav>
       <PageHero eyebrow={post.tags?.[0] ?? "Article"} title={post.title} desc={post.excerpt} />
       <article className="mx-auto max-w-3xl px-6 pb-24">
         {post.coverUrl && (
@@ -266,6 +296,7 @@ function BlogPost() {
           </Link>
         </div>
       </article>
+      <ServiceLinks />
     </SiteLayout>
   );
 }

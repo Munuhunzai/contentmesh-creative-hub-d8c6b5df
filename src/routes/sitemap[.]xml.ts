@@ -3,6 +3,7 @@ import type {} from "@tanstack/react-start";
 import { sanityClient } from "@/integrations/sanity/client";
 import { absoluteUrl } from "@/lib/site";
 import { buildSitemap } from "@/lib/sitemap";
+import { serviceIndex } from "@/lib/service-index";
 
 export const Route = createFileRoute("/sitemap.xml")({
   server: {
@@ -26,6 +27,7 @@ export const Route = createFileRoute("/sitemap.xml")({
           return new Response(
             buildSitemap([
               ...pages,
+              ...serviceIndex.map((page) => ({ url: absoluteUrl(`/services/${page.slug}`) })),
               ...(posts || []).map((p) => ({
                 url: absoluteUrl(`/blog/${encodeURIComponent(p.slug)}`),
                 updatedAt: p.updatedAt,
