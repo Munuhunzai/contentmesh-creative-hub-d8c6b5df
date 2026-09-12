@@ -6,6 +6,7 @@ import { Logo } from "@/components/brand/Logo";
 import { useSanity } from "@/integrations/sanity/useSanity";
 import { siteSettingsQuery } from "@/integrations/sanity/queries";
 import { whatsappUrl, CONTACT_EMAIL } from "@/lib/site";
+import { glassPointer } from "@/lib/liquid-glass";
 import { Modal } from "./Modal";
 
 const NAV = [
@@ -31,11 +32,10 @@ export function Navbar() {
     <>
       <header className="fixed inset-x-0 top-0 z-[100] px-4 py-4 sm:px-6 lg:px-10">
         <div className="mx-auto flex max-w-[1480px] items-center justify-between gap-3">
-          <div className="relative flex h-14 items-center gap-2 overflow-hidden rounded-3xl border border-white/85 bg-white/90 py-1.5 pl-3 pr-2 shadow-lg backdrop-blur-xl sm:pl-4 xl:pr-4">
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-0 bg-[url('/paper-monochrome.webp')] bg-[length:480px_auto] opacity-15"
-            />
+          <div
+            {...glassPointer}
+            className="liquid-glass glass-nav relative flex h-14 items-center gap-2 rounded-3xl py-1.5 pl-3 pr-2 sm:pl-4 xl:pr-4"
+          >
             <div className="relative shrink-0">
               <Logo />
             </div>
@@ -90,7 +90,8 @@ export function Navbar() {
           <div className="flex shrink-0 items-center gap-2">
             <Link
               to="/contact"
-              className="nav-cta-glint inline-flex h-12 items-center justify-center gap-2 rounded-full border border-white/20 bg-[#C23800] px-4 text-sm font-bold text-white shadow-lg transition-colors hover:bg-[#a83000] sm:h-14 sm:px-6"
+              {...glassPointer}
+              className="liquid-glass glass-amber relative inline-flex h-12 items-center justify-center gap-2 rounded-full px-4 text-sm font-bold sm:h-14 sm:px-6"
             >
               Start a project <ArrowUpRight className="hidden h-4 w-4 sm:block" />
             </Link>
@@ -99,7 +100,8 @@ export function Navbar() {
               target={wa ? "_blank" : undefined}
               rel={wa ? "noopener noreferrer" : undefined}
               aria-label={wa ? "Contact us on WhatsApp" : "Email ContentMesh"}
-              className="nav-cta-glint hidden h-14 items-center gap-2 rounded-full bg-[#0E447F] px-5 text-sm font-bold text-white shadow-lg transition-colors hover:bg-[#082F59] sm:inline-flex"
+              {...glassPointer}
+              className="liquid-glass glass-blue relative hidden h-14 items-center gap-2 rounded-full px-5 text-sm font-bold sm:inline-flex"
             >
               {wa ? <MessageCircle className="h-5 w-5" /> : <Mail className="h-5 w-5" />}
               {wa ? "WhatsApp" : "Email us"}
