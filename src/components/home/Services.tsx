@@ -2,7 +2,6 @@ import { PortableText, type PortableTextBlock } from "@portabletext/react";
 import { Modal } from "@/components/layout/Modal";
 import { useState } from "react";
 import {
-  X,
   CheckCircle2,
   ArrowRight,
   Sparkles,
@@ -329,11 +328,15 @@ export function Services({ compact = false }: { compact?: boolean }) {
       }))
     : SERVICES_DATA;
   return (
-    <section className="studio-section border-t border-border" id="services">
+    <section
+      className="studio-section border-t border-border"
+      id="services"
+      aria-labelledby="services-heading"
+    >
       <div className="mb-10 flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
         <div className="max-w-2xl">
           <p className="eyebrow">{compact ? "02 / Capabilities" : "Our capabilities"}</p>
-          <h2 className="section-title mt-3">
+          <h2 id="services-heading" className="section-title mt-3">
             Your idea. Our craft.
             <br />
             <span className="text-brand-blue">Built for the screen.</span>
@@ -352,24 +355,23 @@ export function Services({ compact = false }: { compact?: boolean }) {
             type="button"
             key={item._id}
             onClick={() => setSelected(item)}
-            className="service-card group border border-border bg-white p-7 text-left transition duration-300 hover:-translate-y-1 hover:border-brand-blue/40 hover:shadow-soft"
+            className="service-card service-explorer-card group"
             aria-haspopup="dialog"
+            aria-label={`Explore ${item.title}`}
           >
-            <div className="mb-6 flex items-center justify-between">
-              <span className="grid h-12 w-12 place-items-center rounded-full bg-brand-blue/5 text-brand-blue">
+            <div className="service-card-top">
+              <span className="service-card-icon">
                 <item.iconComponent className="h-6 w-6" />
               </span>
-              <span className="text-xs font-semibold tabular-nums text-muted-foreground">
-                {String(index + 1).padStart(2, "0")}
-              </span>
+              <span className="service-card-number">{String(index + 1).padStart(2, "0")}</span>
             </div>
-            <h3 className="font-display text-xl font-bold">{item.title}</h3>
-            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              {item.shortDescription}
-            </p>
-            <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-brand-blue">
-              Explore service{" "}
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+            <h3 className="service-card-title">{item.title}</h3>
+            <p className="service-card-description">{item.shortDescription}</p>
+            <span className="service-card-action">
+              Explore service
+              <span className="service-card-arrow">
+                <ArrowRight className="h-5 w-5" />
+              </span>
             </span>
           </button>
         ))}
