@@ -1,6 +1,7 @@
 export type ServicePage = {
   slug: string;
   title: string;
+  searchTitle?: string;
   description: string;
   summary: string;
   audience: string;
@@ -144,8 +145,9 @@ export const servicePages: ServicePage[] = [
   {
     slug: "ai-youtube-video-production",
     title: "AI YouTube Video Production",
+    searchTitle: "Faceless YouTube Video Production & Editing | ContentMesh",
     description:
-      "Story-led AI YouTube video production: scripts, storyboards, visual continuity, voiceover and editing. Plan a single episode or an ongoing series with ContentMesh.",
+      "Faceless YouTube video production with AI visuals, narration, storyboards and human editing. Plan a documentary, explainer or ongoing series with ContentMesh.",
     summary:
       "ContentMesh Studios helps creators turn a script or episode idea into a finished AI-assisted YouTube video. Storyboarding, visual continuity, narration and editing are planned together so the episode works as a story, not just a sequence of generated clips.",
     audience:
@@ -159,7 +161,7 @@ export const servicePages: ServicePage[] = [
     ],
     sections: [
       {
-        title: "Start with the script and narration timing",
+        title: "Faceless YouTube videos built around your narration",
         text: "The script determines what the audience needs to understand and when. A storyboard maps each narration passage to a purposeful image, action or transition. If you already have a voiceover, share it before shot planning so scenes fit the actual pacing. If you need script development, include that in the brief rather than treating it as an automatic part of editing.",
       },
       {
