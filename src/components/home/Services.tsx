@@ -1,6 +1,5 @@
 import { PortableText, type PortableTextBlock } from "@portabletext/react";
-import { Modal } from "@/components/layout/Modal";
-import { useState } from "react";
+import { useId, useState } from "react";
 import {
   CheckCircle2,
   ArrowRight,
@@ -303,7 +302,8 @@ type CmsService = {
 
 export function Services({ compact = false }: { compact?: boolean }) {
   const cms = useSanity<CmsService[]>(["sanity", "services"], servicesQuery, []);
-  const [selected, setSelected] = useState<ServiceItem | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const tabsId = useId();
   const items = cms.length
     ? cms.map((item, i) => ({
         ...SERVICES_DATA[i % SERVICES_DATA.length],
@@ -327,6 +327,11 @@ export function Services({ compact = false }: { compact?: boolean }) {
         deliverables: item.features || [],
       }))
     : SERVICES_DATA;
+  const visibleItems = compact ? items.slice(0, 3) : items;
+  const selectedIndex = Math.max(
+    0,
+    visibleItems.findIndex((item) => item._id === selectedId),
+  );
   return (
     <section
       className="studio-section border-t border-border"
@@ -347,34 +352,95 @@ export function Services({ compact = false }: { compact?: boolean }) {
           your brief.
         </p>
       </div>
-      <div
-        className={`grid gap-4 ${items.length > 1 ? "sm:grid-cols-2" : ""} ${items.length > 2 ? "lg:grid-cols-3" : ""}`}
-      >
-        {(compact ? items.slice(0, 3) : items).map((item, index) => (
-          <button
-            type="button"
-            key={item._id}
-            onClick={() => setSelected(item)}
-            className="service-card service-explorer-card group"
-            aria-haspopup="dialog"
-            aria-label={`Explore ${item.title}`}
-          >
-            <div className="service-card-top">
-              <span className="service-card-icon">
-                <item.iconComponent className="h-6 w-6" />
+      <div className="service-overview">
+        <div
+          className="service-selector"
+          role="tablist"
+          aria-label="Choose a service"
+          aria-orientation="vertical"
+        >
+          {visibleItems.map((item, index) => (
+            <button
+              type="button"
+              key={item._id}
+              role="tab"
+              id={`${tabsId}-tab-${index}`}
+              aria-controls={`${tabsId}-panel-${index}`}
+              aria-selected={selectedIndex === index}
+              tabIndex={selectedIndex === index ? 0 : -1}
+              className="service-selector-tab"
+              onClick={() => setSelectedId(item._id)}
+              onKeyDown={(event) => {
+                const next =
+                  event.key === "ArrowDown"
+                    ? (index + 1) % visibleItems.length
+                    : event.key === "ArrowUp"
+                      ? (index - 1 + visibleItems.length) % visibleItems.length
+                      : event.key === "Home"
+                        ? 0
+                        : event.key === "End"
+                          ? visibleItems.length - 1
+                          : null;
+                if (next === null) return;
+                event.preventDefault();
+                setSelectedId(visibleItems[next]._id);
+                const buttons =
+                  event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>(
+                    '[role="tab"]',
+                  );
+                buttons?.[next]?.focus();
+              }}
+            >
+              <span className="service-selector-icon" aria-hidden="true">
+                <item.iconComponent className="h-5 w-5" />
               </span>
-              <span className="service-card-number">{String(index + 1).padStart(2, "0")}</span>
+              <span>{item.title}</span>
+              <ArrowRight className="service-selector-arrow h-4 w-4" aria-hidden="true" />
+            </button>
+          ))}
+        </div>
+        <div className="service-overview-panels">
+          {visibleItems.map((item, index) => (
+            <div
+              key={item._id}
+              role="tabpanel"
+              id={`${tabsId}-panel-${index}`}
+              aria-labelledby={`${tabsId}-tab-${index}`}
+              hidden={selectedIndex !== index}
+              tabIndex={0}
+              className="service-overview-panel"
+            >
+              <div className="service-overview-copy">
+                <h3 className="font-display text-2xl font-bold tracking-tight sm:text-3xl">
+                  {item.fullTitle}
+                </h3>
+                <div className="mt-5">
+                  <ServiceDescription value={item.fullDescription} />
+                </div>
+                {item.deliverables.length > 0 && (
+                  <ul className="service-overview-features">
+                    {item.deliverables.map((feature, featureIndex) => (
+                      <li key={`${featureIndex}-${feature}`}>
+                        <CheckCircle2 className="h-4 w-4 shrink-0 text-accent" aria-hidden="true" />
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                <Link
+                  to="/contact"
+                  search={{ reference: `Service: ${item.title}` }}
+                  className="studio-text-link mt-8"
+                >
+                  Request a quote <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
+              <div className="service-overview-art" aria-hidden="true">
+                <item.iconComponent />
+              </div>
             </div>
-            <h3 className="service-card-title">{item.title}</h3>
-            <p className="service-card-description">{item.shortDescription}</p>
-            <span className="service-card-action">
-              Explore service
-              <span className="service-card-arrow">
-                <ArrowRight className="h-5 w-5" />
-              </span>
-            </span>
-          </button>
-        ))}
+          ))}
+        </div>
       </div>
       {compact && (
         <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-b border-border pb-7">
@@ -386,38 +452,6 @@ export function Services({ compact = false }: { compact?: boolean }) {
           </Link>
         </div>
       )}
-      <Modal
-        open={!!selected}
-        onClose={() => setSelected(null)}
-        title={selected?.fullTitle || "Service details"}
-      >
-        {selected && (
-          <div className="p-6 sm:p-8">
-            <ServiceDescription value={selected.fullDescription} />
-            {selected.deliverables.length > 0 && (
-              <>
-                <h3 className="mt-6 font-semibold">Deliverables to discuss</h3>
-                <ul className="mt-4 space-y-3">
-                  {selected.deliverables.map((item) => (
-                    <li key={item} className="flex gap-3 text-sm">
-                      <CheckCircle2 className="h-5 w-5 shrink-0 text-brand-blue" />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </>
-            )}
-            <Link
-              to="/contact"
-              search={{ reference: `Service: ${selected.title}` }}
-              onClick={() => setSelected(null)}
-              className="mt-8 inline-flex min-h-12 items-center gap-3 rounded-full bg-accent px-6 py-3 text-sm font-semibold text-white"
-            >
-              Request a quote <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-        )}
-      </Modal>
     </section>
   );
 }
