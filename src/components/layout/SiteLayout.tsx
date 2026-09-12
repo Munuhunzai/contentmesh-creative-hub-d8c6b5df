@@ -2,8 +2,6 @@ import { useRouterState } from "@tanstack/react-router";
 import { useEffect, useState, lazy, Suspense, type ReactNode } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUp } from "lucide-react";
-import { GlassFilters } from "@/components/effects/GlassFilters";
-import { glassPointer } from "@/lib/liquid-glass";
 import { Navbar } from "./Navbar";
 import { Footer } from "./Footer";
 
@@ -47,7 +45,6 @@ export function SiteLayout({ children, heroSlot, noTopPadding }: SiteLayoutProps
       <a href="#main-content" className="skip-link">
         Skip to content
       </a>
-      <GlassFilters />
       <Navbar />
       {/* Hero renders here — behind the fixed navbar, no pt-28 */}
       <main
@@ -72,8 +69,7 @@ export function SiteLayout({ children, heroSlot, noTopPadding }: SiteLayoutProps
             exit={{ opacity: 0, y: 20 }}
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             aria-label="Back to top"
-            {...glassPointer}
-            className="liquid-glass glass-round fixed bottom-28 left-6 z-40 grid h-12 w-12 place-items-center rounded-full"
+            className="glass-strong glass-reflect fixed bottom-28 left-6 z-40 grid h-12 w-12 place-items-center rounded-full text-foreground shadow-float transition-transform hover:scale-105"
           >
             <ArrowUp className="h-4 w-4" />
           </motion.button>

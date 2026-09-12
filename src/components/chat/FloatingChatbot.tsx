@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { glassPointer } from "@/lib/liquid-glass";
 import { X, Send } from "lucide-react";
 
 type Msg = { role: "user" | "assistant"; content: string };
@@ -72,8 +71,12 @@ export function FloatingChatbot() {
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
         aria-label={open ? "Close chat" : "Open chat"}
-        {...glassPointer}
-        className="liquid-glass glass-round fixed bottom-6 right-4 z-40 grid h-16 w-16 place-items-center rounded-full sm:bottom-6"
+        className="fixed bottom-6 right-4 z-40 grid h-16 w-16 place-items-center rounded-full transition-transform hover:scale-110 sm:bottom-6"
+        style={{
+          background: "#FFFFFF",
+          border: "1px solid rgba(14,68,127,0.15)",
+          boxShadow: "0 18px 45px -12px rgba(14,68,127,0.35), 0 4px 12px rgba(0,0,0,0.06)",
+        }}
       >
         {open ? (
           <X className="h-5 w-5 text-[#0E447F]" />
@@ -106,21 +109,23 @@ export function FloatingChatbot() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 24, scale: 0.96 }}
             transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-            {...glassPointer}
-            role="region"
-            aria-label="Chat with Mesh"
-            className="liquid-glass glass-panel fixed bottom-24 left-4 right-4 z-40 flex w-auto flex-col overflow-hidden sm:left-auto sm:right-6 sm:bottom-28 sm:w-[380px] max-w-[calc(100vw-2rem)]"
+            className="fixed bottom-24 left-4 right-4 z-40 flex w-auto flex-col overflow-hidden sm:left-auto sm:right-6 sm:bottom-28 sm:w-[380px] max-w-[calc(100vw-2rem)]"
             style={{
               height: "min(520px, calc(100dvh - 7.5rem))",
               maxHeight: "calc(100dvh - 7rem)",
               borderRadius: 24,
+              background: "rgba(255,255,255,0.95)",
+              backdropFilter: "blur(32px) saturate(180%)",
+              WebkitBackdropFilter: "blur(32px) saturate(180%)",
+              border: "1px solid rgba(255,255,255,0.6)",
+              boxShadow: "0 30px 80px -20px rgba(14,68,127,0.35), 0 10px 30px rgba(0,0,0,0.10)",
             }}
           >
             {/* Header */}
             <div
               className="flex items-center gap-3 px-5 py-4 shrink-0"
               style={{
-                background: "linear-gradient(135deg, rgba(14,68,127,0.92), rgba(10,54,99,0.96))",
+                background: "linear-gradient(135deg, #0E447F 0%, #0A3663 100%)",
                 color: "#fff",
               }}
             >
@@ -168,8 +173,7 @@ export function FloatingChatbot() {
                       style={
                         m.role === "user"
                           ? {
-                              background:
-                                "linear-gradient(135deg, rgba(14,68,127,0.92), rgba(10,54,99,0.96))",
+                              background: "linear-gradient(135deg, #0E447F 0%, #0A3663 100%)",
                               color: "#fff",
                               borderBottomRightRadius: 6,
                             }
@@ -223,7 +227,7 @@ export function FloatingChatbot() {
                 aria-label="Chat message"
                 autoComplete="off"
                 maxLength={1000}
-                className="min-w-0 flex-1 rounded-full border border-black/10 bg-white px-4 py-2.5 text-sm outline-none focus:border-[#0E447F]"
+                className="flex-1 rounded-full border border-black/10 bg-white px-4 py-2.5 text-sm outline-none focus:border-[#0E447F]"
               />
               <button
                 type="submit"
