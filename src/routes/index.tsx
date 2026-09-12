@@ -37,7 +37,7 @@ export const Route = createFileRoute("/")({
                 as: "image",
                 href: optimizeSanityImage(firstImage, 1440, 75),
                 imageSrcSet: getSanitySrcSet(firstImage, [640, 960, 1440, 1920], 75),
-                imageSizes: "(min-width: 1024px) 52vw, 100vw",
+                imageSizes: "100vw",
                 fetchPriority: "high" as const,
               },
             ]

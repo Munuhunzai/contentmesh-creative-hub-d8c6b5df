@@ -143,9 +143,14 @@ export function Portfolio({ featuredOnly = false }: { featuredOnly?: boolean }) 
             for a closer look.
           </p>
           {featuredOnly && (
-            <Link to="/portfolio" className="studio-text-link mt-5">
-              View all projects <ArrowUpRight className="h-4 w-4" />
-            </Link>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link to="/contact" className="studio-button studio-button-blue">
+                Start your project <ArrowUpRight className="h-4 w-4" />
+              </Link>
+              <Link to="/portfolio" className="studio-button studio-button-outline">
+                Explore our work <ArrowUpRight className="h-4 w-4" />
+              </Link>
+            </div>
           )}
         </div>
       </div>
