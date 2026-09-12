@@ -61,3 +61,9 @@ No duplicate city pages or keyword-swapped industry pages were created. Pakistan
 Record an initial 28-day baseline when account access exists. Review index coverage and canonical selection first; then non-brand impressions, clicks, query groups and qualified enquiries by landing page. Compare the next 28 days with the baseline, noting seasonality and site changes. Track AI referrals where visible; manually sample a fixed set of buyer questions and record date, platform and cited URLs without claiming that a small sample represents universal AI rankings. None of these measurements has been configured or collected in this change.
 
 Validation before publishing: 21 tests passed, TypeScript passed and production build passed. Live deployment checks are performed after merge. Ranking growth requires observation over time; no first-place, indexing or AI-citation guarantee is made.
+
+## Deployment verification
+
+PR #9 passed CI and merged as `e69a095c1ed9079fc9da5c8442ee42da3ddfcf03`; Vercel reported a successful production deployment. All three service pages were opened on production and had one expected H1 and a self-referencing canonical. The product page's Service and BreadcrumbList JSON parsed successfully, its public robots meta allowed indexing, and its enquiry link populated the contact form with the selected service. Desktop visual inspection confirmed the page layout.
+
+Live `robots.txt` retrieval was blocked in the browser; a direct HTTP attempt timed out and the search fetcher could not retrieve either the robots or sitemap endpoint. Their route source and build were checked, but independent live endpoint verification remains outstanding. No claim of successful Google indexing, AI citation or a new Lighthouse score is made.

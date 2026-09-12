@@ -14,7 +14,11 @@ export const Route = createFileRoute("/services_/$slug")({
   head: ({ loaderData: page }) =>
     page
       ? {
-          ...seoHead(`${page.title} | ${SITE_NAME}`, page.description, `/services/${page.slug}`),
+          ...seoHead(
+            page.searchTitle || `${page.title} | ${SITE_NAME}`,
+            page.description,
+            `/services/${page.slug}`,
+          ),
           scripts: [
             {
               type: "application/ld+json",
