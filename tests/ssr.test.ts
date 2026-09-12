@@ -81,7 +81,7 @@ test("empty CMS state contains no invented client proof or duplicate service cop
   const html = await render({});
   for (const text of ["Emily Jeff", "TheWebagency", "Client Satisfaction", "250+"])
     assert.ok(!html.includes(text), text);
-  assert.equal((html.match(/Explore service/g) || []).length, 12);
+  assert.equal((html.match(/role="tab"/g) || []).length, 12);
 });
 
 test("the full portfolio shows non-featured projects and never invents review ratings", async () => {
@@ -113,8 +113,8 @@ test("homepage curation limits the work and service catalogue without dropping f
   const full = await render(data);
   assert.equal((compact.match(/View project:/g) || []).length, 4);
   assert.equal((full.match(/View project:/g) || []).length, 6);
-  assert.equal((compact.match(/Explore service/g) || []).length, 3);
-  assert.equal((full.match(/Explore service/g) || []).length, 12);
+  assert.equal((compact.match(/role="tab"/g) || []).length, 3);
+  assert.equal((full.match(/role="tab"/g) || []).length, 12);
 });
 
 test("service descriptions render Sanity blocks instead of invalid React children", () => {
