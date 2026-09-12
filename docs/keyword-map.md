@@ -62,3 +62,10 @@ The goal is qualified organic discovery. First-place rankings and a fixed timefr
 ## September 12 verification results
 
 All 24 automated tests passed, including three new crawl-endpoint contract tests. TypeScript and the production build passed. The existing live YouTube service page rendered with one H1 and the expected canonical. A new direct robots request again returned a browser client block; a shell HTTP request timed out. Therefore live robots/sitemap reachability from crawlers remains unverified here. This is a test-environment limitation, not evidence that Google is blocked or that the site is indexed.
+
+Subsequent independent Lighthouse verification on the production product-ad service page scored **91/100/100/100 mobile** and **100/100/100/100 desktop** (Performance/Accessibility/Best Practices/SEO). The expanded SEO checks passed successful HTTP status, crawlable links, valid robots.txt, valid canonical and no indexing block. This provides independent confirmation of the robots audit despite the direct-fetch limitation above; it does not prove sitemap correctness in production or actual index inclusion. The audit sampled one service page, not every URL.
+
+- [Mobile report](https://pagespeed.web.dev/analysis/https-contentmesh-creative-hub-d8c6b5df-vercel-app-services-ai-product-video-ads/3mqoozec6h?form_factor=mobile)
+- [Desktop report](https://pagespeed.web.dev/analysis/https-contentmesh-creative-hub-d8c6b5df-vercel-app-services-ai-product-video-ads/3mqoozec6h?form_factor=desktop)
+
+PR #10 passed CI and merged as `47c27e09ec982b9bb86b679a8a465047eb9a6264`. The tested product-page content is unchanged by that keyword-title update.
