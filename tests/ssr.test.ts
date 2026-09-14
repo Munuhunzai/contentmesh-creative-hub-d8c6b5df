@@ -149,3 +149,30 @@ test("unfinished CMS service descriptions use a useful enquiry fallback", () => 
   assert.ok(!html.includes("epwnofpewoco"));
   assert.ok(html.includes("Discuss the creative direction"));
 });
+
+test("sparse CMS services retain relevant descriptions after reordering", async () => {
+  for (const services of [
+    [
+      { _id: "ads", title: "AI ads", longDescription: "unfinished" },
+      { _id: "animation", title: "AI 2D animation" },
+    ],
+    [
+      { _id: "animation", title: "AI 2D animation" },
+      { _id: "ads", title: "AI ads", longDescription: "unfinished" },
+    ],
+  ]) {
+    const html = await render({ services });
+    assert.ok(html.includes("Build an animated story"));
+    assert.ok(html.includes("Turn a product or campaign idea"));
+    assert.ok(!html.includes("unfinished"));
+    assert.ok(!html.includes("Discuss the right deliverables"));
+  }
+});
+
+test("project cards expose published context without inventing outcomes", async () => {
+  const html = await render({
+    portfolio: [{ _id: "context", title: "Launch film", brief: "Introduce a new collection." }],
+  });
+  assert.ok(html.includes("Introduce a new collection."));
+  assert.ok(!html.includes("Increased conversions"));
+});

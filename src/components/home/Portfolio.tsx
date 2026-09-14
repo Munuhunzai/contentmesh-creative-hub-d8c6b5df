@@ -241,6 +241,11 @@ export function Portfolio({ featuredOnly = false }: { featuredOnly?: boolean }) 
                   <h3 className="mt-2 font-display text-xl font-bold tracking-tight sm:text-2xl">
                     {p.title}
                   </h3>
+                  {(p.brief || p.description) && (
+                    <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground line-clamp-2">
+                      {p.brief || p.description}
+                    </p>
+                  )}
                 </div>
                 <span
                   aria-hidden="true"

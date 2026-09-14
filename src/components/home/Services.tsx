@@ -45,7 +45,7 @@ const SERVICES_DATA: ServiceItem[] = [
     shortDescription:
       "AI video creation, generative visuals, and script-to-screen commercial production.",
     fullDescription:
-      "We combine state-of-the-art generative AI models (selected for your visual direction) with senior human post-production to craft cinema-grade commercial ads and visual stories.",
+      "Turn a product or campaign idea into a film with creative direction, AI-generated visuals, editing and sound. We plan the message, shots and delivery formats around your audience and distribution channels.",
     deliverables: [
       "Custom Scriptwriting & Storyboarding",
       "Generative 4K Video Renderings",
@@ -63,9 +63,9 @@ const SERVICES_DATA: ServiceItem[] = [
     iconImg: "/services/ai-animation.webp",
     iconComponent: Wand2,
     shortDescription:
-      "Cinema-grade 2D/3D character animation, product concepts, and kinetic motion graphics.",
+      "Character animation, illustrated scenes and motion graphics shaped around your story.",
     fullDescription:
-      "Bring complex visual ideas to life with high-fidelity 3D character animation, fluid motion graphics, and stylized generative visual effects.",
+      "Build an animated story with a consistent visual style, clear scene planning and a considered final edit. We agree the characters, movement, formats and review stages around your brief.",
     deliverables: [
       "3D Character & Object Modeling",
       "Fluid Camera Motion & Lighting",
@@ -300,30 +300,56 @@ type CmsService = {
   features?: string[];
 };
 
+function usefulServiceDescription(value?: string | PortableTextBlock[]) {
+  const text =
+    typeof value === "string"
+      ? value
+      : (value || [])
+          .flatMap((block) => block.children || [])
+          .map((span) => span.text || "")
+          .join(" ");
+  return text.trim().length >= 15 ? value : undefined;
+}
+
+function servicePresentation(title: string): ServiceItem {
+  const normalized = title.toLowerCase();
+  if (/animation|anime|2d|3d/.test(normalized)) return SERVICES_DATA[1];
+  if (/youtube/.test(normalized)) return SERVICES_DATA[9];
+  if (/voice|dubb|audio/.test(normalized)) return SERVICES_DATA[2];
+  if (/ugc/.test(normalized)) return SERVICES_DATA[3];
+  if (/avatar|presenter/.test(normalized)) return SERVICES_DATA[4];
+  if (/reel|social|shorts/.test(normalized)) return SERVICES_DATA[6];
+  if (/explain|talking|saas/.test(normalized)) return SERVICES_DATA[7];
+  if (/brand film|documentary/.test(normalized)) return SERVICES_DATA[10];
+  if (/strategy/.test(normalized)) return SERVICES_DATA[11];
+  if (/ads?|commercial|product|video/.test(normalized)) return SERVICES_DATA[0];
+  return {
+    ...SERVICES_DATA[0],
+    iconComponent: Sparkles,
+    shortDescription: "Creative direction and production planned around your audience and brief.",
+    fullDescription:
+      "Start with your audience, message and preferred visual direction. We will discuss the production approach, formats and review stages before agreeing the scope.",
+  };
+}
+
 export function Services({ compact = false }: { compact?: boolean }) {
   const cms = useSanity<CmsService[]>(["sanity", "services"], servicesQuery, []);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const tabsId = useId();
   const items = cms.length
-    ? cms.map((item, i) => ({
-        ...SERVICES_DATA[i % SERVICES_DATA.length],
+    ? cms.map((item) => ({
+        ...servicePresentation(item.title),
         _id: item._id,
         title: item.title,
         fullTitle: item.title,
         shortDescription:
           item.shortDescription && item.shortDescription.trim().length >= 15
             ? item.shortDescription
-            : "Creative production shaped around your brief.",
+            : servicePresentation(item.title).shortDescription,
         fullDescription:
-          (Array.isArray(item.longDescription)
-            ? item.longDescription.length
-              ? item.longDescription
-              : undefined
-            : item.longDescription) ||
-          (item.shortDescription && item.shortDescription.trim().length >= 15
-            ? item.shortDescription
-            : undefined) ||
-          "Discuss the right deliverables for your project with our team.",
+          usefulServiceDescription(item.longDescription) ||
+          usefulServiceDescription(item.shortDescription) ||
+          servicePresentation(item.title).fullDescription,
         deliverables: item.features || [],
       }))
     : SERVICES_DATA;

@@ -22,6 +22,7 @@ export function Hero({ initialData }: { initialData?: HomepageData | null } = {}
   const [started, setStarted] = useState(false);
   const [paused, setPaused] = useState(false);
   const [visible, setVisible] = useState(true);
+  const [playingSource, setPlayingSource] = useState<string | null>(null);
   const reducedMotion = useReducedMotion();
   const sectionRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -52,9 +53,10 @@ export function Hero({ initialData }: { initialData?: HomepageData | null } = {}
   }, []);
   useEffect(() => {
     if (!canPlay || slides.length < 2) return;
+    if (slide.videoFileUrl && playingSource !== slide.videoFileUrl) return;
     const timer = setTimeout(() => setCurrent((index) => (index + 1) % slides.length), 8000);
     return () => clearTimeout(timer);
-  }, [canPlay, current, slides.length]);
+  }, [canPlay, current, slides.length, slide.videoFileUrl, playingSource]);
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
@@ -69,7 +71,7 @@ export function Hero({ initialData }: { initialData?: HomepageData | null } = {}
     };
   }, [canPlay, slide.videoFileUrl]);
   const move = (delta: number) => {
-    setPaused(true);
+    setPlayingSource(null);
     setCurrent((index) => (index + delta + slides.length) % slides.length);
   };
   return (
@@ -103,6 +105,8 @@ export function Hero({ initialData }: { initialData?: HomepageData | null } = {}
                 ? optimizeSanityImage(slide.backgroundImageUrl, 1440, 75)
                 : undefined
             }
+            onPlaying={() => setPlayingSource(slide.videoFileUrl || null)}
+            onWaiting={() => setPlayingSource(null)}
             onError={() => setPaused(true)}
             muted
             loop

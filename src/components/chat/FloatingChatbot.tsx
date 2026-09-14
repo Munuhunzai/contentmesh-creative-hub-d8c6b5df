@@ -18,6 +18,7 @@ export function FloatingChatbot() {
   const [error, setError] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const launcherRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -38,6 +39,7 @@ export function FloatingChatbot() {
     try {
       const res = await fetch("/api/chat", {
         method: "POST",
+        signal: AbortSignal.timeout(20_000),
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ messages: next.slice(-20) }),
       });
@@ -58,6 +60,7 @@ export function FloatingChatbot() {
     <>
       {/* Floating avatar button */}
       <motion.button
+        ref={launcherRef}
         initial={{ opacity: 0, scale: 0.8 }}
         animate={open ? { opacity: 1, scale: 1, y: 0 } : { opacity: 1, scale: 1, y: 0 }}
         transition={
@@ -70,6 +73,7 @@ export function FloatingChatbot() {
         }
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
+        aria-controls={open ? "mesh-chat-panel" : undefined}
         aria-label={open ? "Close chat" : "Open chat"}
         className="fixed bottom-6 right-4 z-40 grid h-16 w-16 place-items-center rounded-full transition-transform hover:scale-110 sm:bottom-6"
         style={{
@@ -105,6 +109,15 @@ export function FloatingChatbot() {
       <AnimatePresence>
         {open && (
           <motion.div
+            id="mesh-chat-panel"
+            role="region"
+            aria-label="Chat with Mesh"
+            onKeyDown={(event) => {
+              if (event.key === "Escape") {
+                setOpen(false);
+                launcherRef.current?.focus();
+              }
+            }}
             initial={{ opacity: 0, y: 24, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 24, scale: 0.96 }}
@@ -147,20 +160,29 @@ export function FloatingChatbot() {
                     className="inline-block h-2 w-2 rounded-full"
                     style={{ background: "#FF7A00" }}
                   />
-                  Online — usually replies instantly
+                  AI assistant · Ask about your project
                 </div>
               </div>
               <button
-                onClick={() => setOpen(false)}
+                onClick={() => {
+                  setOpen(false);
+                  launcherRef.current?.focus();
+                }}
                 aria-label="Close chat"
-                className="grid h-8 w-8 place-items-center rounded-full text-white/90 hover:bg-white/10"
+                className="grid h-11 w-11 shrink-0 place-items-center rounded-full text-white/90 hover:bg-white/10"
               >
                 <X className="h-4 w-4" />
               </button>
             </div>
 
             {/* Messages */}
-            <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto px-4 py-4">
+            <div
+              ref={scrollRef}
+              role="log"
+              aria-label="Conversation"
+              aria-live="polite"
+              className="flex-1 min-h-0 overflow-y-auto px-4 py-4"
+            >
               <div className="flex flex-col gap-3">
                 {messages.map((m, i) => (
                   <div
@@ -227,13 +249,13 @@ export function FloatingChatbot() {
                 aria-label="Chat message"
                 autoComplete="off"
                 maxLength={1000}
-                className="flex-1 rounded-full border border-black/10 bg-white px-4 py-2.5 text-sm outline-none focus:border-[#0E447F]"
+                className="min-w-0 flex-1 rounded-full border border-black/10 bg-white px-4 py-2.5 text-sm outline-none focus:border-[#0E447F]"
               />
               <button
                 type="submit"
                 disabled={!input.trim() || loading}
                 aria-label="Send"
-                className="grid h-10 w-10 place-items-center rounded-full text-white transition-transform hover:scale-105 disabled:opacity-50"
+                className="grid h-11 w-11 shrink-0 place-items-center rounded-full text-white transition-transform hover:scale-105 disabled:opacity-50"
                 style={{ background: "#FF7A00" }}
               >
                 <Send className="h-4 w-4" />
