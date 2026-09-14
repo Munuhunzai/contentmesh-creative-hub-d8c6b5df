@@ -43,7 +43,7 @@ const FALLBACK: Post[] = [];
 
 function Blog() {
   const posts = useSanity<Post[]>(["sanity", "blog", "list"], blogListQuery, FALLBACK);
-  const list = posts.length > 0 ? posts : FALLBACK;
+  const list = posts.filter((post) => post.slug?.trim());
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
@@ -111,7 +111,7 @@ function Blog() {
           >
             <Link
               to="/blog/$slug"
-              params={{ slug: featured.slug || "state-of-ai-video-2026" }}
+              params={{ slug: featured.slug }}
               className="group mb-14 block overflow-hidden rounded-[2.5rem] border border-border/80 bg-card shadow-xl transition-all hover:shadow-2xl hover:border-primary/40 cursor-pointer"
             >
               <div className="grid gap-0 lg:grid-cols-12">
@@ -203,15 +203,21 @@ function Blog() {
                 ? "Try a different search or clear the filters."
                 : "Explore our services or share your project brief with the studio."}
             </p>
-            <button
-              onClick={() => {
-                setSearchQuery("");
-                setSelectedTag(null);
-              }}
-              className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#FF5A1F] px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow"
-            >
-              Clear Search & Filters
-            </button>
+            {isFiltering ? (
+              <button
+                onClick={() => {
+                  setSearchQuery("");
+                  setSelectedTag(null);
+                }}
+                className="studio-button studio-button-blue mt-6"
+              >
+                Clear search and filters
+              </button>
+            ) : (
+              <Link to="/services" className="studio-button studio-button-blue mt-6">
+                Explore video production <ArrowUpRight className="h-4 w-4" />
+              </Link>
+            )}
           </div>
         )}
 
@@ -221,14 +227,14 @@ function Blog() {
             {gridPosts.map((p, i) => (
               <motion.div
                 key={p._id}
-                initial={{ opacity: 0, y: 28 }}
+                initial={false}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-40px" }}
                 transition={{ duration: 0.5, delay: (i % 3) * 0.08, ease: [0.16, 1, 0.3, 1] }}
               >
                 <Link
                   to="/blog/$slug"
-                  params={{ slug: p.slug || "state-of-ai-video-2026" }}
+                  params={{ slug: p.slug }}
                   className="group relative flex flex-col h-full overflow-hidden rounded-[2rem] border border-border/70 bg-card p-6 shadow-sm transition-all hover:-translate-y-1.5 hover:border-primary/30 hover:shadow-xl cursor-pointer"
                 >
                   {/* Image / Gradient preview */}

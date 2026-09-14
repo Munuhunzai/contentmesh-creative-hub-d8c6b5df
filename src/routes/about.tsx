@@ -118,7 +118,7 @@ function About() {
               className="group overflow-hidden rounded-3xl border border-border bg-card"
             >
               <div
-                className="aspect-[4/5] relative"
+                className={m.photoUrl ? "aspect-[4/5] relative" : "relative h-32"}
                 style={
                   m.photoUrl
                     ? {
@@ -145,7 +145,7 @@ function About() {
                 <p className="font-display font-semibold">{m.name}</p>
                 <p className="text-sm text-muted-foreground">{m.role}</p>
                 {m.bio && (
-                  <p className="mt-2 text-xs text-muted-foreground line-clamp-3">{m.bio}</p>
+                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{m.bio}</p>
                 )}
               </div>
             </motion.div>

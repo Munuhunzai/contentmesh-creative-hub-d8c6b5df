@@ -58,7 +58,7 @@ export function Footer() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={label}
-                    className="grid h-9 w-9 place-items-center rounded-full border border-border bg-background text-muted-foreground transition-all hover:bg-[#0D4C92] hover:border-[#0D4C92] hover:text-white shadow-sm"
+                    className="grid h-11 w-11 place-items-center rounded-full border border-border bg-background text-muted-foreground transition-all hover:bg-[#0D4C92] hover:border-[#0D4C92] hover:text-white shadow-sm"
                   >
                     <Icon className="h-4 w-4" />
                   </a>
@@ -78,10 +78,10 @@ export function Footer() {
           <FooterCol
             title="Services"
             links={[
-              ["AI Video Production", "/services"],
-              ["AI Animation", "/services"],
-              ["AI Voiceovers", "/services"],
-              ["Motion Graphics", "/services"],
+              ["AI Commercials", "/services/ai-commercial-video-production"],
+              ["Product Video Ads", "/services/ai-product-video-ads"],
+              ["YouTube Production", "/services/ai-youtube-video-production"],
+              ["All capabilities", "/services"],
               ["Free Storyboard Tool", "/tools/storyboard-generator"],
             ]}
           />

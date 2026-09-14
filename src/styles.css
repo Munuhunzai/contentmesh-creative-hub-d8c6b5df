@@ -1147,3 +1147,8 @@ button:disabled {
     animation: none;
   }
 }
+
+/* Keep showcase controls clear of the fixed chat launcher. */
+.studio-hero-footer {
+  padding-right: 5rem;
+}
