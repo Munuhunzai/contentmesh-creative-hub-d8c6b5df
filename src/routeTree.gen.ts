@@ -22,6 +22,7 @@ import { Route as ApiAssistantModifyRouteImport } from './routes/api/assistant-m
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as ApiContactRouteImport } from './routes/api/contact'
 import { Route as ApiGenerateStoryboardRouteImport } from './routes/api/generate-storyboard'
+import { Route as ApiResendInboundRouteImport } from './routes/api/resend-inbound'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as ServicesSlugRouteImport } from './routes/services_.$slug'
@@ -94,6 +95,11 @@ const ApiGenerateStoryboardRoute = ApiGenerateStoryboardRouteImport.update({
   path: '/api/generate-storyboard',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiResendInboundRoute = ApiResendInboundRouteImport.update({
+  id: '/api/resend-inbound',
+  path: '/api/resend-inbound',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BlogIndexRoute = BlogIndexRouteImport.update({
   id: '/blog/',
   path: '/blog/',
@@ -140,6 +146,7 @@ export interface FileRoutesByFullPath {
   '/api/chat': typeof ApiChatRoute
   '/api/contact': typeof ApiContactRoute
   '/api/generate-storyboard': typeof ApiGenerateStoryboardRoute
+  '/api/resend-inbound': typeof ApiResendInboundRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/services/$slug': typeof ServicesSlugRoute
   '/studio/$': typeof StudioSplatRoute
@@ -161,6 +168,7 @@ export interface FileRoutesByTo {
   '/api/chat': typeof ApiChatRoute
   '/api/contact': typeof ApiContactRoute
   '/api/generate-storyboard': typeof ApiGenerateStoryboardRoute
+  '/api/resend-inbound': typeof ApiResendInboundRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/services/$slug': typeof ServicesSlugRoute
   '/studio/$': typeof StudioSplatRoute
@@ -183,6 +191,7 @@ export interface FileRoutesById {
   '/api/chat': typeof ApiChatRoute
   '/api/contact': typeof ApiContactRoute
   '/api/generate-storyboard': typeof ApiGenerateStoryboardRoute
+  '/api/resend-inbound': typeof ApiResendInboundRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/services_/$slug': typeof ServicesSlugRoute
   '/studio/$': typeof StudioSplatRoute
@@ -206,6 +215,7 @@ export interface FileRouteTypes {
     | '/api/chat'
     | '/api/contact'
     | '/api/generate-storyboard'
+    | '/api/resend-inbound'
     | '/blog/$slug'
     | '/services/$slug'
     | '/studio/$'
@@ -227,6 +237,7 @@ export interface FileRouteTypes {
     | '/api/chat'
     | '/api/contact'
     | '/api/generate-storyboard'
+    | '/api/resend-inbound'
     | '/blog/$slug'
     | '/services/$slug'
     | '/studio/$'
@@ -248,6 +259,7 @@ export interface FileRouteTypes {
     | '/api/chat'
     | '/api/contact'
     | '/api/generate-storyboard'
+    | '/api/resend-inbound'
     | '/blog/$slug'
     | '/services_/$slug'
     | '/studio/$'
@@ -270,6 +282,7 @@ export interface RootRouteChildren {
   ApiChatRoute: typeof ApiChatRoute
   ApiContactRoute: typeof ApiContactRoute
   ApiGenerateStoryboardRoute: typeof ApiGenerateStoryboardRoute
+  ApiResendInboundRoute: typeof ApiResendInboundRoute
   BlogSlugRoute: typeof BlogSlugRoute
   ServicesSlugRoute: typeof ServicesSlugRoute
   StudioSplatRoute: typeof StudioSplatRoute
@@ -371,6 +384,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiGenerateStoryboardRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/resend-inbound': {
+      id: '/api/resend-inbound'
+      path: '/api/resend-inbound'
+      fullPath: '/api/resend-inbound'
+      preLoaderRoute: typeof ApiResendInboundRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/blog/': {
       id: '/blog/'
       path: '/blog'
@@ -430,6 +450,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiChatRoute: ApiChatRoute,
   ApiContactRoute: ApiContactRoute,
   ApiGenerateStoryboardRoute: ApiGenerateStoryboardRoute,
+  ApiResendInboundRoute: ApiResendInboundRoute,
   BlogSlugRoute: BlogSlugRoute,
   ServicesSlugRoute: ServicesSlugRoute,
   StudioSplatRoute: StudioSplatRoute,
