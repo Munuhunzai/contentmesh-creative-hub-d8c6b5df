@@ -37,6 +37,37 @@ test("contact validation and delivery failures never return a false success", as
     if (saved) process.env.RESEND_API_KEY = saved;
   }
 });
+test("contact delivery uses the verified ContentMesh sender by default", async () => {
+  const savedKey = process.env.RESEND_API_KEY;
+  const savedFrom = process.env.CONTACT_FROM_EMAIL;
+  const savedFetch = globalThis.fetch;
+  let sentEmail: Record<string, unknown> | undefined;
+  process.env.RESEND_API_KEY = "re_test_key";
+  delete process.env.CONTACT_FROM_EMAIL;
+  globalThis.fetch = async (_input, init) => {
+    sentEmail = JSON.parse(String(init?.body));
+    return Response.json({ id: "email_test_id" });
+  };
+  try {
+    const response = await post(ContactRoute, "/api/contact", {
+      name: "Sample Client",
+      email: "client@example.test",
+      service: "AI Video Production",
+      budget: "Help me estimate",
+      details: "A short product film for a launch.",
+      _honey: "",
+    });
+    assert.equal(response.status, 200);
+    assert.equal((await response.json()).ok, true);
+    assert.equal(sentEmail?.from, "ContentMesh <info@contentmeshai.com>");
+  } finally {
+    globalThis.fetch = savedFetch;
+    if (savedKey === undefined) delete process.env.RESEND_API_KEY;
+    else process.env.RESEND_API_KEY = savedKey;
+    if (savedFrom === undefined) delete process.env.CONTACT_FROM_EMAIL;
+    else process.env.CONTACT_FROM_EMAIL = savedFrom;
+  }
+});
 test("AI routes handle absent credentials and malformed input without external calls", async () => {
   const saved = process.env.DEEPSEEK_API_KEY;
   delete process.env.DEEPSEEK_API_KEY;

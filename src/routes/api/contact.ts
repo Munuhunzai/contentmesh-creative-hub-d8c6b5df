@@ -25,7 +25,7 @@ async function handlePost({ request }: { request: Request }) {
     const { name, email, company, service, budget, details } = parsed.data;
     // The recipient is server-controlled. Browser-supplied recipient fields are ignored.
     const to = process.env.CONTACT_EMAIL || CONTACT_EMAIL;
-    const from = process.env.CONTACT_FROM_EMAIL || "ContentMesh <onboarding@resend.dev>";
+    const from = process.env.CONTACT_FROM_EMAIL || "ContentMesh <info@contentmeshai.com>";
     const text = `Name: ${name}\nEmail: ${email}\nCompany: ${company || "Not specified"}\nService: ${service}\nBudget: ${budget}\n\n${details}`;
     const { error } = await new Resend(apiKey).emails.send({
       from,
