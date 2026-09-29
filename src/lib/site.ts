@@ -1,7 +1,7 @@
-// Use the connected production origin until the custom domain is live.
-// Set VITE_SITE_URL and rebuild when migrating; never derive canonicals from a preview host.
+// Keep canonicals, social URLs, robots.txt, and the sitemap on the public production domain.
+// Preview deployments should still point search engines to this canonical origin.
 export const SITE_URL = new URL(
-  import.meta.env?.VITE_SITE_URL || "https://contentmesh-creative-hub-d8c6b5df.vercel.app",
+  import.meta.env?.VITE_SITE_URL || "https://contentmeshai.com",
 ).origin;
 export const SITE_NAME = "ContentMesh Studios";
 export const CONTACT_EMAIL = "waheed.sul00@gmail.com";
