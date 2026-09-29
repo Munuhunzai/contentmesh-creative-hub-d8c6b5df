@@ -99,6 +99,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "ContentMesh crafts AI videos, animations, voiceovers, and premium marketing content for ambitious brands, creators, and agencies.",
       },
       { name: "author", content: "ContentMesh" },
+      {
+        name: "google-site-verification",
+        content: "x4jzfpt30Y_3sgoyDcnzv5Y5eHApF_lfVFUHdXC_wPI",
+      },
       { name: "theme-color", content: "#FF5A1F" },
       { property: "og:site_name", content: "ContentMesh" },
       { property: "og:title", content: "ContentMesh — AI-Powered Creative Content Studio" },
