@@ -40,7 +40,7 @@ function Contact() {
   const info = useSanity<ContactInfo>(["sanity", "contact"], contactQuery, CONTACT_FALLBACK);
   const c = { ...CONTACT_FALLBACK, ...info };
   const [showMap, setShowMap] = useState(false);
-  const [status, setStatus] = useState<"idle" | "sending" | "ok" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "sending" | "ok" | "ack-error" | "error">("idle");
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -69,13 +69,16 @@ function Contact() {
           ...Object.fromEntries(fd.entries()),
         }),
       });
+      const data = (await res.json()) as {
+        error?: string;
+        acknowledgementSent?: boolean;
+      };
       if (!res.ok) {
-        const data = (await res.json()) as { error?: string };
         setErrors({ _form: data.error ?? "Something went wrong. Please try again." });
         setStatus("error");
         return;
       }
-      setStatus("ok");
+      setStatus(data.acknowledgementSent === false ? "ack-error" : "ok");
       form.reset();
     } catch {
       setErrors({ _form: "Network error — please check your connection and try again." });
@@ -193,7 +196,13 @@ function Contact() {
               </button>
               {status === "ok" && (
                 <span className="inline-flex items-center gap-1.5 text-sm font-medium text-accent">
-                  <Check className="h-4 w-4" /> Thanks — we'll be in touch shortly.
+                  <Check className="h-4 w-4" /> Thanks — a confirmation email is on its way.
+                </span>
+              )}
+              {status === "ack-error" && (
+                <span className="text-sm font-medium text-accent">
+                  Your brief reached us, but we couldn’t email a confirmation. We’ll be in touch
+                  soon.
                 </span>
               )}
               {status === "error" && errors._form && (

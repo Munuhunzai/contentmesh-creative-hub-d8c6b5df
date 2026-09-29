@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Resend } from "resend";
 import { contactSchema, escapeHtml } from "@/lib/contact-schema";
+import { contactAcknowledgementEmail } from "@/lib/contact-email";
 import { guardRequest, readJson, requestErrorResponse } from "@/lib/request-guard";
 import { CONTACT_EMAIL } from "@/lib/site";
 
@@ -45,7 +46,34 @@ async function handlePost({ request }: { request: Request }) {
         { status: 502 },
       );
     }
-    return Response.json({ ok: true }, { headers: { "Cache-Control": "no-store" } });
+
+    // The enquiry is safely delivered to the studio. If the optional acknowledgement
+    // fails, keep the submission successful so visitors don't retry and duplicate it.
+    let acknowledgementSent = true;
+    try {
+      const acknowledgement = contactAcknowledgementEmail(name, service);
+      const { error: acknowledgementError } = await new Resend(apiKey).emails.send({
+        from,
+        to: [email],
+        replyTo: to,
+        ...acknowledgement,
+      });
+      if (acknowledgementError) {
+        acknowledgementSent = false;
+        console.error("Contact acknowledgement failed:", acknowledgementError.name);
+      }
+    } catch (acknowledgementError) {
+      acknowledgementSent = false;
+      console.error(
+        "Contact acknowledgement failed:",
+        acknowledgementError instanceof Error ? acknowledgementError.name : "UnknownError",
+      );
+    }
+
+    return Response.json(
+      { ok: true, acknowledgementSent },
+      { headers: { "Cache-Control": "no-store" } },
+    );
   } catch (error) {
     const response = requestErrorResponse(error);
     if (response) return response;

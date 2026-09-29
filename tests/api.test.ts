@@ -41,11 +41,11 @@ test("contact delivery uses the verified ContentMesh sender by default", async (
   const savedKey = process.env.RESEND_API_KEY;
   const savedFrom = process.env.CONTACT_FROM_EMAIL;
   const savedFetch = globalThis.fetch;
-  let sentEmail: Record<string, unknown> | undefined;
+  const sentEmails: Record<string, unknown>[] = [];
   process.env.RESEND_API_KEY = "re_test_key";
   delete process.env.CONTACT_FROM_EMAIL;
   globalThis.fetch = async (_input, init) => {
-    sentEmail = JSON.parse(String(init?.body));
+    sentEmails.push(JSON.parse(String(init?.body)) as Record<string, unknown>);
     return Response.json({ id: "email_test_id" });
   };
   try {
@@ -59,7 +59,49 @@ test("contact delivery uses the verified ContentMesh sender by default", async (
     });
     assert.equal(response.status, 200);
     assert.equal((await response.json()).ok, true);
-    assert.equal(sentEmail?.from, "ContentMesh <info@contentmeshai.com>");
+    assert.equal(sentEmails.length, 2);
+    assert.equal(sentEmails[0].from, "ContentMesh <info@contentmeshai.com>");
+    assert.equal(sentEmails[1].from, "ContentMesh <info@contentmeshai.com>");
+    assert.deepEqual(sentEmails[1].to, ["client@example.test"]);
+    assert.equal(sentEmails[1].subject, "Thanks for reaching out to ContentMesh");
+    assert.match(String(sentEmails[1].html), /Content_mesh_AI_video_production_agency\.png/);
+    assert.match(String(sentEmails[1].html), /Hi Sample Client/);
+    assert.match(
+      String(sentEmails[1].text),
+      /We’ve received your enquiry about AI Video Production/,
+    );
+  } finally {
+    globalThis.fetch = savedFetch;
+    if (savedKey === undefined) delete process.env.RESEND_API_KEY;
+    else process.env.RESEND_API_KEY = savedKey;
+    if (savedFrom === undefined) delete process.env.CONTACT_FROM_EMAIL;
+    else process.env.CONTACT_FROM_EMAIL = savedFrom;
+  }
+});
+test("a failed customer acknowledgement does not lose an enquiry already delivered to the studio", async () => {
+  const savedKey = process.env.RESEND_API_KEY;
+  const savedFrom = process.env.CONTACT_FROM_EMAIL;
+  const savedFetch = globalThis.fetch;
+  let sendCount = 0;
+  process.env.RESEND_API_KEY = "re_test_key";
+  delete process.env.CONTACT_FROM_EMAIL;
+  globalThis.fetch = async () => {
+    sendCount += 1;
+    if (sendCount === 2) throw new Error("Mock acknowledgement network failure");
+    return Response.json({ id: "internal_email_test_id" });
+  };
+  try {
+    const response = await post(ContactRoute, "/api/contact", {
+      name: "Sample Client",
+      email: "client@example.test",
+      service: "AI Video Production",
+      budget: "Help me estimate",
+      details: "A short product film for a launch.",
+      _honey: "",
+    });
+    assert.equal(response.status, 200);
+    assert.deepEqual(await response.json(), { ok: true, acknowledgementSent: false });
+    assert.equal(sendCount, 2);
   } finally {
     globalThis.fetch = savedFetch;
     if (savedKey === undefined) delete process.env.RESEND_API_KEY;
