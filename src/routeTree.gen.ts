@@ -16,6 +16,7 @@ import { Route as PortfolioRouteImport } from './routes/portfolio'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as ServicesRouteImport } from './routes/services'
+import { Route as SignupRouteImport } from './routes/signup'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as ApiAssistantModifyRouteImport } from './routes/api/assistant-modify'
@@ -23,6 +24,7 @@ import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as ApiContactRouteImport } from './routes/api/contact'
 import { Route as ApiGenerateStoryboardRouteImport } from './routes/api/generate-storyboard'
 import { Route as ApiResendInboundRouteImport } from './routes/api/resend-inbound'
+import { Route as ApiStoryboardUsageRouteImport } from './routes/api/storyboard-usage'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as ServicesSlugRouteImport } from './routes/services_.$slug'
@@ -65,6 +67,11 @@ const ServicesRoute = ServicesRouteImport.update({
   path: '/services',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
@@ -98,6 +105,11 @@ const ApiGenerateStoryboardRoute = ApiGenerateStoryboardRouteImport.update({
 const ApiResendInboundRoute = ApiResendInboundRouteImport.update({
   id: '/api/resend-inbound',
   path: '/api/resend-inbound',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiStoryboardUsageRoute = ApiStoryboardUsageRouteImport.update({
+  id: '/api/storyboard-usage',
+  path: '/api/storyboard-usage',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BlogIndexRoute = BlogIndexRouteImport.update({
@@ -140,6 +152,7 @@ export interface FileRoutesByFullPath {
   '/privacy': typeof PrivacyRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/services': typeof ServicesRoute
+  '/signup': typeof SignupRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/api/assistant-modify': typeof ApiAssistantModifyRoute
@@ -147,6 +160,7 @@ export interface FileRoutesByFullPath {
   '/api/contact': typeof ApiContactRoute
   '/api/generate-storyboard': typeof ApiGenerateStoryboardRoute
   '/api/resend-inbound': typeof ApiResendInboundRoute
+  '/api/storyboard-usage': typeof ApiStoryboardUsageRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/services/$slug': typeof ServicesSlugRoute
   '/studio/$': typeof StudioSplatRoute
@@ -162,6 +176,7 @@ export interface FileRoutesByTo {
   '/privacy': typeof PrivacyRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/services': typeof ServicesRoute
+  '/signup': typeof SignupRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/api/assistant-modify': typeof ApiAssistantModifyRoute
@@ -169,6 +184,7 @@ export interface FileRoutesByTo {
   '/api/contact': typeof ApiContactRoute
   '/api/generate-storyboard': typeof ApiGenerateStoryboardRoute
   '/api/resend-inbound': typeof ApiResendInboundRoute
+  '/api/storyboard-usage': typeof ApiStoryboardUsageRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/services/$slug': typeof ServicesSlugRoute
   '/studio/$': typeof StudioSplatRoute
@@ -185,6 +201,7 @@ export interface FileRoutesById {
   '/privacy': typeof PrivacyRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/services': typeof ServicesRoute
+  '/signup': typeof SignupRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/api/assistant-modify': typeof ApiAssistantModifyRoute
@@ -192,6 +209,7 @@ export interface FileRoutesById {
   '/api/contact': typeof ApiContactRoute
   '/api/generate-storyboard': typeof ApiGenerateStoryboardRoute
   '/api/resend-inbound': typeof ApiResendInboundRoute
+  '/api/storyboard-usage': typeof ApiStoryboardUsageRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/services_/$slug': typeof ServicesSlugRoute
   '/studio/$': typeof StudioSplatRoute
@@ -209,6 +227,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/robots.txt'
     | '/services'
+    | '/signup'
     | '/sitemap.xml'
     | '/terms'
     | '/api/assistant-modify'
@@ -216,6 +235,7 @@ export interface FileRouteTypes {
     | '/api/contact'
     | '/api/generate-storyboard'
     | '/api/resend-inbound'
+    | '/api/storyboard-usage'
     | '/blog/$slug'
     | '/services/$slug'
     | '/studio/$'
@@ -231,6 +251,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/robots.txt'
     | '/services'
+    | '/signup'
     | '/sitemap.xml'
     | '/terms'
     | '/api/assistant-modify'
@@ -238,6 +259,7 @@ export interface FileRouteTypes {
     | '/api/contact'
     | '/api/generate-storyboard'
     | '/api/resend-inbound'
+    | '/api/storyboard-usage'
     | '/blog/$slug'
     | '/services/$slug'
     | '/studio/$'
@@ -253,6 +275,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/robots.txt'
     | '/services'
+    | '/signup'
     | '/sitemap.xml'
     | '/terms'
     | '/api/assistant-modify'
@@ -260,6 +283,7 @@ export interface FileRouteTypes {
     | '/api/contact'
     | '/api/generate-storyboard'
     | '/api/resend-inbound'
+    | '/api/storyboard-usage'
     | '/blog/$slug'
     | '/services_/$slug'
     | '/studio/$'
@@ -276,6 +300,7 @@ export interface RootRouteChildren {
   PrivacyRoute: typeof PrivacyRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   ServicesRoute: typeof ServicesRoute
+  SignupRoute: typeof SignupRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TermsRoute: typeof TermsRoute
   ApiAssistantModifyRoute: typeof ApiAssistantModifyRoute
@@ -283,6 +308,7 @@ export interface RootRouteChildren {
   ApiContactRoute: typeof ApiContactRoute
   ApiGenerateStoryboardRoute: typeof ApiGenerateStoryboardRoute
   ApiResendInboundRoute: typeof ApiResendInboundRoute
+  ApiStoryboardUsageRoute: typeof ApiStoryboardUsageRoute
   BlogSlugRoute: typeof BlogSlugRoute
   ServicesSlugRoute: typeof ServicesSlugRoute
   StudioSplatRoute: typeof StudioSplatRoute
@@ -342,6 +368,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ServicesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sitemap.xml': {
       id: '/sitemap.xml'
       path: '/sitemap.xml'
@@ -389,6 +422,13 @@ declare module '@tanstack/react-router' {
       path: '/api/resend-inbound'
       fullPath: '/api/resend-inbound'
       preLoaderRoute: typeof ApiResendInboundRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/storyboard-usage': {
+      id: '/api/storyboard-usage'
+      path: '/api/storyboard-usage'
+      fullPath: '/api/storyboard-usage'
+      preLoaderRoute: typeof ApiStoryboardUsageRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/blog/': {
@@ -444,6 +484,7 @@ const rootRouteChildren: RootRouteChildren = {
   PrivacyRoute: PrivacyRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
   ServicesRoute: ServicesRoute,
+  SignupRoute: SignupRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TermsRoute: TermsRoute,
   ApiAssistantModifyRoute: ApiAssistantModifyRoute,
@@ -451,6 +492,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiContactRoute: ApiContactRoute,
   ApiGenerateStoryboardRoute: ApiGenerateStoryboardRoute,
   ApiResendInboundRoute: ApiResendInboundRoute,
+  ApiStoryboardUsageRoute: ApiStoryboardUsageRoute,
   BlogSlugRoute: BlogSlugRoute,
   ServicesSlugRoute: ServicesSlugRoute,
   StudioSplatRoute: StudioSplatRoute,

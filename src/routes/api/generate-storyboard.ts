@@ -3,6 +3,11 @@ import { createFileRoute } from "@tanstack/react-router";
 import { StoryboardFormInput, StoryboardOutput, StoryboardScene } from "@/types/storyboard";
 import { buildDeepSeekStoryboardPrompt } from "@/lib/storyboard-prompt-builder";
 import { safeParseAIJson } from "@/lib/json-repair";
+import {
+  consumeStoryboardCredits,
+  requireStoryboardAuth,
+  usageLimitResponse,
+} from "@/lib/server/storyboard-auth";
 
 class DeepSeekApiError extends Error {
   constructor(readonly status: number) {
@@ -41,7 +46,10 @@ async function fetchDeepSeekChunk(
 
   if (!response.ok) {
     const errText = await response.text();
-    console.error(`DeepSeek API error for scenes ${startScene}-${endScene} (HTTP ${response.status}):`, errText);
+    console.error(
+      `DeepSeek API error for scenes ${startScene}-${endScene} (HTTP ${response.status}):`,
+      errText,
+    );
     throw new DeepSeekApiError(response.status);
   }
 
@@ -58,6 +66,8 @@ async function fetchDeepSeekChunk(
 async function handlePost({ request }: { request: Request }) {
   try {
     guardRequest(request, 6);
+    const auth = await requireStoryboardAuth(request);
+    if (!auth.ok) return auth.response;
     const apiKey = process.env.DEEPSEEK_API_KEY;
 
     const body = (await readJson(request, 512_000)) as StoryboardFormInput;
@@ -66,10 +76,10 @@ async function handlePost({ request }: { request: Request }) {
       !body ||
       typeof body.script !== "string" ||
       body.script.trim().length < 10 ||
-      body.script.length > 80_000
+      body.script.length > 12_000
     ) {
       return Response.json(
-        { error: "Please provide a valid script with at least 10 characters." },
+        { error: "Please provide a script between 10 and 12,000 characters." },
         { status: 400 },
       );
     }
@@ -77,12 +87,9 @@ async function handlePost({ request }: { request: Request }) {
     if (
       !Number.isInteger(body.numberOfScenes) ||
       body.numberOfScenes < 1 ||
-      body.numberOfScenes > 150
+      body.numberOfScenes > 20
     ) {
-      return Response.json(
-        { error: "Choose a scene count between 1 and 150." },
-        { status: 400 },
-      );
+      return Response.json({ error: "Choose a scene count between 1 and 20." }, { status: 400 });
     }
 
     if (!apiKey)
@@ -91,7 +98,12 @@ async function handlePost({ request }: { request: Request }) {
         { status: 503 },
       );
 
-    const targetSceneCount = Math.max(1, Math.min(150, body.numberOfScenes || 10));
+    const creditCost = Math.ceil(body.numberOfScenes / 10);
+    const usageResult = await consumeStoryboardCredits(auth.token, creditCost);
+    if (usageResult.response) return usageResult.response;
+    if (!usageResult.usage?.allowed) return usageLimitResponse(usageResult.usage!);
+
+    const targetSceneCount = Math.max(1, Math.min(20, body.numberOfScenes || 10));
     const CHUNK_SIZE = 10;
     const ranges: Array<[number, number]> = [];
 
@@ -205,7 +217,8 @@ async function handlePost({ request }: { request: Request }) {
         402: "The AI provider account needs billing or available credits.",
         429: "The AI provider is rate limiting requests. Please wait a moment and retry.",
       };
-      const message = details[err.status] ||
+      const message =
+        details[err.status] ||
         (err.status >= 500
           ? "The AI provider is temporarily unavailable. Please retry shortly."
           : `The AI provider rejected the request (HTTP ${err.status}).`);

@@ -2,6 +2,11 @@ import { guardRequest, readJson, requestErrorResponse } from "@/lib/request-guar
 import { createFileRoute } from "@tanstack/react-router";
 import { StoryboardFormInput, StoryboardOutput, VisualStyleOption } from "@/types/storyboard";
 import { safeParseAIJson } from "@/lib/json-repair";
+import {
+  consumeStoryboardCredits,
+  requireStoryboardAuth,
+  usageLimitResponse,
+} from "@/lib/server/storyboard-auth";
 
 export const Route = createFileRoute("/api/assistant-modify")({
   server: {
@@ -89,7 +94,7 @@ function localIntelligentAssistant(
       targetCount = Math.max(1, newScenes.length - targetCount);
     }
 
-    targetCount = Math.min(Math.max(1, targetCount), 50);
+    targetCount = Math.min(Math.max(1, targetCount), 20);
     newTargetCount = targetCount;
 
     if (targetCount > newScenes.length) {
@@ -259,17 +264,22 @@ function localIntelligentAssistant(
 async function handleAssistantPost({ request }: { request: Request }) {
   try {
     guardRequest(request, 6);
+    const auth = await requireStoryboardAuth(request);
+    if (!auth.ok) return auth.response;
     const apiKey = process.env.DEEPSEEK_API_KEY;
 
     const body = (await readJson(request, 512_000)) as AssistantRequestBody;
     if (
       !body ||
       typeof body.userQuery !== "string" ||
-      body.userQuery.length > 8000 ||
+      body.userQuery.length > 500 ||
       !body.currentForm ||
       typeof body.currentForm.script !== "string" ||
+      body.currentForm.script.length > 12_000 ||
       (body.currentOutput && !Array.isArray(body.currentOutput.scenes)) ||
-      (body.chatHistory && !Array.isArray(body.chatHistory))
+      (body.currentOutput && body.currentOutput.scenes.length > 20) ||
+      (body.chatHistory && !Array.isArray(body.chatHistory)) ||
+      (body.chatHistory && body.chatHistory.length > 8)
     ) {
       return Response.json(
         { error: "Please provide a valid storyboard and instruction." },
@@ -286,6 +296,10 @@ async function handleAssistantPost({ request }: { request: Request }) {
       const fallbackResult = localIntelligentAssistant(userQuery, currentForm, currentOutput);
       return Response.json(fallbackResult);
     }
+
+    const usageResult = await consumeStoryboardCredits(auth.token, 1);
+    if (usageResult.response) return usageResult.response;
+    if (!usageResult.usage?.allowed) return usageLimitResponse(usageResult.usage!);
 
     const systemPrompt = `You are an expert AI Director and Storyboard Assistant.
 Your task is to update an existing AI video storyboard package based on the user's instruction while maintaining project memory and continuity.

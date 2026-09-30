@@ -44,6 +44,8 @@ import {
 } from "lucide-react";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { AdPlaceholder } from "@/components/tools/AdPlaceholder";
+import { isSupabaseConfigured, supabaseClient } from "@/lib/supabase";
+import type { Session } from "@supabase/supabase-js";
 import {
   StoryboardFormInput,
   StoryboardOutput,
@@ -178,6 +180,9 @@ const ASPECT_RATIOS: AspectRatioOption[] = ["16:9", "9:16", "1:1", "4:5", "21:9"
 const CAMERA_STYLES: CameraStyleOption[] = ["Cinematic", "Static", "Handheld", "Drone", "Mixed"];
 
 const SCENES_PER_PAGE = 10;
+const MAX_SCENES_PER_GENERATION = 20;
+
+type StoryboardUsage = { used: number; limit: number; remaining: number; resetsAt: string };
 
 export interface SavedStoryItem {
   id: string;
@@ -203,6 +208,13 @@ const cleanPromptText = (text: string) => {
 
 export function StoryboardGeneratorPage() {
   const [step, setStep] = useState<"script" | "config" | "studio">("script");
+  const [accountState, setAccountState] = useState<
+    "checking" | "signed-out" | "signed-in" | "not-configured"
+  >("checking");
+  const [accountEmail, setAccountEmail] = useState<string | null>(null);
+  const [accountUserId, setAccountUserId] = useState<string | null>(null);
+  const [usage, setUsage] = useState<StoryboardUsage | null>(null);
+  const [usageError, setUsageError] = useState<string | null>(null);
 
   const [form, setForm] = useState<StoryboardFormInput>({
     script: DEFAULT_SCRIPT,
@@ -243,8 +255,53 @@ export function StoryboardGeneratorPage() {
   const rightCanvasRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
+    if (!supabaseClient || !isSupabaseConfigured) {
+      setAccountState("not-configured");
+      return;
+    }
+
+    const applySession = (session: Session | null) => {
+      setAccountEmail(session?.user.email ?? null);
+      setAccountUserId(session?.user.id ?? null);
+      setAccountState(session ? "signed-in" : "signed-out");
+
+      if (session) {
+        void fetch("/api/storyboard-usage", {
+          headers: { Authorization: `Bearer ${session.access_token}` },
+        })
+          .then(async (response) => {
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok) throw new Error(data.error || "Could not load monthly usage.");
+            setUsage(data.usage);
+            setUsageError(null);
+          })
+          .catch((error: unknown) => {
+            setUsage(null);
+            setUsageError(error instanceof Error ? error.message : "Could not load monthly usage.");
+          });
+      } else {
+        setUsage(null);
+        setUsageError(null);
+      }
+    };
+
+    const { data } = supabaseClient.auth.onAuthStateChange((_event, session) =>
+      applySession(session),
+    );
+    void supabaseClient.auth
+      .getSession()
+      .then(({ data: sessionData }) => applySession(sessionData.session));
+    return () => data.subscription.unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    if (!accountUserId) {
+      setOutput(null);
+      setStoryHistory([]);
+      return;
+    }
     try {
-      const savedOutput = localStorage.getItem("contentmesh_storyboard_output");
+      const savedOutput = localStorage.getItem(`contentmesh_storyboard_output_${accountUserId}`);
       if (savedOutput) {
         const parsed = JSON.parse(savedOutput);
         if (parsed.scenes && parsed.scenes.length > 0) {
@@ -259,7 +316,7 @@ export function StoryboardGeneratorPage() {
         setOutput(parsed);
       }
 
-      const savedHistory = localStorage.getItem("contentmesh_story_history");
+      const savedHistory = localStorage.getItem(`contentmesh_story_history_${accountUserId}`);
       if (savedHistory) {
         const parsedHist = JSON.parse(savedHistory);
         if (Array.isArray(parsedHist)) {
@@ -269,7 +326,7 @@ export function StoryboardGeneratorPage() {
     } catch {
       /* ignore */
     }
-  }, []);
+  }, [accountUserId]);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -305,7 +362,9 @@ export function StoryboardGeneratorPage() {
     e.stopPropagation();
     const updated = storyHistory.filter((item) => item.id !== id);
     setStoryHistory(updated);
-    localStorage.setItem("contentmesh_story_history", JSON.stringify(updated));
+    if (accountUserId) {
+      localStorage.setItem(`contentmesh_story_history_${accountUserId}`, JSON.stringify(updated));
+    }
   };
 
   const handleImageFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -401,6 +460,10 @@ export function StoryboardGeneratorPage() {
       setError("Please paste a story or script with at least 10 characters.");
       return;
     }
+    if (form.script.length > 12_000) {
+      setError("Keep your script under 12,000 characters to control AI usage.");
+      return;
+    }
     setError(null);
     setStep("config");
   };
@@ -412,6 +475,30 @@ export function StoryboardGeneratorPage() {
       setStep("script");
       return;
     }
+    if (form.script.length > 12_000) {
+      setError("Keep your script under 12,000 characters to control AI usage.");
+      setStep("script");
+      return;
+    }
+    if (form.numberOfScenes < 1 || form.numberOfScenes > MAX_SCENES_PER_GENERATION) {
+      setError(`Choose a scene count between 1 and ${MAX_SCENES_PER_GENERATION}.`);
+      setStep("config");
+      return;
+    }
+    const creditCost = Math.ceil(form.numberOfScenes / 10);
+    if (!usage || usage.remaining < creditCost) {
+      setError("You do not have enough monthly AI credits for this scene count.");
+      setStep("config");
+      return;
+    }
+
+    const { data: authData } = (await supabaseClient?.auth.getSession()) ?? {
+      data: { session: null },
+    };
+    if (!authData.session) {
+      setAccountState("signed-out");
+      return;
+    }
 
     setError(null);
     setLoading(true);
@@ -420,7 +507,10 @@ export function StoryboardGeneratorPage() {
     try {
       const res = await fetch("/api/generate-storyboard", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authData.session.access_token}`,
+        },
         body: JSON.stringify({
           ...form,
           // The server uses character names/prompts, not the local preview image data.
@@ -459,7 +549,12 @@ export function StoryboardGeneratorPage() {
 
       setOutput(data);
       setCurrentPage(1);
-      localStorage.setItem("contentmesh_storyboard_output", JSON.stringify(data));
+      if (accountUserId) {
+        localStorage.setItem(
+          `contentmesh_storyboard_output_${accountUserId}`,
+          JSON.stringify(data),
+        );
+      }
 
       const newHistoryItem: SavedStoryItem = {
         id: `story-${Date.now()}`,
@@ -481,18 +576,40 @@ export function StoryboardGeneratorPage() {
         ...storyHistory.filter((item) => item.script !== form.script),
       ].slice(0, 15);
       setStoryHistory(updatedHistory);
-      localStorage.setItem("contentmesh_story_history", JSON.stringify(updatedHistory));
+      if (accountUserId) {
+        localStorage.setItem(
+          `contentmesh_story_history_${accountUserId}`,
+          JSON.stringify(updatedHistory),
+        );
+      }
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "An error occurred during generation.");
       setStep("config");
     } finally {
       setLoading(false);
+      void fetch("/api/storyboard-usage", {
+        headers: { Authorization: `Bearer ${authData.session.access_token}` },
+      }).then(async (response) => {
+        const data = await response.json().catch(() => ({}));
+        if (response.ok) setUsage(data.usage);
+      });
     }
   };
 
   /* ── DEEPSEEK MEMORY-POWERED AI PROMPT ASSISTANT HANDLER ── */
   const handleAssistantSubmit = async (query: string) => {
     if (!query || !query.trim() || !output) return;
+    if (!usage || usage.remaining < 1) {
+      setError("Your monthly AI credits are used up. They will reset next month.");
+      return;
+    }
+    const { data: authData } = (await supabaseClient?.auth.getSession()) ?? {
+      data: { session: null },
+    };
+    if (!authData.session) {
+      setAccountState("signed-out");
+      return;
+    }
     const userMsg = query.trim();
     const updatedLogs = [...assistantLogs, { sender: "user" as const, text: userMsg }];
     setAssistantLogs(updatedLogs);
@@ -502,7 +619,10 @@ export function StoryboardGeneratorPage() {
     try {
       const res = await fetch("/api/assistant-modify", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authData.session.access_token}`,
+        },
         body: JSON.stringify({
           userQuery: userMsg,
           currentForm: form,
@@ -528,7 +648,12 @@ export function StoryboardGeneratorPage() {
       if (data.updatedOutput && data.updatedOutput.scenes) {
         const newOutput = data.updatedOutput;
         setOutput(newOutput);
-        localStorage.setItem("contentmesh_storyboard_output", JSON.stringify(newOutput));
+        if (accountUserId) {
+          localStorage.setItem(
+            `contentmesh_storyboard_output_${accountUserId}`,
+            JSON.stringify(newOutput),
+          );
+        }
 
         const updatedHistory = storyHistory.map((item) =>
           item.script === form.script || item.output?.project?.title === output.project?.title
@@ -542,7 +667,12 @@ export function StoryboardGeneratorPage() {
             : item,
         );
         setStoryHistory(updatedHistory);
-        localStorage.setItem("contentmesh_story_history", JSON.stringify(updatedHistory));
+        if (accountUserId) {
+          localStorage.setItem(
+            `contentmesh_story_history_${accountUserId}`,
+            JSON.stringify(updatedHistory),
+          );
+        }
       }
 
       setAssistantLogs((prev) => [...prev, { sender: "ai", text: `✨ ${actionDesc}` }]);
@@ -556,6 +686,12 @@ export function StoryboardGeneratorPage() {
       ]);
     } finally {
       setAssistantLoading(false);
+      void fetch("/api/storyboard-usage", {
+        headers: { Authorization: `Bearer ${authData.session.access_token}` },
+      }).then(async (response) => {
+        const data = await response.json().catch(() => ({}));
+        if (response.ok) setUsage(data.usage);
+      });
     }
   };
 
@@ -618,10 +754,90 @@ export function StoryboardGeneratorPage() {
     URL.revokeObjectURL(url);
   };
 
+  if (accountState === "checking") {
+    return (
+      <SiteLayout>
+        <div className="flex min-h-[60vh] items-center justify-center px-4 text-slate-600">
+          <Loader2 className="mr-3 h-5 w-5 animate-spin" /> Checking your account…
+        </div>
+      </SiteLayout>
+    );
+  }
+
+  if (accountState === "not-configured") {
+    return (
+      <SiteLayout>
+        <div className="mx-auto max-w-xl px-4 py-24 text-center">
+          <h1 className="text-3xl font-bold text-slate-950">Accounts are being set up</h1>
+          <p className="mt-3 text-slate-600">
+            The storyboard tool will be available once account access is configured.
+          </p>
+        </div>
+      </SiteLayout>
+    );
+  }
+
+  if (accountState === "signed-out") {
+    return (
+      <SiteLayout>
+        <section className="mx-auto flex min-h-[65vh] max-w-xl items-center px-4 py-12 sm:px-6">
+          <div className="w-full rounded-3xl border border-slate-200 bg-white p-7 text-center shadow-xl shadow-slate-900/5 sm:p-10">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-100 text-orange-600">
+              <Sparkles className="h-7 w-7" />
+            </div>
+            <h1 className="mt-5 text-3xl font-bold tracking-tight text-slate-950">
+              Sign in to use the storyboard tool
+            </h1>
+            <p className="mt-3 text-sm leading-6 text-slate-600">
+              Create a free account for 10 AI credits each month. A storyboard uses one credit per
+              10 scenes, with up to 20 scenes per run.
+            </p>
+            <Link
+              to="/signup"
+              search={{ next: "/tools/storyboard-generator" }}
+              className="mt-7 inline-flex w-full items-center justify-center rounded-xl bg-slate-950 px-5 py-3.5 font-semibold text-white hover:bg-slate-800"
+            >
+              Create account or sign in
+            </Link>
+          </div>
+        </section>
+      </SiteLayout>
+    );
+  }
+
+  if (usageError || !usage) {
+    return (
+      <SiteLayout>
+        <div className="mx-auto max-w-xl px-4 py-24 text-center">
+          <h1 className="text-2xl font-bold text-slate-950">Usage limits are not ready</h1>
+          <p className="mt-3 text-slate-600">{usageError || "Loading your monthly credits…"}</p>
+          <p className="mt-2 text-sm text-slate-500">
+            Please try again after the account and usage setup is complete.
+          </p>
+        </div>
+      </SiteLayout>
+    );
+  }
+
   return (
     <SiteLayout noTopPadding>
       {/* ── CLEAN MODERN LIGHT THEME ─────────────────────────────────────── */}
       <div className="font-['Inter'] font-sans text-slate-900 antialiased bg-slate-50 min-h-screen w-full max-w-full pt-24 selection:bg-slate-200 selection:text-slate-900">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 pb-4 sm:px-6">
+          <div className="min-w-0 text-xs text-slate-600">
+            <span className="font-medium text-slate-800">{accountEmail}</span>
+            <span className="ml-2 inline-flex rounded-full bg-orange-100 px-2.5 py-1 font-semibold text-orange-800">
+              {usage.remaining}/{usage.limit} AI credits left this month
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={() => void supabaseClient?.auth.signOut()}
+            className="shrink-0 rounded-full border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-100"
+          >
+            Sign out
+          </button>
+        </div>
         {/* ─────────────────────────────────────────────────────────────────── */}
         {/* ── STEP 1: LIGHT MODE PROMPT SCREEN ───────────────────────────── */}
         {/* ─────────────────────────────────────────────────────────────────── */}
@@ -642,6 +858,7 @@ export function StoryboardGeneratorPage() {
             <div className="mx-auto max-w-3xl rounded-3xl border border-slate-200 bg-white p-4 sm:p-5 shadow-xl shadow-slate-200/50 space-y-3 transition-all focus-within:border-slate-400 focus-within:ring-2 focus-within:ring-slate-200">
               <textarea
                 rows={5}
+                maxLength={12_000}
                 value={form.script}
                 onChange={(e) => handleFormChange("script", e.target.value)}
                 placeholder="Describe your scene concept or paste a screenplay here..."
@@ -924,10 +1141,13 @@ export function StoryboardGeneratorPage() {
                     <input
                       type="number"
                       min={1}
-                      max={150}
+                      max={MAX_SCENES_PER_GENERATION}
                       value={form.numberOfScenes}
                       onChange={(e) =>
-                        handleFormChange("numberOfScenes", parseInt(e.target.value) || 10)
+                        handleFormChange(
+                          "numberOfScenes",
+                          Math.min(MAX_SCENES_PER_GENERATION, parseInt(e.target.value) || 10),
+                        )
                       }
                       className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs font-sans text-slate-900 outline-none focus:ring-1 focus:ring-slate-400"
                     />
@@ -1169,6 +1389,7 @@ export function StoryboardGeneratorPage() {
                   {/* ChatGPT Input Bar */}
                   <div className="space-y-2 shrink-0 pt-1">
                     <textarea
+                      maxLength={500}
                       rows={2}
                       value={assistantInput}
                       onChange={(e) => setAssistantInput(e.target.value)}
