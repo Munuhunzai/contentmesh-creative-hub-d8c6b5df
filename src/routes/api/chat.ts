@@ -70,7 +70,7 @@ async function handlePost({ request }: { request: Request }) {
         Authorization: `Bearer ${key}`,
       },
       body: JSON.stringify({
-        model: "deepseek-chat",
+        model: "deepseek-flash",
         messages: [{ role: "system", content: SYSTEM_PROMPT }, ...trimmed],
         temperature: 0.7,
         max_tokens: 800,

@@ -346,7 +346,7 @@ Modify the storyboard package accordingly. Ensure every scene has a high quality
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: "deepseek-chat",
+        model: "deepseek-flash",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userContextPrompt },

@@ -20,7 +20,7 @@ async function fetchDeepSeekChunk(
       Authorization: `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
-      model: "deepseek-chat",
+      model: "deepseek-flash",
       messages: [
         { role: "system", content: systemPrompt },
         { role: "user", content: userPrompt },
@@ -58,13 +58,21 @@ async function handlePost({ request }: { request: Request }) {
       !body ||
       typeof body.script !== "string" ||
       body.script.trim().length < 10 ||
-      body.script.length > 80_000 ||
+      body.script.length > 80_000
+    ) {
+      return Response.json(
+        { error: "Please provide a valid script with at least 10 characters." },
+        { status: 400 },
+      );
+    }
+
+    if (
       !Number.isInteger(body.numberOfScenes) ||
       body.numberOfScenes < 1 ||
       body.numberOfScenes > 150
     ) {
       return Response.json(
-        { error: "Please provide a valid script with at least 10 characters." },
+        { error: "Choose a scene count between 1 and 150." },
         { status: 400 },
       );
     }

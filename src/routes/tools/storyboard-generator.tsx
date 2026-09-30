@@ -421,7 +421,14 @@ export function StoryboardGeneratorPage() {
       const res = await fetch("/api/generate-storyboard", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          ...form,
+          // The server uses character names/prompts, not the local preview image data.
+          uploadedCharacters: form.uploadedCharacters?.map(({ name, prompt }) => ({
+            name,
+            prompt,
+          })),
+        }),
       });
 
       if (!res.ok) {
@@ -614,7 +621,7 @@ export function StoryboardGeneratorPage() {
   return (
     <SiteLayout noTopPadding>
       {/* ── CLEAN MODERN LIGHT THEME ─────────────────────────────────────── */}
-      <div className="font-['Inter'] font-sans text-slate-900 antialiased bg-slate-50 min-h-screen w-full max-w-full selection:bg-slate-200 selection:text-slate-900">
+      <div className="font-['Inter'] font-sans text-slate-900 antialiased bg-slate-50 min-h-screen w-full max-w-full pt-24 selection:bg-slate-200 selection:text-slate-900">
         {/* ─────────────────────────────────────────────────────────────────── */}
         {/* ── STEP 1: LIGHT MODE PROMPT SCREEN ───────────────────────────── */}
         {/* ─────────────────────────────────────────────────────────────────── */}
@@ -917,7 +924,7 @@ export function StoryboardGeneratorPage() {
                     <input
                       type="number"
                       min={1}
-                      max={200}
+                      max={150}
                       value={form.numberOfScenes}
                       onChange={(e) =>
                         handleFormChange("numberOfScenes", parseInt(e.target.value) || 10)
@@ -1042,6 +1049,15 @@ export function StoryboardGeneratorPage() {
                   </label>
                 </div>
 
+                {error && (
+                  <p
+                    role="alert"
+                    className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm font-medium text-red-700"
+                  >
+                    {error}
+                  </p>
+                )}
+
                 {/* Submit CTA */}
                 <button
                   type="submit"
@@ -1067,7 +1083,7 @@ export function StoryboardGeneratorPage() {
         {/* ── STEP 3: FULL-SCREEN STUDIO WITH AI ASSISTANT ON BOTTOM LEFT ───── */}
         {/* ─────────────────────────────────────────────────────────────────── */}
         {step === "studio" && (
-          <div className="flex flex-col h-[calc(100vh-64px)] overflow-hidden w-full max-w-full bg-slate-50 relative">
+          <div className="flex min-h-[calc(100dvh-6rem)] flex-col w-full max-w-full bg-slate-50 relative lg:h-[calc(100dvh-6rem)] lg:overflow-hidden">
             {/* PINNED TOP HEADER WITH ONLY TWO BUTTONS */}
             <header className="shrink-0 border-b border-slate-200 bg-white px-4 sm:px-6 py-2.5 w-full flex items-center justify-end gap-2.5 z-30 shadow-sm">
               <button
@@ -1086,9 +1102,9 @@ export function StoryboardGeneratorPage() {
             </header>
 
             {/* DUAL-PANEL FULL-HEIGHT CONTAINER */}
-            <div className="flex-1 flex flex-col lg:flex-row min-h-0 overflow-hidden w-full max-w-7xl mx-auto px-3 sm:px-6 py-3 gap-5">
+            <div className="flex flex-col lg:flex-1 lg:flex-row min-h-0 lg:overflow-hidden w-full max-w-7xl mx-auto px-3 sm:px-6 py-3 gap-5">
               {/* FIXED TALL LEFT SIDEBAR (AI PROMPT ASSISTANT PANEL TOUCHING TOP HEADER LINE) */}
-              <aside className="w-full lg:w-[320px] xl:w-[360px] shrink-0 h-full overflow-hidden flex flex-col">
+              <aside className="w-full lg:w-[320px] xl:w-[360px] shrink-0 h-[min(60dvh,560px)] min-h-[380px] lg:h-full overflow-hidden flex flex-col">
                 {/* ── AI ASSISTANT CHAT DOCK (FULL HEIGHT - TOUCHING TOP HEADER LINE) ── */}
                 <div className="rounded-2xl sm:rounded-3xl border border-slate-200 bg-white p-4 shadow-xl space-y-3 flex-1 flex flex-col overflow-hidden h-full">
                   <div className="flex items-center justify-between border-b border-slate-100 pb-2.5 shrink-0">
@@ -1190,7 +1206,7 @@ export function StoryboardGeneratorPage() {
               {/* ── SCROLLABLE RIGHT CANVAS ── */}
               <main
                 ref={rightCanvasRef}
-                className="flex-1 h-full overflow-y-auto pr-1.5 no-scrollbar space-y-4 min-w-0"
+                className="flex-1 h-auto lg:h-full lg:overflow-y-auto pr-1.5 no-scrollbar space-y-4 min-w-0"
               >
                 {loading || !output ? (
                   /* ── FULL SCENE CANVAS LOADING SCREEN ── */
