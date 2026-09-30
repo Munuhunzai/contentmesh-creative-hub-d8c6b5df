@@ -4,7 +4,7 @@ export const SITE_URL = new URL(
   import.meta.env?.VITE_SITE_URL || "https://contentmeshai.com",
 ).origin;
 export const SITE_NAME = "ContentMesh Studios";
-export const CONTACT_EMAIL = "uxbyejaz@gmail.com";
+export const CONTACT_EMAIL = "info@contentmeshai.com";
 export const SOCIAL_IMAGE =
   "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/ffeef70c-e0bc-41b3-b08a-31faed939538";
 

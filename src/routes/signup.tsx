@@ -1,3 +1,4 @@
+import { seoHead } from "@/lib/site";
 import { useState, type FormEvent } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, Loader2, Sparkles } from "lucide-react";
@@ -5,6 +6,19 @@ import { SiteLayout } from "@/components/layout/SiteLayout";
 import { isSupabaseConfigured, supabaseClient } from "@/lib/supabase";
 
 export const Route = createFileRoute("/signup")({
+  head: () => {
+    const head = seoHead(
+      "Sign up or sign in | ContentMesh",
+      "Access your ContentMesh account and monthly storyboard credits.",
+      "/signup",
+    );
+    return {
+      ...head,
+      meta: head.meta.map((meta) =>
+        "name" in meta && meta.name === "robots" ? { ...meta, content: "noindex, follow" } : meta,
+      ),
+    };
+  },
   validateSearch: (search: Record<string, unknown>) => ({
     next: typeof search.next === "string" ? search.next : undefined,
   }),

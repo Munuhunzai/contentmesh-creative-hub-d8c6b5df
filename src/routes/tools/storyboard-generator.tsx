@@ -1,6 +1,6 @@
 import { seoHead, absoluteUrl } from "@/lib/site";
 import { useState, useEffect, useMemo, useRef } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Sparkles,
@@ -43,6 +43,7 @@ import {
   Paperclip,
 } from "lucide-react";
 import { SiteLayout } from "@/components/layout/SiteLayout";
+import { StoryboardLanding } from "@/components/tools/StoryboardLanding";
 import { AdPlaceholder } from "@/components/tools/AdPlaceholder";
 import { isSupabaseConfigured, supabaseClient } from "@/lib/supabase";
 import type { Session } from "@supabase/supabase-js";
@@ -60,8 +61,8 @@ import {
 export const Route = createFileRoute("/tools/storyboard-generator")({
   head: () => ({
     ...seoHead(
-      "AI Storyboard & Scene Prompt Studio | ContentMesh",
-      "Turn your script into an AI storyboard with scene prompts, character actions, camera directions and sound notes. Plan your next video with ContentMesh.",
+      "AI Storyboard Prompt Generator from Script | ContentMesh",
+      "Turn scripts into scene plans, camera directions and AI video prompts. See a sample storyboard, then sign up for 10 monthly credits to create your own.",
       "/tools/storyboard-generator",
     ),
     scripts: [
@@ -70,10 +71,10 @@ export const Route = createFileRoute("/tools/storyboard-generator")({
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "WebApplication",
-          name: "Make AI Storyboard & Prompt Studio",
+          name: "ContentMesh AI Storyboard Prompt Generator",
           url: absoluteUrl("/tools/storyboard-generator"),
           description:
-            "Free AI tool to generate complete storyboards, scene prompts, character actions, and camera direction from scripts.",
+            "Create text-based storyboards and scene prompts from scripts. A free account is required; usage is limited to 10 AI credits per month.",
           applicationCategory: "MultimediaApplication",
           operatingSystem: "All",
         }),
@@ -754,53 +755,10 @@ export function StoryboardGeneratorPage() {
     URL.revokeObjectURL(url);
   };
 
-  if (accountState === "checking") {
+  if (accountState !== "signed-in") {
     return (
       <SiteLayout>
-        <div className="flex min-h-[60vh] items-center justify-center px-4 text-slate-600">
-          <Loader2 className="mr-3 h-5 w-5 animate-spin" /> Checking your account…
-        </div>
-      </SiteLayout>
-    );
-  }
-
-  if (accountState === "not-configured") {
-    return (
-      <SiteLayout>
-        <div className="mx-auto max-w-xl px-4 py-24 text-center">
-          <h1 className="text-3xl font-bold text-slate-950">Accounts are being set up</h1>
-          <p className="mt-3 text-slate-600">
-            The storyboard tool will be available once account access is configured.
-          </p>
-        </div>
-      </SiteLayout>
-    );
-  }
-
-  if (accountState === "signed-out") {
-    return (
-      <SiteLayout>
-        <section className="mx-auto flex min-h-[65vh] max-w-xl items-center px-4 py-12 sm:px-6">
-          <div className="w-full rounded-3xl border border-slate-200 bg-white p-7 text-center shadow-xl shadow-slate-900/5 sm:p-10">
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-100 text-orange-600">
-              <Sparkles className="h-7 w-7" />
-            </div>
-            <h1 className="mt-5 text-3xl font-bold tracking-tight text-slate-950">
-              Sign in to use the storyboard tool
-            </h1>
-            <p className="mt-3 text-sm leading-6 text-slate-600">
-              Create a free account for 10 AI credits each month. A storyboard uses one credit per
-              10 scenes, with up to 20 scenes per run.
-            </p>
-            <Link
-              to="/signup"
-              search={{ next: "/tools/storyboard-generator" }}
-              className="mt-7 inline-flex w-full items-center justify-center rounded-xl bg-slate-950 px-5 py-3.5 font-semibold text-white hover:bg-slate-800"
-            >
-              Create account or sign in
-            </Link>
-          </div>
-        </section>
+        <StoryboardLanding accountState={accountState} />
       </SiteLayout>
     );
   }

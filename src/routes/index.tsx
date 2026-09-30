@@ -1,4 +1,5 @@
-import { seoHead, jsonLd, absoluteUrl, SITE_NAME } from "@/lib/site";
+import { ProductionResources } from "@/components/layout/ProductionResources";
+import { seoHead, jsonLd, absoluteUrl, SITE_NAME, CONTACT_EMAIL } from "@/lib/site";
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { Hero, type HomepageData } from "@/components/home/Hero";
@@ -53,6 +54,7 @@ export const Route = createFileRoute("/")({
                 "@type": "Organization",
                 "@id": absoluteUrl("/#organization"),
                 name: SITE_NAME,
+                email: CONTACT_EMAIL,
                 url: absoluteUrl(),
                 logo: absoluteUrl("/Content_mesh_AI_video_production_agency.png"),
                 description:
@@ -83,6 +85,7 @@ function Index() {
       <Portfolio featuredOnly />
       <Services compact />
       <ServiceLinks />
+      <ProductionResources />
       <WhyUs />
       <Process />
       <Stats />

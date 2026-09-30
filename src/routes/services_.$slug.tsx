@@ -1,3 +1,4 @@
+import { ProductionResources } from "@/components/layout/ProductionResources";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { PageHero } from "@/components/layout/PageHero";
@@ -153,6 +154,7 @@ function ServicePage() {
         </aside>
       </div>
       <ServiceLinks />
+      <ProductionResources />
     </SiteLayout>
   );
 }

@@ -119,7 +119,7 @@ export function Hero({ initialData }: { initialData?: HomepageData | null } = {}
       </div>
       <div className="studio-hero-content">
         <div className="studio-hero-copy">
-          <p className="eyebrow text-white/90">ContentMesh / Independent AI studio</p>
+          <p className="eyebrow text-white/90">ContentMesh / AI video production agency</p>
           <h1 className="studio-hero-title">
             Your story.
             <br />
