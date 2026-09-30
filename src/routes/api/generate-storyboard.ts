@@ -4,6 +4,13 @@ import { StoryboardFormInput, StoryboardOutput, StoryboardScene } from "@/types/
 import { buildDeepSeekStoryboardPrompt } from "@/lib/storyboard-prompt-builder";
 import { safeParseAIJson } from "@/lib/json-repair";
 
+class DeepSeekApiError extends Error {
+  constructor(readonly status: number) {
+    super(`DeepSeek API returned HTTP ${status}.`);
+    this.name = "DeepSeekApiError";
+  }
+}
+
 async function fetchDeepSeekChunk(
   apiKey: string,
   body: StoryboardFormInput,
@@ -34,8 +41,8 @@ async function fetchDeepSeekChunk(
 
   if (!response.ok) {
     const errText = await response.text();
-    console.error(`DeepSeek API error for scenes ${startScene}-${endScene}:`, errText);
-    throw new Error(`DeepSeek service error for scenes ${startScene}-${endScene}.`);
+    console.error(`DeepSeek API error for scenes ${startScene}-${endScene} (HTTP ${response.status}):`, errText);
+    throw new DeepSeekApiError(response.status);
   }
 
   const data = await response.json();
@@ -191,6 +198,20 @@ async function handlePost({ request }: { request: Request }) {
   } catch (err: unknown) {
     const failure = requestErrorResponse(err);
     if (failure) return failure;
+    if (err instanceof DeepSeekApiError) {
+      const details: Record<number, string> = {
+        400: "The AI provider rejected this request. Check the model configuration and try again.",
+        401: "The AI provider rejected its API key. Check the production DEEPSEEK_API_KEY setting.",
+        402: "The AI provider account needs billing or available credits.",
+        429: "The AI provider is rate limiting requests. Please wait a moment and retry.",
+      };
+      const message = details[err.status] ||
+        (err.status >= 500
+          ? "The AI provider is temporarily unavailable. Please retry shortly."
+          : `The AI provider rejected the request (HTTP ${err.status}).`);
+      console.error("Storyboard generation failed at DeepSeek API", err);
+      return Response.json({ error: message }, { status: 502 });
+    }
     console.error("Storyboard API batch endpoint error:", err);
     return Response.json(
       {
