@@ -9,7 +9,7 @@ export const Route = createFileRoute("/portfolio")({
   head: () =>
     seoHead(
       "AI Video Portfolio | ContentMesh Studios",
-      "Explore AI commercials, product videos, animation and branded content produced by ContentMesh. Find a creative direction for your next project.",
+      "Explore ContentMesh client animation and independent AI video concepts, with creative notes for commercials, product films and visual stories.",
       "/portfolio",
     ),
   component: () => (
@@ -17,7 +17,7 @@ export const Route = createFileRoute("/portfolio")({
       <PageHero
         eyebrow="AI Video Portfolio"
         title="The work speaks first."
-        desc="Commercials, product films and visual stories. Explore the collection and find a starting point for your next idea."
+        desc="Client work and independent creative studies. Explore commercials, product films and visual stories, with ideas for developing your next brief."
       />
       <Portfolio />
       <CTA />

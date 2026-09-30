@@ -1,3 +1,4 @@
+import { getPortfolioNotes, portfolioProjectType } from "@/lib/portfolio-notes";
 import { Modal } from "@/components/layout/Modal";
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
@@ -9,6 +10,7 @@ import { optimizeSanityImage, getSanitySrcSet } from "@/lib/sanity-image";
 type Item = {
   _id: string;
   title: string;
+  slug?: string;
   category?: string;
   featured?: boolean;
   description?: string;
@@ -118,6 +120,9 @@ export function Portfolio({ featuredOnly = false }: { featuredOnly?: boolean }) 
   const [open, setOpen] = useState<Item | null>(null);
   const [visibleCount, setVisibleCount] = useState(12);
 
+  const openNotes = getPortfolioNotes(open?.slug);
+  const openProjectType = open ? portfolioProjectType(open) : undefined;
+
   const featured = items.filter((p) => p.featured);
   const filteredList = featuredOnly
     ? (featured.length ? featured : items).slice(0, 4)
@@ -139,8 +144,8 @@ export function Portfolio({ featuredOnly = false }: { featuredOnly?: boolean }) 
         </div>
         <div className="max-w-sm">
           <p className="text-sm leading-relaxed text-muted-foreground">
-            Explore the visual direction, storytelling and craft behind our films. Open a project
-            for a closer look.
+            Explore client work and independent creative studies. Open a film for its published
+            context and ideas for developing a similar project.
           </p>
           {featuredOnly && (
             <div className="mt-6 flex flex-wrap gap-3">
@@ -236,14 +241,14 @@ export function Portfolio({ featuredOnly = false }: { featuredOnly?: boolean }) 
                 <div>
                   <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
                     {p.category || "Studio project"}
-                    {p.projectType ? ` / ${p.projectType}` : ""}
+                    {portfolioProjectType(p) ? ` / ${portfolioProjectType(p)}` : ""}
                   </p>
                   <h3 className="mt-2 font-display text-xl font-bold tracking-tight sm:text-2xl">
                     {p.title}
                   </h3>
-                  {(p.brief || p.description) && (
+                  {(p.brief || getPortfolioNotes(p.slug)?.summary || p.description) && (
                     <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground line-clamp-2">
-                      {p.brief || p.description}
+                      {p.brief || getPortfolioNotes(p.slug)?.summary || p.description}
                     </p>
                   )}
                 </div>
@@ -362,10 +367,10 @@ export function Portfolio({ featuredOnly = false }: { featuredOnly?: boolean }) 
 
             {/* Info Description */}
             <div className="p-4 sm:p-5 overflow-y-auto min-h-0 flex-1 bg-card">
-              {open.projectType && <p className="eyebrow mb-4">{open.projectType}</p>}
+              {openProjectType && <p className="eyebrow mb-4">{openProjectType}</p>}
               {open.client && (
                 <p className="text-xs sm:text-sm text-muted-foreground font-medium mb-1">
-                  {open.projectType === "Concept study" || open.projectType === "Personal project"
+                  {openProjectType === "Concept study" || openProjectType === "Personal project"
                     ? "Brand / subject"
                     : "Client"}
                   : {open.client}
@@ -375,6 +380,37 @@ export function Portfolio({ featuredOnly = false }: { featuredOnly?: boolean }) 
                 {open.description ||
                   "Ask us about the creative approach and production details behind this project."}
               </p>
+              {openNotes && (
+                <section
+                  className="mt-6 rounded-xl border border-border bg-secondary/30 p-5"
+                  aria-labelledby="project-creative-notes"
+                >
+                  <h3 id="project-creative-notes" className="text-lg font-bold text-brand-blue">
+                    Creative possibilities
+                  </h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                    {openNotes.summary}
+                  </p>
+                  <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
+                    Directions to explore for a similar brief. These ideas describe potential
+                    adaptations, not the original project's production history or results.
+                  </p>
+                  <dl className="mt-5 space-y-5">
+                    <div>
+                      <dt className="text-sm font-bold text-brand-blue">A direction to explore</dt>
+                      <dd className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                        {openNotes.direction}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="text-sm font-bold text-brand-blue">What to plan</dt>
+                      <dd className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                        {openNotes.consideration}
+                      </dd>
+                    </div>
+                  </dl>
+                </section>
+              )}
               <dl className="mt-6 space-y-6">
                 {[
                   ["The brief", open.brief],
