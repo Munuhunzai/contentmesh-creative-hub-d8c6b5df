@@ -21,6 +21,7 @@ async function fetchDeepSeekChunk(
     },
     body: JSON.stringify({
       model: "deepseek-flash",
+      thinking: { type: "disabled" },
       messages: [
         { role: "system", content: systemPrompt },
         { role: "user", content: userPrompt },
