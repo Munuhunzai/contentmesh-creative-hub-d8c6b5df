@@ -365,6 +365,17 @@ export function Portfolio({ featuredOnly = false }: { featuredOnly?: boolean }) 
               )}
             </div>
 
+            {open.videoUrl?.startsWith("https://") && (
+              <a
+                href={open.videoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block shrink-0 border-b border-border bg-card px-5 py-3 text-sm font-semibold text-brand-blue underline underline-offset-4"
+              >
+                Watch original video <span className="sr-only">(opens in a new tab)</span>
+              </a>
+            )}
+
             {/* Info Description */}
             <div className="p-4 sm:p-5 overflow-y-auto min-h-0 flex-1 bg-card">
               {openProjectType && <p className="eyebrow mb-4">{openProjectType}</p>}
