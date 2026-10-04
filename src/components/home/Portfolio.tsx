@@ -1,3 +1,4 @@
+import { getPortfolioPage, portfolioPages } from "@/lib/portfolio-pages";
 import { getPortfolioNotes, portfolioProjectType } from "@/lib/portfolio-notes";
 import { Modal } from "@/components/layout/Modal";
 import { Link } from "@tanstack/react-router";
@@ -260,6 +261,15 @@ export function Portfolio({ featuredOnly = false }: { featuredOnly?: boolean }) 
                 </span>
               </div>
             </button>
+            {getPortfolioPage(p.slug) && (
+              <Link
+                to="/portfolio/$slug"
+                params={{ slug: p.slug! }}
+                className="studio-text-link mt-4"
+              >
+                Explore {p.title} <ArrowUpRight className="h-4 w-4" />
+              </Link>
+            )}
           </article>
         ))}
       </div>
@@ -286,6 +296,26 @@ export function Portfolio({ featuredOnly = false }: { featuredOnly?: boolean }) 
             Request relevant work <ArrowUpRight className="h-4 w-4" />
           </Link>
         </div>
+      )}
+      {!featuredOnly && items.some((item) => getPortfolioPage(item.slug)) && (
+        <nav aria-label="Selected project details" className="mt-12 border-t border-border pt-8">
+          <h2 className="font-display text-2xl font-bold">Selected project details</h2>
+          <ul className="mt-5 grid gap-4 sm:grid-cols-2">
+            {portfolioPages
+              .filter((page) => items.some((item) => item.slug === page.slug))
+              .map((page) => (
+                <li key={page.slug}>
+                  <Link
+                    to="/portfolio/$slug"
+                    params={{ slug: page.slug }}
+                    className="studio-text-link"
+                  >
+                    {page.title}
+                  </Link>
+                </li>
+              ))}
+          </ul>
+        </nav>
       )}
       <Modal open={!!open} onClose={() => setOpen(null)} title={open?.title || "Project"}>
         {open && (

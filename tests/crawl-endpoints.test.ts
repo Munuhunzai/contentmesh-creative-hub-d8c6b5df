@@ -4,6 +4,7 @@ import { Route as RobotsRoute } from "../src/routes/robots[.]txt";
 import { Route as SitemapRoute } from "../src/routes/sitemap[.]xml";
 import { sanityClient } from "../src/integrations/sanity/client";
 import { absoluteUrl } from "../src/lib/site";
+import { portfolioPages } from "../src/lib/portfolio-pages";
 import { serviceIndex } from "../src/lib/service-index";
 
 const get = (route: unknown): Promise<Response> =>
@@ -28,6 +29,8 @@ test("sitemap endpoint includes services and published CMS URLs without duplicat
   const originalFetch = sanityClient.fetch;
   let query = "";
   sanityClient.fetch = (async (value: string) => {
+    if (value.includes("portfolioItem"))
+      return [{ slug: portfolioPages[0].slug }, { slug: "uncurated" }];
     query = value;
     return [
       { slug: "a&b", updatedAt: "2026-09-01" },
@@ -43,9 +46,12 @@ test("sitemap endpoint includes services and published CMS URLs without duplicat
     for (const service of serviceIndex)
       assert.ok(xml.includes(`<loc>${absoluteUrl(`/services/${service.slug}`)}</loc>`));
     assert.ok(query.includes("publishedAt <= now()"));
-    assert.equal((xml.match(/<loc>/g) || []).length, 14);
+    assert.equal((xml.match(/<loc>/g) || []).length, 15);
     assert.equal((xml.match(/<lastmod>/g) || []).length, 1);
     assert.ok(xml.includes("/blog/a%26b</loc>"));
+    assert.ok(xml.includes(`/portfolio/${portfolioPages[0].slug}</loc>`));
+    assert.ok(!xml.includes("uncurated"));
+    assert.ok(!xml.includes(portfolioPages[1].slug));
     assert.doesNotMatch(xml, /<loc>[^<]*\/(?:api|studio)\b/);
   } finally {
     sanityClient.fetch = originalFetch;
