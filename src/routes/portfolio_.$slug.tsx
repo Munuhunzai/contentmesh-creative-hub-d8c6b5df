@@ -9,6 +9,7 @@ import {
   portfolioPageQuery,
   portfolioEmbedUrl,
   portfolioVideoUrl,
+  portfolioOriginalUrl,
   type PortfolioProject,
 } from "@/lib/portfolio-pages";
 import { breadcrumbs, jsonLd, seoHead, SITE_NAME } from "@/lib/site";
@@ -96,7 +97,7 @@ export function PortfolioDetail({ page, project }: Awaited<ReturnType<typeof loa
         </div>
       </section>
       <article className="studio-section max-w-5xl space-y-10 !pt-8 sm:!pt-10">
-        <section aria-label="Project video">
+        <section aria-label="Project preview">
           <ProjectMedia key={project._id} project={project} />
           {project.description && (
             <p className="mt-5 whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
@@ -200,9 +201,7 @@ function ProjectMedia({ project }: { project: PortfolioProject }) {
   const video = portfolioVideoUrl(project.videoFileUrl) || portfolioVideoUrl(project.videoUrl);
   const embed = video ? undefined : portfolioEmbedUrl(project.videoUrl);
   const original =
-    project.videoUrl && (portfolioVideoUrl(project.videoUrl) || portfolioEmbedUrl(project.videoUrl))
-      ? project.videoUrl
-      : portfolioVideoUrl(project.videoFileUrl);
+    portfolioOriginalUrl(project.videoUrl) || portfolioOriginalUrl(project.videoFileUrl);
   return (
     <>
       <div className="aspect-video overflow-hidden rounded-2xl bg-black">
@@ -226,13 +225,34 @@ function ProjectMedia({ project }: { project: PortfolioProject }) {
             className="h-full w-full border-0"
           />
         ) : project.thumbnailUrl ? (
-          <img
-            src={project.thumbnailUrl}
-            alt={`${project.title} project still`}
-            width={1280}
-            height={720}
-            className="h-full w-full object-contain"
-          />
+          original ? (
+            <a
+              href={original}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Watch ${project.title} on the original video host`}
+              className="relative block h-full w-full"
+            >
+              <img
+                src={project.thumbnailUrl}
+                alt={`${project.title} project still`}
+                width={1280}
+                height={720}
+                className="h-full w-full object-contain"
+              />
+              <span className="absolute bottom-5 left-5 rounded-full bg-white px-5 py-3 text-sm font-semibold text-brand-blue">
+                Open original video ↗
+              </span>
+            </a>
+          ) : (
+            <img
+              src={project.thumbnailUrl}
+              alt={`${project.title} project still`}
+              width={1280}
+              height={720}
+              className="h-full w-full object-contain"
+            />
+          )
         ) : (
           <p className="p-8 text-white">The video preview is currently unavailable.</p>
         )}

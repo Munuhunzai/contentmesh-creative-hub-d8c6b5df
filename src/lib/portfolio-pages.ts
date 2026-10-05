@@ -85,10 +85,6 @@ export function portfolioVideoUrl(value?: string): string | undefined {
   try {
     const url = new URL(value);
     if (url.protocol !== "https:") return;
-    if (url.hostname === "drive.google.com") {
-      const id = url.pathname.match(/^\/file\/d\/([\w-]+)(?:\/|$)/)?.[1];
-      if (id) return `https://lh3.googleusercontent.com/d/${id}`;
-    }
     if (
       url.protocol === "https:" &&
       ["cdn.sanity.io", "storage.googleapis.com"].includes(url.hostname)
@@ -96,5 +92,23 @@ export function portfolioVideoUrl(value?: string): string | undefined {
       return url.href;
   } catch {
     /* Invalid CMS media is not embedded. */
+  }
+}
+
+// Drive's thumbnail endpoint is an image, not a video stream. Keep its original
+// published link without attempting to embed a sign-in page or invent a stream.
+export function portfolioOriginalUrl(value?: string): string | undefined {
+  if (!value) return;
+  if (portfolioVideoUrl(value) || portfolioEmbedUrl(value)) return value;
+  try {
+    const url = new URL(value);
+    if (
+      url.protocol === "https:" &&
+      url.hostname === "drive.google.com" &&
+      /^\/file\/d\/[\w-]+(?:\/|$)/.test(url.pathname)
+    )
+      return url.href;
+  } catch {
+    /* Invalid external links are not rendered. */
   }
 }

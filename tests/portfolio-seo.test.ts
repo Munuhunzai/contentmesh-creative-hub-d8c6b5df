@@ -1,7 +1,12 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { loadPortfolioPage, portfolioHead } from "../src/routes/portfolio_.$slug";
-import { portfolioPages, portfolioEmbedUrl, portfolioVideoUrl } from "../src/lib/portfolio-pages";
+import {
+  portfolioPages,
+  portfolioEmbedUrl,
+  portfolioVideoUrl,
+  portfolioOriginalUrl,
+} from "../src/lib/portfolio-pages";
 import { sanityClient } from "../src/integrations/sanity/client";
 import { absoluteUrl } from "../src/lib/site";
 import { getServicePage } from "../src/lib/service-pages";
@@ -63,8 +68,8 @@ test("unknown or unpublished projects are 404s; CMS failure remains a server err
 
 test("portfolio media embeds reject unsupported hosts and never request autoplay", () => {
   assert.equal(
-    portfolioVideoUrl("https://drive.google.com/file/d/abc_123/view?usp=sharing"),
-    "https://lh3.googleusercontent.com/d/abc_123",
+    portfolioOriginalUrl("https://drive.google.com/file/d/abc_123/view?usp=sharing"),
+    "https://drive.google.com/file/d/abc_123/view?usp=sharing",
   );
   assert.equal(
     portfolioEmbedUrl("https://youtu.be/abcdefghijk"),
@@ -89,6 +94,11 @@ test("portfolio media embeds reject unsupported hosts and never request autoplay
   assert.equal(portfolioVideoUrl("https://example.test/video.mp4"), undefined);
   assert.equal(portfolioVideoUrl("https://drive.google.com.evil.test/file/d/id/view"), undefined);
   assert.equal(portfolioEmbedUrl("https://drive.google.com/file/d/id/view"), undefined);
+  assert.equal(portfolioVideoUrl("https://drive.google.com/file/d/id/view"), undefined);
+  assert.equal(
+    portfolioOriginalUrl("https://drive.google.com.evil.test/file/d/id/view"),
+    undefined,
+  );
 });
 
 test("project content, concept disclaimers and conversion links render without browser JavaScript", async () => {
@@ -108,6 +118,7 @@ test("project content, concept disclaimers and conversion links render without b
     description:
       "Created for entertainment purposes. Not affiliated with, endorsed by, or sponsored by Nike.",
     videoUrl: "https://drive.google.com/file/d/test_video/view",
+    thumbnailUrl: "https://cdn.sanity.io/images/test/production/project.jpg",
   };
   const route = createRootRoute({
     component: () => React.createElement(PortfolioDetail, { page, project }),
@@ -135,9 +146,9 @@ test("project content, concept disclaimers and conversion links render without b
     assert.match(html, /Creative possibilities/);
     assert.match(html, /href="\/services\/ai-product-video-ads"/);
     assert.match(html, /href="\/contact\?reference=/);
-    assert.match(html, /https:\/\/lh3.googleusercontent.com\/d\/test_video/);
-    assert.match(html, /preload="none"/);
-    assert.doesNotMatch(html, /<iframe/);
+    assert.match(html, /href="https:\/\/drive.google.com\/file\/d\/test_video\/view"/);
+    assert.match(html, /alt="Nike project still"/);
+    assert.doesNotMatch(html, /<iframe|<video|lh3.googleusercontent.com/);
     assert.doesNotMatch(html, /autoplay=1|<dt[^>]*>Client<\/dt>|<h2[^>]*>Outcome<\/h2>/);
   } finally {
     client.clear();

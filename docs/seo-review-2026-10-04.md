@@ -26,7 +26,7 @@ The routes preserve the existing CMS slugs:
 - `/portfolio/zara-3d-2d-animation-ai-realistic`
 - `/portfolio/nike-3d-2d-animation-ai-realistic`
 
-Each page reads the published CMS record, has an individual title, description and canonical, and displays breadcrumb navigation with matching BreadcrumbList markup. Videos appear on the page without autoplay. Visible published descriptions retain the concept/affiliation distinctions. Editorial ideas are explicitly labelled as possibilities for a future brief. The pages link to a relevant service and a contact enquiry carrying the project reference.
+Each page reads the published CMS record, has an individual title, description and canonical, and displays breadcrumb navigation with matching BreadcrumbList markup. Public video files and supported video hosts can play on the page without autoplay. Google Drive projects display their published thumbnail and an original-video link. Visible published descriptions retain the concept/affiliation distinctions. Editorial ideas are explicitly labelled as possibilities for a future brief. The pages link to a relevant service and a contact enquiry carrying the project reference.
 
 Homepage cards link directly to selected project details. The portfolio directory also provides links to the selected pages even when their cards fall beyond the first 12 items. Existing modal controls, filters and load-more behavior are preserved.
 
@@ -69,4 +69,6 @@ The authenticated Vercel project dashboard showed Web Analytics and Speed Insigh
 
 ## Preview verification — 5 October 2026
 
-Clean-install GitHub CI passed installation, all 33 tests, TypeScript, lint and the production build for the security patch. Vercel produced a ready preview. Browser inspection then found Google Drive's iframe redirecting to an account page that disallows embedding. Project pages now use the site's existing native Google Drive video source with a poster and an original-video link; a playback error shows the project thumbnail and a useful fallback message. No sharing permissions or security headers are weakened.
+Clean-install GitHub CI passed installation, all 33 tests, TypeScript, lint and the production build for the security patch. Vercel produced a ready preview. Browser inspection then found Google Drive's iframe redirecting to an account page that disallows embedding. A header check of the existing native Google Drive source returned image/jpeg (Nike.jpg), not video. The final project pages therefore display the published thumbnail with an original-video link for Drive records. Native video remains available only for supported public file URLs, with a thumbnail and message on playback failure. No sharing permissions or security headers are weakened.
+
+Next media improvement: publish approved video files on a reliable public video host or in the existing CMS video-file field, verify playback anonymously, and record actual upload dates before considering video structured data. This review did not change Google Drive sharing permissions or rehost files.
