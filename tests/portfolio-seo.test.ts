@@ -63,8 +63,8 @@ test("unknown or unpublished projects are 404s; CMS failure remains a server err
 
 test("portfolio media embeds reject unsupported hosts and never request autoplay", () => {
   assert.equal(
-    portfolioEmbedUrl("https://drive.google.com/file/d/abc_123/view?usp=sharing"),
-    "https://drive.google.com/file/d/abc_123/preview",
+    portfolioVideoUrl("https://drive.google.com/file/d/abc_123/view?usp=sharing"),
+    "https://lh3.googleusercontent.com/d/abc_123",
   );
   assert.equal(
     portfolioEmbedUrl("https://youtu.be/abcdefghijk"),
@@ -87,6 +87,8 @@ test("portfolio media embeds reject unsupported hosts and never request autoplay
     "https://cdn.sanity.io/files/project/production/video.mp4",
   );
   assert.equal(portfolioVideoUrl("https://example.test/video.mp4"), undefined);
+  assert.equal(portfolioVideoUrl("https://drive.google.com.evil.test/file/d/id/view"), undefined);
+  assert.equal(portfolioEmbedUrl("https://drive.google.com/file/d/id/view"), undefined);
 });
 
 test("project content, concept disclaimers and conversion links render without browser JavaScript", async () => {
@@ -133,7 +135,9 @@ test("project content, concept disclaimers and conversion links render without b
     assert.match(html, /Creative possibilities/);
     assert.match(html, /href="\/services\/ai-product-video-ads"/);
     assert.match(html, /href="\/contact\?reference=/);
-    assert.match(html, /https:\/\/drive.google.com\/file\/d\/test_video\/preview/);
+    assert.match(html, /https:\/\/lh3.googleusercontent.com\/d\/test_video/);
+    assert.match(html, /preload="none"/);
+    assert.doesNotMatch(html, /<iframe/);
     assert.doesNotMatch(html, /autoplay=1|<dt[^>]*>Client<\/dt>|<h2[^>]*>Outcome<\/h2>/);
   } finally {
     client.clear();

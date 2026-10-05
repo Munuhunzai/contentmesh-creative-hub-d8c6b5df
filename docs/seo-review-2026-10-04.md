@@ -66,3 +66,7 @@ The first clean-install job exposed missing Linux optional-dependency entries. T
 Vercel also blocked the recovered TanStack versions for [GHSA-qx66-fv34-fjm8](https://github.com/TanStack/router/security/advisories/GHSA-qx66-fv34-fjm8), verified against the maintainer advisory on 4 October 2026. This release pins react-start to the documented patched 1.168.60 and resolves start-server-core 1.169.39. No deployment security bypass is enabled.
 
 The authenticated Vercel project dashboard showed Web Analytics and Speed Insights as not enabled. This does not establish whether a separate analytics provider is in use.
+
+## Preview verification — 5 October 2026
+
+Clean-install GitHub CI passed installation, all 33 tests, TypeScript, lint and the production build for the security patch. Vercel produced a ready preview. Browser inspection then found Google Drive's iframe redirecting to an account page that disallows embedding. Project pages now use the site's existing native Google Drive video source with a poster and an original-video link; a playback error shows the project thumbnail and a useful fallback message. No sharing permissions or security headers are weakened.

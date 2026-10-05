@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { sanityClient } from "@/integrations/sanity/client";
@@ -60,8 +61,6 @@ function ProjectPage() {
 
 export function PortfolioDetail({ page, project }: Awaited<ReturnType<typeof loadPortfolioPage>>) {
   const notes = getPortfolioNotes(page.slug);
-  const embed = portfolioEmbedUrl(project.videoUrl);
-  const video = portfolioVideoUrl(project.videoFileUrl);
   const kind = portfolioProjectType(project);
   return (
     <SiteLayout>
@@ -98,46 +97,7 @@ export function PortfolioDetail({ page, project }: Awaited<ReturnType<typeof loa
       </section>
       <article className="studio-section max-w-5xl space-y-10 !pt-8 sm:!pt-10">
         <section aria-label="Project video">
-          <div className="aspect-video overflow-hidden rounded-2xl bg-black">
-            {video ? (
-              <video
-                src={video}
-                controls
-                playsInline
-                preload="none"
-                poster={project.thumbnailUrl}
-                className="h-full w-full object-contain"
-              />
-            ) : embed ? (
-              <iframe
-                src={embed}
-                title={`${project.title} — project video`}
-                allow="encrypted-media; picture-in-picture; fullscreen"
-                allowFullScreen
-                className="h-full w-full border-0"
-              />
-            ) : project.thumbnailUrl ? (
-              <img
-                src={project.thumbnailUrl}
-                alt={`${project.title} project still`}
-                width={1280}
-                height={720}
-                className="h-full w-full object-contain"
-              />
-            ) : (
-              <p className="p-8 text-white">The video preview is currently unavailable.</p>
-            )}
-          </div>
-          {embed && (
-            <a
-              href={project.videoUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="studio-text-link mt-4"
-            >
-              Open original video
-            </a>
-          )}
+          <ProjectMedia key={project._id} project={project} />
           {project.description && (
             <p className="mt-5 whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
               {project.description}
@@ -232,5 +192,66 @@ export function PortfolioDetail({ page, project }: Awaited<ReturnType<typeof loa
         </section>
       </article>
     </SiteLayout>
+  );
+}
+
+function ProjectMedia({ project }: { project: PortfolioProject }) {
+  const [failed, setFailed] = useState(false);
+  const video = portfolioVideoUrl(project.videoFileUrl) || portfolioVideoUrl(project.videoUrl);
+  const embed = video ? undefined : portfolioEmbedUrl(project.videoUrl);
+  const original =
+    project.videoUrl && (portfolioVideoUrl(project.videoUrl) || portfolioEmbedUrl(project.videoUrl))
+      ? project.videoUrl
+      : portfolioVideoUrl(project.videoFileUrl);
+  return (
+    <>
+      <div className="aspect-video overflow-hidden rounded-2xl bg-black">
+        {video && !failed ? (
+          <video
+            src={video}
+            controls
+            playsInline
+            preload="none"
+            poster={project.thumbnailUrl}
+            onError={() => setFailed(true)}
+            aria-label={`${project.title} — project video`}
+            className="h-full w-full object-contain"
+          />
+        ) : embed ? (
+          <iframe
+            src={embed}
+            title={`${project.title} — project video`}
+            allow="encrypted-media; picture-in-picture; fullscreen"
+            allowFullScreen
+            className="h-full w-full border-0"
+          />
+        ) : project.thumbnailUrl ? (
+          <img
+            src={project.thumbnailUrl}
+            alt={`${project.title} project still`}
+            width={1280}
+            height={720}
+            className="h-full w-full object-contain"
+          />
+        ) : (
+          <p className="p-8 text-white">The video preview is currently unavailable.</p>
+        )}
+      </div>
+      {failed && (
+        <p role="status" className="mt-4 text-sm text-muted-foreground">
+          The video could not play here. You can open the original below.
+        </p>
+      )}
+      {original && (
+        <a
+          href={original}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="studio-text-link mt-4"
+        >
+          Open original video
+        </a>
+      )}
+    </>
   );
 }

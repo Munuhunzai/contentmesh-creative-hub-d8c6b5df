@@ -67,10 +67,6 @@ export function portfolioEmbedUrl(value?: string): string | undefined {
   try {
     const url = new URL(value);
     if (url.protocol !== "https:") return;
-    if (url.hostname === "drive.google.com") {
-      const id = url.pathname.match(/^\/file\/d\/([\w-]+)(?:\/|$)/)?.[1];
-      if (id) return `https://drive.google.com/file/d/${id}/preview`;
-    }
     if (["youtube.com", "www.youtube.com", "youtu.be"].includes(url.hostname)) {
       const id = url.hostname === "youtu.be" ? url.pathname.slice(1) : url.searchParams.get("v");
       if (id && /^[\w-]{11}$/.test(id)) return `https://www.youtube-nocookie.com/embed/${id}`;
@@ -88,6 +84,11 @@ export function portfolioVideoUrl(value?: string): string | undefined {
   if (!value) return;
   try {
     const url = new URL(value);
+    if (url.protocol !== "https:") return;
+    if (url.hostname === "drive.google.com") {
+      const id = url.pathname.match(/^\/file\/d\/([\w-]+)(?:\/|$)/)?.[1];
+      if (id) return `https://lh3.googleusercontent.com/d/${id}`;
+    }
     if (
       url.protocol === "https:" &&
       ["cdn.sanity.io", "storage.googleapis.com"].includes(url.hostname)
