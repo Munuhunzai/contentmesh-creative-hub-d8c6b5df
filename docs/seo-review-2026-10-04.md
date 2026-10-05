@@ -1,0 +1,74 @@
+# ContentMeshAI SEO implementation review — 4 October 2026
+
+## Scope and business objective
+
+Improve discovery of existing video work and make it easier for a prospective buyer to move from a relevant example to a service enquiry. This is a focused implementation and representative audit, not a full crawl or an assertion of improved rankings.
+
+Working priorities: the site's existing AI commercial, product-ad and YouTube-production services, in English. Target countries and relative service priority remain unconfirmed; no location pages or Google Business Profile changes are included.
+
+## Evidence and decisions
+
+| Status                       | Observation and scope                                                                                                                                                                                                                                    | Consequence / response                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| ---------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Confirmed issue              | At baseline `src/components/home/Portfolio.tsx` rendered project cards as modal buttons. The public homepage showed four selected pieces; none had an individual project link.                                                                           | Add stable project pages and ordinary anchor links without removing the watch modal. Google documents anchor/href links as its reliable discovery format.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| Verified baseline            | Public robots.txt allowed public crawling and listed the production sitemap. Sitemap.xml returned 39 URLs: nine general pages, three service pages and 27 articles.                                                                                      | Preserve existing URLs and rules. Extend the sitemap only with selected, published project records.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| Confirmed content constraint | The public Sanity production dataset returned 67 project records. Several are independent concepts, and the selected Nike and Zara records explicitly disclaim brand endorsement. The animation record identifies Sami Uddin and Google Flow/ElevenLabs. | Publish four curated detail pages using existing project records and existing editorial notes. Preserve disclaimers; do not invent campaign metrics, commissions or production histories.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| Verified baseline, sampled   | Homepage browser rendering and one commercial service response showed substantive content; the service response was HTTP 200 with server-rendered HTML.                                                                                                  | Preserve the established service architecture. Initial request timeouts were not treated as proof of an outage.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| Confirmed release blocker    | The committed package-lock.json began with a tool truncation warning and contained a truncated block mid-file. npm ci could not parse it.                                                                                                                | Restore the last intact lock from commit 477194515b549372e359d8867d60a02f80fec0bf, then reconcile the already-declared Supabase dependency. The intact lock supplied the recovery baseline. Release checks then required Linux optional-dependency reconciliation and a targeted TanStack security update: react-start 1.168.60 and start-server-core 1.169.39, with their compatible router dependencies. No unrelated application feature changes were made. The pre-existing API test also needed to reflect authentication before payload validation; its repair mocks confirmed-user authentication and makes no provider calls. Production authentication behavior was not changed. |
+| Unavailable this review      | Current Search Console query/indexing reports, analytics attribution, qualified-lead data, field Core Web Vitals and server access logs.                                                                                                                 | No traffic-loss diagnosis, keyword-volume estimates, indexing claims or revenue gains are asserted. Older repository reports are historical context only.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+
+## Implemented project discovery
+
+The routes preserve the existing CMS slugs:
+
+- `/portfolio/men-shoes-ai-animation-3d-realistic`
+- `/portfolio/ai-2d-animation-3d-kids-animation-realistic`
+- `/portfolio/zara-3d-2d-animation-ai-realistic`
+- `/portfolio/nike-3d-2d-animation-ai-realistic`
+
+Each page reads the published CMS record, has an individual title, description and canonical, and displays breadcrumb navigation with matching BreadcrumbList markup. Public video files and supported video hosts can play on the page without autoplay. Google Drive projects display their published thumbnail and an original-video link. Visible published descriptions retain the concept/affiliation distinctions. Editorial ideas are explicitly labelled as possibilities for a future brief. The pages link to a relevant service and a contact enquiry carrying the project reference.
+
+Homepage cards link directly to selected project details. The portfolio directory also provides links to the selected pages even when their cards fall beyond the first 12 items. Existing modal controls, filters and load-more behavior are preserved.
+
+Only the stable editorial selection can resolve as project pages. Unknown or unpublished projects return not-found behavior; CMS errors remain errors instead of being represented as missing projects. Sitemap generation reads published projects and articles concurrently, and returns a retryable uncached 503 if content retrieval fails. It does not invent modification dates for project pages.
+
+VideoObject markup is deferred because a reliable video upload date and complete eligible video metadata were not established. Page creation does not guarantee video indexing or rich results. Google Drive playback remains dependent on the owner's sharing settings and Google's player availability.
+
+## Ordered next work
+
+1. **P1 — Measurement baseline.** Owner: site owner + SEO operator. Obtain read access or exports from the existing Search Console property and analytics property. Save the latest complete 28 days and preceding 28 days by page, query, device and country. Separate branded queries and the three commercial services. Record report lag and changes to tracking. Completion: a reproducible baseline with qualified enquiries separated from visits and button clicks.
+2. **P1 — Verified client evidence.** Owner: business owner. Supply approved scope, deliverables, production context and outcomes for real client work. Update the existing client project page before expanding the portfolio selection. Completion: claims tied to records and publication permission; no implied Nike/Zara commissions.
+3. **P2 — Content claims and overlap.** Owner: SEO editor. Review the 27 existing articles, starting with cost and agency-versus-tool guides linked from service pages. Validate pricing, savings and performance claims; map overlapping pages by actual query/intent evidence. Retain current URLs unless a documented merge/redirect decision is supported. Completion: reviewed claim sources and one clear destination per intent, without arbitrary word-count targets.
+4. **P2 — Performance evidence.** Owner: developer. Obtain fresh lab tests for homepage, a service, an article and a project, and field data where available. Investigate measured LCP, INP or CLS failures by template. Completion: comparable before/after measurements, with lab and field data reported separately.
+5. **P2 — Project discovery after release.** Owner: SEO operator. Inspect the released project URLs and updated sitemap in Search Console. Check Google-selected canonicals and indexed status when reports update. Completion: actual inspection records, not a claim based only on a successful public fetch.
+
+## Maintenance and rollback
+
+- Keep selected project slugs stable. Homepage featured flags must not control URL survival.
+- A new portfolio detail page should require a distinct, substantive published record and truthful context; do not expand all 67 automatically.
+- If a selected record is withdrawn, its page must stop returning content and its sitemap entry must disappear. If a replacement is genuinely equivalent, plan a specific redirect separately.
+- Revert the SEO commit with a normal revert commit if regression is confirmed. Do not rewrite shared history; this repository is connected to Lovable.
+- This task does not create scheduled monitoring or purchase tools.
+
+## Current primary guidance checked
+
+Checked 4 October 2026:
+
+- [Google: crawlable links and useful internal anchor text](https://developers.google.com/search/docs/crawling-indexing/links-crawlable)
+- [Google: video SEO and dedicated watch pages](https://developers.google.com/search/docs/appearance/video)
+
+Validation and release results are recorded in the pull request and the delivered review record.
+
+## Release prerequisites discovered during validation
+
+The first clean-install job exposed missing Linux optional-dependency entries. The lock was reconciled using npm 11 on a clean dependency-free working directory for Linux/x64. A dry-run npm ci validated that lock before the patched framework update.
+
+Vercel also blocked the recovered TanStack versions for [GHSA-qx66-fv34-fjm8](https://github.com/TanStack/router/security/advisories/GHSA-qx66-fv34-fjm8), verified against the maintainer advisory on 4 October 2026. This release pins react-start to the documented patched 1.168.60 and resolves start-server-core 1.169.39. No deployment security bypass is enabled.
+
+The authenticated Vercel project dashboard showed Web Analytics and Speed Insights as not enabled. This does not establish whether a separate analytics provider is in use.
+
+## Preview verification — 5 October 2026
+
+Clean-install GitHub CI passed installation, all 33 tests, TypeScript, lint and the production build for the security patch. Vercel produced a ready preview. Browser inspection then found Google Drive's iframe redirecting to an account page that disallows embedding. A header check of the existing native Google Drive source returned image/jpeg (Nike.jpg), not video. The final project pages therefore display the published thumbnail with an original-video link for Drive records. Native video remains available only for supported public file URLs, with a thumbnail and message on playback failure. No sharing permissions or security headers are weakened.
+
+Next media improvement: publish approved video files on a reliable public video host or in the existing CMS video-file field, verify playback anonymously, and record actual upload dates before considering video structured data. This review did not change Google Drive sharing permissions or rehost files.

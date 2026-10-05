@@ -27,6 +27,7 @@ import { Route as ApiResendInboundRouteImport } from './routes/api/resend-inboun
 import { Route as ApiStoryboardUsageRouteImport } from './routes/api/storyboard-usage'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
+import { Route as PortfolioSlugRouteImport } from './routes/portfolio_.$slug'
 import { Route as ServicesSlugRouteImport } from './routes/services_.$slug'
 import { Route as StudioIndexRouteImport } from './routes/studio.index'
 import { Route as StudioSplatRouteImport } from './routes/studio.$'
@@ -122,6 +123,11 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
   path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PortfolioSlugRoute = PortfolioSlugRouteImport.update({
+  id: '/portfolio_/$slug',
+  path: '/portfolio/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ServicesSlugRoute = ServicesSlugRouteImport.update({
   id: '/services_/$slug',
   path: '/services/$slug',
@@ -162,6 +168,7 @@ export interface FileRoutesByFullPath {
   '/api/resend-inbound': typeof ApiResendInboundRoute
   '/api/storyboard-usage': typeof ApiStoryboardUsageRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/portfolio/$slug': typeof PortfolioSlugRoute
   '/services/$slug': typeof ServicesSlugRoute
   '/studio/$': typeof StudioSplatRoute
   '/tools/storyboard-generator': typeof ToolsStoryboardGeneratorRoute
@@ -186,6 +193,7 @@ export interface FileRoutesByTo {
   '/api/resend-inbound': typeof ApiResendInboundRoute
   '/api/storyboard-usage': typeof ApiStoryboardUsageRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/portfolio/$slug': typeof PortfolioSlugRoute
   '/services/$slug': typeof ServicesSlugRoute
   '/studio/$': typeof StudioSplatRoute
   '/tools/storyboard-generator': typeof ToolsStoryboardGeneratorRoute
@@ -211,6 +219,7 @@ export interface FileRoutesById {
   '/api/resend-inbound': typeof ApiResendInboundRoute
   '/api/storyboard-usage': typeof ApiStoryboardUsageRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/portfolio_/$slug': typeof PortfolioSlugRoute
   '/services_/$slug': typeof ServicesSlugRoute
   '/studio/$': typeof StudioSplatRoute
   '/tools/storyboard-generator': typeof ToolsStoryboardGeneratorRoute
@@ -237,6 +246,7 @@ export interface FileRouteTypes {
     | '/api/resend-inbound'
     | '/api/storyboard-usage'
     | '/blog/$slug'
+    | '/portfolio/$slug'
     | '/services/$slug'
     | '/studio/$'
     | '/tools/storyboard-generator'
@@ -261,6 +271,7 @@ export interface FileRouteTypes {
     | '/api/resend-inbound'
     | '/api/storyboard-usage'
     | '/blog/$slug'
+    | '/portfolio/$slug'
     | '/services/$slug'
     | '/studio/$'
     | '/tools/storyboard-generator'
@@ -285,6 +296,7 @@ export interface FileRouteTypes {
     | '/api/resend-inbound'
     | '/api/storyboard-usage'
     | '/blog/$slug'
+    | '/portfolio_/$slug'
     | '/services_/$slug'
     | '/studio/$'
     | '/tools/storyboard-generator'
@@ -310,6 +322,7 @@ export interface RootRouteChildren {
   ApiResendInboundRoute: typeof ApiResendInboundRoute
   ApiStoryboardUsageRoute: typeof ApiStoryboardUsageRoute
   BlogSlugRoute: typeof BlogSlugRoute
+  PortfolioSlugRoute: typeof PortfolioSlugRoute
   ServicesSlugRoute: typeof ServicesSlugRoute
   StudioSplatRoute: typeof StudioSplatRoute
   ToolsStoryboardGeneratorRoute: typeof ToolsStoryboardGeneratorRoute
@@ -445,6 +458,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/portfolio_/$slug': {
+      id: '/portfolio_/$slug'
+      path: '/portfolio/$slug'
+      fullPath: '/portfolio/$slug'
+      preLoaderRoute: typeof PortfolioSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/services_/$slug': {
       id: '/services_/$slug'
       path: '/services/$slug'
@@ -494,6 +514,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiResendInboundRoute: ApiResendInboundRoute,
   ApiStoryboardUsageRoute: ApiStoryboardUsageRoute,
   BlogSlugRoute: BlogSlugRoute,
+  PortfolioSlugRoute: PortfolioSlugRoute,
   ServicesSlugRoute: ServicesSlugRoute,
   StudioSplatRoute: StudioSplatRoute,
   ToolsStoryboardGeneratorRoute: ToolsStoryboardGeneratorRoute,

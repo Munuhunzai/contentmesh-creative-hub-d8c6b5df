@@ -176,3 +176,25 @@ test("project cards expose published context without inventing outcomes", async 
   assert.ok(html.includes("Introduce a new collection."));
   assert.ok(!html.includes("Increased conversions"));
 });
+
+test("selected projects have crawlable links in initial HTML even beyond the first grid page", async () => {
+  const slug = "nike-3d-2d-animation-ai-realistic";
+  const portfolio = [
+    ...Array.from({ length: 12 }, (_, i) => ({
+      _id: `other-${i}`,
+      title: `Other project ${i}`,
+      slug: `other-${i}`,
+    })),
+    { _id: "nike", title: "Nike", slug },
+  ];
+  const html = await render({ portfolio });
+  assert.match(html, new RegExp(`href="/portfolio/${slug}"`));
+  assert.ok(html.includes("Selected project details"));
+  assert.ok(!html.includes('href="/portfolio/other-0"'));
+  const home = await render(
+    { portfolio: [{ _id: "nike", title: "Nike", slug, featured: true }] },
+    true,
+  );
+  assert.match(home, new RegExp(`href="/portfolio/${slug}"`));
+  assert.match(home, /aria-haspopup="dialog"/);
+});
