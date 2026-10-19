@@ -1,3 +1,4 @@
+import { AnalyticsConsent } from "@/components/AnalyticsConsent";
 import { MotionConfig } from "framer-motion";
 import { sanityClient } from "@/integrations/sanity/client";
 import { SanitySnapshot, snapshotQuery, type Snapshot } from "@/integrations/sanity/snapshot";
@@ -172,7 +173,10 @@ function RootComponent() {
       <SanitySnapshot data={snapshot}>
         <MotionConfig reducedMotion="user">
           <ThemeProvider>
-            <Outlet />
+            <div data-clarity-mask="true">
+              <Outlet />
+            </div>
+            <AnalyticsConsent />
           </ThemeProvider>
         </MotionConfig>
       </SanitySnapshot>
